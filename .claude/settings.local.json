@@ -9,7 +9,8 @@
       "Skill(make-slides)",
       "Bash(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" -Filter \"*.md\" -Depth 0)",
       "Bash(Select-Object Name)",
-      "PowerShell(New-Item *)"
+      "PowerShell(New-Item *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\AppData\\\\Local\\\\Temp\\\\\" | Where-Object {$_.Name -match \"css3\"} | Sort-Object Name | Select-Object Name)"
     ]
   }
 }

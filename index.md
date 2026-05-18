@@ -8,6 +8,8 @@ drawings:
 transition: slide-left
 title: Angular 教材庫
 routeAlias: home
+aspectRatio: '16/9'
+canvasWidth: 1280
 style: |
   .slidev-layout p,
   .slidev-layout li,
@@ -127,6 +129,16 @@ style: |
       <div>CSS 樣式編輯</div>
       <div class="chapter-subtitle">Flex & Bootstrap</div>
     </Link>
+    <Link to="ch11" class="chapter-card">
+      <div class="chapter-num">Ch 11</div>
+      <div>CSS 進階工具</div>
+      <div class="chapter-subtitle">Background & Position</div>
+    </Link>
+    <Link to="ch12" class="chapter-card">
+      <div class="chapter-num">Ch 12</div>
+      <div>JavaScript 介紹</div>
+      <div class="chapter-subtitle">JS & TypeScript</div>
+    </Link>
     <!-- 更多章節將在此處新增 -->
   </div>
 </div>
@@ -169,4 +181,12 @@ src: ./09-css-basics.md
 
 ---
 src: ./10-css-advanced.md
+---
+
+---
+src: ./11-css-tools.md
+---
+
+---
+src: ./12-javascript-intro.md
 ---
