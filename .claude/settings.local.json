@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm search *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\\\\\" | Select-Object Name, PSIsContainer | Where-Object { $_.Name -match \"\\\\.md$\" })",
+      "PowerShell(Head *)",
+      "Skill(make-slides)",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" -Filter \"*.md\" -Depth 0)",
+      "Bash(Select-Object Name)",
+      "PowerShell(New-Item *)"
+    ]
+  }
+}
