@@ -8,8 +8,6 @@ drawings:
 transition: slide-left
 title: Angular 教材庫
 routeAlias: home
-aspectRatio: '16/9'
-canvasWidth: 1280
 style: |
   .slidev-layout p,
   .slidev-layout li,
@@ -139,6 +137,86 @@ style: |
       <div>JavaScript 介紹</div>
       <div class="chapter-subtitle">JS & TypeScript</div>
     </Link>
+    <Link to="ch13" class="chapter-card">
+      <div class="chapter-num">Ch 13</div>
+      <div>數據類型</div>
+      <div class="chapter-subtitle">TypeScript Types</div>
+    </Link>
+    <Link to="ch14" class="chapter-card">
+      <div class="chapter-num">Ch 14</div>
+      <div>變數使用</div>
+      <div class="chapter-subtitle">Variables & Binding</div>
+    </Link>
+    <Link to="ch15" class="chapter-card">
+      <div class="chapter-num">Ch 15</div>
+      <div>方法</div>
+      <div class="chapter-subtitle">Methods & Functions</div>
+    </Link>
+    <Link to="ch16" class="chapter-card">
+      <div class="chapter-num">Ch 16</div>
+      <div>TypeScript 練習（一）</div>
+      <div class="chapter-subtitle">Practice — Control & Arrays</div>
+    </Link>
+    <Link to="ch17p2" class="chapter-card">
+      <div class="chapter-num">Ch 16-2</div>
+      <div>TypeScript 練習（二）</div>
+      <div class="chapter-subtitle">Date, Restructure & Methods</div>
+    </Link>
+    <Link to="ch17" class="chapter-card">
+      <div class="chapter-num">Ch 17</div>
+      <div>資料轉換與呈現</div>
+      <div class="chapter-subtitle">Data Design & Presentation</div>
+    </Link>
+    <Link to="ch18" class="chapter-card">
+      <div class="chapter-num">Ch 18</div>
+      <div>生命週期</div>
+      <div class="chapter-subtitle">Component Lifecycle</div>
+    </Link>
+    <Link to="ch19" class="chapter-card">
+      <div class="chapter-num">Ch 19</div>
+      <div>新增組件</div>
+      <div class="chapter-subtitle">Components</div>
+    </Link>
+    <Link to="ch20" class="chapter-card">
+      <div class="chapter-num">Ch 20</div>
+      <div>繫結</div>
+      <div class="chapter-subtitle">Data Binding</div>
+    </Link>
+    <Link to="ch21" class="chapter-card">
+      <div class="chapter-num">Ch 21</div>
+      <div>路由</div>
+      <div class="chapter-subtitle">Angular Routing</div>
+    </Link>
+    <Link to="ch22" class="chapter-card">
+      <div class="chapter-num">Ch 22</div>
+      <div>資料傳遞</div>
+      <div class="chapter-subtitle">Data Passing</div>
+    </Link>
+    <Link to="ch23" class="chapter-card">
+      <div class="chapter-num">Ch 23</div>
+      <div>網頁儲存</div>
+      <div class="chapter-subtitle">Web Storage</div>
+    </Link>
+    <Link to="ch24" class="chapter-card">
+      <div class="chapter-num">Ch 24</div>
+      <div>陣列顯示</div>
+      <div class="chapter-subtitle">Array Display</div>
+    </Link>
+    <Link to="ch25" class="chapter-card">
+      <div class="chapter-num">Ch 25</div>
+      <div>@if 條件顯示</div>
+      <div class="chapter-subtitle">Conditional Rendering</div>
+    </Link>
+    <Link to="ch26" class="chapter-card">
+      <div class="chapter-num">Ch 26</div>
+      <div>@switch 條件切換</div>
+      <div class="chapter-subtitle">Switch Case</div>
+    </Link>
+    <Link to="ch27" class="chapter-card">
+      <div class="chapter-num">Ch 27</div>
+      <div>串接 API</div>
+      <div class="chapter-subtitle">HTTP & API</div>
+    </Link>
     <!-- 更多章節將在此處新增 -->
   </div>
 </div>
@@ -189,4 +267,68 @@ src: ./11-css-tools.md
 
 ---
 src: ./12-javascript-intro.md
+---
+
+---
+src: ./13-typescript-types.md
+---
+
+---
+src: ./14-variables.md
+---
+
+---
+src: ./15-methods.md
+---
+
+---
+src: ./16-typescript-practice-1.md
+---
+
+---
+src: ./17-typescript-practice-2.md
+---
+
+---
+src: ./17-pipes.md
+---
+
+---
+src: ./18-lifecycle.md
+---
+
+---
+src: ./19-components.md
+---
+
+---
+src: ./20-binding.md
+---
+
+---
+src: ./21-routing.md
+---
+
+---
+src: ./22-data-passing.md
+---
+
+---
+src: ./23-web-storage.md
+---
+
+---
+src: ./24-array-display.md
+---
+
+---
+src: ./25-if.md
+---
+
+---
+src: ./26-switch-case.md
+---
+
+---
+src: ./27-api.md
 ---

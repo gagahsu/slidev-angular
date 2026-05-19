@@ -8,6 +8,38 @@
   font-style: normal !important;
 }
 
+/* Operator snippets that must render exactly as typed, without code-font ligatures */
+.no-liga-code,
+.no-liga-code-block,
+.no-liga-code-block pre,
+.no-liga-code-block code,
+.no-liga-code-block span,
+.shiki,
+.shiki code,
+.shiki span {
+  font-family: Consolas, "Courier New", monospace !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: "liga" 0, "calt" 0, "dlig" 0 !important;
+  text-rendering: optimizeSpeed !important;
+}
+
+.op-code {
+  display: inline-block;
+  min-width: 2.2em;
+  padding: 0.12em 0.45em;
+  border-radius: 0.25rem;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.9em;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  white-space: nowrap;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}
+
 /* Code blocks: wider layout, no scrollbars, wrap content for clean PDF export */
 .slidev-layout pre,
 .slidev-layout .shiki,
@@ -28,14 +60,6 @@
   overflow: visible !important;
 }
 
-/* Fix double-digit line numbers wrapping (default w-4 = 1rem is too narrow) */
-.slidev-code-line-numbers .slidev-code code .line::before {
-  width: 2rem !important;
-  min-width: 2rem !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-
 /* Global scrollbar removal for code blocks */
 .slidev-code-wrapper,
 .slidev-code {
@@ -45,4 +69,11 @@
 /* Ensure container doesn't force scrollbar */
 .slidev-layout {
   width: 100% !important;
+}
+
+/* Allow browser print dialog to set orientation */
+@media print {
+  @page {
+    size: A4 landscape;
+  }
 }
