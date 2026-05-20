@@ -45,6 +45,18 @@ style: |
   <Link to="home" style="color: #9dc4c4; font-size: 0.85rem; margin-top: 2rem; text-decoration: none; letter-spacing: 0.05em;">← 返回目錄</Link>
 </div>
 
+<!--
+各位學員，歡迎回來！
+上一章我們學會了用 `if` 和 `else if` 來做分支判斷。
+但是，你想想看，如果今天我們要設計一個遊戲角色選擇畫面。
+角色職業有「戰士、法師、刺客、弓箭手、牧師、德魯伊...」等十幾種。
+如果你用 `if` 來寫，代碼就會變成：
+`if (職業 == 戰士) ... else if (職業 == 法師) ... else if (職業 == 刺客) ...`
+這一長串的 `else if` 排下來，不只你看得眼花，連你的編輯器都不想理你了。
+今天，我們就要來學習條件判斷的另一個秘密武器——`switch case`！
+不只在 TypeScript 大腦裡好用，Angular 17 的 HTML 模板裡也有非常相似的 `@switch` 機制喔！
+-->
+
 ---
 layout: default
 ---
@@ -57,6 +69,15 @@ layout: default
 - **case 與 break 說明** — case() 比對值、break 結束執行
 - **switch 中使用運算式** — 在 switch() 內撰寫運算邏輯
 
+<!--
+今天我們的分支切換作戰計畫如下：
+先了解什麼是 `switch case`，以及它如何用 `case` 取代討人厭的 `else if`。
+接著，拆解 `switch case` 的四大零件：switch、case、default 和 break。
+然後，把 `switch` 和 `if` 放在拳擊場上進行實況 PK，看看它們的代碼長相。
+隨後，深入探討最容易遺忘、也是新手最常踩雷的 `break` 與穿透（fall-through）機制。
+最後，看看如何在 `switch` 裡面塞入算術運算式！
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -65,11 +86,15 @@ class: flex flex-col justify-center items-center text-center
 # 什麼是 switch case
 # What is Switch Case
 
+<!--
+第一站，我們先來認識這個分支選擇器的基本骨架。
+-->
+
 ---
 
 # 什麼是 switch case？
 
-switch case 其實跟 if 一樣都是所謂的條件判斷，只是寫法跟 if 不太相同，如果在 if 中有多個條件我們通常會使用 `&&` 跟 `||` 或者 else if 還有 else 去做額外的判斷，switch 中就會使用 case 去做額外的判斷。
+`switch case` 與 `if` 同為條件判斷，差異在寫法：`if` 以 `else if` 處理多個分支，`switch` 改以 `case` 逐一比對。
 
 ```typescript
 switch (變數名稱或運算式) {
@@ -89,6 +114,16 @@ switch (變數名稱或運算式) {
 💡 <b>注意：</b> <code>default</code> 相當於 if 中的 <code>else</code>，當所有 case 都不符合時執行。
 </div>
 
+<!--
+`switch case` 的運作邏輯，大叔把它比喻成「自動販賣機的按鈕」。
+你投了硬幣，按了「1 號」按鈕，販賣機就掉出可樂；按了「2 號」按鈕，掉出雪碧；按了沒設定的號碼，就跑出「請重新選擇」（default）。
+我們在 `switch()` 括號裡放入要判斷的變數。
+底下用一個個 `case` 來比對變數的值。
+如果對上了，就執行該 case 底下的陳述句。
+最後別忘了加 `default`，它就是防呆安全網（相當於 `else`）。
+當前面的 case 通通都不符合時，就會被引導到這條預設的備用道路。
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -97,17 +132,19 @@ class: flex flex-col justify-center items-center text-center
 # switch vs if 比較
 # Switch vs If Comparison
 
+<!--
+既然兩者都能做判斷，我們直接把它們放在一起對照，感受一下語法的視覺差異。
+-->
+
 ---
 layout: two-cols
 ---
 
 # switch vs if 比較
 
-假設我現在有個值，我需要判斷他的內容為 1 時要去打印出 1，為 2 時打應出 2，都不是就打印出 other。
+以判斷值為 1 時打印 1、為 2 時打印 2、否則打印 other 為例，兩種寫法結果相同，語法不同。
 
-**if 的寫法（左）vs switch 的寫法（右）**
-
-兩邊的最終結果是一樣的，只是寫法不同。
+**if 寫法（左）vs switch 寫法（右）**
 
 ::right::
 
@@ -137,6 +174,16 @@ switch (this.testNum) {
 }
 ```
 
+<!--
+大家看看這左右兩邊的程式碼。
+左邊是我們熟悉的 `if-else`。
+右邊是新朋友 `switch-case`。
+當 `testNum` 等於 1 的時候，兩邊都會印出 1；等於 2 的時候，都會印出 2。
+你可以感覺到，右邊的 `switch` 排版更加的「對齊」、一目了然。
+在分支很多的時候，`switch` 的代碼結構不會像 `if` 那樣往右下角斜斜地斜過去，維護起來更加舒服！
+但大叔要提醒：右邊那個 `break` 到底是什麼鬼？為什麼不寫不行？我們下一張投影片來解密！
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -145,15 +192,17 @@ class: flex flex-col justify-center items-center text-center
 # case 與 break 說明
 # Case and Break
 
+<!--
+現在，我們來聊聊 switch 裡最關鍵、也是最容易讓新手在半夜抓狂加班的 `break` 指令！
+-->
+
 ---
 layout: two-cols
 ---
 
 # switch 的 case 與 break
 
-這邊的 switch 是將 `this.testNum` 作為判斷的變數，當他的內容為 1 或者為 2 又或者其他的時候分別去執行 case 中的內容。
-
-注意 `case()` 的 `()` 中寫的是當這個判斷的變數的值為你寫的內容時就會執行裡面的程式，並且在每個 case 程式結束之後要給他 `break` 告訴系統這段程式已經結束了。
+以 `this.testNum` 為判斷依據，`case(值)` 比對後執行對應程式。每個 `case` 結尾必須加 `break`，否則會繼續執行下一個 `case`（fall-through）。
 
 ::right::
 
@@ -175,6 +224,16 @@ switch (this.testNum) {
 💡 <b>注意：</b> 每個 case 結尾必須加上 <code>break</code>，否則程式會繼續往下執行下一個 case（fall-through）。
 </div>
 
+<!--
+在 TypeScript 的 `switch` 語法裡，**`break` 代表「跳出這台機器」**。
+如果你忘記在 `case(1)` 底下寫 `break`。
+當 `testNum` 等於 1 時，電腦執行完 `console.log(1)` 之後，它不會下班！
+它會像是煞車壞掉的卡車一樣，繼續往下撞進 `case(2)` 裡執行 `console.log(2)`，直到它碰到下一個 `break` 或者把整個 switch 撞穿為止！
+這種靈異現象在程式界叫作「Fall-through（穿透）」。
+所以，寫 case 時，千萬要養成好習慣：**寫完一行，立刻補上 `break;`**！
+不然你的程式跑出奇怪的雙重執行結果，你可能要對著螢幕哭一整晚！
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -183,13 +242,17 @@ class: flex flex-col justify-center items-center text-center
 # switch 中使用運算式
 # Expression in Switch
 
+<!--
+除了放單一變數之外，switch 的括號裡其實還可以玩點花樣。
+-->
+
 ---
 layout: two-cols
 ---
 
 # switch 中使用運算式
 
-switch 中也可以寫運算去做判斷，不過主要因為他的寫法跟 if 差異蠻大的，所以各位在寫 switch 時要多注意「符號」跟「寫法」的差異。
+`switch()` 括號內可放入運算式，系統先計算結果再與各 `case` 比對。注意 `switch` 與 `if` 寫法差異，勿混淆符號。
 
 ::right::
 
@@ -211,9 +274,24 @@ switch (this.testNum * 3) {
 💡 <b>注意：</b> <code>switch()</code> 括號內可以放入運算式，例如 <code>this.testNum * 3</code>，系統會先計算結果再與各 case 值比對。
 </div>
 
+<!--
+我們不只可以寫 `switch(this.testNum)`，我們還可以在括號裡塞入運算式，比如 `switch(this.testNum * 3)`。
+這時候，電腦會非常聰明地先幫你把 `testNum * 3` 的算術結果算出來。
+比如結果是 6，它再拿著這個 6，去底下每一個 `case` 裡敲門，看看誰是 6。
+所以在 switch 括號裡，算術加減乘除都是完全合法的！
+大家回去可以在自己的 TS 練習檔裡，試著把這段 code 敲敲看，觀察它的執行結果！
+-->
+
 ---
 layout: end
 ---
 
 # 課程結束
 ### 熟悉 switch case，讓多條件判斷更整潔易讀
+
+<!--
+恭喜大家！成功收服了 `switch case` 這個強大的分支語法！
+今天你學會了這招，以後遇到十幾種職業、或是多種狀態切換的畫面，就能寫出極度整潔、好讀的代碼了。
+回去把 `break` 的觀念牢牢記住。
+下一堂課，我們要迎來整個前端課程的終極重頭戲——「串接 API（Fetch API）」，去學習如何用程式碼向政府或是遠端的伺服器要資料，把真實世界的實時數據搬到我們的網頁上！大家休息一下，我們等一下見！
+-->

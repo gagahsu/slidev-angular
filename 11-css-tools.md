@@ -45,6 +45,14 @@ style: |
   <Link to="home" style="color: #9dc4c4; font-size: 0.85rem; margin-top: 2rem; text-decoration: none; letter-spacing: 0.05em;">← 返回目錄</Link>
 </div>
 
+<!--
+各位學員，歡迎來到 CSS 的進階修煉場！
+上堂課我們把基本的身材外觀（Box Model）還有輸送帶排版（Flexbox）搞定了。
+今天我們要來學點能掌控網頁「靈魂細節」的進階工具。
+包括怎麼幫你的網頁換上漂亮的背景圖、怎麼像圖釘一樣把元件「釘」在畫面的特定角落，還有怎麼處理當物件疊在一起時，誰在上面、誰在底下的「宮鬥劇」（堆疊順序）。
+這堂課上完，你對版面的掌控力會達到像素級的精準！
+-->
+
 ---
 layout: default
 ---
@@ -57,6 +65,15 @@ layout: default
 - **後蓋前觀念 — CSS 優先權**
 - **練習**
 
+<!--
+今天我們的作戰大綱很精實：
+首先是背景圖的四大金剛屬性。
+接著是極度重要的 Position 定位三兄弟。
+再來是解決重疊紛爭的 z-index。
+最後我們會聊聊 CSS 的後蓋前與優先權潛規則。
+照慣例，最後有非常精彩的定位實作練習，大家加油！
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -64,6 +81,10 @@ class: flex flex-col justify-center items-center text-center
 
 # 背景設定
 # Background Properties
+
+<!--
+第一站，我們先來聊聊怎麼幫網頁裝修壁紙——也就是背景屬性。
+-->
 
 ---
 
@@ -81,6 +102,16 @@ class: flex flex-col justify-center items-center text-center
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>background-position</b> 前方數值代表水平位置（X），後方代表垂直位置（Y）
 </div>
+
+<!--
+大家看這個屬性表格。
+背景屬性叫 `background-*` 系列，有四大常用旋鈕：
+第一是 `background-image` 設定背景圖片路徑。
+第二是 `background-repeat` 控制要不要像阿嬤家的地板磁磚一樣重複平鋪。
+第三是 `background-position` 定位圖片要在盒子的哪個方位。
+第四是 `background-size` 調整圖片要縮放成多大。
+這四顆旋鈕組合起來，就能調出任何你想要的背景效果！
+-->
 
 ---
 
@@ -100,6 +131,14 @@ background-image: url("./IMG_8536(1).jpg");
   </div>
 </div>
 
+<!--
+第一顆旋鈕叫 `background-image`。我們可以使用 `url()` 把本地端的圖片加進來。
+你看代碼寫 `url("./IMG_8536(1).jpg")`。
+這裡的 `./` 代表「我目前所在的位置」。
+路徑非常重要！要是你圖片檔案在同一個資料夾，卻忘了寫 `./`，瀏覽器可能就會找不到圖，賞你一片空白。
+另外，要是圖片檔名有括號、空白之類的特殊字元，記得路徑格式一定要寫正確，最好是用半形引號包起來，才不會出錯喔。
+-->
+
 ---
 
 # background-image — 網路圖片：取得網址
@@ -111,6 +150,14 @@ background-image: url("./IMG_8536(1).jpg");
 <div class="mt-2 p-2 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
 ⚠️ 使用網路圖片前請注意版權，此處僅作練習用途
 </div>
+
+<!--
+如果不想下載圖片，我們也可以直接拉「網路圖片」的網址來當壁紙！
+怎麼做呢？很簡單，三步驟：
+在 Google 搜尋到你喜歡的圖，點右鍵，然後選擇「複製圖片位址」（注意，是圖片位址，不是網頁網址喔！）。
+複製完直接貼進 `url("...")` 的括號裡就行了。
+不過這邊大叔要溫馨提醒：用網路圖片練習很方便，但如果以後做正式專案，一定要注意版權問題，或者是遇到對方伺服器關機，你的圖片就會跟著消失喔！
+-->
 
 ---
 
@@ -127,6 +174,12 @@ background-image: url("https://pic.pimg.tw/twfish0999/1361897489-2554509122_n.jp
     預設情況下背景圖片會<b>重複平鋪</b>填滿整個元素
   </div>
 </div>
+
+<!--
+這就是直接貼上網路圖片 URL 的範例。
+你會發現，如果你的容器很大，而圖片很小，瀏覽器預設會非常貼心地「重複平鋪」這張圖片，就像磁磚一樣把它鋪滿整個螢幕。
+如果你不想要這種魔性重複的效果，我們就要靠下一顆旋鈕來拯救了。
+-->
 
 ---
 
@@ -149,6 +202,13 @@ background-repeat: no-repeat;
   </div>
 </div>
 
+<!--
+這顆旋鈕就是 `background-repeat`。
+如果你覺得重複鋪滿太雜亂，只要下一行 `background-repeat: no-repeat;`。
+這行指令翻譯過來就是：「背景圖片給我乖乖只顯示一張，不准重複！」
+你看右邊的示意圖，加上之後它就只會孤零零地出現在左上角，乾乾淨淨。
+-->
+
 ---
 
 # background-position — 設定背景位置
@@ -170,6 +230,15 @@ background-position: 50% 50%;
   </div>
 </div>
 
+<!--
+當你用了 `no-repeat` 之後，圖片預設會貼在左上角。
+如果你想讓它移動，就要調整 `background-position`（背景位置）。
+它的格式是 `X Y`，前面代表水平（左右），後面代表垂直（上下）。
+我們可以用百分比來設定。
+例如 `50% 50%`，就代表水平置中（50%）加上垂直置中（50%），圖片就會乖乖躺在盒子的正中央。
+你也可以直接用英文單字，像是 `center center` 或是 `right bottom`（右下角），非常直覺！
+-->
+
 ---
 
 # background-size — 設定背景圖片大小
@@ -187,6 +256,14 @@ background-size: contain;
 
 <img src="/images/11-css/bg-size-contain.png" alt="background-size: contain 效果示意" style="max-height: 145px; margin-top: 0.4rem; border-radius: 4px; border: 1px solid #ccc;" />
 
+<!--
+最後一顆旋鈕是 `background-size` 控制大小。
+除了寫死 `px` 之外，最常用的是 `cover` 和 `contain` 這兩個關鍵字。
+`cover` 就像是「把圖硬塞滿整個盒子」，就算會被裁切一部分也在所不惜，總之就是要塞滿！
+`contain` 則是「等比例縮放」，保證整張圖片完整呈現，絕對不裁切，但也因為這樣，如果盒子比例不對，旁邊就會留下空白。
+這在做網頁大 Banner 或是頭像時非常實用，大家實作時可以切換看看感覺。
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -194,6 +271,10 @@ class: flex flex-col justify-center items-center text-center
 
 # Position（位置）
 # fixed / relative / absolute
+
+<!--
+好，熱身完畢！接下來我們要進入整堂課最核心、也最考驗空間邏輯的屬性——「Position（定位）」！
+-->
 
 ---
 
@@ -216,6 +297,14 @@ class: flex flex-col justify-center items-center text-center
 <div class="mt-3 p-2 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 常用於固定導覽列、懸浮按鈕、回頂端按鈕等不隨頁面捲動的元件
 </div>
+
+<!--
+第一種定位叫 `position: fixed`，我稱它為「死心塌地釘子戶」。
+一旦你對元素設定了 `position: fixed`，它就會脫離網頁的常規排隊邏輯，直接以「瀏覽器視窗」為基準進行定位。
+不管使用者滾輪怎麼滾、網頁怎麼拉，它都會像一顆頑固的圖釘一樣，死死地釘在你指定的視窗位置上（比如 `top: 20px; right: 50px`）。
+這招最常用在什麼地方？
+就是我們常常看到網頁右下角的「回頂端（Top）」小按鈕，或是上方不管怎麼滾都在的固定導覽列，都是靠它做出來的！
+-->
 
 ---
 
@@ -241,6 +330,13 @@ class: flex flex-col justify-center items-center text-center
   </div>
 </div>
 
+<!--
+大家看這張滾輪滾動的對比圖。
+左邊是滾動前，粉紅色的 fixed 盒子在右上角。
+右邊是滾動後，底下的綠色網頁內容已經往上滑了一大截，但是那個粉紅色的 fixed 盒子依然在視窗的同一個位置一動也不動。
+這就是 `fixed` 的威力，它只看視窗，不看網頁長度！
+-->
+
 ---
 
 # position: relative & absolute — 父子關係定錨
@@ -261,6 +357,16 @@ class: flex flex-col justify-center items-center text-center
 <div class="mt-2 p-2 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 標籤 <code>topContent</code> 被 <code>top</code> 包住，即形成父子關係：父 → <code>top</code>，子 → <code>topContent</code>
 </div>
+
+<!--
+接下來這對組合是 Position 家族的「最佳拍檔」：`relative`（相對定位）與 `absolute`（絕對定位）。
+很多初學者會單獨使用 `absolute`，結果發現它飛到天邊去，根本不受控制。
+那是因為你沒有幫它指定「基準點」！
+我們業界的標準配對玩法是：
+在父標籤（老爸）身上寫 `position: relative`，這是在老爸身上宣告「我要當定位基準點喔，但我位置不動」。
+在子標籤（小孩）身上寫 `position: absolute`，這是在小孩身上宣告「我要在老爸的範圍內進行絕對定錨」。
+一旦老爸身上裝了 relative，小孩的 absolute 就會乖乖在老爸的身體範圍裡活動，絕對不會飛到外面去！
+-->
 
 ---
 
@@ -289,6 +395,14 @@ class: flex flex-col justify-center items-center text-center
 💡 滾動頁面時，<code>absolute</code> 元素的位置會跟著父標籤移動（非固定在視窗）
 </div>
 
+<!--
+我們來看範例程式碼。
+老爸 `.top` 設定了 `position: relative`。
+小孩 `.topContent` 設定了 `position: absolute; top: 5%; right: 1%;`。
+這行指令的意思就是：「小孩要在老爸的肚子裡，距離老爸頂端 5% 的高度、距離老爸右邊 1% 的寬度，把自己釘在那裡。」
+這樣一來，不管網頁怎麼滾動，只要老爸移動，小孩就會跟著老爸一起動，不會像 `fixed` 一樣傻傻地停在螢幕畫面上。這叫父唱子隨！
+-->
+
 ---
 
 # position: relative & absolute — 示意圖
@@ -313,6 +427,15 @@ class: flex flex-col justify-center items-center text-center
   </div>
 </div>
 
+<!--
+看這張示意圖就很清楚了。
+粉紅色的 `absolute` 小孩，是緊緊地釘在綠色的「父標籤範圍」右上角。
+當你往下滾動網頁時，因為父標籤整個往上挪動了，所以粉紅色的 absolute 小孩也跟著父標籤一起往上挪移。
+這就是 absolute 與 fixed 最本質的差別：
+`fixed` 認「瀏覽器視窗」當老大；
+`absolute` 則是認「最近的有設 relative 的祖先（通常是老爸）」當老大！
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -320,6 +443,12 @@ class: flex flex-col justify-center items-center text-center
 
 # z-index
 # 堆疊順序
+
+<!--
+當大家學會了定位，元件開始在畫面上飛來飛去的時候，一定會遇到一個靈異事件：
+「我的按鈕怎麼被圖片壓在底下了？」
+這時候我們就需要請出 `z-index` 來處理這場宮鬥劇了！
+-->
 
 ---
 
@@ -339,6 +468,15 @@ class: flex flex-col justify-center items-center text-center
   </div>
 </div>
 
+<!--
+`z-index` 就是控制「3D 空間裡的深度（Z 軸）」。
+數值越大的人，代表它站得越前面、越霸道，會壓在數值小的人身上。
+比如圖中 `z-index: 3` 的紫色方塊，就把 `z-index: 2` 的橘色和 `1` 的藍色死死地壓在底下。
+這裡有兩個新手一定要背下來的超級鐵律：
+第一，`z-index` **只對有設定定位（position）的元素有效**！如果你給一個普通老百姓 `div` 下 `z-index: 9999`，瀏覽器會直接當作沒看到，完全不會生效。
+第二，父層的 `relative` 優先權非常霸道。如果老爸的 `z-index` 輸了，小孩再高也沒用。這就像是拼爹的社會一樣，老爸輸了，小孩在外面也翻不了身！
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -346,6 +484,10 @@ class: flex flex-col justify-center items-center text-center
 
 # 後蓋前觀念
 # CSS 優先權
+
+<!--
+最後，我們要來聊聊 CSS 的核心底層邏輯——「後蓋前」與「優先權（Specificity）」。
+-->
 
 ---
 
@@ -374,6 +516,13 @@ h1 { color: blue; }
 
 當兩條規則都以**標籤名稱（`h1`）**為選擇器時，後方規則生效。
 
+<!--
+我們之前提過，CSS 預設是「後蓋前」。
+你看這段程式碼，我們對 `h1` 同時下了 `color: red` 和 `color: blue`。
+這兩個指令完全打架了。因為它們都是用同一個「標籤選擇器（h1）」，所以瀏覽器會聽最後面的話，把顏色渲染成藍色（blue）。
+這是最基礎的後蓋前，看誰在底下誰就贏。
+-->
+
 ---
 
 # 後蓋前觀念 — class 選擇器
@@ -399,6 +548,18 @@ h1  { color: blue; }
 class 選擇器優先權高，不會被後方的標籤選擇器覆蓋
 </div>
 
+<!--
+但是！如果我們用的是不同的選擇器呢？
+比如我們給 `h1` 貼了個 `.x1` 的 class 貼紙。
+CSS 裡寫了 `.x1 { color: red; }` 在上面，底下又寫了 `h1 { color: blue; }`。
+照理說 blue 在下面應該要贏啊？但結果畫面上居然顯示紅色（red）！
+為什麼？因為 CSS 有一套「優先權計分制（Specificity）」。
+Class 選擇器的權重（分數是10分）遠遠高於普通的標籤選擇器（分數只有1分）！
+所以不管標籤選擇器寫在多下面，都幹不掉分數比它高的 class 選擇器。
+計分規則很簡單：ID（100分） > Class（10分） > 標籤名稱（1分）。
+所以，權重分數高的人說了算，這就是為什麼你的樣式有時候會「不合邏輯」地被覆蓋的原因！
+-->
+
 ---
 
 # 後蓋前小注意（一）
@@ -422,6 +583,16 @@ h1 { color: blue; }
   <div style="font-size: 1.8rem; font-weight: bold; color: red;">XXX</div>
 </div>
 
+<!--
+我們來補充兩個冷知識。
+第一，`id` 選擇器權重高達 100 分。不過在業界，我們極少用 `id` 來寫 CSS 樣式，`id` 通常是給 JavaScript 用來抓元素的。如果用 `id` 寫樣式，會因為分數太高導致以後很難被覆蓋，代碼會變得很髒。
+第二，CSS 裡有一個作弊大絕招，叫做 `!important`。
+只要在屬性值後面加上 `!important`，它的分數值就會瞬間暴增到無限大！
+你看代碼，雖然 `color: blue` 寫在下面，但因為上面加了 `!important`，所以紅色取得了絕對勝利。
+不過，這個大絕招在業界是「禁忌之術」，沒事千萬別亂用！
+因為一旦你用了，別人就要用更多的 `!important` 來蓋你，最後整個專案會打滿 `!important`，變成一場 CSS 災難！
+-->
+
 ---
 
 # 後蓋前小注意（二）
@@ -433,6 +604,14 @@ h1 { color: blue; }
 - **檔案管理**
   - CSS、TS 個別放，共用的放在一起
 
+<!--
+在檔案管理和協作上，我們有兩個好習慣建議：
+第一，當你接手別人寫好的網頁樣式，需要修改時，**不要直接去改原本的舊 CSS 檔**。
+萬一你改爛了，根本還原不回去。
+建議你新建一個 `custom.css`，用後蓋前或是更高權重的 class 選擇器，在你的新檔案裡覆蓋舊樣式。這樣原檔安全，你的修改也一目了然。
+第二，專案大了之後，要保持「CSS 與 TS 分開存放」的原則，共用的東西抽出來，代碼才不會變成一坨拉撒麵。
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -440,6 +619,10 @@ class: flex flex-col justify-center items-center text-center
 
 # 練習
 # CSS Practice
+
+<!--
+好，學完了 Position 的 relative 和 absolute 父子定錨法，我們馬上來進行一場頭腦體操！
+-->
 
 ---
 
@@ -467,6 +650,16 @@ class: flex flex-col justify-center items-center text-center
   </div>
 </div>
 
+<!--
+今天的練習是「三層俄羅斯套娃色塊排版」！
+請大家用 CSS 的定位，做出右邊這個圖形：
+最底層是深灰色盒子（300x300），中間是橘色盒子（200x200），最上層是綠色盒子（100x100）。
+注意它們重疊和靠齊的位置：
+橘色要死死貼在深灰色的右上角；
+綠色則要貼在橘色的左下角。
+這題非常考驗你的 relative 與 absolute 巢狀關係，大家先建好 HTML，然後想想看 CSS 要怎麼下！
+-->
+
 ---
 
 # 練習 — Position 定位排版
@@ -486,9 +679,26 @@ class: flex flex-col justify-center items-center text-center
 💡 記得在 HTML 中建立正確的巢狀結構：<code>black &gt; orange &gt; green</code>
 </div>
 
+<!--
+大家寫得怎麼樣？如果卡住了，請看投影片上的黃金提示：
+首先，在 HTML 裡要建立「套娃結構」，也就是 `black` 包著 `orange`，`orange` 再包著 `green`。
+在 CSS 裡：
+最外層的 `.black` 設 `position: relative` 作為地基。
+中層的 `.orange` 設 `position: absolute; top: 0; right: 0;`。因為它的爸爸是 black，所以它會飛到 black 的右上角。
+最內層的 `.green` 設 `position: absolute; bottom: 0; left: 0;`。因為它的爸爸是 orange，所以它會以 orange 的身體為基準，飛到 orange 的左下角！
+看看你的程式碼是不是像這樣一層包一層？這就是 Position 的精髓啦！
+-->
+
 ---
 layout: end
 ---
 
 # CSS 進階工具完成
 ### 背景、定位、堆疊，全部就位！
+
+<!--
+恭喜大家！成功收服了背景、定位、堆疊與優先權這四隻大魔王！
+現在你已經具備了控制網頁任何角落、任何層次的能力。
+回去把這幾招多練幾遍，特別是 `relative` 加上 `absolute` 的組合技。
+下堂課，我們要正式跨入一個全新的維度——「JavaScript 程式邏輯世界」，我們要開始讓網頁學會計算、思考 and 回應！大家回去把大腦充飽電，下堂課見！
+-->

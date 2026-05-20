@@ -12,7 +12,12 @@
       "PowerShell(New-Item *)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\AppData\\\\Local\\\\Temp\\\\\" | Where-Object {$_.Name -match \"css3\"} | Sort-Object Name | Select-Object Name)",
       "Bash(not exist *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(New-Item *)",
+      "Bash(Select-String \"images|public|assets\")",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" | Where-Object { $_.PSIsContainer } | Select-Object FullName)"
     ]
   }
 }
