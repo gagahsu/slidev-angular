@@ -1,0 +1,26 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>⚔️ RPG 遊戲示範</h2>
+    <p class="hint"><code>(click)="方法名()"</code> 呼叫 TypeScript 的方法</p>
+    <div class="status-card">
+      <p>角色：<strong>{{ playerName }}</strong></p>
+      <p>HP：<strong>{{ hp }} / 100 {{ statusText }}</strong></p>
+      <p>MP：<strong>{{ mp }} / 50</strong></p>
+      <p>金幣：<strong>{{ gold }} 💰</strong></p>
+    </div>
+    <div class="message-box">📢 {{ message }}</div>
+    <div class="btn-row">
+      <button (click)="takeDamage(20)">受傷 -20</button>
+      <button (click)="takeDamage(50)">受傷 -50</button>
+      <button (click)="useMagic()">魔法 (-10MP)</button>
+      <button (click)="pickGold(50)">金幣 +50</button>
+      <button (click)="rest()">🛌 休息回復</button>
+    </div>
+    <div class="log-box">
+      @for (entry of log; track entry) {
+        <div>{{ entry }}</div>
+      }
+    </div>
+  </section>
+</div>

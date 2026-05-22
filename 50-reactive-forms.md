@@ -150,10 +150,6 @@ Reactive Forms 由三種積木組合而成：
 - `FormArray` 可包含多個 `FormGroup`，每組代表一筆動態資料
 - 整份表單通常以一個根 `FormGroup` 為起點
 
-<div class="flex justify-center mt-2">
-  <img src="/images/50-reactive-forms/form-building-blocks-diagram.png" class="rounded shadow-md max-h-52" />
-</div>
-
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -177,8 +173,6 @@ class: flex flex-col justify-center items-center text-center
 - 每道題目包含：題目名稱（`qTitle`）、題目類型（`qType`）、是否必填（`need`）
 
 ---
-layout: two-cols
----
 
 # 動態增減欄位 — 初始化（一）
 
@@ -190,7 +184,9 @@ layout: two-cols
 - `surveyTitle`：`['', Validators.required]` — 初始值為空字串，加必填驗證
 - `questions`：`fb.array([])` — 初始化空的 `FormArray`
 
-::right::
+---
+
+# 動態增減欄位 — 初始化（一）程式碼
 
 ```typescript
 // app.component.ts
@@ -200,14 +196,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule], // 步驟一：加入 ReactiveFormsModule
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  fb = inject(FormBuilder);
+  fb = inject(FormBuilder); // 步驟二：取得 FormBuilder 實例
 
-  // 定義表單結構
+  // 步驟三：以 fb.group() 定義根 FormGroup
   form = this.fb.group({
     surveyTitle: ['', Validators.required], // 問卷標題
     questions: this.fb.array([])            // 題目空陣列
@@ -215,8 +211,6 @@ export class AppComponent {
 }
 ```
 
----
-layout: two-cols
 ---
 
 # 動態增減欄位 — 初始化（二）
@@ -229,7 +223,9 @@ layout: two-cols
 
 建立 getter `questionsArray`，方便 TypeScript 與 HTML 存取該 `FormArray`，需將 `form.get('questions')` 強型轉換為 `FormArray`。
 
-::right::
+---
+
+# 動態增減欄位 — 初始化（二）程式碼
 
 ```typescript
 // app.component.ts
@@ -239,11 +235,11 @@ export class AppComponent {
   fb = inject(FormBuilder);
 
   form = this.fb.group({
-    surveyTitle: ['', Validators.required],
-    questions: this.fb.array([])
+    surveyTitle: ['', Validators.required], // 第一個元素：初始值；第二個：驗證規則
+    questions: this.fb.array([])            // fb.array([])：建立空的 FormArray
   });
 
-  // 建立 getter 方便在 HTML 讀取
+  // getter：將 form.get('questions') 轉型為 FormArray 供外部存取
   get questionsArray(): FormArray {
     return this.form.get('questions') as FormArray;
   }
@@ -251,21 +247,14 @@ export class AppComponent {
 ```
 
 ---
-layout: two-cols
----
 
 # 動態增減欄位 — 新增題目
 
 呼叫 `addQuestion()` 時：
 
-1. 以 `fb.group()` 建立新的題目 `FormGroup`，包含三個欄位：
-   - `qTitle`：題目名稱（必填）
-   - `qType`：題目類型，預設 `'M'`
-   - `need`：是否必填，預設 `false`
+1. 以 `fb.group()` 建立新的題目 `FormGroup`，包含三個欄位：`qTitle`（必填）、`qType`（預設 `'M'`）、`need`（預設 `false`）
 2. 以 `questionsArray.push()` 將新 `FormGroup` 推入陣列
 3. `console.log(this.form.value)` 可查看目前表單完整資料
-
-::right::
 
 ```typescript
 // app.component.ts
@@ -284,16 +273,12 @@ addQuestion() {
 ```
 
 ---
-layout: two-cols
----
 
 # 動態增減欄位 — 刪除題目
 
 刪除操作與 JavaScript Array 概念相同：指定要移除資料的索引位置，呼叫 `FormArray` 的 `removeAt(index)` 方法即可移除對應的 `FormGroup`。
 
 **`removeAt(index)`：** `FormArray` 的內建方法，依位置移除元素，後續索引自動重新排列。
-
-::right::
 
 ```typescript
 // app.component.ts
@@ -313,16 +298,12 @@ class: flex flex-col justify-center items-center text-center
 # Template Binding
 
 ---
-layout: two-cols
----
 
 # 畫面顯示 — 繫結 formGroup（一）
 
 **步驟一：** 在 HTML 的 `<form>` 標籤加上 `[formGroup]="form"`，將整個表單繫結至 TypeScript 中的 `form` 變數。
 
 `ReactiveFormsModule` 必須已匯入至 `@Component` 的 `imports`，否則 `[formGroup]` 指令無法識別，畫面會報錯。
-
-::right::
 
 ```html
 <!-- app.component.html -->
@@ -360,8 +341,6 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 ```
 
 ---
-layout: two-cols
----
 
 # 畫面顯示 — 繫結 formArrayName（三）
 
@@ -371,7 +350,9 @@ layout: two-cols
 2. 以 `@for` 迭代 `questionsArray.controls`，用 `$index` 追蹤索引
 3. 迴圈內的 `<div>` 加上 `[formGroupName]="$index"`，對應每筆題目的 `FormGroup`
 
-::right::
+---
+
+# 畫面顯示 — 繫結 formArrayName（三）程式碼
 
 ```html
 <!-- app.component.html -->

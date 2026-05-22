@@ -72,10 +72,6 @@ class: flex flex-col justify-center items-center text-center
 
 Chart.js 是一套基於 HTML5 `<canvas>` 的開源圖表函式庫，可在 Angular 專案中直接引用。
 
-<div class="grid grid-cols-2 gap-4 my-3">
-
-**支援的圖表類型**
-
 | 圖表類型 | 說明 |
 | --- | --- |
 | 長條圖（Bar chart） | 比較各類別數值大小 |
@@ -84,12 +80,6 @@ Chart.js 是一套基於 HTML5 `<canvas>` 的開源圖表函式庫，可在 Angu
 | 環狀圖（Doughnut chart） | 圓餅圖的中空變形版本 |
 | 泡泡圖（Bubble chart） | 以座標與泡泡大小呈現三維資料 |
 | 混合圖（Mixed chart） | 結合兩種以上圖表類型 |
-
-**視覺範例**
-
-<img src="/images/41-pie-chart/chartjs-chart-types-overview.png" class="rounded shadow-md max-h-80" />
-
-</div>
 
 ---
 
@@ -181,8 +171,6 @@ class: flex flex-col justify-center items-center text-center
 
 - `id="chart"` 用於在 TypeScript 中透過 DOM 取得該元素
 - Chart.js 以 `<canvas>` 作為繪圖表面，不使用其他 HTML 元素
-
-<img src="/images/41-pie-chart/canvas-element-in-html-template.png" class="rounded shadow-md max-h-80" />
 
 ---
 
@@ -313,23 +301,6 @@ const chart = new Chart(ctx, {
 
 `hoverOffset` 設為正整數時，滑鼠移至某個區塊，該區塊會向圓心外側偏移對應像素，提升可讀性。
 
-<div class="grid grid-cols-2 gap-4 my-3">
-<div>
-
-**type: 'pie'（圓餅圖）**
-
-<img src="/images/41-pie-chart/pie-chart-type-example.png" class="rounded shadow-md max-h-80" />
-
-</div>
-<div>
-
-**type: 'doughnut'（環狀圖）**
-
-<img src="/images/41-pie-chart/doughnut-chart-type-example.png" class="rounded shadow-md max-h-80" />
-
-</div>
-</div>
-
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -375,17 +346,27 @@ class: flex flex-col justify-center items-center text-center
 ---
 
 # 練習：繪製支出圓餅圖
-### 解題提示
+### 解題提示（一）
 
 1. 終端機執行 `npm install chart.js`
 2. HTML 中加入 `<canvas id="chart"></canvas>`
-3. TypeScript 中：
+3. TypeScript 中匯入 Chart.js 並取得 canvas 元素：
 
 ```typescript
 import Chart from 'chart.js/auto';
 
 ngAfterViewInit() {
   const ctx = document.getElementById('chart') as HTMLCanvasElement;
+```
+
+---
+
+# 練習：繪製支出圓餅圖
+### 解題提示（二）
+
+4. 建立圖表並傳入資料：
+
+```typescript
   new Chart(ctx, {
     type: 'pie',
     data: {

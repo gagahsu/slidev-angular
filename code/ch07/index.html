@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>第07章 - HTML 標籤總覽</title>
+</head>
+<body>
+
+  <!--
+    === 第07章：HTML 標籤總覽示範 ===
+
+    這個檔案示範了 HTML 所有常用標籤的用法。
+    直接用瀏覽器打開，看看每個標籤在瀏覽器裡長什麼樣子！
+
+    HTML 的邏輯就像「樂高積木」：
+    → 每個標籤都是一種形狀的積木
+    → 把它們堆疊組合，就能蓋出各種樣子的房子（網頁）
+  -->
+
+  <!-- ============================
+       1. 標題標籤 h1 ~ h6
+       ============================ -->
+  <h1>這是 h1 最大標題</h1>
+  <h2>這是 h2 二級標題</h2>
+  <h3>這是 h3 三級標題</h3>
+  <h4>這是 h4 四級標題</h4>
+  <h5>這是 h5 五級標題</h5>
+  <h6>這是 h6 最小標題</h6>
+
+  <hr>  <!-- 分隔線 -->
+
+  <!-- ============================
+       2. 段落與文字
+       ============================ -->
+  <p>這是一個段落標籤 &lt;p&gt;，它是「區塊元素」，會自動換行。</p>
+  <p>這是第二個段落，每個 &lt;p&gt; 之間會有一點空隙。</p>
+
+  <!-- span 是「行內元素」，不會換行 -->
+  <p>
+    這段文字裡有
+    <span style="color: red;">紅色的部分</span>
+    和
+    <span style="color: blue;">藍色的部分</span>，
+    它們都在同一行。
+  </p>
+
+  <hr>
+
+  <!-- ============================
+       3. 連結與圖片
+       ============================ -->
+
+  <!-- a 標籤：超連結 -->
+  <!-- href：指定連結目標網址 -->
+  <!-- target="_blank"：在新分頁開啟 -->
+  <a href="https://angular.dev" target="_blank">點我前往 Angular 官方網站</a>
+
+  <br>  <!-- 換行 -->
+
+  <!-- img 標籤：圖片（注意：是單標籤，沒有結尾標籤！） -->
+  <!-- src：圖片的路徑或網址 -->
+  <!-- alt：當圖片無法顯示時，顯示的替代文字 -->
+  <img src="https://angular.dev/assets/images/logos/angular/angular.svg"
+       alt="Angular Logo"
+       width="100">
+
+  <hr>
+
+  <!-- ============================
+       4. 列表
+       ============================ -->
+
+  <!-- ul：無序列表（bullet points，前面是圓點） -->
+  <h3>我的興趣（無序列表）</h3>
+  <ul>
+    <li>打程式</li>
+    <li>看電影</li>
+    <li>打籃球</li>
+  </ul>
+
+  <!-- ol：有序列表（前面是數字 1, 2, 3...） -->
+  <h3>學習順序（有序列表）</h3>
+  <ol>
+    <li>HTML - 骨架</li>
+    <li>CSS - 外觀</li>
+    <li>JavaScript - 互動</li>
+    <li>Angular - 框架</li>
+  </ol>
+
+  <hr>
+
+  <!-- ============================
+       5. 表格
+       ============================ -->
+  <h3>成績單（表格）</h3>
+
+  <!-- table：整個表格的容器 -->
+  <table border="1">
+    <!-- thead：表格標頭（欄位名稱那一列） -->
+    <thead>
+      <tr>  <!-- tr：一橫列（Table Row） -->
+        <th>姓名</th>   <!-- th：標頭格（Table Header，字會加粗置中） -->
+        <th>數學</th>
+        <th>英文</th>
+      </tr>
+    </thead>
+
+    <!-- tbody：表格主體（實際資料） -->
+    <tbody>
+      <tr>
+        <td>小明</td>   <!-- td：資料格（Table Data） -->
+        <td>90</td>
+        <td>85</td>
+      </tr>
+      <tr>
+        <td>小華</td>
+        <td>70</td>
+        <td>95</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ============================
+       6. 表單相關標籤
+       ============================ -->
+  <h3>表單（form）</h3>
+
+  <!-- form：表單容器，收集使用者輸入的資料 -->
+  <form>
+
+    <!-- label：欄位的說明文字 -->
+    <!-- input type="text"：單行文字輸入框 -->
+    <label>姓名：</label>
+    <input type="text" placeholder="請輸入姓名">
+    <br><br>
+
+    <!-- input type="number"：數字輸入框 -->
+    <label>年齡：</label>
+    <input type="number" placeholder="請輸入年齡">
+    <br><br>
+
+    <!-- input type="password"：密碼輸入框（字會變成圓點） -->
+    <label>密碼：</label>
+    <input type="password" placeholder="請輸入密碼">
+    <br><br>
+
+    <!-- input type="radio"：單選按鈕（name 相同的選項只能選一個） -->
+    <label>性別：</label>
+    <input type="radio" name="gender" value="male"> 男
+    <input type="radio" name="gender" value="female"> 女
+    <br><br>
+
+    <!-- input type="checkbox"：複選框 -->
+    <label>興趣：</label>
+    <input type="checkbox" value="coding"> 寫程式
+    <input type="checkbox" value="music"> 音樂
+    <input type="checkbox" value="travel"> 旅遊
+    <br><br>
+
+    <!-- select & option：下拉選單 -->
+    <label>學歷：</label>
+    <select>
+      <option value="high-school">高中</option>
+      <option value="bachelor">大學</option>
+      <option value="master">研究所</option>
+    </select>
+    <br><br>
+
+    <!-- textarea：多行文字輸入框 -->
+    <label>自我介紹：</label>
+    <br>
+    <textarea rows="5" cols="40" placeholder="請輸入自我介紹..."></textarea>
+    <br><br>
+
+    <!-- input type="file"：上傳檔案按鈕 -->
+    <label>上傳大頭照：</label>
+    <input type="file">
+    <br><br>
+
+    <!-- button type="submit"：送出表單 -->
+    <button type="submit">送出</button>
+
+    <!-- button type="button"：一般按鈕（不會送出表單） -->
+    <button type="button">取消</button>
+
+  </form>
+
+  <hr>
+
+  <!-- ============================
+       7. div 和 span（最常用的容器）
+       ============================ -->
+  <h3>div 與 span 的差別</h3>
+
+  <!-- div：區塊容器，會自動換行，佔滿整行寬度 -->
+  <div style="background-color: lightblue; padding: 10px;">
+    我是 div，我是「區塊元素」，我會獨佔整行。
+  </div>
+  <div style="background-color: lightgreen; padding: 10px;">
+    我是第二個 div，我在新的一行。
+  </div>
+
+  <br>
+
+  <!-- span：行內容器，不換行，只佔內容的寬度 -->
+  我是文字，旁邊有
+  <span style="background-color: yellow;">一個 span</span>
+  和另一個
+  <span style="background-color: pink;">span</span>，
+  我們都在同一行。
+
+</body>
+</html>

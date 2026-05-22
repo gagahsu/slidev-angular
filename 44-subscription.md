@@ -79,9 +79,10 @@ class: flex flex-col justify-center items-center text-center
 - **未訂閱**：頻道更新再多內容，使用者都不會收到任何通知。
 - **已訂閱**：頻道一有新內容，訂閱者立即收到推播通知。
 
-<div class="flex justify-center mt-4">
-  <img src="/images/44-subscription/subscription-concept-diagram.png" class="rounded shadow-md max-h-80" />
-</div>
+| | 未訂閱 | 已訂閱 |
+|---|---|---|
+| 頻道有更新時 | 不會收到通知 | 立即收到推播通知 |
+| Angular 元件角度 | `ngOnInit` 只讀取一次，資料更新後無感知 | 資料一變更，訂閱回呼自動觸發 |
 
 ---
 layout: section
@@ -271,9 +272,18 @@ export class LoadingService {
 }
 ```
 
+---
+
+# 撰寫 next 方法 — 注意事項
+
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>注意：</b> 修改訂閱內容只能使用 <code>next()</code>，且必須呼叫 <code>private</code> 的原始 Subject（<code>loading$</code>），而非公開的 <code>_loading$</code>，因為 Observable 不具備 <code>next()</code> 方法。
 </div>
+
+| 變數 | 型別 | 可呼叫 `next()` | 說明 |
+|---|---|---|---|
+| `loading$` | `BehaviorSubject` | ✅ | Service 內部使用，負責推送資料 |
+| `_loading$` | `Observable` | ❌ | 對外公開，僅供訂閱觀察 |
 
 ---
 layout: section
@@ -347,9 +357,6 @@ ngOnInit(): void {
 </div>
 </div>
 
-<div class="flex justify-center mt-2">
-  <img src="/images/44-subscription/subscription-flow-overview.png" class="rounded shadow-md max-h-80" />
-</div>
 
 ---
 layout: end

@@ -1,0 +1,13 @@
+/* 整個應用的版面：左側邊欄 + 右側主內容 */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  font-family: Arial, '微軟正黑體', sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+  background: #f8f9fa;
+  overflow-y: auto;
+}

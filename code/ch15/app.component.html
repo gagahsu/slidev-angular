@@ -1,0 +1,48 @@
+<!--
+  === 第15章：方法的 HTML 示範（RPG 小遊戲）===
+
+  (click)="方法名稱()"   → 點擊時呼叫方法
+  (click)="方法名稱(值)" → 點擊時帶參數呼叫方法
+  {{ 變數名稱 }}          → 顯示變數的值
+-->
+
+<div style="max-width: 500px; margin: 40px auto; font-family: Arial, sans-serif; padding: 20px; border: 2px solid #1a5c5c; border-radius: 12px;">
+
+  <h2 style="color: #1a5c5c; text-align: center;">⚔️ RPG 小遊戲</h2>
+
+  <!-- 顯示角色狀態 -->
+  <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+    <p><strong>角色：</strong>{{ playerName }}</p>
+    <p><strong>HP：</strong>{{ hp }} / 100 &nbsp; {{ statusText }}</p>
+    <p><strong>MP：</strong>{{ mp }} / 50</p>
+    <p><strong>金幣：</strong>{{ gold }} 💰</p>
+  </div>
+
+  <!-- 訊息顯示區 -->
+  <div style="background: #e8f5e9; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+    📢 {{ message }}
+  </div>
+
+  <!-- 動作按鈕 -->
+  <!-- (click)="方法名稱()" → 點擊時呼叫 AppComponent 的方法 -->
+  <button (click)="takeDamage(20)" style="margin: 4px; padding: 8px 16px;">
+    受到 20 傷害
+  </button>
+
+  <button (click)="takeDamage(50)" style="margin: 4px; padding: 8px 16px;">
+    受到 50 傷害
+  </button>
+
+  <button (click)="useMagic()" style="margin: 4px; padding: 8px 16px;">
+    使用魔法 (-10 MP)
+  </button>
+
+  <button (click)="pickUpGold(50)" style="margin: 4px; padding: 8px 16px;">
+    撿起金幣 (+50)
+  </button>
+
+  <button (click)="rest()" style="margin: 4px; padding: 8px 16px; background: #5eada0; color: white; border: none; border-radius: 4px; cursor: pointer;">
+    🛌 休息（全回復）
+  </button>
+
+</div>

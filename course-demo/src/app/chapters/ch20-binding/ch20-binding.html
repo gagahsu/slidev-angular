@@ -1,0 +1,30 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+
+  <section class="demo-section">
+    <h2>① 插值 <code>{{ '{{' }}{{ '}}' }}</code>（TS → HTML）</h2>
+    <p>頁面標題：{{ pageTitle }}</p>
+    <p>大寫：{{ pageTitle.toUpperCase() }}</p>
+  </section>
+
+  <section class="demo-section">
+    <h2>② 屬性綁定 <code>[ ]</code>（TS 變數 → HTML 屬性）</h2>
+    <img [src]="logoUrl" alt="Angular Logo" width="60">
+    <p><button [disabled]="isDisabled">這顆按鈕由 isDisabled 控制</button>
+    <button (click)="toggleDisabled()">切換啟用/禁用</button></p>
+  </section>
+
+  <section class="demo-section">
+    <h2>③ 事件綁定 <code>( )</code>（使用者動作 → TS 方法）</h2>
+    <button (click)="onButtonClick()">點我</button>
+    <span>已點擊 {{ clickCount }} 次</span>
+  </section>
+
+  <section class="demo-section">
+    <h2>④ 雙向綁定 <code>[( )]</code>（ngModel，需 FormsModule）</h2>
+    <input [(ngModel)]="inputName" placeholder="輸入名字">
+    <p>即時顯示：<strong>{{ inputName || '（還沒輸入）' }}</strong></p>
+    <input type="range" [(ngModel)]="fontSize" min="12" max="36">
+    <p [style.fontSize.px]="fontSize">這段文字大小由滑桿控制（目前 {{ fontSize }}px）</p>
+  </section>
+</div>

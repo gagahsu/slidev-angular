@@ -189,7 +189,8 @@ The dist Folder and Deployment
 
 `ng build` 成功後，專案根目錄會新增 `dist/` 資料夾，結構如下：
 
-<div class="flex justify-center"><img src="/images/54-angular-build/dist-folder-structure.png" class="rounded shadow-md max-h-80" /></div>
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
 
 | 檔案 | 說明 |
 | --- | --- |
@@ -198,6 +199,14 @@ The dist Folder and Deployment
 | `polyfills-[hash].js` | 瀏覽器相容性補丁 |
 | `styles-[hash].css` | 全域樣式表 |
 | `chunk-[hash].js` | 額外切割的程式碼區塊（含 Lazy 模組） |
+
+</div>
+<div>
+
+<img src="/images/54-angular-build/dist-folder-structure.png" class="rounded shadow-md w-full" />
+
+</div>
+</div>
 
 ---
 

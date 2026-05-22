@@ -118,33 +118,20 @@ class: flex flex-col justify-center items-center text-center
 
 Observable 是一個**多值的惰性 Push 集合**。
 
-<div class="grid grid-cols-2 gap-4 my-3">
-<div>
-
-**特性說明**
-
 - **惰性（Lazy）**：在被訂閱之前不會執行
 - **Push 模型**：由 Observable 決定何時推送值給 Observer
 - **多值**：可在不同時間點推送多個值
 - **可同步或非同步**：兩者皆可
 
-**與 Promise 的差異**
+---
+
+# Observable 與 Promise 的差異
 
 | | Observable | Promise |
 |---|---|---|
 | 值數量 | 多值 | 單值 |
 | 惰性 | 是 | 否 |
 | 可取消 | 是 | 否 |
-
-</div>
-<div>
-
-**資料推送比較**
-
-<div class="flex justify-center"><img src="/images/53-rxjs/observable-push-model-comparison.png" class="rounded shadow-md max-h-80" /></div>
-
-</div>
-</div>
 
 ---
 
@@ -397,9 +384,6 @@ class: flex flex-col justify-center items-center text-center
 
 Subject 是一種特殊型別的 Observable，允許將值**多播**（Multicast）到多個 Observer。
 
-<div class="grid grid-cols-2 gap-4 my-3">
-<div>
-
 **Observable 與 Subject 的差異**
 
 | | Observable | Subject |
@@ -407,14 +391,16 @@ Subject 是一種特殊型別的 Observable，允許將值**多播**（Multicast
 | 播送方式 | 單播（Unicast） | 多播（Multicast） |
 | 執行次數 | 每個訂閱各自獨立執行 | 所有訂閱共享同一執行 |
 | 同時具備 | 只有 Observable | Observable + Observer |
+| 應用場景 | API 呼叫、各自獨立的資料流 | 登入/登出後，所有訂閱 auth 狀態的元件同時切換畫面 |
 
 **Subject 的雙重身份**
 
 - 作為 **Observable**：可被訂閱
 - 作為 **Observer**：可呼叫 `next()`、`error()`、`complete()` 主動推送值
 
-</div>
-<div>
+---
+
+# Subject 概念 — 程式碼範例
 
 ```typescript
 import { Subject } from 'rxjs';
@@ -437,9 +423,6 @@ subject.next(2);
 // observerA: 2
 // observerB: 2
 ```
-
-</div>
-</div>
 
 ---
 
@@ -481,6 +464,10 @@ RxJS 提供多種 Subject 變體，適用於不同的多播場景。
 | `BehaviorSubject(初始值)` | 持有當前值，新訂閱者立即收到最新值 |
 | `ReplaySubject(n)` | 快取最近 n 個值，新訂閱者可重播歷史值 |
 | `AsyncSubject` | 僅在 `complete()` 後，發出最後一個值 |
+
+---
+
+# Subject 的變體類型 — BehaviorSubject 範例
 
 ```typescript
 import { BehaviorSubject } from 'rxjs';

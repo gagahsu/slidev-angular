@@ -1,0 +1,37 @@
+<!--
+  === 第21章：路由的 HTML 設定 ===
+
+  重要元素：
+  ① <router-outlet>  → 路由的「切換插槽」，Angular 會把對應元件放到這裡
+  ② routerLink       → 路由版的超連結（不會讓瀏覽器重新整理頁面）
+  ③ routerLinkActive → 當連結對應的路由「活躍中」時，自動加上指定的 CSS class
+-->
+
+<!-- 導覽列（所有頁面都顯示） -->
+<nav style="background: #1a5c5c; padding: 12px 24px; display: flex; gap: 16px; align-items: center;">
+  <span style="color: white; font-weight: bold; margin-right: 16px;">🅰️ 我的應用</span>
+
+  <!--
+    routerLink="/路徑"    → 點擊後跳轉到指定路徑
+    routerLinkActive="active"  → 路徑匹配時，自動加上 class="active"
+  -->
+  <a routerLink="/" routerLinkActive="active"
+     style="color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 12px; border-radius: 6px;">
+    首頁
+  </a>
+
+  <a routerLink="/about" routerLinkActive="active"
+     style="color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 12px; border-radius: 6px;">
+    關於
+  </a>
+
+  <!-- 帶動態參數的連結（[routerLink] 用陣列傳入路徑 + 參數） -->
+  <a [routerLink]="['/courses', 1]" routerLinkActive="active"
+     style="color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 12px; border-radius: 6px;">
+    課程 #1
+  </a>
+</nav>
+
+<!-- 路由插槽：Angular 會把對應的元件放在這裡 -->
+<!-- 相當於「這個空間由路由決定放什麼元件」 -->
+<router-outlet></router-outlet>

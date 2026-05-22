@@ -1,0 +1,35 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>① 插值顯示變數</h2>
+    <div class="info-card">
+      <p>姓名：<strong>{{ userName }}</strong></p>
+      <p>年齡：<strong>{{ age }}</strong>，明年：<strong>{{ age + 1 }}</strong></p>
+      <p>狀態：<strong>{{ statusLabel }}</strong></p>
+      <p>歡迎語（getter）：<strong>{{ welcomeMessage }}</strong></p>
+      <p>興趣：{{ hobbies.join('、') }}</p>
+    </div>
+    <button (click)="toggleStatus()">切換狀態</button>
+  </section>
+  <section class="demo-section">
+    <h2>② 計數器示範</h2>
+    <p class="hint">方法裡用 <code>this.count</code> 修改，畫面自動更新</p>
+    <div class="counter-row">
+      <button (click)="decrement()">－</button>
+      <span class="count-num">{{ count }}</span>
+      <button (click)="increment()">＋</button>
+      <button (click)="reset()">重置</button>
+    </div>
+  </section>
+  <section class="demo-section">
+    <h2>③ let / const / var 比較</h2>
+    <table class="compare-table">
+      <thead><tr><th>關鍵字</th><th>可改值？</th><th>建議</th></tr></thead>
+      <tbody>
+        <tr><td><code>const</code></td><td>❌</td><td>✅ 不變的值優先</td></tr>
+        <tr><td><code>let</code></td><td>✅</td><td>✅ 一般變數首選</td></tr>
+        <tr><td><code>var</code></td><td>✅</td><td>❌ 有 Hoisting，禁用</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>

@@ -1,0 +1,9 @@
+<div class="product-card" [class.out-of-stock]="!inStock">
+  <h3>{{ name }}</h3>
+  <p class="price">NT$ {{ price }}</p>
+  @if (inStock) {
+    <button (click)="onAddToCart()">加入購物車</button>
+  } @else {
+    <button disabled>缺貨中</button>
+  }
+</div>

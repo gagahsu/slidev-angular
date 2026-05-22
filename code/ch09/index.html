@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>第09章 - CSS 基礎語法</title>
+
+  <!--
+    CSS 有三種寫法：
+    ① Inline Style：直接寫在標籤的 style 屬性（最低優先，但最常覆蓋其他）
+    ② 內部 <style> 標籤：寫在 <head> 裡的 <style> 標籤
+    ③ 外部 CSS 檔：用 <link> 引入獨立的 .css 檔（推薦做法）
+
+    這個範例同時示範三種方式，讓你看出差異。
+  -->
+
+  <!-- 方法③：引入外部 CSS 檔（最推薦的做法） -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- 方法②：在 <head> 裡寫 <style> 標籤 -->
+  <style>
+    /*
+      === 元素選擇器（Element Selector）===
+      直接用標籤名稱當選擇器
+      → 會影響頁面上「所有」這種標籤
+
+      語法：
+      標籤名稱 {
+        屬性: 值;
+      }
+    */
+
+    /* 讓所有 h2 都變成深藍色 */
+    h2 {
+      color: #1a5c5c;
+    }
+
+    /* 讓所有 p 標籤的行高是 1.8 倍（更好讀） */
+    p {
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+
+  <!--
+    === 第09章：CSS 基礎語法示範 ===
+
+    請配合 style.css 一起看！
+    打開瀏覽器後，觀察每個區塊的樣式是如何被設定的。
+  -->
+
+  <h1>第09章 — CSS 基礎語法</h1>
+
+  <hr>
+
+  <!-- ============================
+       方法①：Inline Style
+       ============================ -->
+  <h2>① Inline Style（行內樣式）</h2>
+
+  <!--
+    把 CSS 直接寫在標籤的 style="" 裡
+    格式：style="屬性名稱: 值; 屬性名稱: 值;"
+    → 每個屬性後面要加分號 ;
+  -->
+  <p style="color: red;">這段文字用 Inline Style 設定成紅色。</p>
+
+  <p style="color: blue; font-size: 20px;">
+    這段文字同時設定了藍色和 20px 大小。
+  </p>
+
+  <p style="background-color: yellow; padding: 10px; border-radius: 5px;">
+    ⚠️ color 是文字顏色；background-color 才是背景色！
+  </p>
+
+  <hr>
+
+  <!-- ============================
+       方法②：<style> 標籤（元素選擇器示範）
+       ============================ -->
+  <h2>② 元素選擇器（Element Selector）</h2>
+
+  <!--
+    上面 <head> 裡的 style 設定了 h2 和 p 的全域樣式
+    所以這裡所有的 h2 和 p 都會受到影響
+  -->
+  <p>這段文字受到元素選擇器 <code>p { line-height: 1.8; }</code> 的影響。</p>
+  <p>元素選擇器會影響頁面上「所有」相同的標籤，沒有例外。</p>
+
+  <hr>
+
+  <!-- ============================
+       Class 選擇器（在 style.css 裡定義）
+       ============================ -->
+  <h2>③ Class 選擇器（Class Selector）</h2>
+
+  <!--
+    Class 選擇器讓你只影響「特定的」標籤
+    在 HTML 裡加上 class="XXX"
+    在 CSS 裡用 .XXX { } 來選取
+
+    一個標籤可以有多個 class，用空格分開：
+    class="card highlight"
+  -->
+  <p class="highlight">
+    這段文字有 class="highlight"，會套用 style.css 裡的 .highlight 樣式。
+  </p>
+
+  <p>這段文字沒有 class，不會受到 .highlight 影響。</p>
+
+  <p class="highlight">
+    這段文字也有 class="highlight"，同樣套用高亮樣式。
+  </p>
+
+  <hr>
+
+  <!-- ============================
+       常用 CSS 屬性示範
+       ============================ -->
+  <h2>④ 常用 CSS 屬性</h2>
+
+  <!-- 卡片樣式（用 .card class） -->
+  <div class="card">
+    <h3>這是一個卡片</h3>
+    <p>用 CSS 的 border、padding、border-radius、box-shadow 做出卡片效果。</p>
+  </div>
+
+  <div class="card info">
+    <h3>這是藍色資訊卡片</h3>
+    <p>同時套用了 .card 和 .info 兩個 class，樣式會疊加。</p>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       Box Model 盒子模型
+       ============================ -->
+  <h2>⑤ Box Model（盒子模型）</h2>
+
+  <!--
+    每個 HTML 元素都是一個「盒子」，由外到內分為四層：
+    ① Margin（外距）：盒子與外部的距離
+    ② Border（邊框）：盒子的邊框線
+    ③ Padding（內距）：內容與邊框的距離
+    ④ Content（內容）：文字、圖片等實際內容
+  -->
+
+  <div class="box-demo">
+    <p>
+      這個 div 有：<br>
+      margin: 20px（外距）<br>
+      border: 3px solid（邊框）<br>
+      padding: 20px（內距）<br>
+      content：這些文字
+    </p>
+  </div>
+
+  <!-- CSS Units 單位說明 -->
+  <h3>常用 CSS 單位</h3>
+  <ul>
+    <li><code>px</code>：像素，固定大小（例：font-size: 16px）</li>
+    <li><code>%</code>：相對於父元素的百分比（例：width: 50%）</li>
+    <li><code>rem</code>：相對於根元素 html 的大小（例：1rem = 16px）</li>
+    <li><code>em</code>：相對於當前元素的字體大小</li>
+  </ul>
+
+</body>
+</html>

@@ -1,0 +1,284 @@
+/*
+  === 第10章：CSS 進階樣式 - style.css ===
+
+  本章 CSS 重點：
+  1. :hover 與 :active 互動效果 + transition 過渡動畫
+  2. display: flex（Flexbox）
+  3. justify-content（主軸對齊）
+  4. align-items（次軸對齊）
+*/
+
+/* ============================================================
+   基礎全域樣式
+   ============================================================ */
+
+body {
+  font-family: Arial, 微軟正黑體, sans-serif;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+h1 {
+  text-align: center;
+  color: #1a5c5c;
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #2c3e50;
+  border-bottom: 2px solid #5eada0;
+  padding-bottom: 8px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #dee2e6;
+  margin: 30px 0;
+}
+
+code {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  color: #c0392b;
+}
+
+pre {
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+}
+
+/* ============================================================
+   ① :hover 與 :active 互動效果
+   ============================================================
+
+   CSS 偽類（Pseudo-class）：
+   :hover  = 滑鼠移上去
+   :active = 滑鼠按下去的瞬間
+   :focus  = 元素被選中（例如點了輸入框）
+
+   transition 語法：
+   transition: 屬性 時間 緩動函式;
+   例：transition: all 0.3s ease;
+       → 所有屬性變化都有 0.3 秒的漸變過渡
+*/
+
+.button-group {
+  display: flex;
+  gap: 12px;         /* 子元素之間的間距 */
+  flex-wrap: wrap;   /* 螢幕太窄時自動換行 */
+  margin: 16px 0;
+}
+
+/* 按鈕基礎樣式 */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  /* transition 讓所有屬性的變化有 0.3 秒的動畫過渡效果 */
+  transition: all 0.3s ease;
+}
+
+/* 主要按鈕（綠色） */
+.btn-primary {
+  background-color: #5eada0;
+  color: white;
+}
+
+/* 主要按鈕：滑鼠移上去 */
+.btn-primary:hover {
+  background-color: #4a9688;  /* 顏色變深 */
+  transform: translateY(-2px);  /* 往上移 2px（浮起效果） */
+  box-shadow: 0 4px 12px rgba(94, 173, 160, 0.4);  /* 加上陰影 */
+}
+
+/* 主要按鈕：點擊壓下的瞬間 */
+.btn-primary:active {
+  transform: translateY(0);   /* 回到原位（被按下去的感覺） */
+  box-shadow: none;
+}
+
+/* 次要按鈕（灰色） */
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* 危險按鈕（紅色） */
+.btn-danger {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+/* 卡片 hover 效果 */
+.hover-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 16px 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.hover-card:hover {
+  transform: translateY(-4px);   /* 往上浮起 4px */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);  /* 陰影加深 */
+  border-color: #5eada0;
+}
+
+/* ============================================================
+   ② Flexbox 示範樣式
+   ============================================================
+
+   Flexbox 的核心概念：
+   → 父元素加上 display: flex，子元素就會「彈性排列」
+   → 兩條軸線：主軸（水平）和次軸（垂直）
+*/
+
+/* 示範用的外容器 */
+.demo-container {
+  background-color: #ecf0f1;
+  border: 2px dashed #bdc3c7;
+  border-radius: 8px;
+  padding: 10px;
+  margin: 8px 0 20px 0;
+  min-height: 60px;
+}
+
+/* 沒有 Flexbox 的容器（預設區塊排列） */
+.no-flex {
+  /* 不加 display: flex，子元素會垂直堆疊 */
+}
+
+/* 加上 display: flex，子元素水平排列 */
+.flex-row {
+  display: flex;
+}
+
+/* 示範用的子元素方塊 */
+.box {
+  background-color: #5eada0;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 60px;
+}
+
+/* 高一點的方塊（用來示範 align-items） */
+.box.tall {
+  padding: 24px 20px;
+}
+
+/* ============================================================
+   ③ justify-content 示範（主軸對齊）
+   ============================================================ */
+
+.justify-start    { justify-content: flex-start; }    /* 靠左（預設） */
+.justify-center   { justify-content: center; }         /* 置中 */
+.justify-end      { justify-content: flex-end; }       /* 靠右 */
+.justify-space-between { justify-content: space-between; }  /* 兩端對齊 */
+.justify-space-around  { justify-content: space-around; }   /* 平均分配 */
+
+/* ============================================================
+   ④ align-items 示範（次軸對齊）
+   ============================================================ */
+
+.align-start  { align-items: flex-start; }   /* 靠上 */
+.align-center { align-items: center; }        /* 垂直置中 */
+.align-end    { align-items: flex-end; }      /* 靠下 */
+
+/* ============================================================
+   ⑤ 實用範例：導覽列（Navbar）
+   ============================================================ */
+
+/* 導覽列容器 */
+.navbar {
+  display: flex;                    /* 使用 Flexbox */
+  justify-content: space-between;   /* 左右兩端對齊（Logo 靠左，連結靠右） */
+  align-items: center;              /* 垂直置中 */
+  background-color: #1a5c5c;
+  padding: 12px 24px;
+  border-radius: 10px;
+  margin: 16px 0;
+}
+
+/* 導覽列 Logo */
+.navbar-brand {
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* 導覽連結清單（清除 ul 預設樣式） */
+.navbar-links {
+  list-style: none;   /* 移除圓點 */
+  margin: 0;
+  padding: 0;
+  display: flex;      /* 讓 li 也水平排列 */
+  gap: 8px;           /* 連結之間的間距 */
+}
+
+/* 導覽連結樣式 */
+.navbar-links a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;     /* 移除底線 */
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+/* 連結 hover 效果 */
+.navbar-links a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+/* ============================================================
+   資訊框樣式
+   ============================================================ */
+
+.info-box {
+  background-color: #eaf4fb;
+  border: 1px solid #aed6f1;
+  border-left: 4px solid #3498db;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.info-box h3 {
+  color: #2980b9;
+  margin-top: 20px;
+}

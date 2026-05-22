@@ -1,0 +1,34 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>生命週期執行順序</h2>
+    <div class="lifecycle-steps">
+      <div class="step">① <code>constructor()</code> — 物件建立，注入 Service</div>
+      <div class="step active">② <code>ngOnInit()</code> — <strong>呼叫 API 的最佳時機</strong></div>
+      <div class="step">③ <code>ngAfterViewInit()</code> — 畫面渲染完成</div>
+      <div class="step warn">④ <code>ngOnDestroy()</code> — <strong>清除計時器/訂閱</strong></div>
+    </div>
+  </section>
+  <section class="demo-section">
+    <h2>即時時鐘（ngOnInit 設定的計時器）</h2>
+    <div class="clock">{{ currentTime || '載入中...' }}</div>
+  </section>
+  <section class="demo-section">
+    <h2>使用者清單（1.5 秒後載入）</h2>
+    @if (userData.length === 0) {
+      <p class="hint">載入中...</p>
+    } @else {
+      @for (u of userData; track u) {
+        <div class="user-item">👤 {{ u }}</div>
+      }
+    }
+  </section>
+  <section class="demo-section">
+    <h2>生命週期執行記錄</h2>
+    <div class="log-box">
+      @for (entry of lifecycleLog; track entry) {
+        <div>{{ entry }}</div>
+      }
+    </div>
+  </section>
+</div>

@@ -1,0 +1,174 @@
+/*
+  === 第11章：CSS 進階工具 - style.css ===
+*/
+
+body {
+  font-family: Arial, 微軟正黑體, sans-serif;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
+  color: #333;
+}
+
+h1 { color: #1a5c5c; text-align: center; }
+h2 { color: #2c3e50; border-bottom: 2px solid #5eada0; padding-bottom: 8px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 30px 0; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; color: #c0392b; }
+
+/* ============================================================
+   ① 背景設定示範
+   ============================================================ */
+
+/* 純色背景 */
+.bg-color-demo {
+  background-color: #5eada0;  /* 背景色 */
+  color: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+/* 背景圖片 */
+.bg-image-demo {
+  /* background-image 用 url() 包住圖片來源（可以是網址或本機路徑） */
+  background-image: url('https://picsum.photos/seed/angular/800/300');
+
+  /* no-repeat：圖片不重複（否則預設會像磁磚一樣鋪滿） */
+  background-repeat: no-repeat;
+
+  /* center center：圖片置中 */
+  background-position: center center;
+
+  /* cover：圖片等比例放大到完全蓋滿容器（最常用！） */
+  background-size: cover;
+
+  height: 200px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.8);  /* 文字加陰影，讓字在圖上更清楚 */
+  font-weight: bold;
+}
+
+/* ============================================================
+   ② position 定位示範
+   ============================================================ */
+
+/*
+  「相對定位 + 絕對定位」黃金組合：
+  → 外層父元素設 position: relative（作為絕對定位的參考點）
+  → 內層子元素設 position: absolute（相對父元素定位）
+*/
+
+/* 卡片外層（作為 badge 的定位參考點） */
+.card-wrapper {
+  position: relative;    /* 設為 relative，讓內部的 absolute 以它為基準 */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 16px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 400px;
+}
+
+/* 通知徽章（右上角） */
+.badge {
+  position: absolute;   /* 脫離文件流，相對最近的 relative 父元素定位 */
+  top: -10px;           /* 從父元素「頂部」偏移 -10px（往上超出） */
+  right: -10px;         /* 從父元素「右邊」偏移 -10px（往右超出） */
+
+  background-color: #e74c3c;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 20px;  /* 膠囊型圓角 */
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+/* 固定在右下角的浮動按鈕（position: fixed） */
+.floating-btn {
+  position: fixed;      /* 固定在瀏覽器視窗，不隨頁面捲動 */
+  bottom: 30px;         /* 距離視窗底部 30px */
+  right: 30px;          /* 距離視窗右側 30px */
+
+  background-color: #1a5c5c;
+  color: white;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 50%;   /* 圓形按鈕 */
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 999;         /* 確保浮在所有內容上面 */
+  transition: transform 0.2s ease;
+}
+
+.floating-btn:hover {
+  transform: translateY(-3px);
+}
+
+/* ============================================================
+   ③ z-index 示範
+   ============================================================ */
+
+/* 外層容器 */
+.z-demo-wrapper {
+  position: relative;
+  height: 200px;
+  margin: 20px 0;
+}
+
+/* 共用的方塊樣式 */
+.z-box {
+  position: absolute;   /* 必須設 position（非 static）z-index 才有效 */
+  width: 160px;
+  height: 120px;
+  border-radius: 8px;
+  padding: 12px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+/* z-index: 1 → 最底層（紅色，被其他兩個蓋住大半） */
+.z-one {
+  background-color: #e74c3c;
+  top: 20px;
+  left: 0px;
+  z-index: 1;
+}
+
+/* z-index: 10 → 中間層（藍色） */
+.z-two {
+  background-color: #3498db;
+  top: 50px;
+  left: 80px;
+  z-index: 10;
+}
+
+/* z-index: 50 → 最上層（綠色，蓋在最上面） */
+.z-three {
+  background-color: #2ecc71;
+  top: 80px;
+  left: 160px;
+  z-index: 50;
+}
+
+/* ============================================================
+   ④ CSS 優先權示範
+   ============================================================ */
+
+/* 先定義紅色（先寫的） */
+.text-red { color: red; }
+
+/* 後定義藍色（後寫的，會蓋掉紅色） */
+.text-blue { color: blue; }
+
+/* id 選擇器（優先權比 class 高，前面加 # 而非 .） */
+#id-wins { color: green; }

@@ -1,0 +1,19 @@
+<nav class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">🅰️</div>
+    <div class="logo-text">Angular<br>課程示範</div>
+  </div>
+
+  <ul class="nav-list">
+    @for (ch of chapters; track ch.path) {
+      <li>
+        <a [routerLink]="ch.path"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          <span class="ch-label">{{ ch.label }}</span>
+          <span class="ch-title">{{ ch.title }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>

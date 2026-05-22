@@ -1,0 +1,132 @@
+/*
+  === 第09章：CSS 基礎語法 - style.css ===
+
+  這個檔案負責：
+  1. 全域基礎樣式（body）
+  2. Class 選擇器示範（.highlight、.card）
+  3. Box Model 示範（.box-demo）
+
+  CSS 語法格式：
+  選擇器 {
+    屬性名稱: 值;  ← 每個屬性後面要加分號！
+  }
+*/
+
+/* ============================================================
+   全域基礎樣式
+   ============================================================ */
+
+/* 選到 body（整個頁面的容器） */
+body {
+  font-family: Arial, 微軟正黑體, sans-serif;  /* 字型 */
+  max-width: 900px;    /* 最大寬度，讓內容不會撐太寬 */
+  margin: 30px auto;   /* 上下 30px，左右 auto 自動置中 */
+  padding: 0 20px;     /* 左右各 20px 的內距 */
+  color: #333;         /* 深灰色文字（比純黑更舒適） */
+  background-color: #fafafa;  /* 淡灰色背景 */
+}
+
+/* 分隔線樣式 */
+hr {
+  border: none;
+  border-top: 1px solid #ddd;  /* 只有上方有細線 */
+  margin: 30px 0;
+}
+
+/* code 標籤（程式碼片段） */
+code {
+  background-color: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;  /* 等寬字型 */
+  color: #c0392b;  /* 紅色 */
+}
+
+/* ============================================================
+   Class 選擇器示範
+   ============================================================
+
+   在 CSS 裡，Class 選擇器前面要加「.」（點）
+   例：.highlight 對應 HTML 裡的 class="highlight"
+*/
+
+/* 高亮樣式 */
+.highlight {
+  background-color: #fff3cd;  /* 淡黃色背景 */
+  border-left: 4px solid #ffc107;  /* 左邊黃色粗線 */
+  padding: 10px 15px;         /* 內距 */
+  border-radius: 0 6px 6px 0; /* 右側圓角 */
+}
+
+/* 基本卡片樣式 */
+.card {
+  background-color: white;
+  border: 1px solid #e0e0e0;   /* 1px 的淺灰色邊框 */
+  border-radius: 10px;          /* 圓角 */
+  padding: 20px;                /* 內距 */
+  margin: 16px 0;               /* 上下外距 */
+
+  /*
+    box-shadow 語法：
+    水平位移 垂直位移 模糊半徑 顏色
+    0 = 沒有水平位移
+    2px = 往下偏移 2px
+    8px = 模糊效果
+    rgba(0,0,0,0.1) = 10% 透明度的黑色
+  */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 卡片裡的 h3 */
+.card h3 {
+  color: #1a5c5c;
+  margin-top: 0;  /* 去掉 h3 預設的上方空白 */
+}
+
+/* 藍色資訊卡片（疊加在 .card 上面） */
+.info {
+  border-left: 4px solid #3498db;  /* 左邊藍色粗線 */
+  background-color: #eaf4fb;       /* 淡藍色背景 */
+}
+
+/* ============================================================
+   Box Model 示範
+   ============================================================ */
+
+.box-demo {
+  /*
+    Box Model 四層（由外到內）：
+    Margin → Border → Padding → Content
+  */
+
+  margin: 20px 0;                  /* ① 外距（盒子與外部的距離） */
+  border: 3px dashed #e74c3c;      /* ② 邊框（虛線紅色邊框） */
+  padding: 20px;                   /* ③ 內距（內容與邊框的距離） */
+  /* ④ Content：裡面的文字就是內容 */
+
+  background-color: #fef9e7;       /* 背景色 */
+  border-radius: 6px;
+}
+
+/* ============================================================
+   文字相關屬性示範
+   ============================================================ */
+
+/*
+  常用文字屬性：
+  color           → 文字顏色
+  font-size       → 字體大小（px、rem、em）
+  font-weight     → 字體粗細（bold、normal、數字 100~900）
+  text-align      → 對齊方式（left、center、right）
+  text-decoration → 裝飾（underline、line-through、none）
+  letter-spacing  → 字母/字元間距
+  line-height     → 行高（行距）
+*/
+
+/* 置中大標題 */
+h1 {
+  text-align: center;       /* 置中 */
+  font-size: 2rem;
+  color: #1a5c5c;
+  letter-spacing: 2px;      /* 字元間距加寬一點點 */
+}

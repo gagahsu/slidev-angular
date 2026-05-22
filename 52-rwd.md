@@ -159,7 +159,6 @@ Breakpoints
 | 平板（Tablet） | `601px ~ 768px` | 二欄或單欄 |
 | 手機（Mobile） | `≤ 600px` | 單欄垂直排列 |
 
-<div class="flex justify-center"><img src="/images/52-rwd/breakpoints-device-diagram.png" class="rounded shadow-md max-h-80" /></div>
 
 ---
 layout: section
@@ -176,8 +175,6 @@ class: flex flex-col justify-center items-center text-center
 
 `@media` 規則讓開發者針對特定視窗條件套用獨立的 CSS 樣式，是實作 RWD 最核心的工具。
 
-**基本語法**
-
 ```css
 @media (條件) {
   選擇器 {
@@ -186,7 +183,9 @@ class: flex flex-col justify-center items-center text-center
 }
 ```
 
-**常用條件關鍵字**
+---
+
+# @media 常用條件關鍵字
 
 | 關鍵字 | 說明 | 範例 |
 | --- | --- | --- |
@@ -279,7 +278,6 @@ Visual Result
 | `601px ~ 768px`（平板） | 平板 Media Query | 淺綠色（`lightgreen`） |
 | `≤ 600px`（手機） | 手機 Media Query | 淺粉紅（`lightcoral`） |
 
-<div class="flex justify-center"><img src="/images/52-rwd/media-query-color-result.png" class="rounded shadow-md max-h-80" /></div>
 
 ---
 

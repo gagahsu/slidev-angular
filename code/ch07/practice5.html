@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>練習 5 - 個人名片頁面</title>
+</head>
+<body>
+
+  <!--
+    === 練習 5：個人名片完整頁面 ===
+
+    這是最後的綜合練習！把前面學過的所有標籤都用上。
+
+    頁面結構分為五個區塊：
+    ① 頭像與自我介紹（h2 + p + img）
+    ② 關於我（h3 + p）
+    ③ 我的興趣（h3 + ul + li）
+    ④ 聯絡方式（h3 + p + a 連結）
+    ⑤ 我的作品（table 表格）
+    ⑥ 留言給我（form 表單）
+
+    請把下面的「範例姓名」換成你自己的名字！
+  -->
+
+  <!-- ============================
+       ① 自我介紹
+       ============================ -->
+  <h2>👤 王小明</h2>
+
+  <!-- 大頭照：把 src 換成你自己的照片路徑 -->
+  <img src="https://via.placeholder.com/150" alt="個人照片" width="150">
+
+  <p>大家好！我是王小明，正在學習前端開發，夢想是成為一名優秀的前端工程師！</p>
+
+  <hr>
+
+  <!-- ============================
+       ② 關於我
+       ============================ -->
+  <h3>📌 關於我</h3>
+  <p>目前居住在台灣台北，畢業於台灣大學資訊工程學系。</p>
+  <p>喜歡用程式解決生活中的問題，希望能開發出對使用者有幫助的產品。</p>
+
+  <hr>
+
+  <!-- ============================
+       ③ 我的興趣
+       ============================ -->
+  <h3>🎮 我的興趣</h3>
+  <ul>
+    <li>寫程式 - 最近在學 Angular</li>
+    <li>打籃球 - 每週三固定去打球</li>
+    <li>看電影 - 喜歡科幻和動作片</li>
+    <li>旅遊 - 最想去日本京都</li>
+  </ul>
+
+  <hr>
+
+  <!-- ============================
+       ④ 聯絡我
+       ============================ -->
+  <h3>📬 聯絡我</h3>
+  <p>Email：example@gmail.com</p>
+
+  <!-- a 標籤做超連結，target="_blank" 在新分頁開啟 -->
+  <p>
+    GitHub：<a href="https://github.com" target="_blank">我的 GitHub</a>
+  </p>
+  <p>
+    LinkedIn：<a href="https://linkedin.com" target="_blank">我的 LinkedIn</a>
+  </p>
+
+  <hr>
+
+  <!-- ============================
+       ⑤ 我的作品
+       ============================ -->
+  <h3>🗂️ 我的作品</h3>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>作品名稱</th>
+        <th>使用技術</th>
+        <th>完成時間</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>個人名片網頁</td>
+        <td>HTML / CSS</td>
+        <td>2024 年 1 月</td>
+      </tr>
+      <tr>
+        <td>待辦事項清單</td>
+        <td>Angular</td>
+        <td>2024 年 3 月</td>
+      </tr>
+      <tr>
+        <td>購物車系統</td>
+        <td>Angular + API</td>
+        <td>2024 年 6 月</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <!-- ============================
+       ⑥ 留言給我（表單）
+       ============================ -->
+  <h3>💬 留言給我</h3>
+
+  <form>
+    <!-- 姓名欄位 -->
+    <label>您的姓名：</label>
+    <input type="text" placeholder="請輸入您的姓名">
+    <br><br>
+
+    <!-- Email 欄位 -->
+    <label>您的 Email：</label>
+    <input type="text" placeholder="請輸入 Email">
+    <br><br>
+
+    <!-- 留言內容 -->
+    <label>留言內容：</label>
+    <br>
+    <textarea rows="5" cols="50" placeholder="請輸入您想說的話..."></textarea>
+    <br><br>
+
+    <!-- 送出按鈕 -->
+    <button type="submit">送出留言</button>
+    <button type="button">清除</button>
+  </form>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!--
+  === 第17章：資料驅動畫面 ===
+
+  @for 指令：讓 Angular 幫你「自動把陣列裡的每一筆資料畫出來」
+  格式：
+  @for (變數 of 陣列; track 變數.id) {
+    <!-- 每一筆資料的 HTML 模板 -->
+  }
+
+  好處：
+  → 不需要手動寫每一個 <li> 或 <div>
+  → 陣列增加一筆，畫面就自動多一個卡片
+  → 陣列刪除一筆，畫面就自動少一個卡片
+-->
+
+<div style="max-width: 700px; margin: 30px auto; font-family: Arial, sans-serif; padding: 0 16px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">{{ pageTitle }}</h1>
+
+  <!-- 統計資料（使用 getter 計算） -->
+  <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+    <div style="flex: 1; background: #e8f5e9; padding: 16px; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2rem; font-weight: bold;">{{ totalProducts }}</div>
+      <div>商品總數</div>
+    </div>
+    <div style="flex: 1; background: #e3f2fd; padding: 16px; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2rem; font-weight: bold;">{{ inStockProducts }}</div>
+      <div>有庫存</div>
+    </div>
+    <div style="flex: 1; background: #fff8e1; padding: 16px; border-radius: 8px; text-align: center;">
+      <div style="font-size: 2rem; font-weight: bold;">{{ totalValue }}</div>
+      <div>可購買總價</div>
+    </div>
+  </div>
+
+  <!-- 商品清單：用 @for 讓陣列自動渲染 -->
+  @for (product of products; track product.id) {
+    <div style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+
+      <!-- 商品資訊 -->
+      <div>
+        <div style="font-weight: bold; font-size: 1.1rem;">{{ product.name }}</div>
+        <div style="color: #666; font-size: 0.9rem;">{{ product.category }}</div>
+      </div>
+
+      <!-- 價格與庫存狀態 -->
+      <div style="text-align: right;">
+        <div style="font-size: 1.2rem; font-weight: bold; color: #e74c3c;">
+          NT$ {{ product.price }}
+        </div>
+        <!-- @if 指令：根據條件顯示不同內容 -->
+        @if (product.inStock) {
+          <span style="color: green; font-size: 0.85rem;">✅ 有庫存</span>
+        } @else {
+          <span style="color: #999; font-size: 0.85rem;">❌ 缺貨中</span>
+        }
+      </div>
+    </div>
+  }
+
+</div>

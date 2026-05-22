@@ -92,7 +92,7 @@ Validators（驗證器）是 Angular Forms 的輸入驗證機制，負責檢查�
 </div>
 
 <div class="flex justify-center">
-  <img src="/images/51-validators/angular-form-validation-concept.png" class="rounded shadow-md max-h-80" />
+  <img src="/images/51-validators/angular-form-validation-concept.png" class="rounded shadow-md max-h-48" />
 </div>
 
 ---

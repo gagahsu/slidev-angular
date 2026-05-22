@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <!-- 引入外部 CSS 檔案，讓網頁穿上衣服 -->
+  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>第01章 - 前端介紹示範</title>
+</head>
+<body>
+
+  <!--
+    === 第01章：前端三大技術示範 ===
+
+    這個檔案展示了前端的三個核心角色如何搭配：
+    ① HTML  → 骨架（這個檔案本身就是 HTML）
+    ② CSS   → 衣服（由 style.css 負責）
+    ③ JS    → 動作（由 main.js 負責）
+
+    你可以直接用瀏覽器打開這個 index.html 檔案來看效果！
+  -->
+
+  <!-- 頁面主標題 -->
+  <h1>👋 歡迎來到前端世界！</h1>
+
+  <!-- 說明文字段落 -->
+  <p>這個網頁示範了前端三大技術：HTML、CSS、JavaScript 如何一起工作。</p>
+
+  <!-- 按鈕：id="greet-btn" 讓 JS 可以找到這個按鈕 -->
+  <button id="greet-btn">點我打招呼</button>
+
+  <!-- 訊息顯示區：按鈕被點擊後，JS 會把文字放到這裡 -->
+  <p id="message"></p>
+
+  <!-- 分隔線 -->
+  <hr>
+
+  <!-- 三大技術介紹卡片 -->
+  <div class="card">
+    <h2>🦴 HTML</h2>
+    <p>網頁的骨架，決定有哪些元素、放在哪裡。</p>
+  </div>
+
+  <div class="card">
+    <h2>👗 CSS</h2>
+    <p>網頁的衣服，控制顏色、大小、排版等外觀。</p>
+  </div>
+
+  <div class="card">
+    <h2>🧠 JavaScript</h2>
+    <p>網頁的大腦，讓頁面能回應使用者的操作。</p>
+  </div>
+
+  <!-- 引入外部 JS 檔案（要放在 body 最後面，確保 HTML 先載入完） -->
+  <script src="main.js"></script>
+</body>
+</html>

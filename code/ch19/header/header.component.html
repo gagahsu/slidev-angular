@@ -1,0 +1,44 @@
+<!--
+  === 第19章：Header 元件的 HTML 模板 ===
+
+  這個 HTML 只屬於 HeaderComponent，
+  用 selector "app-header" 可以在任何父元件裡引用它。
+-->
+
+<header style="background: #1a5c5c; color: white; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;">
+
+  <!-- 左側：網站名稱 -->
+  <div style="font-size: 1.3rem; font-weight: bold;">
+    🅰️ {{ siteName }}
+  </div>
+
+  <!-- 中間：導覽列 -->
+  <nav>
+    <ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 8px;">
+      @for (link of navLinks; track link.path) {
+        <li>
+          <a [routerLink]="link.path"
+             style="color: rgba(255,255,255,0.8); text-decoration: none; padding: 8px 12px; border-radius: 6px; transition: background 0.2s;"
+             routerLinkActive="active-link">
+            {{ link.label }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <!-- 右側：登入狀態 -->
+  <div>
+    @if (isLoggedIn) {
+      <span>👤 {{ userName }}</span>
+      <button (click)="toggleLogin()" style="margin-left: 12px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+        登出
+      </button>
+    } @else {
+      <button (click)="toggleLogin()" style="background: white; color: #1a5c5c; border: none; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+        登入
+      </button>
+    }
+  </div>
+
+</header>

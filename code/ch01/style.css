@@ -1,0 +1,75 @@
+/*
+  === 第01章：CSS 衣服 ===
+
+  CSS 的語法格式：
+  選擇器 {
+    屬性名稱: 設定值;
+  }
+
+  「選擇器」就是你要幫哪個 HTML 標籤穿衣服
+  「屬性名稱: 設定值」就是你幫它穿的是什麼衣服
+*/
+
+/* 讓整個 body 的字型更好看，並加上一些邊距 */
+body {
+  font-family: Arial, sans-serif; /* 字型 */
+  max-width: 800px;               /* 最大寬度 800px，不讓它撐太寬 */
+  margin: 40px auto;              /* 上下40px，左右自動置中 */
+  padding: 0 20px;                /* 左右留 20px 的內部空間 */
+  background-color: #f5f5f5;      /* 淺灰色背景 */
+}
+
+/* 主標題樣式 */
+h1 {
+  color: #1a5c5c;          /* 深綠色字體 */
+  text-align: center;       /* 文字置中 */
+  font-size: 2rem;          /* 字體大小 2rem（相對單位，比px更有彈性）*/
+}
+
+/* 按鈕樣式 */
+#greet-btn {
+  /* #greet-btn 是 id 選擇器，只選到 id="greet-btn" 那一個元素 */
+  background-color: #5eada0; /* 蒂芬妮綠背景 */
+  color: white;               /* 白色文字 */
+  border: none;               /* 移除預設邊框 */
+  padding: 12px 24px;         /* 內距：上下12px、左右24px */
+  border-radius: 8px;         /* 圓角效果 */
+  font-size: 1rem;
+  cursor: pointer;            /* 滑鼠移上去變成手指游標 */
+
+  /* 讓所有屬性變化都有 0.3秒 的過渡動畫效果 */
+  transition: all 0.3s ease;
+}
+
+/* 滑鼠移到按鈕上時的樣式（:hover 是滑鼠懸停狀態） */
+#greet-btn:hover {
+  background-color: #4a9688; /* 顏色稍微變深 */
+  transform: scale(1.05);     /* 放大 5% */
+}
+
+/* 顯示訊息的段落 */
+#message {
+  color: #e74c3c;          /* 紅色 */
+  font-size: 1.2rem;
+  font-weight: bold;        /* 粗體 */
+  margin-top: 16px;
+}
+
+/* 卡片樣式（用於三大技術介紹） */
+.card {
+  /* .card 是 class 選擇器，選到所有 class="card" 的元素 */
+  background-color: white;
+  border: 1px solid #ddd;   /* 1px 的淺灰色邊框 */
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+
+  /* box-shadow：陰影效果 → 水平偏移 垂直偏移 模糊程度 顏色 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+  /* 選到 .card 裡面的 h2 標籤 */
+  color: #1a5c5c;
+  margin-top: 0; /* 移除 h2 預設的上邊距 */
+}

@@ -1,0 +1,34 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>路由核心概念</h2>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <code>app.routes.ts</code>
+        <p>定義 URL 路徑 → 元件的對應關係</p>
+      </div>
+      <div class="concept-card">
+        <code>&lt;router-outlet&gt;</code>
+        <p>路由切換的「插槽」，Angular 把對應元件放在這裡</p>
+      </div>
+      <div class="concept-card">
+        <code>routerLink</code>
+        <p>替代 href，點擊後切換路由不重新載入頁面</p>
+      </div>
+      <div class="concept-card">
+        <code>ActivatedRoute</code>
+        <p>讀取目前路由的參數，例如 /courses/:id 的 id 值</p>
+      </div>
+    </div>
+  </section>
+  <section class="demo-section">
+    <h2>本專案的路由設定（app.routes.ts）</h2>
+    <div class="code-block">
+      <p>&#123; path: 'ch14', loadComponent: () =&gt; import('./ch14-variables')... &#125;</p>
+      <p>&#123; path: 'ch15', loadComponent: () =&gt; import('./ch15-methods')... &#125;</p>
+      <p>&#123; path: 'ch17', loadComponent: () =&gt; import('./ch17-data-design')... &#125;</p>
+      <p>... 其餘章節以此類推</p>
+    </div>
+    <p>側邊欄的每個連結就是一個 <code>routerLink</code>，點擊後更換 <code>&lt;router-outlet&gt;</code> 的內容</p>
+  </section>
+</div>

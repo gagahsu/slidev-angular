@@ -1,0 +1,39 @@
+<!--
+  === 第22章：父元件 HTML ===
+
+  如何把資料傳給子元件：
+  [子元件的@Input屬性名] = "父元件的變數"
+  → 方括號 [] 代表「屬性綁定」，把父元件的值傳進去
+
+  如何接收子元件的事件：
+  (子元件的@Output名稱) = "父元件的方法($event)"
+  → 小括號 () 代表「事件綁定」，監聽子元件發出的事件
+-->
+
+<div style="max-width: 700px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 24px;">
+    <h2 style="color: #1565c0; margin-top: 0;">🏠 父元件 (ParentComponent)</h2>
+    <p>父元件訊息：{{ parentMessage }}</p>
+
+    @if (selectedProduct) {
+      <p style="background: white; padding: 10px; border-radius: 6px;">
+        子元件選擇了：<strong style="color: #e74c3c;">{{ selectedProduct }}</strong>
+        （這個值是子元件透過 @Output 傳上來的）
+      </p>
+    }
+  </div>
+
+  <!--
+    使用子元件，並把資料傳進去：
+    [message]    → 傳入 @Input message 屬性
+    [items]      → 傳入 @Input items 屬性（陣列）
+    (selected)   → 監聽子元件的 @Output selected 事件
+  -->
+  <app-child
+    [message]="parentMessage"
+    [items]="products"
+    (selected)="onProductSelected($event)">
+  </app-child>
+
+</div>

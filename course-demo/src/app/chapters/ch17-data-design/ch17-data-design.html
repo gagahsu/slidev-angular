@@ -1,0 +1,36 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>資料驅動畫面（&#64;for + &#64;if）</h2>
+    <p class="hint">資料陣列改變 → 畫面自動更新，不需要手動修改 HTML</p>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">{{ totalProducts }}</div><div>商品總數</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ inStockCount }}</div><div>有庫存</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">{{ totalValue }}</div><div>可購買總價</div>
+      </div>
+    </div>
+    <div class="product-list">
+      @for (p of products; track p.id) {
+        <div class="product-item">
+          <div>
+            <strong>{{ p.name }}</strong>
+            <span class="category">{{ p.category }}</span>
+          </div>
+          <div class="price-stock">
+            <span class="price">NT$ {{ p.price }}</span>
+            @if (p.inStock) {
+              <span class="in-stock">✅ 有庫存</span>
+            } @else {
+              <span class="out-stock">❌ 缺貨</span>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+</div>

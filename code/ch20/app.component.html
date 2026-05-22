@@ -1,0 +1,91 @@
+<!--
+  === 第20章：四種資料綁定方式示範 ===
+-->
+
+<div style="max-width: 700px; margin: 30px auto; font-family: Arial, sans-serif; padding: 0 16px;">
+
+  <!-- ============================================================
+       ① 插值（Interpolation）：{{ 變數 }}
+       → TS 資料 → 顯示在 HTML
+       ============================================================ -->
+  <section style="margin-bottom: 30px; padding: 20px; background: #f5f5f5; border-radius: 10px;">
+    <h2 style="color: #1a5c5c; margin-top: 0;">① 插值 {{ }}</h2>
+    <p>頁面標題：<strong>{{ pageTitle }}</strong></p>
+    <p>目前時間計算：2025 年後 {{ 2026 - 2025 }} 年（{{ }} 裡可以做運算）</p>
+    <p>字串方法：{{ pageTitle.toUpperCase() }}</p>
+  </section>
+
+  <!-- ============================================================
+       ② 屬性綁定（Property Binding）：[屬性]="變數"
+       → TS 變數 → 設定 HTML 標籤的屬性
+       ============================================================ -->
+  <section style="margin-bottom: 30px; padding: 20px; background: #e3f2fd; border-radius: 10px;">
+    <h2 style="color: #1565c0; margin-top: 0;">② 屬性綁定 [ ]</h2>
+
+    <!-- [src] 和 [alt] 是屬性綁定，值來自 TS 的變數 -->
+    <img [src]="imageUrl" [alt]="imageAlt" width="80">
+    <p>img 的 src 和 alt 都來自 TypeScript 的變數</p>
+
+    <!-- [disabled] 綁定到布林變數，控制按鈕是否可點擊 -->
+    <button [disabled]="isButtonDisabled" style="margin-right: 12px; padding: 8px 16px;">
+      這顆按鈕的啟用狀態由 TypeScript 控制
+    </button>
+
+    <!-- (click) 是事件綁定（見下一節） -->
+    <button (click)="toggleButton()" style="padding: 8px 16px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer;">
+      切換上方按鈕的啟用/禁用
+    </button>
+  </section>
+
+  <!-- ============================================================
+       ③ 事件綁定（Event Binding）：(事件)="方法()"
+       → 使用者操作 → 呼叫 TS 的方法
+       ============================================================ -->
+  <section style="margin-bottom: 30px; padding: 20px; background: #fff3e0; border-radius: 10px;"
+           (mousemove)="onMouseMove($event)">
+    <!-- (mousemove) 在整個 section 移動滑鼠時觸發 -->
+
+    <h2 style="color: #e65100; margin-top: 0;">③ 事件綁定 ( )</h2>
+
+    <!-- (click) 點擊事件 -->
+    <button (click)="onButtonClick()" style="padding: 10px 20px; background: #e65100; color: white; border: none; border-radius: 6px; cursor: pointer; margin-bottom: 12px;">
+      {{ buttonText }}
+    </button>
+
+    <p>點擊次數：{{ clickCount }}</p>
+    <p>上次點擊：{{ lastClickTime }}</p>
+    <p style="color: #666; font-size: 0.9rem;">{{ mousePosition }}（在這個框框裡移動滑鼠試試）</p>
+  </section>
+
+  <!-- ============================================================
+       ④ 雙向綁定（Two-way Binding）：[(ngModel)]="變數"
+       → TS ↔ HTML 同步，常用於輸入框
+       → 需要 import FormsModule
+       ============================================================ -->
+  <section style="margin-bottom: 30px; padding: 20px; background: #e8f5e9; border-radius: 10px;">
+    <h2 style="color: #2e7d32; margin-top: 0;">④ 雙向綁定 [( )]</h2>
+
+    <div style="margin-bottom: 12px;">
+      <label>姓名：</label>
+      <!-- [(ngModel)] 雙向綁定：輸入框的值自動同步到 TS 的 inputName 變數 -->
+      <input [(ngModel)]="inputName" placeholder="請輸入姓名" style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; margin-left: 8px;">
+    </div>
+
+    <!-- 即時顯示輸入框的值（因為是雙向綁定，打字就立刻更新） -->
+    <p>你輸入的姓名：<strong>{{ inputName || '（還沒輸入）' }}</strong></p>
+
+    <hr style="border-color: #ddd;">
+
+    <div style="margin-bottom: 12px;">
+      <label>字體大小：{{ fontSize }}px</label>
+      <!-- input type="range" 滑桿，雙向綁定到 fontSize -->
+      <input type="range" [(ngModel)]="fontSize" min="12" max="36" style="margin-left: 12px; width: 200px;">
+    </div>
+
+    <!-- 字體大小由滑桿即時控制 -->
+    <p [style.fontSize.px]="fontSize" style="background: white; padding: 12px; border-radius: 6px;">
+      這段文字的大小由上方滑桿即時控制（[style.fontSize.px] = 樣式綁定）
+    </p>
+  </section>
+
+</div>

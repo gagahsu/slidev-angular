@@ -1,0 +1,21 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>元件化概念</h2>
+    <p class="hint">把重複的 UI 拆成獨立元件，在父元件用 <code>&lt;app-child-demo&gt;</code> 引用</p>
+    <div class="cards-grid">
+      @for (card of cards; track card.title) {
+        <app-child-demo
+          [cardTitle]="card.title"
+          [description]="card.description"
+          (clicked)="onCardClicked($event)">
+        </app-child-demo>
+      }
+    </div>
+    @if (lastClicked) {
+      <div class="event-result">
+        📨 父元件收到子元件 @Output：<strong>{{ lastClicked }}</strong> 被點擊了！
+      </div>
+    }
+  </section>
+</div>

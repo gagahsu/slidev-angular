@@ -1,0 +1,18 @@
+<!--
+  === 第21章：首頁元件 HTML ===
+-->
+<div style="max-width: 700px; margin: 30px auto; padding: 0 20px; font-family: Arial, sans-serif;">
+  <h1 style="color: #1a5c5c;">🏠 首頁</h1>
+  <p>歡迎來到首頁！點擊課程卡片可以用程式碼跳頁（router.navigate）。</p>
+
+  <h2>課程列表</h2>
+  @for (course of courses; track course.id) {
+    <div (click)="goToCourse(course.id)"
+         style="border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: box-shadow 0.2s;"
+         onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'"
+         onmouseout="this.style.boxShadow='none'">
+      <strong>{{ course.name }}</strong>
+      <span style="float: right; color: #5eada0;">→ 查看詳情</span>
+    </div>
+  }
+</div>

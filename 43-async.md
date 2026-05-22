@@ -126,7 +126,6 @@ class: flex flex-col justify-center items-center text-center
 </div>
 </div>
 
-<img src="/images/43-async/sync-queue-diagram.png" class="rounded shadow-md max-h-80 mx-auto mt-2" alt="同步執行流程示意圖" />
 
 ---
 
@@ -186,7 +185,6 @@ class: flex flex-col justify-center items-center text-center
 </div>
 </div>
 
-<img src="/images/43-async/async-queue-diagram.png" class="rounded shadow-md max-h-80 mx-auto mt-2" alt="非同步執行流程示意圖" />
 
 ---
 
@@ -235,7 +233,6 @@ class: flex flex-col justify-center items-center text-center
 | 適用情境 | 計算、資料轉換、本地邏輯 | API 呼叫、計時器、事件監聽 |
 | Angular 常見用法 | 元件邏輯、樣板運算 | `HttpClient`、`Observable`、`setTimeout` |
 
-<img src="/images/43-async/sync-vs-async-comparison.png" class="rounded shadow-md max-h-80 mx-auto mt-3" alt="同步與非同步比較示意圖" />
 
 ---
 layout: section

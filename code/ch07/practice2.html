@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>練習 2 - 各種輸入元件</title>
+</head>
+<body>
+
+  <!--
+    === 練習 2：組合多種輸入元件 ===
+
+    目標：做出包含以下元件的頁面：
+    - 多行文字輸入框（textarea）
+    - 無序列表中放「文字輸入框」和「複選框」
+    - 有序列表中放「上傳檔案」和「單選按鈕」
+    - 一個一般按鈕
+
+    重點標籤：
+    - <textarea>：多行輸入框（可以拉大）
+    - <ul> + <li>：無序列表（前面是圓點）
+    - <ol> + <li>：有序列表（前面是數字）
+    - <input type="text">：單行文字輸入框
+    - <input type="checkbox">：複選框（可多選）
+    - <input type="file">：選擇檔案
+    - <input type="radio">：單選按鈕（同名只能選一個）
+    - <button type="button">：一般按鈕
+  -->
+
+  <!-- 多行文字輸入框 -->
+  <textarea cols="30" rows="5">我是文字輸入框(可拉大)</textarea>
+
+  <!-- 無序列表 -->
+  <ul>
+    <li>
+      <!-- 第一個項目：文字輸入框 -->
+      <input type="text" placeholder="請輸入文字">
+    </li>
+    <li>
+      <!-- 第二個項目：複選框 -->
+      <input type="checkbox">
+    </li>
+  </ul>
+
+  <!-- 有序列表 -->
+  <ol>
+    <li>
+      <!-- 第一個項目：選擇檔案 -->
+      <input type="file">
+    </li>
+    <li>
+      <!-- 第二個項目：單選按鈕 -->
+      <input type="radio">
+    </li>
+  </ol>
+
+  <!-- 一般按鈕 -->
+  <button type="button">我是按鈕Button</button>
+
+</body>
+</html>

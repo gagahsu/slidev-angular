@@ -1,0 +1,46 @@
+<!--
+  === 第14章：Angular 的資料綁定（Data Binding）===
+
+  用 {{ 變數名稱 }} 在 HTML 裡顯示 TypeScript 的變數值。
+  這叫做「插值（Interpolation）」，是最基本的資料綁定方式。
+
+  規則：{{  }} 裡面放 TypeScript 的「表達式」
+    → 變數名稱：{{ userName }}
+    → 計算：{{ 1 + 1 }}
+    → 方法呼叫：{{ getName() }}
+    → 物件屬性：{{ user.name }}
+-->
+
+<div style="max-width: 600px; margin: 40px auto; font-family: Arial, sans-serif;">
+
+  <!-- 插值示範：顯示變數 -->
+  <h1>{{ title }}</h1>
+
+  <h2>{{ welcomeMessage }}</h2>
+
+  <p>姓名：{{ userName }}</p>
+  <p>年齡：{{ age }}</p>
+  <p>狀態：{{ isActive ? '啟用' : '停用' }}</p>
+
+  <!-- 計算也可以放在 {{}} 裡 -->
+  <p>明年：{{ age + 1 }} 歲</p>
+
+  <hr>
+
+  <!-- 計數器示範 -->
+  <h3>計數器：{{ count }}</h3>
+
+  <button (click)="decrement()">－</button>
+  &nbsp;
+  <button (click)="reset()">重置</button>
+  &nbsp;
+  <button (click)="increment()">＋</button>
+
+  <hr>
+
+  <!-- 顯示陣列（暫時用簡單的字串插值） -->
+  <h3>我的興趣</h3>
+  <p>{{ hobbies }}</p>
+  <!-- 之後學 @for 指令後，可以改成用迴圈顯示每個項目 -->
+
+</div>

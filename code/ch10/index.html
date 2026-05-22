@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>第10章 - CSS 樣式編輯（Flexbox、互動效果）</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!--
+    === 第10章：CSS 進階樣式 ===
+
+    本章重點：
+    ① :hover 與 :active 滑鼠互動效果
+    ② display: flex（Flexbox 彈性盒排版）
+    ③ justify-content（主軸對齊）
+    ④ align-items（次軸對齊）
+    ⑤ Bootstrap 安裝說明
+
+    打開瀏覽器，把滑鼠移到不同的元素上，觀察互動效果！
+  -->
+
+  <h1>第10章 — CSS 進階樣式</h1>
+
+  <hr>
+
+  <!-- ============================
+       ① :hover 與 :active 互動效果
+       ============================ -->
+  <h2>① 滑鼠互動效果（:hover / :active）</h2>
+
+  <p>把滑鼠移到下面的按鈕上，觀察樣式的變化：</p>
+
+  <!--
+    :hover  = 滑鼠「移入」時的樣式
+    :active = 滑鼠「點擊壓下去」的瞬間的樣式
+    transition = 讓樣式的切換有動畫過渡效果（不會突然跳變）
+  -->
+  <div class="button-group">
+    <button class="btn btn-primary">主要按鈕（移上來看效果）</button>
+    <button class="btn btn-secondary">次要按鈕</button>
+    <button class="btn btn-danger">危險按鈕</button>
+  </div>
+
+  <h3>卡片的 hover 效果</h3>
+  <div class="hover-card">
+    <p>把滑鼠移到這張卡片上，它會浮起來！</p>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       ② Flexbox 基礎概念
+       ============================ -->
+  <h2>② Flexbox — 彈性盒排版</h2>
+
+  <!--
+    Flexbox 讓你輕鬆控制「子元素的排列方式」
+    只要在「父元素」加上 display: flex
+    裡面的「子元素」就會變成可以彈性排列的磚塊
+
+    Flexbox 有兩條軸線：
+    → 主軸（Main Axis）：預設是「水平」方向（左→右）
+    → 次軸（Cross Axis）：垂直方向（上→下）
+  -->
+
+  <h3>沒有 Flexbox（預設排列）</h3>
+  <div class="demo-container no-flex">
+    <div class="box">Box 1</div>
+    <div class="box">Box 2</div>
+    <div class="box">Box 3</div>
+  </div>
+
+  <h3>加上 display: flex（水平排列）</h3>
+  <div class="demo-container flex-row">
+    <div class="box">Box 1</div>
+    <div class="box">Box 2</div>
+    <div class="box">Box 3</div>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       ③ justify-content（主軸對齊）
+       ============================ -->
+  <h2>③ justify-content（主軸對齊）</h2>
+
+  <!--
+    justify-content 控制子元素在「主軸（水平方向）」上的對齊方式：
+    flex-start  → 靠左對齊（預設）
+    center      → 置中
+    flex-end    → 靠右對齊
+    space-between → 兩端對齊，元素之間平均分配空間
+    space-around  → 每個元素兩側平均分配空間
+  -->
+
+  <p><code>justify-content: flex-start</code>（靠左）</p>
+  <div class="demo-container flex-row justify-start">
+    <div class="box">A</div>
+    <div class="box">B</div>
+    <div class="box">C</div>
+  </div>
+
+  <p><code>justify-content: center</code>（置中）</p>
+  <div class="demo-container flex-row justify-center">
+    <div class="box">A</div>
+    <div class="box">B</div>
+    <div class="box">C</div>
+  </div>
+
+  <p><code>justify-content: flex-end</code>（靠右）</p>
+  <div class="demo-container flex-row justify-end">
+    <div class="box">A</div>
+    <div class="box">B</div>
+    <div class="box">C</div>
+  </div>
+
+  <p><code>justify-content: space-between</code>（兩端對齊）</p>
+  <div class="demo-container flex-row justify-space-between">
+    <div class="box">A</div>
+    <div class="box">B</div>
+    <div class="box">C</div>
+  </div>
+
+  <p><code>justify-content: space-around</code>（平均分配）</p>
+  <div class="demo-container flex-row justify-space-around">
+    <div class="box">A</div>
+    <div class="box">B</div>
+    <div class="box">C</div>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       ④ align-items（次軸對齊）
+       ============================ -->
+  <h2>④ align-items（次軸對齊）</h2>
+
+  <!--
+    align-items 控制子元素在「次軸（垂直方向）」上的對齊方式：
+    flex-start → 靠上
+    center     → 垂直置中（非常常用！）
+    flex-end   → 靠下
+    stretch    → 撐滿父元素高度（預設）
+  -->
+
+  <p><code>align-items: flex-start</code>（靠上）</p>
+  <div class="demo-container flex-row align-start" style="height: 100px;">
+    <div class="box">A</div>
+    <div class="box tall">B（高）</div>
+    <div class="box">C</div>
+  </div>
+
+  <p><code>align-items: center</code>（垂直置中）</p>
+  <div class="demo-container flex-row align-center" style="height: 100px;">
+    <div class="box">A</div>
+    <div class="box tall">B（高）</div>
+    <div class="box">C</div>
+  </div>
+
+  <p><code>align-items: flex-end</code>（靠下）</p>
+  <div class="demo-container flex-row align-end" style="height: 100px;">
+    <div class="box">A</div>
+    <div class="box tall">B（高）</div>
+    <div class="box">C</div>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       ⑤ 實用範例：導覽列
+       ============================ -->
+  <h2>⑤ 實用範例：用 Flexbox 做導覽列</h2>
+
+  <!--
+    這是業界最常見的 Flexbox 使用場景：
+    左邊放 Logo，右邊放導覽連結，中間自動撐開
+  -->
+
+  <nav class="navbar">
+    <!-- 左側 Logo -->
+    <div class="navbar-brand">🅰️ My App</div>
+
+    <!-- 右側導覽連結 -->
+    <ul class="navbar-links">
+      <li><a href="#">首頁</a></li>
+      <li><a href="#">關於</a></li>
+      <li><a href="#">作品</a></li>
+      <li><a href="#">聯絡</a></li>
+    </ul>
+  </nav>
+
+  <hr>
+
+  <!-- ============================
+       ⑥ Bootstrap 安裝說明
+       ============================ -->
+  <h2>⑥ Bootstrap 快速說明</h2>
+
+  <div class="info-box">
+    <p>
+      Bootstrap 是業界最流行的 CSS 框架，提供大量現成的樣式和元件。
+      不用自己寫一堆 CSS，只要加上特定的 class 名稱，就能套用漂亮的設計！
+    </p>
+
+    <h3>安裝方式</h3>
+    <p>在 Angular 專案中安裝：</p>
+    <pre>
+npm install bootstrap
+    </pre>
+
+    <p>在 <code>angular.json</code> 裡加入：</p>
+    <pre>
+"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "src/styles.css"
+]
+    </pre>
+
+    <h3>Bootstrap 常用 Class</h3>
+    <ul>
+      <li><code>d-flex</code> → 相當於 display: flex</li>
+      <li><code>justify-content-center</code> → justify-content: center</li>
+      <li><code>align-items-center</code> → align-items: center</li>
+      <li><code>btn btn-primary</code> → 藍色按鈕</li>
+      <li><code>card</code> → 卡片樣式</li>
+      <li><code>container</code> → 置中容器（加上最大寬度）</li>
+    </ul>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>第11章 - CSS 進階工具</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!--
+    === 第11章：CSS 進階工具 ===
+
+    本章重點：
+    ① background - 背景圖片設定
+    ② position   - 定位（fixed / relative / absolute）
+    ③ z-index    - 堆疊順序（誰在上面，誰在下面）
+    ④ CSS 優先權（後蓋前）
+
+    打開瀏覽器觀察各個區塊的定位與背景效果！
+  -->
+
+  <h1>第11章 — CSS 進階工具</h1>
+
+  <!-- ============================
+       ① 背景設定（Background）
+       ============================ -->
+  <h2>① 背景設定</h2>
+
+  <!--
+    background 相關屬性：
+    background-color    → 背景顏色
+    background-image    → 背景圖片（用 url() 包起來）
+    background-repeat   → 圖片重複方式
+      no-repeat         → 不重複
+      repeat            → 水平+垂直都重複（預設）
+      repeat-x          → 只水平重複
+      repeat-y          → 只垂直重複
+    background-position → 圖片位置（center center）
+    background-size     → 圖片大小
+      cover             → 等比例放大到蓋滿（常用！）
+      contain           → 等比例縮放到完整顯示
+  -->
+
+  <div class="bg-color-demo">
+    背景色（background-color）
+  </div>
+
+  <div class="bg-image-demo">
+    <p>這個方塊有背景圖片</p>
+    <p>background-size: cover → 圖片等比例放大蓋滿</p>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       ② Position 定位
+       ============================ -->
+  <h2>② Position 定位</h2>
+
+  <!--
+    position 有四個值：
+    static   → 預設值，正常排在文件流中，不能用 top/left
+    relative → 相對原本位置偏移，仍佔原來的空間
+    absolute → 脫離文件流，相對最近的 position 父元素定位
+    fixed    → 脫離文件流，固定在瀏覽器視窗的某個位置（不隨捲動移動）
+
+    配合 top / right / bottom / left 屬性來設定偏移量
+  -->
+
+  <!-- relative + absolute 示範：把 badge 釘在卡片右上角 -->
+  <h3>relative + absolute 示範（通知徽章）</h3>
+  <p>外層 .card-wrapper 設 position: relative，徽章設 position: absolute</p>
+
+  <div class="card-wrapper">
+    <p>這是一張卡片</p>
+    <p>看看右上角的紅色徽章，它是用 absolute 定位「釘」在卡片的右上角！</p>
+
+    <!-- 用 absolute 定位在右上角的徽章 -->
+    <span class="badge">99+</span>
+  </div>
+
+  <!-- fixed 示範說明（右下角那個浮動按鈕） -->
+  <h3>fixed 定位示範（右下角浮動按鈕）</h3>
+  <p>⬇️ 頁面右下角有一個固定按鈕，滾動頁面它也不會消失。</p>
+  <p>這是 <code>position: fixed</code> 的典型應用，例如「回到頂端」按鈕或客服按鈕。</p>
+
+  <!-- 捲動製造高度 -->
+  <div style="height: 200px; background: #f0f0f0; padding: 20px; border-radius: 8px;">
+    <p>試著上下捲動這個頁面，看看右下角的浮動按鈕是否固定在畫面上！</p>
+  </div>
+
+  <!-- 固定在右下角的浮動按鈕（position: fixed） -->
+  <button class="floating-btn">⬆ TOP</button>
+
+  <hr>
+
+  <!-- ============================
+       ③ z-index 堆疊順序
+       ============================ -->
+  <h2>③ z-index — 堆疊順序</h2>
+
+  <!--
+    當多個元素重疊時，z-index 決定誰在上面：
+    → 數字越大，越在上面（越靠近使用者的眼睛）
+    → z-index 只對 position 不是 static 的元素有效
+
+    想像 z-index 是每張紙的「堆疊層數」
+    z-index: 1  → 最底下的紙
+    z-index: 10 → 中間的紙
+    z-index: 99 → 最上面的紙
+  -->
+
+  <p>下面三個方塊互相重疊，但 z-index 決定誰在最上面：</p>
+
+  <div class="z-demo-wrapper">
+    <!-- z-index: 1 → 最底 -->
+    <div class="z-box z-one">z-index: 1<br>（最底層）</div>
+    <!-- z-index: 10 → 中間 -->
+    <div class="z-box z-two">z-index: 10<br>（中間層）</div>
+    <!-- z-index: 50 → 最上 -->
+    <div class="z-box z-three">z-index: 50<br>（最上層）</div>
+  </div>
+
+  <hr>
+
+  <!-- ============================
+       ④ CSS 優先權（後蓋前）
+       ============================ -->
+  <h2>④ CSS 優先權（後蓋前）</h2>
+
+  <!--
+    CSS 的優先權規則（由高到低）：
+    ① !important         → 最高，強制覆蓋所有（謹慎使用）
+    ② Inline Style       → 寫在標籤上的 style=""
+    ③ id 選擇器（#id）  → 比 class 更強
+    ④ class 選擇器      → 普通強度
+    ⑤ 元素選擇器        → 最弱
+
+    同優先權的規則：「後面寫的會蓋掉前面寫的」（後蓋前）
+  -->
+
+  <!-- 示範：同一個元素被多個 class 影響 -->
+  <p class="text-red text-blue">
+    這段文字同時有 .text-red 和 .text-blue，最終顯示哪個顏色？
+    →「後寫的蓋前寫的」，class 的定義順序決定結果（看 style.css 的順序）
+  </p>
+
+  <p id="id-wins" class="text-red">
+    這段文字有 id="id-wins" 和 class="text-red"
+    → id 選擇器的優先權比 class 高，所以顏色由 id 決定
+  </p>
+
+</body>
+</html>

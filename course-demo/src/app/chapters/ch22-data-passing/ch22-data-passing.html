@@ -1,0 +1,30 @@
+<div class="chapter">
+  <h1>{{ title }}</h1>
+  <section class="demo-section">
+    <h2>@Input（父 → 子）/ @Output（子 → 父）</h2>
+    <p class="hint">
+      父元件用 <code>[name]="product.name"</code> 把資料傳給子元件，<br>
+      子元件用 <code>(addToCart)="onAddToCart($event)"</code> 把事件傳回父元件
+    </p>
+    <div class="products-grid">
+      @for (p of products; track p.name) {
+        <app-product-card
+          [name]="p.name"
+          [price]="p.price"
+          [inStock]="p.inStock"
+          (addToCart)="onAddToCart($event)">
+        </app-product-card>
+      }
+    </div>
+  </section>
+  <section class="demo-section">
+    <h2>🛒 購物車（父元件收到子元件的 @Output）</h2>
+    @if (cartItems.length === 0) {
+      <p class="hint">購物車是空的，點上方的「加入購物車」試試！</p>
+    } @else {
+      @for (item of cartItems; track item) {
+        <div class="cart-item">✅ {{ item }}</div>
+      }
+    }
+  </section>
+</div>
