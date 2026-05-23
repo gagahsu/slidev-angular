@@ -1,0 +1,100 @@
+<!--
+  === 第30章：資料排序 HTML ===
+
+  顯示排序按鈕和資料表格，點擊按鈕後資料即時重新排列。
+-->
+
+<div style="max-width: 800px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">🔢 資料排序示範</h1>
+
+  <!-- 排序說明 -->
+  <div style="background: #e3f2fd; padding: 16px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h3 style="color: #1565c0; margin-top: 0;">sort() 比較函式邏輯</h3>
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+      <thead>
+        <tr style="background: #1565c0; color: white;">
+          <th style="padding: 8px; text-align: left;">回傳值</th>
+          <th style="padding: 8px; text-align: left;">代表意思</th>
+          <th style="padding: 8px; text-align: left;">結果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 8px; border: 1px solid #eee;"><code>-1</code></td>
+          <td style="padding: 8px; border: 1px solid #eee;">a 比 b 小</td>
+          <td style="padding: 8px; border: 1px solid #eee;">a 排在 b 前面</td>
+        </tr>
+        <tr style="background: #f5f5f5;">
+          <td style="padding: 8px; border: 1px solid #eee;"><code>1</code></td>
+          <td style="padding: 8px; border: 1px solid #eee;">b 比 a 小</td>
+          <td style="padding: 8px; border: 1px solid #eee;">b 排在 a 前面</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; border: 1px solid #eee;"><code>0</code></td>
+          <td style="padding: 8px; border: 1px solid #eee;">相等</td>
+          <td style="padding: 8px; border: 1px solid #eee;">順序不變</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 排序按鈕 -->
+  <div style="background: #f5f5f5; padding: 16px; border-radius: 10px; margin-bottom: 16px;">
+    <p style="margin: 0 0 12px; font-weight: bold;">點擊按鈕排序：</p>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <button (click)="sortByPosition()"
+        style="padding: 10px 18px; background: #1565c0; color: white; border: none; border-radius: 8px; cursor: pointer;">
+        依 Position ↑
+      </button>
+      <button (click)="sortByName()"
+        style="padding: 10px 18px; background: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer;">
+        依 Name A→Z
+      </button>
+      <button (click)="sortByWeight()"
+        style="padding: 10px 18px; background: #f57f17; color: white; border: none; border-radius: 8px; cursor: pointer;">
+        依 Weight ↑
+      </button>
+      <button (click)="sortByWeightDesc()"
+        style="padding: 10px 18px; background: #7b1fa2; color: white; border: none; border-radius: 8px; cursor: pointer;">
+        依 Weight ↓
+      </button>
+      <button (click)="resetSort()"
+        style="padding: 10px 18px; background: #546e7a; color: white; border: none; border-radius: 8px; cursor: pointer;">
+        還原
+      </button>
+    </div>
+    <p style="margin: 12px 0 0; color: #555;">
+      目前排序：<strong style="color: #1565c0;">{{ currentSort }}</strong>
+    </p>
+  </div>
+
+  <!-- 資料表格 -->
+  <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #1a5c5c; color: white;">
+          <th style="padding: 14px 16px; text-align: left;">No.</th>
+          <th style="padding: 14px 16px; text-align: left;">Name</th>
+          <th style="padding: 14px 16px; text-align: left;">Weight</th>
+          <th style="padding: 14px 16px; text-align: left;">Symbol</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (element of tableData; track element.symbol) {
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 12px 16px; color: #555;">{{ element.position }}</td>
+            <td style="padding: 12px 16px; font-weight: bold;">{{ element.name }}</td>
+            <td style="padding: 12px 16px; color: #555; font-family: monospace;">{{ element.weight }}</td>
+            <td style="padding: 12px 16px;">
+              <span style="background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 12px; font-family: monospace; font-weight: bold;">
+                {{ element.symbol }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>

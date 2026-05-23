@@ -28,6 +28,17 @@
 | [`ch20/`](./ch20/) | 繫結（插值 / 屬性 / 事件 / 雙向） | Angular |
 | [`ch21/`](./ch21/) | 路由（routerLink / 動態路由） | Angular |
 | [`ch22/`](./ch22/) | 資料傳遞（@Input / @Output） | Angular |
+| [`ch23/`](./ch23/) | 網頁儲存（Cookie / localStorage / sessionStorage） | TS + Angular |
+| [`ch24/`](./ch24/) | 陣列顯示（@for / 巢狀陣列） | TS + Angular |
+| [`ch25/`](./ch25/) | @if 條件顯示（@else / @else if） | TS + Angular |
+| [`ch26/`](./ch26/) | @switch 條件切換（switch / @switch） | TS + Angular |
+| [`ch27/`](./ch27/) | 串接 API（HttpClient / GET / POST） | TS + Angular |
+| [`ch28/`](./ch28/) | 串接 OpenAI（Chat Completions API） | TS + Angular |
+| [`ch29/`](./ch29/) | Interface（型別定義 / 巢狀 / implements） | TypeScript |
+| [`ch30/`](./ch30/) | 資料排序（sort / 比較函式） | TS + Angular |
+| [`ch31/`](./ch31/) | 安裝 Angular Material | Markdown |
+| [`ch32/`](./ch32/) | Mat-table + 分頁（MatTableDataSource / Paginator） | Angular |
+| [`ch33/`](./ch33/) | Mat-icon（Material Icons 圖示） | Angular |
 
 ---
 
@@ -149,9 +160,56 @@ code/
 │   ├── pages/home/home.component.ts
 │   └── pages/course-detail/course-detail.component.ts（動態路由參數）
 │
-└── ch22/               ← 第22章：資料傳遞
-    ├── parent/parent.component.ts（父元件）
-    ├── parent/parent.component.html
-    ├── child/child.component.ts（@Input / @Output）
-    └── child/child.component.html
+├── ch22/               ← 第22章：資料傳遞
+│   ├── parent/parent.component.ts（父元件）
+│   ├── parent/parent.component.html
+│   ├── child/child.component.ts（@Input / @Output）
+│   └── child/child.component.html
+│
+├── ch23/               ← 第23章：網頁儲存
+│   ├── app.component.ts（localStorage / sessionStorage / 物件儲存）
+│   └── app.component.html
+│
+├── ch24/               ← 第24章：陣列顯示
+│   ├── app.component.ts（數字陣列 / 物件陣列 / 巢狀陣列）
+│   └── app.component.html（@for 單層 + 巢狀）
+│
+├── ch25/               ← 第25章：@if 條件顯示
+│   ├── app.component.ts（登入狀態 / 成績等級 / 購物車）
+│   └── app.component.html（@if / @else / @else if）
+│
+├── ch26/               ← 第26章：@switch 條件切換
+│   ├── app.component.ts（switch 示範 / 角色職業）
+│   └── app.component.html（@switch / @case / @default）
+│
+├── ch27/               ← 第27章：串接 API
+│   ├── app.config.ts         （provideHttpClient）
+│   ├── http-client.service.ts（get / post / put / delete）
+│   ├── app.component.ts      （inject Service + subscribe）
+│   └── app.component.html
+│
+├── ch28/               ← 第28章：串接 OpenAI
+│   ├── openai.service.ts     （Chat Completions API）
+│   ├── app.component.ts      （對話歷史 / 送出訊息）
+│   └── app.component.html    （聊天介面）
+│
+├── ch29/               ← 第29章：Interface
+│   ├── user.interface.ts     （介面定義 / 選填欄位 / 巢狀）
+│   ├── app.component.ts      （使用 interface 的元件）
+│   └── app.component.html
+│
+├── ch30/               ← 第30章：資料排序
+│   ├── app.component.ts      （sort() / 多欄位排序）
+│   └── app.component.html    （按鈕切換排序方式）
+│
+├── ch31/               ← 第31章：安裝 Angular Material
+│   └── setup-guide.md        （安裝步驟 / 常用 Module 對照表）
+│
+├── ch32/               ← 第32章：Mat-table + 分頁
+│   ├── app.component.ts      （MatTableDataSource / @ViewChild Paginator）
+│   └── app.component.html    （mat-table 欄位定義 / mat-paginator）
+│
+└── ch33/               ← 第33章：Mat-icon
+    ├── app.component.ts      （MatIconModule / 圖示清單）
+    └── app.component.html    （基本用法 / 搭配按鈕 / 動態切換）
 ```
