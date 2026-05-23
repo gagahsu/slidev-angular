@@ -39,6 +39,17 @@
 | [`ch31/`](./ch31/) | 安裝 Angular Material | Markdown |
 | [`ch32/`](./ch32/) | Mat-table + 分頁（MatTableDataSource / Paginator） | Angular |
 | [`ch33/`](./ch33/) | Mat-icon（Material Icons 圖示） | Angular |
+| [`ch34/`](./ch34/) | 日期選擇器（input type="date" / mat-datepicker） | TS + Angular |
+| [`ch35/`](./ch35/) | DatePipe（日期格式化） | TS + Angular |
+| [`ch36/`](./ch36/) | JsonPipe（物件格式化顯示） | TS + Angular |
+| [`ch37/`](./ch37/) | 即時搜尋（keyup / indexOf / dataSource 篩選） | TS + Angular |
+| [`ch38/`](./ch38/) | ngClass（動態 CSS 類別） | TS + Angular |
+| [`ch39/`](./ch39/) | Tabs（mat-tab-group / mat-tab-nav-bar） | Angular |
+| [`ch40/`](./ch40/) | Select（原生 select / mat-select） | TS + Angular |
+| [`ch41/`](./ch41/) | 圓餅圖（Chart.js pie / bar） | TS + Angular |
+| [`ch42/`](./ch42/) | Dialog（MatDialog / MAT_DIALOG_DATA） | Angular |
+| [`ch43/`](./ch43/) | 同步與非同步（setTimeout / Observable / subscribe） | TS + Angular |
+| [`ch44/`](./ch44/) | 訂閱（BehaviorSubject / Subject / unsubscribe） | TS + Angular |
 
 ---
 
@@ -209,7 +220,56 @@ code/
 │   ├── app.component.ts      （MatTableDataSource / @ViewChild Paginator）
 │   └── app.component.html    （mat-table 欄位定義 / mat-paginator）
 │
-└── ch33/               ← 第33章：Mat-icon
-    ├── app.component.ts      （MatIconModule / 圖示清單）
-    └── app.component.html    （基本用法 / 搭配按鈕 / 動態切換）
+├── ch33/               ← 第33章：Mat-icon
+│   ├── app.component.ts      （MatIconModule / 圖示清單）
+│   └── app.component.html    （基本用法 / 搭配按鈕 / 動態切換）
+│
+├── ch34/               ← 第34章：日期選擇器
+│   ├── app.component.ts      （原生 Date 字串 / mat-datepicker + Date 物件）
+│   └── app.component.html    （input type="date" / mat-datepicker 完整結構）
+│
+├── ch35/               ← 第35章：DatePipe
+│   ├── app.component.ts      （手動格式化方法 / tidyDate）
+│   └── app.component.html    （DatePipe 各種格式代碼對照表）
+│
+├── ch36/               ← 第36章：JsonPipe
+│   ├── app.component.ts      （user / order 物件資料）
+│   └── app.component.html    （ json Pipe + pre 格式化顯示）
+│
+├── ch37/               ← 第37章：即時搜尋
+│   ├── app.component.ts      （(keyup) 篩選 / indexOf / dataSource.data 更新）
+│   └── app.component.html    （mat-table + mat-paginator + 搜尋框）
+│
+├── ch38/               ← 第38章：ngClass
+│   ├── app.component.ts      （isActive / getStatusClass 方法）
+│   ├── app.component.css     （active / highlighted / in-stock 等 class 定義）
+│   └── app.component.html    （字串 / 物件條件 / 方法回傳三種用法）
+│
+├── ch39/               ← 第39章：Tabs
+│   ├── app.component.ts      （staticTabs / links / activeLink）
+│   └── app.component.html    （mat-tab-group / @for 動態頁籤 / mat-tab-nav-bar）
+│
+├── ch40/               ← 第40章：Select
+│   ├── app.component.ts      （selectedCar / courseOptions / 表單送出）
+│   └── app.component.html    （原生 select / matNativeControl / mat-select）
+│
+├── ch41/               ← 第41章：圓餅圖
+│   ├── app.component.ts      （Chart.js pie + bar / ngAfterViewInit）
+│   └── app.component.html    （canvas 元素 / 圖表類型說明表）
+│
+├── ch42/               ← 第42章：Dialog
+│   ├── app.component.ts      （inject MatDialog / open / afterClosed）
+│   ├── app.component.html    （打開按鈕 / 顯示回傳結果）
+│   └── dialog/
+│       ├── dialog.component.ts   （MAT_DIALOG_DATA / dialogRef.close）
+│       └── dialog.component.html （mat-dialog-title/content/actions）
+│
+├── ch43/               ← 第43章：同步與非同步
+│   ├── app.component.ts      （同步順序 / setTimeout / Observable subscribe）
+│   └── app.component.html    （執行順序視覺化 / subscribe 三個 callback）
+│
+└── ch44/               ← 第44章：訂閱
+    ├── loading.service.ts    （BehaviorSubject / Subject / asObservable）
+    ├── app.component.ts      （subscribe / unsubscribe / ngOnDestroy）
+    └── app.component.html    （狀態顯示 / 事件日誌 / 比較表）
 ```
