@@ -1,0 +1,99 @@
+<!--
+  === 第48章：Toolbar HTML ===
+
+  spacer 技巧：<span class="spacer"></span> 搭配 CSS flex: 1 1 auto
+  → 左側：Logo + 標題
+  → 中間：spacer 撐開剩餘空間
+  → 右側：購物車、通知、用戶圖示自動靠右
+-->
+
+<!-- ① 基本 Toolbar -->
+<mat-toolbar color="primary">
+  <button mat-icon-button aria-label="選單">
+    <mat-icon fontIcon="menu"></mat-icon>
+  </button>
+  <span>My Angular App</span>
+
+  <!-- spacer：填滿中間空間，把右側按鈕推到最右 -->
+  <span class="spacer"></span>
+
+  <!-- 購物車圖示（帶角標顯示數量） -->
+  <button mat-icon-button
+    [matBadge]="cartCount > 0 ? cartCount : ''"
+    matBadgeColor="warn"
+    aria-label="購物車">
+    <mat-icon fontIcon="shopping_cart"></mat-icon>
+  </button>
+
+  <!-- 通知圖示 -->
+  <button mat-icon-button
+    [matBadge]="notificationCount > 0 ? notificationCount : ''"
+    matBadgeColor="accent"
+    aria-label="通知">
+    <mat-icon fontIcon="notifications"></mat-icon>
+  </button>
+
+  <!-- 用戶圖示 -->
+  <button mat-icon-button aria-label="個人資料">
+    <mat-icon fontIcon="account_circle"></mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="page-content">
+
+  <h1 style="color: #1a5c5c;">🔧 Toolbar 示範</h1>
+
+  <!-- Spacer 原理說明 -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 24px;">
+    <h3 style="color: #1565c0; margin-top: 0;">Spacer 排版技巧</h3>
+    <div style="background: white; padding: 16px; border-radius: 8px; display: flex; align-items: center; gap: 8px; border: 2px dashed #1565c0;">
+      <span style="background: #1565c0; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem;">選單</span>
+      <span style="background: #1565c0; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem;">標題</span>
+      <span style="flex: 1 1 auto; border-bottom: 2px dashed #ccc; text-align: center; font-size: 0.8rem; color: #aaa;">← spacer（flex: 1 1 auto）→</span>
+      <span style="background: #f9a825; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem;">🛒</span>
+      <span style="background: #f9a825; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem;">🔔</span>
+    </div>
+    <pre style="background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 0.85rem; overflow: auto;">.spacer &#123;
+  flex: 1 1 auto;  /* 自動填滿剩餘空間 */
+&#125;</pre>
+  </div>
+
+  <!-- 互動示範 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
+    <h3 style="color: #2e7d32; margin-top: 0;">互動示範</h3>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;">
+      <button mat-raised-button color="primary" (click)="addToCart()">
+        加入購物車（目前：{{ cartCount }}）
+      </button>
+      <button mat-raised-button (click)="clearCart()">
+        清空購物車
+      </button>
+      <button mat-raised-button color="accent" (click)="readNotifications()">
+        已讀通知（目前：{{ notificationCount }}）
+      </button>
+    </div>
+    <p style="color: #555; font-size: 0.9rem;">
+      觀察頂部 Toolbar 的購物車和通知角標數量變化 ↑
+    </p>
+  </div>
+
+  <!-- Toolbar color 說明 -->
+  <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825;">
+    <h3 style="color: #f57f17; margin-top: 0;">Toolbar color 屬性</h3>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="background: #1976d2; color: white; padding: 12px 16px; border-radius: 6px; font-size: 0.9rem;">
+        color="primary"
+      </div>
+      <div style="background: #ff4081; color: white; padding: 12px 16px; border-radius: 6px; font-size: 0.9rem;">
+        color="accent"
+      </div>
+      <div style="background: #f44336; color: white; padding: 12px 16px; border-radius: 6px; font-size: 0.9rem;">
+        color="warn"
+      </div>
+      <div style="background: #f5f5f5; color: #333; padding: 12px 16px; border-radius: 6px; border: 1px solid #ddd; font-size: 0.9rem;">
+        （不設定 color）
+      </div>
+    </div>
+  </div>
+
+</div>

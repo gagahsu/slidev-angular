@@ -1,0 +1,14 @@
+/* === 第48章：Toolbar CSS === */
+
+/* Spacer：自動填滿 toolbar 的剩餘空間，把右側按鈕推到最右 */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* 頁面內容的 padding */
+.page-content {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}

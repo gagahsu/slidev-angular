@@ -1,0 +1,25 @@
+/* === 第47章：Sidenav CSS === */
+
+/* 讓 container 填滿整個畫面 */
+.sidenav-container {
+  height: calc(100vh - 64px);   /* 減去 toolbar 高度 */
+}
+
+/* 側邊欄寬度 */
+.sidenav {
+  width: 220px;
+  padding: 16px 0;
+}
+
+/* 主內容區 padding */
+.main-content {
+  padding: 24px;
+}
+
+/* 切換模式按鈕群組 */
+.mode-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}

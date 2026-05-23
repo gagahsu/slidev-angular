@@ -50,6 +50,17 @@
 | [`ch42/`](./ch42/) | Dialog（MatDialog / MAT_DIALOG_DATA） | Angular |
 | [`ch43/`](./ch43/) | 同步與非同步（setTimeout / Observable / subscribe） | TS + Angular |
 | [`ch44/`](./ch44/) | 訂閱（BehaviorSubject / Subject / unsubscribe） | TS + Angular |
+| [`ch45/`](./ch45/) | Loading（mat-spinner / LoadingService / async pipe） | TS + Angular |
+| [`ch46/`](./ch46/) | Signals（signal() / effect() / asReadonly） | TS + Angular |
+| [`ch47/`](./ch47/) | Sidenav（mat-drawer-container / over / push / side） | Angular |
+| [`ch48/`](./ch48/) | Toolbar（mat-toolbar / spacer / matBadge） | Angular |
+| [`ch49/`](./ch49/) | Mat-radio & Checkbox（單選 / 多選 / 全選） | TS + Angular |
+| [`ch50/`](./ch50/) | Reactive Forms（FormBuilder / FormGroup / FormArray） | TS + Angular |
+| [`ch51/`](./ch51/) | Validators（required / email / pattern / min / max） | TS + Angular |
+| [`ch52/`](./ch52/) | RWD（@media query / 響應式單位 / BreakpointObserver） | TS + Angular |
+| [`ch53/`](./ch53/) | RxJS（Observable / Operators / Subject / interval） | TS + Angular |
+| [`ch54/`](./ch54/) | Angular Build（ng build / dist 結構 / http-server） | Markdown |
+| [`ch55/`](./ch55/) | Angular Deploy（Firebase Hosting 部署指南） | Markdown |
 
 ---
 
@@ -272,4 +283,53 @@ code/
     ├── loading.service.ts    （BehaviorSubject / Subject / asObservable）
     ├── app.component.ts      （subscribe / unsubscribe / ngOnDestroy）
     └── app.component.html    （狀態顯示 / 事件日誌 / 比較表）
+│
+├── ch45/               ← 第45章：Loading
+│   ├── loading.service.ts    （BehaviorSubject / show / hide）
+│   ├── app.component.ts      （loading$ Observable + async pipe）
+│   ├── app.component.css     （overlay 遮罩 / mat-spinner 置中）
+│   └── app.component.html    （@if (loading$ | async)）
+│
+├── ch46/               ← 第46章：Signals
+│   ├── loading.service.ts    （signal() / asReadonly / set）
+│   ├── app.component.ts      （Signal<boolean> / effect()）
+│   ├── app.component.css     （overlay / spinner）
+│   └── app.component.html    （loading() 直接讀取，無需 async pipe）
+│
+├── ch47/               ← 第47章：Sidenav
+│   ├── app.component.ts      （MatSidenavModule / MatListModule）
+│   ├── app.component.css     （sidenav 寬度 / container 高度）
+│   └── app.component.html    （mat-drawer-container / drawer.toggle / mode 切換）
+│
+├── ch48/               ← 第48章：Toolbar
+│   ├── app.component.ts      （MatToolbarModule / MatBadgeModule）
+│   ├── app.component.css     （.spacer flex: 1 1 auto）
+│   └── app.component.html    （mat-toolbar / spacer / matBadge 角標）
+│
+├── ch49/               ← 第49章：Mat-radio & Checkbox
+│   ├── app.component.ts      （seasons / courses / 全選邏輯）
+│   └── app.component.html    （mat-radio-group / mat-checkbox / indeterminate）
+│
+├── ch50/               ← 第50章：Reactive Forms
+│   ├── app.component.ts      （FormBuilder / FormGroup / FormArray）
+│   └── app.component.html    （formGroup / formArrayName / formGroupName）
+│
+├── ch51/               ← 第51章：Validators
+│   ├── app.component.ts      （required / email / pattern / min / max）
+│   └── app.component.html    （invalid && touched 顯示錯誤）
+│
+├── ch52/               ← 第52章：RWD
+│   ├── app.component.ts      （BreakpointObserver / Breakpoints）
+│   ├── app.component.css     （@media query / grid 響應式欄數）
+│   └── app.component.html    （響應式格線 / 裝置偵測顯示）
+│
+├── ch53/               ← 第53章：RxJS
+│   ├── app.component.ts      （Observable / of / from / interval / Subject）
+│   └── app.component.html    （四個互動示範區塊）
+│
+├── ch54/               ← 第54章：Angular Build
+│   └── build-guide.md        （ng build / dist 結構 / http-server / 最佳化）
+│
+└── ch55/               ← 第55章：Angular Deploy
+    └── deploy-guide.md       （Firebase Hosting 完整部署步驟）
 ```

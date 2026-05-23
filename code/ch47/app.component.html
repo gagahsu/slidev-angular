@@ -1,0 +1,80 @@
+<!--
+  === 第47章：Sidenav HTML ===
+
+  #drawer 是範本引用變數（template reference variable）
+  → 讓 HTML 其他地方可以直接呼叫 drawer.toggle()
+  → 不需要在 TypeScript 寫方法來開關側邊欄
+-->
+
+<!-- Toolbar：放開關按鈕和標題 -->
+<mat-toolbar color="primary" style="position: sticky; top: 0; z-index: 10;">
+  <!-- (click)="drawer.toggle()" — 直接呼叫 mat-drawer 的 toggle() 方法 -->
+  <button mat-icon-button (click)="drawer.toggle()">
+    <mat-icon fontIcon="menu"></mat-icon>
+  </button>
+  <span style="margin-left: 8px;">Sidenav 示範</span>
+</mat-toolbar>
+
+<!-- Sidenav Container -->
+<!--
+  autosize：側邊欄開關時，主內容區自動縮放
+  mat-drawer #drawer：用 #drawer 讓 HTML 其他地方引用
+  [mode]：動態切換顯示模式
+-->
+<mat-drawer-container class="sidenav-container" autosize>
+
+  <!-- 側邊欄 -->
+  <mat-drawer #drawer class="sidenav" [mode]="currentMode">
+    <h3 style="padding: 0 16px; color: #1a5c5c;">📋 選單</h3>
+
+    <!-- mat-list：Material 清單元件，適合導覽項目 -->
+    <mat-list role="list">
+      @for (item of menuItems; track item.label) {
+        <mat-list-item
+          role="listitem"
+          (click)="selectPage(item.label)"
+          [style.background]="activePage === item.label ? '#e3f2fd' : ''"
+          style="cursor: pointer;">
+          <mat-icon matListItemIcon [fontIcon]="item.icon"></mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </mat-list-item>
+      }
+    </mat-list>
+  </mat-drawer>
+
+  <!-- 主內容區 -->
+  <div class="main-content">
+
+    <!-- 切換 mode -->
+    <h3>切換 mode：</h3>
+    <div class="mode-buttons">
+      @for (mode of ['over', 'push', 'side']; track mode) {
+        <button mat-raised-button
+          [color]="currentMode === mode ? 'primary' : ''"
+          (click)="currentMode = $any(mode)">
+          {{ mode }}
+        </button>
+      }
+    </div>
+
+    <!-- 各 mode 說明 -->
+    <div style="background: #e3f2fd; padding: 16px; border-radius: 10px; margin-bottom: 20px;">
+      @switch (currentMode) {
+        @case ('over') {
+          <p><strong>over 模式（預設）：</strong>側邊欄浮在主內容上方，打開時主內容不移動，但被遮住。</p>
+        }
+        @case ('push') {
+          <p><strong>push 模式：</strong>側邊欄打開時，把主內容往右推，主內容仍然可見。</p>
+        }
+        @case ('side') {
+          <p><strong>side 模式：</strong>側邊欄固定在旁邊，和主內容並排，不互相遮蔽。</p>
+        }
+      }
+    </div>
+
+    <!-- 目前狀態 -->
+    <p>目前選中：<strong style="color: #1565c0;">{{ activePage }}</strong></p>
+    <p style="color: #888;">點擊左側選單切換頁面</p>
+
+  </div>
+</mat-drawer-container>
