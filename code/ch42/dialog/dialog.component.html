@@ -1,0 +1,37 @@
+<!--
+  === 第42章：Dialog 元件 HTML ===
+
+  使用 Material Dialog 的三個區域：
+  mat-dialog-title   → 對話框標題
+  mat-dialog-content → 對話框內容（可捲動）
+  mat-dialog-actions → 底部按鈕區
+-->
+
+<!-- mat-dialog-title：對話框標題列 -->
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<!-- mat-dialog-content：主要內容區 -->
+<mat-dialog-content>
+  <p style="font-size: 1rem; color: #333; line-height: 1.6;">
+    {{ data.message }}
+  </p>
+
+  @if (data.userName) {
+    <p style="color: #777; font-size: 0.9rem;">
+      對象：{{ data.userName }}
+    </p>
+  }
+</mat-dialog-content>
+
+<!-- mat-dialog-actions：按鈕列（通常放在右下角） -->
+<mat-dialog-actions align="end">
+  <!-- 取消按鈕 → 呼叫 onCancel()，close(false) -->
+  <button mat-stroked-button (click)="onCancel()">
+    {{ data.cancelLabel ?? '取消' }}
+  </button>
+
+  <!-- 確認按鈕 → 呼叫 onConfirm()，close(true) -->
+  <button mat-raised-button color="primary" (click)="onConfirm()">
+    {{ data.confirmLabel ?? '確定' }}
+  </button>
+</mat-dialog-actions>

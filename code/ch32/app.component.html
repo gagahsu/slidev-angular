@@ -1,0 +1,85 @@
+<!--
+  === 第32章：Mat-table HTML ===
+
+  mat-table 的結構：
+  ① <table mat-table [dataSource]="..."> — 主要容器
+  ② <ng-container matColumnDef="欄位名"> — 定義每一欄的標題和內容
+  ③ <tr mat-header-row *matHeaderRowDef="..."> — 標題列
+  ④ <tr mat-row *matRowDef="..."> — 資料列
+  ⑤ <mat-paginator> — 分頁元件
+
+  ⚠️ 三個名稱要保持一致：
+     matColumnDef="position" ↔ displayedColumns=['position',...] ↔ element.position
+-->
+
+<div style="max-width: 800px; margin: 30px auto; padding: 20px; font-family: Arial, sans-serif;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">📊 Mat-table 分頁示範</h1>
+
+  <!-- 三個同步部分的說明 -->
+  <div style="background: #fff8e1; padding: 16px; border-radius: 10px; border: 2px solid #f9a825; margin-bottom: 24px;">
+    <h3 style="color: #f57f17; margin-top: 0;">⚠️ 三個必須同步的名稱</h3>
+    <ol style="margin: 0; color: #333; font-family: monospace; font-size: 0.9rem;">
+      <li>HTML <code>matColumnDef="position"</code></li>
+      <li>TS <code>displayedColumns = ['position', ...]</code></li>
+      <li>TS 資料物件 <code>&#123; position: 1, ... &#125;</code></li>
+    </ol>
+  </div>
+
+  <!-- mat-table -->
+  <div class="mat-elevation-z8" style="border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+
+    <table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+      <!-- ===== 欄位定義 ===== -->
+
+      <!-- position 欄位 -->
+      <ng-container matColumnDef="position">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: white;">No.</th>
+        <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+      </ng-container>
+
+      <!-- name 欄位 -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: white;">Name</th>
+        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+      </ng-container>
+
+      <!-- weight 欄位 -->
+      <ng-container matColumnDef="weight">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: white;">Weight</th>
+        <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+      </ng-container>
+
+      <!-- symbol 欄位 -->
+      <ng-container matColumnDef="symbol">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; color: white;">Symbol</th>
+        <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+      </ng-container>
+
+      <!-- ===== 列定義 ===== -->
+
+      <!-- 標題列：顯示哪些欄位（和 displayedColumns 一致）-->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"
+          style="background: #1a5c5c;">
+      </tr>
+
+      <!-- 資料列：每一筆資料渲染一列 -->
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <!-- 分頁元件 -->
+    <!--
+      pageSizeOptions：下拉選單的每頁筆數選項
+      showFirstLastButtons：顯示「第一頁」和「最後一頁」按鈕
+    -->
+    <mat-paginator
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      aria-label="Select page of elements">
+    </mat-paginator>
+
+  </div>
+
+</div>

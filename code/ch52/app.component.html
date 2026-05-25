@@ -1,0 +1,70 @@
+<!--
+  === 第52章：RWD HTML ===
+
+  縮放瀏覽器視窗，觀察：
+  ① 卡片格線從 3 欄 → 2 欄 → 1 欄
+  ② 示範盒子顏色從藍色 → 橘色 → 紅色
+  ③ 手機寬度時導覽列連結消失
+-->
+
+<!-- 響應式導覽列 -->
+<nav class="navbar">
+  <strong>📱 RWD 示範</strong>
+  <!-- 手機寬度時這個 ul 會被 CSS 隱藏 -->
+  <ul class="nav-links">
+    <li>首頁</li>
+    <li>課程</li>
+    <li>關於</li>
+  </ul>
+</nav>
+
+<div style="max-width: 900px; margin: 30px auto; padding: 20px; font-family: Arial, sans-serif;">
+
+  <!-- 目前裝置 -->
+  <div style="background: #e3f2fd; padding: 16px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 24px; text-align: center;">
+    <h3 style="margin: 0; color: #1565c0;">目前裝置（Angular CDK BreakpointObserver）</h3>
+    <p style="font-size: 1.5rem; margin: 8px 0 0; font-weight: bold;">{{ currentDevice }}</p>
+    <p style="color: #777; margin: 4px 0 0;">視窗寬度：{{ windowWidth }}px</p>
+  </div>
+
+  <!-- 響應式示範盒子（顏色隨寬度變化） -->
+  <div class="demo-box" style="margin-bottom: 24px;">
+    <p style="margin: 0;">調整瀏覽器寬度觀察顏色變化！</p>
+    <p style="margin: 8px 0 0; font-size: 0.9rem; opacity: 0.9;">
+      桌機 > 1024px（藍色）｜平板 601-1024px（橘色）｜手機 ≤ 600px（紅色）
+    </p>
+  </div>
+
+  <!-- 響應式卡片格線 -->
+  <h3>響應式格線（縮放視窗看效果）</h3>
+  <div class="card-grid">
+    @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+      <div style="background: #fff; border: 2px solid #5eada0; border-radius: 10px; padding: 20px; text-align: center;">
+        <div style="font-size: 2rem;">🎯</div>
+        <strong>卡片 {{ i }}</strong>
+        <p style="color: #777; font-size: 0.85rem; margin: 8px 0 0;">
+          桌機3欄｜平板2欄｜手機1欄
+        </p>
+      </div>
+    }
+  </div>
+
+  <!-- @media 語法說明 -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+    <h3 style="margin-top: 0;">@media query 語法</h3>
+    <pre style="background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-size: 0.85rem; overflow: auto; margin: 0;">/* 平板（601px ~ 1024px） */
+@media (max-width: 1024px) and (min-width: 601px) &#123;
+  .card-grid &#123;
+    grid-template-columns: repeat(2, 1fr);
+  &#125;
+&#125;
+
+/* 手機（≤ 600px） */
+@media (max-width: 600px) &#123;
+  .card-grid &#123;
+    grid-template-columns: 1fr;
+  &#125;
+&#125;</pre>
+  </div>
+
+</div>

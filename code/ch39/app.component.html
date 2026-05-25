@@ -1,0 +1,98 @@
+<!--
+  === 第39章：Tabs HTML ===
+
+  示範 mat-tab-group（靜態）與 mat-tab-nav-bar（路由）兩種用法。
+-->
+
+<div style="max-width: 800px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">📑 Tabs 頁籤示範</h1>
+
+  <!-- ① mat-tab-group：靜態內容頁籤 -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; margin-bottom: 32px;">
+    <h2 style="color: #1a5c5c; margin-top: 0;">① mat-tab-group（靜態內容）</h2>
+    <p style="color: #555; margin-bottom: 16px;">切換頁籤不改 URL，適合頁面內的區塊切換。</p>
+
+    <!--
+      mat-tab-group：頁籤容器
+      mat-tab：每一個頁籤，label 是頁籤標題
+    -->
+    <mat-tab-group>
+      <mat-tab label="第一頁">
+        <div style="padding: 20px;">
+          <h3>第一頁的內容</h3>
+          <p>這裡可以放任何 HTML 元素，包括表格、表單、圖片等。</p>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="第二頁">
+        <div style="padding: 20px;">
+          <h3>第二頁的內容</h3>
+          <p>切換到這裡時，第一頁的內容不會消失（只是被隱藏）。</p>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="第三頁">
+        <div style="padding: 20px;">
+          <h3>第三頁的內容</h3>
+          <p>mat-tab-group 支援任意數量的頁籤。</p>
+        </div>
+      </mat-tab>
+
+      <!-- disabled 頁籤：無法點擊 -->
+      <mat-tab label="已停用" disabled>
+        <div style="padding: 20px;">這個頁籤無法被選取。</div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <!-- ② 動態 @for 產生頁籤 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin-bottom: 32px;">
+    <h2 style="color: #2e7d32; margin-top: 0;">② 用 @for 動態產生頁籤</h2>
+    <p style="color: #555; margin-bottom: 16px;">頁籤資料來自 TypeScript 陣列，方便動態新增。</p>
+
+    <mat-tab-group>
+      @for (tab of staticTabs; track tab.label) {
+        <mat-tab [label]="tab.icon + ' ' + tab.label">
+          <div style="padding: 20px; background: white; margin-top: 2px;">
+            <p style="font-size: 1.1rem;">{{ tab.content }}</p>
+          </div>
+        </mat-tab>
+      }
+    </mat-tab-group>
+  </div>
+
+  <!-- ③ mat-tab-nav-bar：路由頁籤說明 -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0;">
+    <h2 style="color: #1565c0; margin-top: 0;">③ mat-tab-nav-bar（路由頁籤）</h2>
+    <p style="color: #555;">搭配 routerLink 使用，切換頁籤會改變 URL。</p>
+
+    <!--
+      mat-tab-nav-bar：路由頁籤的外框
+      [tabPanel]：指向 mat-tab-nav-panel，顯示 router-outlet
+      mat-tab-link：每個路由連結
+      [active]：標記目前選中的頁籤
+    -->
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel">
+      @for (link of links; track link.path) {
+        <a mat-tab-link
+           [routerLink]="link.path"
+           (click)="activeLink = link.name"
+           [active]="activeLink === link.name">
+          {{ link.name }}
+        </a>
+      }
+    </nav>
+
+    <mat-tab-nav-panel #tabPanel>
+      <!-- 路由對應的頁面會顯示在這裡 -->
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
+
+    <div style="background: #fff3e0; padding: 12px; border-radius: 6px; margin-top: 12px; font-size: 0.85rem; color: #e65100;">
+      ⚠️ mat-tab-nav-bar 需要配合 app.routes.ts 設定路由才能正常運作。
+      這個範例示範程式碼結構，實際使用時請搭配路由設定。
+    </div>
+  </div>
+
+</div>
