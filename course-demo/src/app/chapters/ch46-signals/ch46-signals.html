@@ -1,0 +1,74 @@
+@if (loading()) {
+  <div class="overlay"></div>
+  <mat-spinner></mat-spinner>
+}
+
+<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">⚡ Signals 示範</h1>
+
+  <!-- Signal vs Observable 比較 -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 24px;">
+    <h3 style="color: #1565c0; margin-top: 0;">Signal vs Observable 比較</h3>
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+      <thead>
+        <tr style="background: #1565c0; color: white;">
+          <th style="padding: 10px; text-align: left;"></th>
+          <th style="padding: 10px; text-align: left;">Signal（第46章）</th>
+          <th style="padding: 10px; text-align: left;">Observable（第45章）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">HTML 讀取</td>
+          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">loading()</td>
+          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">loading$ | async</td>
+        </tr>
+        <tr style="background: #fafafa;">
+          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">更新方式</td>
+          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">.set(value)</td>
+          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">subject.next(value)</td>
+        </tr>
+        <tr>
+          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">取消訂閱</td>
+          <td style="padding: 10px; border: 1px solid #eee;">不需要</td>
+          <td style="padding: 10px; border: 1px solid #eee;">需要（或用 async pipe）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 目前值 -->
+  <div [style.background]="loading() ? '#fff8e1' : '#e8f5e9'"
+       [style.borderColor]="loading() ? '#f9a825' : '#2e7d32'"
+       style="padding: 20px; border-radius: 10px; border: 2px solid; margin-bottom: 20px; transition: all 0.3s;">
+    <h3 style="margin-top: 0;">Signal 目前值</h3>
+    <p>loading() = <strong style="font-size: 1.3rem;">{{ loading() }}</strong></p>
+    @if (loading()) {
+      <p style="color: #e65100;">⏳ 載入中（2秒後自動結束）</p>
+    } @else {
+      <p style="color: #2e7d32;">✅ 閒置中</p>
+    }
+  </div>
+
+  <!-- 操作按鈕 -->
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+    <button mat-raised-button color="primary" (click)="simulateApiCall()">模擬 API（2秒）</button>
+    <button mat-raised-button color="warn" (click)="showLoading()">show()</button>
+    <button mat-raised-button (click)="hideLoading()">hide()</button>
+  </div>
+
+  <!-- effect() 說明 -->
+  <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; border: 2px solid #7b1fa2;">
+    <h3 style="color: #7b1fa2; margin-top: 0;">effect() — 監聽 Signal 變化</h3>
+    <pre style="background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-size: 0.85rem; overflow: auto; margin: 0;">constructor() &#123;
+  effect(() =&gt; &#123;
+    console.log('loading 變化：', this.loadingService.loading());
+  &#125;);
+&#125;</pre>
+    <p style="color: #777; font-size: 0.85rem; margin: 12px 0 0;">
+      → 開啟瀏覽器 Console，操作按鈕時可以看到 effect 被觸發
+    </p>
+  </div>
+
+</div>

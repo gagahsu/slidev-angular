@@ -17,7 +17,20 @@
       "Bash(git push *)",
       "Bash(New-Item *)",
       "Bash(Select-String \"images|public|assets\")",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" | Where-Object { $_.PSIsContainer } | Select-Object FullName)"
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" | Where-Object { $_.PSIsContainer } | Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\\\\code\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(ng version *)",
+      "Bash(ng new *)",
+      "Bash(ng g *)",
+      "Bash(xargs -I{} cat {})",
+      "Bash(ng build *)",
+      "Bash(ng serve *)",
+      "Bash(curl -s http://localhost:4201)",
+      "Bash(git -C \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" diff --stat HEAD)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\" -Directory)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\yunch\\\\Documents\\\\Work\\\\Angular-Allen\\\\code\" -Directory | ForEach-Object { $_.Name } | Sort-Object)",
+      "Bash(npx ng *)"
     ]
   }
 }

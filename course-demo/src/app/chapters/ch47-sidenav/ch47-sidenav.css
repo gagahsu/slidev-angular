@@ -1,0 +1,19 @@
+.sidenav-container {
+  height: 500px;
+}
+
+.sidenav {
+  width: 220px;
+  padding: 16px 0;
+}
+
+.main-content {
+  padding: 24px;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}

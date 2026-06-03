@@ -1,0 +1,86 @@
+<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">☑️ Radio & Checkbox 示範</h1>
+
+  <!-- ① 原生 Radio -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #ccc; margin-bottom: 20px;">
+    <h2 style="margin-top: 0;">① 原生 HTML radio</h2>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <label><input type="radio" name="native-gender" value="male"   (change)="nativeRadio='男'"> 男</label>
+      <label><input type="radio" name="native-gender" value="female" (change)="nativeRadio='女'"> 女</label>
+      <label><input type="radio" name="native-gender" value="other"  (change)="nativeRadio='不公開'"> 不公開</label>
+    </div>
+    <p style="margin-top: 10px;">選取值：<strong>{{ nativeRadio || '（未選）' }}</strong></p>
+  </div>
+
+  <!-- ② mat-radio-group -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h2 style="color: #1565c0; margin-top: 0;">② mat-radio-group（Material 單選）</h2>
+
+    <h4 style="margin-bottom: 8px;">性別：</h4>
+    <mat-radio-group [(ngModel)]="selectedGender" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px;">
+      <mat-radio-button value="male">男</mat-radio-button>
+      <mat-radio-button value="female">女</mat-radio-button>
+      <mat-radio-button value="other">不公開</mat-radio-button>
+    </mat-radio-group>
+    <p>選取值：<strong style="color: #1565c0;">{{ selectedGender || '（未選）' }}</strong></p>
+
+    <h4 style="margin-bottom: 8px;">喜歡的季節：</h4>
+    <mat-radio-group [(ngModel)]="selectedSeason" style="display: flex; gap: 20px; flex-wrap: wrap;">
+      @for (season of seasons; track season) {
+        <mat-radio-button [value]="season">{{ season }}</mat-radio-button>
+      }
+    </mat-radio-group>
+    <p>選取值：<strong style="color: #1565c0;">{{ selectedSeason || '（未選）' }}</strong></p>
+  </div>
+
+  <!-- ③ 原生 Checkbox -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #ccc; margin-bottom: 20px;">
+    <h2 style="margin-top: 0;">③ 原生 HTML checkbox</h2>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <label><input type="checkbox" [(ngModel)]="nativeCheckA"> 選項 A</label>
+      <label><input type="checkbox" [(ngModel)]="nativeCheckB"> 選項 B</label>
+    </div>
+    <p style="margin-top: 10px;">A：{{ nativeCheckA }}，B：{{ nativeCheckB }}</p>
+  </div>
+
+  <!-- ④ mat-checkbox + 全選 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
+    <h2 style="color: #2e7d32; margin-top: 0;">④ mat-checkbox + 全選</h2>
+
+    <mat-checkbox
+      [checked]="allChecked"
+      [indeterminate]="someChecked"
+      (change)="toggleAll($event.checked)"
+      style="margin-bottom: 12px; font-weight: bold;">
+      全選
+    </mat-checkbox>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; padding-left: 24px;">
+      @for (course of courses; track course.name) {
+        <mat-checkbox [(ngModel)]="course.checked">
+          {{ course.name }}
+        </mat-checkbox>
+      }
+    </div>
+
+    @if (selectedCourses.length > 0) {
+      <div style="margin-top: 16px; background: #c8e6c9; padding: 12px; border-radius: 8px;">
+        已選：<strong>{{ selectedCourses.join('、') }}</strong>
+      </div>
+    }
+  </div>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button mat-raised-button color="primary" (click)="submit()" style="font-size: 1rem;">
+      送出表單
+    </button>
+  </div>
+
+  @if (submitResult) {
+    <div style="background: #e8f5e9; padding: 16px; border-radius: 10px; border: 2px solid #2e7d32; white-space: pre-line;">
+      <strong>送出結果：</strong><br>{{ submitResult }}
+    </div>
+  }
+
+</div>

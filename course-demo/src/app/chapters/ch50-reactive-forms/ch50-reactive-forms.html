@@ -1,0 +1,101 @@
+<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">📝 Reactive Forms 動態問卷</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <!-- 問卷基本資訊 -->
+    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+      <h3 style="color: #1565c0; margin-top: 0;">問卷資訊</h3>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 6px;">問卷標題 *</label>
+        <input
+          formControlName="surveyTitle"
+          placeholder="請輸入問卷標題"
+          style="width: 100%; padding: 10px; border: 2px solid #1565c0; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
+        @if (form.get('surveyTitle')?.invalid && form.get('surveyTitle')?.touched) {
+          <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">標題為必填</p>
+        }
+      </div>
+
+      <div>
+        <label style="display: block; font-weight: bold; margin-bottom: 6px;">作者名稱 *</label>
+        <input
+          formControlName="authorName"
+          placeholder="請輸入作者名稱"
+          style="width: 100%; padding: 10px; border: 2px solid #1565c0; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
+        @if (form.get('authorName')?.invalid && form.get('authorName')?.touched) {
+          <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">作者名稱為必填</p>
+        }
+      </div>
+    </div>
+
+    <!-- 動態題目 FormArray -->
+    <div formArrayName="questions">
+      @for (control of questionsArray.controls; track $index) {
+        <div [formGroupName]="$index"
+             style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 16px;">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <strong style="color: #2e7d32;">題目 {{ $index + 1 }}</strong>
+            <button mat-icon-button color="warn" type="button" (click)="removeQuestion($index)">
+              <mat-icon fontIcon="delete"></mat-icon>
+            </button>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 6px;">題目文字 *</label>
+            <input
+              formControlName="qTitle"
+              placeholder="請輸入題目內容"
+              style="width: 100%; padding: 10px; border: 2px solid #2e7d32; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
+            @if (getQuestionGroup($index).get('qTitle')?.invalid && getQuestionGroup($index).get('qTitle')?.touched) {
+              <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">題目文字為必填</p>
+            }
+          </div>
+
+          <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+            <div>
+              <label style="font-weight: bold; margin-right: 8px;">題型：</label>
+              <select formControlName="qType"
+                style="padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
+                <option value="radio">單選題</option>
+                <option value="checkbox">多選題</option>
+                <option value="text">簡答題</option>
+              </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" formControlName="need" id="need-{{ $index }}" />
+              <label [for]="'need-' + $index">必填</label>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <button mat-stroked-button color="primary" type="button" (click)="addQuestion()"
+      style="width: 100%; padding: 14px; margin-bottom: 20px; font-size: 1rem;">
+      <mat-icon fontIcon="add"></mat-icon>
+      新增題目
+    </button>
+
+    <div style="display: flex; gap: 12px;">
+      <button mat-raised-button color="primary" type="submit" style="flex: 1; padding: 14px; font-size: 1rem;">
+        送出問卷
+      </button>
+      <button mat-stroked-button type="button" (click)="resetForm()" style="padding: 14px;">
+        重設
+      </button>
+    </div>
+
+  </form>
+
+  @if (formResult) {
+    <div style="margin-top: 24px; background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32;">
+      <h3 style="color: #2e7d32; margin-top: 0;">✅ 送出成功！表單值：</h3>
+      <pre style="background: #1e1e1e; color: #a5d6a7; padding: 16px; border-radius: 8px; font-size: 0.85rem; overflow: auto;">{{ formResult | json }}</pre>
+    </div>
+  }
+
+</div>

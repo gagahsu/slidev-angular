@@ -1,0 +1,95 @@
+<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">⏱️ 同步 vs 非同步示範</h1>
+
+  <!-- 概念說明 -->
+  <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825; margin-bottom: 24px;">
+    <h3 style="color: #f57f17; margin-top: 0;">核心概念</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div style="background: #e3f2fd; padding: 14px; border-radius: 8px; border-left: 4px solid #1565c0;">
+        <strong style="color: #1565c0;">同步（Sync）</strong>
+        <p style="margin: 8px 0 0; font-size: 0.9rem; color: #555;">
+          排隊等候，一個完成才做下一個。<br>
+          順序：A → B → C
+        </p>
+      </div>
+      <div style="background: #e8f5e9; padding: 14px; border-radius: 8px; border-left: 4px solid #2e7d32;">
+        <strong style="color: #2e7d32;">非同步（Async）</strong>
+        <p style="margin: 8px 0 0; font-size: 0.9rem; color: #555;">
+          叫號系統，不等待，繼續做其他事。<br>
+          順序：A → C → B（B 後來才回來）
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ① 同步執行 -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h2 style="color: #1565c0; margin-top: 0;">① 同步執行順序</h2>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      @for (log of syncLog; track $index) {
+        <div style="background: #1565c0; color: white; padding: 10px 18px; border-radius: 20px; font-size: 0.9rem;">
+          {{ $index + 1 }}. {{ log }}
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- ② 非同步執行（setTimeout） -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
+    <h2 style="color: #2e7d32; margin-top: 0;">② 非同步執行（setTimeout 2秒後）</h2>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+      @for (log of asyncLog; track $index) {
+        <div [style.background]="log.includes('setTimeout') ? '#ff9800' : '#2e7d32'"
+             style="color: white; padding: 10px 18px; border-radius: 20px; font-size: 0.9rem;">
+          {{ $index + 1 }}. {{ log }}
+        </div>
+      }
+    </div>
+    <p style="color: #777; font-size: 0.85rem; margin-top: 12px;">
+      → ① 和 ② 立刻出現，頁面開啟 2 秒後 ③ 才出現
+    </p>
+  </div>
+
+  <!-- ③ Observable + subscribe -->
+  <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; border: 2px solid #7b1fa2; margin-bottom: 20px;">
+    <h2 style="color: #7b1fa2; margin-top: 0;">③ Observable + subscribe（HTTP 請求）</h2>
+
+    <button (click)="fetchData()"
+      [disabled]="isLoading"
+      style="padding: 10px 20px; background: #7b1fa2; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-bottom: 16px;"
+      [style.opacity]="isLoading ? '0.5' : '1'">
+      {{ isLoading ? '載入中...' : '呼叫 API' }}
+    </button>
+
+    @if (isLoading) {
+      <div style="color: #7b1fa2; text-align: center; padding: 20px;">
+        ⏳ 等待 API 回應（非同步，不阻塞其他操作）...
+      </div>
+    }
+
+    @if (errorMsg) {
+      <div style="background: #ffcdd2; padding: 12px; border-radius: 8px; color: #c62828;">
+        ❌ {{ errorMsg }}
+      </div>
+    }
+
+    @if (apiData) {
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #ce93d8;">
+        <strong>✅ 資料回來了：</strong>
+        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; margin-top: 8px; font-size: 0.85rem; overflow: auto;">{{ apiData | json }}</pre>
+      </div>
+    }
+  </div>
+
+  <!-- subscribe 三個 callback 說明 -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
+    <h3 style="margin-top: 0;">subscribe() 三個 callback</h3>
+    <pre style="background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-size: 0.85rem; overflow: auto; margin: 0;">this.http.get(url).subscribe(&#123;
+  next:     (data) =&gt; &#123; /* 資料回來時執行 */ &#125;,
+  error:    (err)  =&gt; &#123; /* 發生錯誤時執行 */ &#125;,
+  complete: ()     =&gt; &#123; /* 所有資料傳完時執行 */ &#125;
+&#125;);</pre>
+  </div>
+
+</div>

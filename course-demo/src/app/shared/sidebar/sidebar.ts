@@ -8,7 +8,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-  // 章節清單（新增章節只要在這裡加一筆即可）
   chapters = [
     { path: 'ch14', label: 'Ch14', title: '變數使用' },
     { path: 'ch15', label: 'Ch15', title: '方法' },
@@ -18,5 +17,35 @@ export class Sidebar {
     { path: 'ch20', label: 'Ch20', title: '繫結' },
     { path: 'ch21', label: 'Ch21', title: '路由示範' },
     { path: 'ch22', label: 'Ch22', title: '資料傳遞' },
+    { path: 'ch23', label: 'Ch23', title: 'Web Storage' },
+    { path: 'ch24', label: 'Ch24', title: '陣列顯示' },
+    { path: 'ch25', label: 'Ch25', title: '@if 條件' },
+    { path: 'ch26', label: 'Ch26', title: '@switch' },
+    { path: 'ch27', label: 'Ch27', title: 'HTTP API' },
+    { path: 'ch28', label: 'Ch28', title: 'OpenAI 對話' },
+    { path: 'ch29', label: 'Ch29', title: 'Interface' },
+    { path: 'ch30', label: 'Ch30', title: '排序' },
+    { path: 'ch32', label: 'Ch32', title: 'Mat-table' },
+    { path: 'ch33', label: 'Ch33', title: 'Mat-icon' },
+    { path: 'ch34', label: 'Ch34', title: 'Datepicker' },
+    { path: 'ch35', label: 'Ch35', title: 'DatePipe' },
+    { path: 'ch36', label: 'Ch36', title: 'JsonPipe' },
+    { path: 'ch37', label: 'Ch37', title: '即時搜尋' },
+    { path: 'ch38', label: 'Ch38', title: 'ngClass' },
+    { path: 'ch39', label: 'Ch39', title: 'Tabs 頁籤' },
+    { path: 'ch40', label: 'Ch40', title: 'Select 下拉' },
+    { path: 'ch41', label: 'Ch41', title: 'Chart.js 圖表' },
+    { path: 'ch42', label: 'Ch42', title: 'Dialog 對話框' },
+    { path: 'ch43', label: 'Ch43', title: '同步 / 非同步' },
+    { path: 'ch44', label: 'Ch44', title: 'Subscription' },
+    { path: 'ch45', label: 'Ch45', title: 'Loading / async' },
+    { path: 'ch46', label: 'Ch46', title: 'Signals' },
+    { path: 'ch47', label: 'Ch47', title: 'Sidenav' },
+    { path: 'ch48', label: 'Ch48', title: 'Toolbar' },
+    { path: 'ch49', label: 'Ch49', title: 'Radio / Checkbox' },
+    { path: 'ch50', label: 'Ch50', title: 'Reactive Forms' },
+    { path: 'ch51', label: 'Ch51', title: 'Validators' },
+    { path: 'ch52', label: 'Ch52', title: 'RWD' },
+    { path: 'ch53', label: 'Ch53', title: 'RxJS' },
   ];
 }

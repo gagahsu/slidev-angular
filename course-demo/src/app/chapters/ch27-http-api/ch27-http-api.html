@@ -1,0 +1,73 @@
+<div style="max-width: 850px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+
+  <h1 style="color: #1a5c5c; text-align: center;">🌐 串接 API 示範</h1>
+
+  <div style="background: #e3f2fd; padding: 16px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h3 style="color: #1565c0; margin-top: 0;">三步驟流程</h3>
+    <ol style="margin: 0; color: #333;">
+      <li><strong>app.config.ts</strong> — 加上 <code>provideHttpClient()</code></li>
+      <li><strong>http-client.service.ts</strong> — 建立 Service 封裝 get / post / put / delete</li>
+      <li><strong>ch27-http-api.ts</strong> — inject Service，呼叫方法並 <code>.subscribe()</code></li>
+    </ol>
+  </div>
+
+  <!-- GET 示範 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h2 style="color: #2e7d32; margin: 0;">📥 GET — 使用者清單</h2>
+      <button (click)="fetchUsers()"
+        style="padding: 8px 16px; background: #2e7d32; color: white; border: none; border-radius: 6px; cursor: pointer;">
+        重新載入
+      </button>
+    </div>
+
+    @if (isLoading) {
+      <div style="text-align: center; padding: 20px; color: #2e7d32;">
+        <p>⏳ 呼叫 API 中...</p>
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div style="background: #ffcdd2; padding: 12px; border-radius: 8px; color: #c62828;">
+        ⚠️ {{ errorMessage }}
+      </div>
+    }
+
+    @if (!isLoading && users.length > 0) {
+      <div>
+        <p style="color: #555; margin-bottom: 12px;">共取得 {{ users.length }} 筆資料：</p>
+        @for (user of users; track user.id) {
+          <div style="background: white; padding: 14px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #c8e6c9;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <strong style="color: #2e7d32; font-size: 1.1rem;">{{ user.name }}</strong>
+                <p style="margin: 4px 0; color: #555;">📧 {{ user.email }}</p>
+                <p style="margin: 4px 0; color: #555;">📞 {{ user.phone }}</p>
+              </div>
+              <span style="background: #e8f5e9; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; color: #2e7d32;">
+                #{{ user.id }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- POST 示範 -->
+  <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825;">
+    <h2 style="color: #f57f17; margin-top: 0;">📤 POST — 新增資料</h2>
+    <button (click)="createPost()"
+      style="padding: 10px 20px; background: #f9a825; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-bottom: 16px;">
+      送出 POST 請求
+    </button>
+    @if (postResult) {
+      <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #f9a825;">
+        <p style="margin: 4px 0; color: #555;">ID：{{ postResult.id }}</p>
+        <p style="margin: 4px 0; color: #555;">標題：{{ postResult.title }}</p>
+        <p style="margin: 4px 0; color: #555;">內容：{{ postResult.body }}</p>
+      </div>
+    }
+  </div>
+
+</div>
