@@ -16,4 +16,9 @@
 .slidev-layout :not(pre) > code span {
   color: inherit !important;
 }
+
+/* Fix Slidev v52+ Presenter Mode Layout Overflow */
+.grid-container {
+  width: 100vw !important;
+}
 </style>
