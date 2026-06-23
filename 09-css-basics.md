@@ -86,12 +86,15 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# CSS 常用屬性（一）
+# CSS 常用屬性（一）— 文字
 
 | 屬性 | 說明 |
 | --- | --- |
 | `color` | 字體顏色 |
 | `font-size` | 字體大小 |
+| `font-weight` | 字體粗細（`bold` 粗體、`normal` 正常、`100`～`900` 數值） |
+| `font-family` | 字型（`Arial`、`sans-serif`、`monospace` 等） |
+| `line-height` | 行距，影響文字上下間隔（建議值 `1.5`～`1.8`） |
 | `text-align` | 文字對齊（`left`、`right`、`center`、`end`） |
 | `text-decoration` | 文字裝飾（`underline` 底線、`line-through` 刪除線） |
 | `letter-spacing` | 文字間距 |
@@ -103,25 +106,31 @@ class: flex flex-col justify-center items-center text-center
 這裡有個最常翻車的雷點：
 在 CSS 裡，`color` 專指「文字本身的顏色」喔！
 如果你想要把一整個區塊的背景塗成黃色，請不要用 `color: yellow`，那會讓字體變黃、背景依然是白的。你必須要叫出 `background-color` 背景色這顆旋鈕！
+`font-weight` 最常用的就是 `bold`（粗）和 `normal`（細），進階用法可以寫數字，`400` 等於 normal，`700` 等於 bold。
+`line-height` 沒有單位時代表「幾倍行距」，例如 `1.6` 代表字體大小的 1.6 倍，閱讀起來更舒服。
 -->
 
 ---
 
-# CSS 常用屬性（二）
+# CSS 常用屬性（二）— 外觀與排版
 
 | 屬性 | 說明 |
 | --- | --- |
+| `background-color` | 背景顏色（與 `color` 不同，`color` 只改文字） |
 | `width` | 寬度 |
 | `height` | 高度 |
-| `border-radius` | 外框圓弧效果 |
+| `border` | 邊框（語法：`粗細 樣式 顏色`，例如 `1px solid black`） |
+| `border-radius` | 外框圓弧效果（`999px` 可做膠囊形） |
 | `box-shadow` | 陰影效果 |
+| `display` | 元素排版方式（`block`、`inline`、`flex`、`none`） |
+| `cursor` | 滑鼠游標樣式（`pointer` 手指、`default` 預設、`not-allowed` 禁止） |
 
 <!--
-第二組旋鈕管的是「物件的形狀與質感」。
-包括控制寬高（width/height）、以及讓邊角變圓滑的 `border-radius`。
-你看現在大家常用的 Facebook 或 LINE 的按鈕和頭貼，通通都圓潤可愛，就是靠這個圓角屬性調出來的。
-還有 `box-shadow`（盒子陰影），它可以幫你的卡片下方加上一層淡淡的影子，讓原本平鋪在螢幕上的網頁，瞬間產生像實體紙張疊在一起的「立體懸浮感」。
-現代高階設計非常不喜歡用粗黑線去框住內容，我們通常會用若隱若現的陰影來做區隔，看起來整個質感就會翻倍！
+第二組旋鈕管的是「物件的外觀與排列方式」。
+`background-color` 是最常用的屬性之一，記住：`color` 改字色，`background-color` 改背景色，這兩個要分清楚！
+`border` 三個參數缺一不可：粗細、樣式（solid/dashed）、顏色，少寫任何一個邊框就不會出現。
+`display: none` 可以讓元素完全消失（連空間也不佔），是做條件顯示時的超常用招式。
+`cursor: pointer` 會讓滑鼠移到元素上時變成手指形狀，告訴使用者「這個可以點」——按鈕一定要加，使用者體驗的基本！
 -->
 
 ---
