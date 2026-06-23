@@ -157,63 +157,63 @@ style: |
       <div>TypeScript 練習（一）</div>
       <div class="chapter-subtitle">Practice — Control & Arrays</div>
     </Link>
-    <Link to="ch17p2" class="chapter-card">
-      <div class="chapter-num">Ch 16-2</div>
+    <Link to="ch17" class="chapter-card">
+      <div class="chapter-num">Ch 17</div>
       <div>TypeScript 練習（二）</div>
       <div class="chapter-subtitle">Date, Restructure & Methods</div>
     </Link>
-    <Link to="ch17" class="chapter-card">
-      <div class="chapter-num">Ch 17</div>
+    <Link to="ch18" class="chapter-card">
+      <div class="chapter-num">Ch 18</div>
       <div>資料轉換與呈現</div>
       <div class="chapter-subtitle">Data Design & Presentation</div>
     </Link>
-    <Link to="ch18" class="chapter-card">
-      <div class="chapter-num">Ch 18</div>
+    <Link to="ch19" class="chapter-card">
+      <div class="chapter-num">Ch 19</div>
       <div>生命週期</div>
       <div class="chapter-subtitle">Component Lifecycle</div>
     </Link>
-    <Link to="ch19" class="chapter-card">
-      <div class="chapter-num">Ch 19</div>
+    <Link to="ch20" class="chapter-card">
+      <div class="chapter-num">Ch 20</div>
       <div>新增組件</div>
       <div class="chapter-subtitle">Components</div>
     </Link>
-    <Link to="ch20" class="chapter-card">
-      <div class="chapter-num">Ch 20</div>
+    <Link to="ch21" class="chapter-card">
+      <div class="chapter-num">Ch 21</div>
       <div>繫結</div>
       <div class="chapter-subtitle">Data Binding</div>
     </Link>
-    <Link to="ch21" class="chapter-card">
-      <div class="chapter-num">Ch 21</div>
+    <Link to="ch22" class="chapter-card">
+      <div class="chapter-num">Ch 22</div>
       <div>路由</div>
       <div class="chapter-subtitle">Angular Routing</div>
     </Link>
-    <Link to="ch22" class="chapter-card">
-      <div class="chapter-num">Ch 22</div>
+    <Link to="ch23" class="chapter-card">
+      <div class="chapter-num">Ch 23</div>
       <div>資料傳遞</div>
       <div class="chapter-subtitle">Data Passing</div>
     </Link>
-    <Link to="ch23" class="chapter-card">
-      <div class="chapter-num">Ch 23</div>
+    <Link to="ch24" class="chapter-card">
+      <div class="chapter-num">Ch 24</div>
       <div>網頁儲存</div>
       <div class="chapter-subtitle">Web Storage</div>
     </Link>
-    <Link to="ch24" class="chapter-card">
-      <div class="chapter-num">Ch 24</div>
+    <Link to="ch25" class="chapter-card">
+      <div class="chapter-num">Ch 25</div>
       <div>陣列顯示</div>
       <div class="chapter-subtitle">Array Display</div>
     </Link>
-    <Link to="ch25" class="chapter-card">
-      <div class="chapter-num">Ch 25</div>
+    <Link to="ch26" class="chapter-card">
+      <div class="chapter-num">Ch 26</div>
       <div>@if 條件顯示</div>
       <div class="chapter-subtitle">Conditional Rendering</div>
     </Link>
-    <Link to="ch26" class="chapter-card">
-      <div class="chapter-num">Ch 26</div>
+    <Link to="ch27" class="chapter-card">
+      <div class="chapter-num">Ch 27</div>
       <div>@switch 條件切換</div>
       <div class="chapter-subtitle">Switch Case</div>
     </Link>
-    <Link to="ch27" class="chapter-card">
-      <div class="chapter-num">Ch 27</div>
+    <Link to="ch28" class="chapter-card">
+      <div class="chapter-num">Ch 28</div>
       <div>串接 API</div>
       <div class="chapter-subtitle">HTTP & API</div>
     </Link>
@@ -425,47 +425,47 @@ src: ./17-typescript-practice-2.md
 ---
 
 ---
-src: ./17-pipes.md
+src: ./18-pipes.md
 ---
 
 ---
-src: ./18-lifecycle.md
+src: ./19-lifecycle.md
 ---
 
 ---
-src: ./19-components.md
+src: ./20-components.md
 ---
 
 ---
-src: ./20-binding.md
+src: ./21-binding.md
 ---
 
 ---
-src: ./21-routing.md
+src: ./22-routing.md
 ---
 
 ---
-src: ./22-data-passing.md
+src: ./23-data-passing.md
 ---
 
 ---
-src: ./23-web-storage.md
+src: ./24-web-storage.md
 ---
 
 ---
-src: ./24-array-display.md
+src: ./25-array-display.md
 ---
 
 ---
-src: ./25-if.md
+src: ./26-if.md
 ---
 
 ---
-src: ./26-switch-case.md
+src: ./27-switch-case.md
 ---
 
 ---
-src: ./27-api.md
+src: ./28-api.md
 ---
 
 ---

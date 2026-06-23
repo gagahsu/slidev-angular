@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: TypeScript 練習（二）
-routeAlias: ch17p2
+routeAlias: ch17
 style: |
   .slidev-layout p,
   .slidev-layout li,

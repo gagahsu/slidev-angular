@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 生命週期
-routeAlias: ch18
+routeAlias: ch19
 style: |
   .slidev-layout p,
   .slidev-layout li,
