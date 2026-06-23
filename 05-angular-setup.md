@@ -138,15 +138,15 @@ Windows 的同學們，請看這裡。我們要去這個 GitHub 連結下載安�
 
 # 安裝 NVM（macOS）
 
-macOS 安裝較為複雜，需至 NVM 官方 GitHub 依說明步驟安裝：
+macOS 需透過終端機執行下列指令安裝 NVM：
 
 ```bash
-# 官方 GitHub
-https://github.com/nvm-sh/nvm
+# 安裝 NVM（v0.40.5）
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash
 ```
 
 <div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
-⚠️ <b>注意：</b> macOS 需依照 GitHub 上的說明一步一步執行，安裝後可能需要重新開啟終端機。
+⚠️ <b>注意：</b> 上方版本號（<code>v0.40.5</code>）可至 <a href="https://github.com/nvm-sh/nvm#installing-and-updating" target="_blank">https://github.com/nvm-sh/nvm#installing-and-updating</a> 查看最新版本。安裝後可能需要重新開啟終端機。
 </div>
 
 <!--
@@ -167,12 +167,18 @@ NVM 安裝完成後，用它來安裝 Node.js。建議先至官方確認目前�
 # 安裝指定版本（例如安裝 22.x 最新版）
 nvm install 22
 
+# 列出已安裝的 Node.js 版本
+nvm list
+
+# 切換使用指定版本（依 nvm list 顯示的版本填入）
+nvm use 22.xx.x
+
 # 確認安裝成功
 node -v
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>技巧：</b> 只輸入主版本號（如 <code>22</code>），NVM 會自動安裝該版本最新的小版號。若 <code>node -v</code> 無反應，關閉命令提示字元重開再試。
+💡 <b>技巧：</b> 只輸入主版本號（如 <code>22</code>），NVM 會自動安裝該版本最新的小版號。可用 <code>nvm list</code> 查看已安裝版本，再用 <code>nvm use</code> 切換。若 <code>node -v</code> 無反應，關閉命令提示字元重開再試。
 </div>
 
 <!--
