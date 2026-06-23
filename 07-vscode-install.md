@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 安裝 VS Code
-routeAlias: ch08
+routeAlias: ch07
 style: |
   .slidev-layout p,
   .slidev-layout li,
@@ -91,7 +91,7 @@ class: flex flex-col justify-center items-center text-center
 VS Code 全名 **Visual Studio Code**，是微軟開發的免費、跨平台程式碼編輯器。
 
 <div class="flex justify-center my-6">
-  <img src="/images/08-vscode/vscode-logo.png" alt="VS Code Logo" style="height: 60px; object-fit: contain;" />
+  <img src="/images/07-vscode/vscode-logo.png" alt="VS Code Logo" style="height: 60px; object-fit: contain;" />
 </div>
 
 | 特性 | 說明 |
@@ -142,7 +142,7 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <div class="flex justify-center mt-4">
-  <img src="/images/08-vscode/vscode-download-page.png" alt="VS Code 下載頁面截圖" style="max-height: 240px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <img src="/images/07-vscode/vscode-download-page.png" alt="VS Code 下載頁面截圖" style="max-height: 240px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </div>
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -165,7 +165,7 @@ class: flex flex-col justify-center items-center text-center
 下載安裝檔後依指示完成安裝，開啟 VS Code 會看到歡迎頁面。
 
 <div class="flex justify-center mt-4">
-  <img src="/images/08-vscode/vscode-welcome-screen.png" alt="VS Code 安裝後歡迎畫面截圖" style="max-height: 320px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <img src="/images/07-vscode/vscode-welcome-screen.png" alt="VS Code 安裝後歡迎畫面截圖" style="max-height: 320px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </div>
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -200,7 +200,7 @@ class: flex flex-col justify-center items-center text-center
 要安裝套件，請點擊左側 Activity Bar 中**長得像方塊的圖示**（延伸模組）。
 
 <div class="flex justify-center mt-6">
-  <img src="/images/08-vscode/vscode-extension-icon.png" alt="VS Code 延伸模組 icon 截圖" style="max-height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <img src="/images/07-vscode/vscode-extension-icon.png" alt="VS Code 延伸模組 icon 截圖" style="max-height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </div>
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -223,7 +223,7 @@ class: flex flex-col justify-center items-center text-center
 在搜尋欄輸入 **`Angular`**，在結果清單中找到製作者為 **Will 保哥** 的套件。
 
 <div class="flex justify-center mt-4">
-  <img src="/images/08-vscode/vscode-search-angular-extension.png" alt="延伸模組搜尋 Angular，Angular Extension Pack by Will 保哥" style="max-height: 300px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <img src="/images/07-vscode/vscode-search-angular-extension.png" alt="延伸模組搜尋 Angular，Angular Extension Pack by Will 保哥" style="max-height: 300px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </div>
 
 <div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
@@ -247,7 +247,7 @@ class: flex flex-col justify-center items-center text-center
 點擊 **Angular Extension Pack** 後，右側會出現套件詳細頁面，點擊「**安裝**」按鈕。
 
 <div class="flex justify-center mt-4">
-  <img src="/images/08-vscode/vscode-install-extension-button.png" alt="Angular Extension Pack 詳細頁面，點擊安裝按鈕" style="max-height: 280px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <img src="/images/07-vscode/vscode-install-extension-button.png" alt="Angular Extension Pack 詳細頁面，點擊安裝按鈕" style="max-height: 280px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </div>
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">

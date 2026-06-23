@@ -109,13 +109,13 @@ style: |
     </Link>
     <Link to="ch07" class="chapter-card">
       <div class="chapter-num">Ch 7</div>
-      <div>HTML 基礎語法</div>
-      <div class="chapter-subtitle">HTML Essentials</div>
+      <div>安裝 VS Code</div>
+      <div class="chapter-subtitle">Install VS Code</div>
     </Link>
     <Link to="ch08" class="chapter-card">
       <div class="chapter-num">Ch 8</div>
-      <div>安裝 VS Code</div>
-      <div class="chapter-subtitle">Install VS Code</div>
+      <div>HTML 基礎語法</div>
+      <div class="chapter-subtitle">HTML Essentials</div>
     </Link>
     <Link to="ch09" class="chapter-card">
       <div class="chapter-num">Ch 9</div>
@@ -381,11 +381,11 @@ src: ./06-angular-downgrade.md
 ---
 
 ---
-src: ./07-html.md
+src: ./07-vscode-install.md
 ---
 
 ---
-src: ./08-vscode-install.md
+src: ./08-html.md
 ---
 
 ---

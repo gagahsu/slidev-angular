@@ -12,8 +12,8 @@
 | [`ch04/`](./ch04/) | 終端機指令 | Markdown / Shell |
 | [`ch05/`](./ch05/) | Angular 安裝與專案建立 | Markdown |
 | [`ch06/`](./ch06/) | Angular 降版 | Markdown |
-| [`ch07/`](./ch07/) | HTML 標籤 | HTML |
-| [`ch08/`](./ch08/) | VS Code 安裝 | Markdown |
+| [`ch07/`](./ch07/) | VS Code 安裝 | Markdown |
+| [`ch08/`](./ch08/) | HTML 標籤 | HTML |
 | [`ch09/`](./ch09/) | CSS 基礎語法 | HTML / CSS |
 | [`ch10/`](./ch10/) | CSS 進階樣式（Flexbox / hover） | HTML / CSS |
 | [`ch11/`](./ch11/) | CSS 進階工具（position / z-index） | HTML / CSS |
@@ -66,7 +66,7 @@
 
 ## 如何使用
 
-### HTML/CSS 檔案（ch01、ch07、ch09、ch10、ch11）
+### HTML/CSS 檔案（ch01、ch08、ch09、ch10、ch11）
 直接用瀏覽器打開 `index.html` 即可看到效果。
 
 ### TypeScript 檔案（ch02）
@@ -76,7 +76,7 @@ npx ts-node 1-naming.ts
 ```
 或直接在 VS Code 裡閱讀程式碼，理解邏輯即可。
 
-### Markdown 檔案（ch03、ch04、ch05、ch06、ch08）
+### Markdown 檔案（ch03、ch04、ch05、ch06、ch07）
 用 VS Code 開啟後，按 `Ctrl + Shift + V` 預覽渲染後的效果。
 
 ---
@@ -114,16 +114,16 @@ code/
 ├── ch06/               ← 第06章：Angular 降版
 │   └── downgrade-guide.md
 │
-├── ch07/               ← 第07章：HTML
+├── ch07/               ← 第07章：VS Code 安裝
+│   └── vscode-extensions.md
+│
+├── ch08/               ← 第08章：HTML
 │   ├── index.html      （所有標籤總覽）
 │   ├── practice1.html  （練習1：大標題）
 │   ├── practice2.html  （練習2：各種輸入元件）
 │   ├── practice3.html  （練習3：標題+文字+圖片）
 │   ├── practice4.html  （練習4：表格）
 │   └── practice5.html  （練習5：個人名片）
-│
-├── ch08/               ← 第08章：VS Code 安裝
-│   └── vscode-extensions.md
 │
 ├── ch09/               ← 第09章：CSS 基礎語法
 │   ├── index.html

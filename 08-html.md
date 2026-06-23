@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 前端語言 HTML
-routeAlias: ch07
+routeAlias: ch08
 style: |
   .slidev-layout p,
   .slidev-layout li,
@@ -657,7 +657,7 @@ layout: default
 <div class="browser-preview text-sm" style="font-family: serif;">
   <h1 style="font-size:1.6em; font-weight:bold; margin:0 0 0.3rem;">HTML練習</h1>
   <p style="margin:0 0 0.5rem; font-size:0.9em;">可愛的圖片</p>
-  <img src="/images/07-html/practice3-animal.png" alt="可愛的圖片" style="max-width:260px; max-height:120px; border-radius:4px;" />
+  <img src="/images/08-html/practice3-animal.png" alt="可愛的圖片" style="max-width:260px; max-height:120px; border-radius:4px;" />
 </div>
 
 <div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
@@ -723,7 +723,7 @@ layout: default
 
 請開啟專案並且試著將下方圖片的畫面做出來（單純 HTML 無 CSS）。
 
-<img src="/images/07-html/practice5.png" alt="練習5目標畫面" style="max-height: 320px;" />
+<img src="/images/08-html/practice5.png" alt="練習5目標畫面" style="max-height: 320px;" />
 
 <!--
 練習五是我們今天的終極大魔王——我們要用剛才學到的所有積木，拼出一張你專屬的「個人名片網頁」！
