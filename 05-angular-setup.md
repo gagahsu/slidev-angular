@@ -111,17 +111,19 @@ class: flex flex-col justify-center items-center text-center
 
 # 安裝 NVM（Windows）
 
-前往以下網址，下載最新版本的 `nvm-setup` 並安裝：
+前往以下網址，於 **Assets** 區下載 `nvm-setup.exe` 並安裝：
 
 ```bash
 # 網址
 https://github.com/coreybutler/nvm-windows/releases
 ```
 
-安裝完成後，開啟命令提示字元並輸入 `nvm`，若看到說明畫面即安裝成功。
+<div class="flex justify-center my-3">
+  <img src="/images/05-angular-setup/nvm-windows-assets.png" alt="nvm-windows releases 頁面 Assets 區，下載 nvm-setup.exe" style="max-height: 220px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+</div>
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>下載選項：</b> 選擇 <code>nvm-setup</code>（安裝版），不要選 <code>nvm-noinstall</code>。
+<div class="mt-2 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>下載選項：</b> 選擇 <code>nvm-setup.exe</code>（安裝版），不要選 <code>nvm-noinstall.zip</code>。安裝完成後，開啟命令提示字元並輸入 <code>nvm</code>，若看到說明畫面即安裝成功。
 </div>
 
 <!--
