@@ -205,23 +205,27 @@ npm uninstall -g @angular/cli
 
 # 步驟 3：安裝 Angular 19 並建立專案
 
-使用 `npx` 直接以指定版本建立新專案，無需重新全域安裝：
+先安裝指定版本全域 CLI，再用 `ng new` 建立專案：
 
 ```bash
-npx @angular/cli@19 new my-app-19
+# 安裝全域 CLI 19 版
+npm install -g @angular/cli@19
+
+# 建立新專案
+ng new my-app-19
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>說明：</b> <code>npx</code> 會臨時下載並執行指定版本的 Angular CLI，專案建立後即可在 <code>package.json</code> 中確認版本是否正確。
+💡 <b>替代方案：</b> 不想全域安裝，可用 <code>npx @angular/cli@19 new my-app-19</code> 臨時執行，但後續 <code>ng serve</code> 等指令仍需全域 CLI 才能直接使用。
 </div>
 
 <!--
-步驟三：臨時徵調工人，來蓋特定版本的房子！
-這招是現代前端的「高級外掛」——使用 **npx**。
-我們輸入 `npx @angular/cli@19 new my-app-19`。
-這個 `npx` 的意思就是：「電腦啊！請你幫我臨時召喚 19 版的 Angular 機器人過來，幫我蓋一棟叫 `my-app-19` 的房子，蓋好之後就讓它消失，不用安裝在我的全域電腦裡佔空間。」
-這招超好用！
-你的電腦就不會塞滿各種舊版新版的工具，需要用的時候「隨調隨用」，超級乾淨優雅！
+步驟三：先請來 19 版的工人，再叫他幫你蓋房子！
+我們先執行 `npm install -g @angular/cli@19`，把 19 版的 Angular CLI 正式安裝到全域。
+裝好之後，`ng` 指令就恢復可用了，而且版本已經是 19。
+接著直接執行 `ng new my-app-19`，就能用 19 版的 CLI 建立出 Angular 19 的新專案。
+這個流程的邏輯很直覺：「先換工具，再開工」。
+如果你不想全域安裝，也可以改用 `npx @angular/cli@19 new my-app-19`，它會臨時下載 19 版來蓋專案，但之後要跑 `ng serve`、`ng build` 這些日常指令，還是需要全域裝好 CLI 才方便。
 -->
 
 ---

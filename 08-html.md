@@ -579,6 +579,134 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+
+# HTML 常用標籤 — table（1/3）外層結構
+
+`<table>` 是整個表格的外框容器，內部用 `<thead>` 和 `<tbody>` 語義化分區：
+
+| 標籤 | 說明 |
+| --- | --- |
+| `<table>` | 表格最外層容器，所有列與欄都放在裡面 |
+| `<thead>` | 表格標題區，放欄位名稱列，語義上是「表頭」 |
+| `<tbody>` | 表格資料區，放實際內容列，語義上是「表身」 |
+
+```html
+<table>
+  <thead>
+    <!-- 表頭列（欄位標題）放這裡 -->
+  </thead>
+  <tbody>
+    <!-- 資料列放這裡 -->
+  </tbody>
+</table>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>thead</code> / <code>tbody</code> 不影響視覺，但讓 CSS 套樣式更精準，也讓瀏覽器與爬蟲理解表格語意
+</div>
+
+<!--
+table 是一個「套娃」結構，最外層是 `<table>`，裡面再分 `<thead>`（表頭）和 `<tbody>`（表身）。
+雖然不寫 `thead` / `tbody` 瀏覽器也能顯示，但加上去之後 CSS 樣式和語義都更清楚，是良好習慣。
+你可以想像 `table` 是一棟大樓，`thead` 是 1 樓入口大廳（放招牌），`tbody` 是 2 樓以上的住戶（放資料）。
+-->
+
+---
+
+# HTML 常用標籤 — table（2/3）tr 與 th
+
+`<tr>` 定義「一整橫列」，`<th>` 定義列中的「標題欄位」：
+
+| 標籤 | 說明 | 預設樣式 |
+| --- | --- | --- |
+| `<tr>` | Table Row，代表表格中的一整列 | 無 |
+| `<th>` | Table Header，標題格，放在 `<thead>` 的 `<tr>` 裡 | **粗體 + 置中** |
+
+```html
+<thead>
+  <tr>
+    <th>姓名</th>
+    <th>數學</th>
+    <th>英文</th>
+  </tr>
+</thead>
+```
+
+<div class="browser-preview text-sm mt-2" style="font-family: sans-serif;">
+  <table style="border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #999; padding:4px 14px; background:#f5f5f5; font-weight:bold; text-align:center;">姓名</th>
+        <th style="border:1px solid #999; padding:4px 14px; background:#f5f5f5; font-weight:bold; text-align:center;">數學</th>
+        <th style="border:1px solid #999; padding:4px 14px; background:#f5f5f5; font-weight:bold; text-align:center;">英文</th>
+      </tr>
+    </thead>
+  </table>
+</div>
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 一個 <code>&lt;tr&gt;</code> 代表一橫列；列裡面有幾個 <code>&lt;th&gt;</code>，就代表有幾欄
+</div>
+
+<!--
+`<tr>` 就是「一層樓」的概念，每個 `<tr>` 就是表格的一整橫列。
+`<th>` 放在 `<thead>` 裡的 `<tr>` 當中，瀏覽器預設會幫它加上粗體和置中，讓使用者一眼看出「這是欄位標題」。
+一個 `<thead>` 通常只放一組 `<tr>`，裡面有幾個 `<th>` 就代表這張表有幾欄。
+-->
+
+---
+
+# HTML 常用標籤 — table（3/3）td 與完整範例
+
+`<td>` 定義「資料格」，放在 `<tbody>` 的 `<tr>` 裡：
+
+| 標籤 | 說明 | 預設樣式 |
+| --- | --- | --- |
+| `<td>` | Table Data，資料格，放在 `<tbody>` 的 `<tr>` 裡 | 無（靠左對齊） |
+
+```html
+<tbody>
+  <tr>
+    <td>小明</td><td>90</td><td>85</td>
+  </tr>
+  <tr>
+    <td>小華</td><td>70</td><td>95</td>
+  </tr>
+</tbody>
+```
+
+<div class="browser-preview text-sm mt-2" style="font-family: sans-serif;">
+  <table style="border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th style="border:1px solid #999; padding:4px 14px; background:#f5f5f5;">姓名</th>
+        <th style="border:1px solid #999; padding:4px 14px; background:#f5f5f5;">數學</th>
+        <th style="border:1px solid #999; padding:4px 14px; background:#f5f5f5;">英文</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="border:1px solid #999; padding:4px 14px;">小明</td>
+        <td style="border:1px solid #999; padding:4px 14px;">90</td>
+        <td style="border:1px solid #999; padding:4px 14px;">85</td>
+      </tr>
+      <tr>
+        <td style="border:1px solid #999; padding:4px 14px;">小華</td>
+        <td style="border:1px solid #999; padding:4px 14px;">70</td>
+        <td style="border:1px solid #999; padding:4px 14px;">95</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--
+`<td>` 就是每一格資料的容器，和 `<th>` 的差別只有：`<td>` 沒有預設粗體和置中。
+每一列 `<tr>` 裡的 `<td>` 數量要和 `<thead>` 的 `<th>` 數量一致，否則表格的欄會對不齊。
+口訣總整理：`table` 是大樓 → `thead`/`tbody` 分樓層用途 → `tr` 是每一層 → `th` 是招牌、`td` 是住戶。
+更多用法可參考：https://www.w3schools.com/html/html_tables.asp
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -677,7 +805,7 @@ layout: default
 
 # 練習 4
 
-請開啟專案並且試著將下方圖片的畫面做出來（單純 HTML 無 CSS），可參考 https://www.w3schools.com/html/html_tables.asp。
+請開啟專案並且試著將下方圖片的畫面做出來（單純 HTML 無 CSS）。
 
 **目標畫面：**
 
