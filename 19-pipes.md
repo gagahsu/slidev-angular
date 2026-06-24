@@ -112,14 +112,18 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 步驟一：思考你的畫面設計
+# 步驟一：思考畫面設計
 
-為什麼要思考畫面設計？因為當你設計前端畫面時，要想一下這個畫面怎麼設計才會符合你的資料，接收到資料的時候呈現會不會有問題。
+畫面結構必須能配合資料量動態調整，而非寫死靜態內容。
 
-例如：問卷的問題跟選項數量不固定，如果 HTML 的內容是固定的：
+以動態問卷為例，問題與選項數量不固定：
 
-- 資料量變多 → 程式報錯或少呈現資料
-- 所以 HTML 必須根據資料量去做動態增長
+| 情況 | 結果 |
+| --- | --- |
+| HTML 內容固定 | 資料量改變時，畫面呈現不符預期或報錯 |
+| HTML 動態增長 | 資料有幾筆，畫面就渲染幾筆，自動對應 |
+
+**原則：HTML 結構需根據資料量動態增減，不可靜態寫死。**
 
 <!--
 第一步：思考畫面設計。
@@ -130,11 +134,15 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 步驟二：思考你的畫面需要什麼內容
+# 步驟二：分析畫面所需內容
 
-這點就是 UI/UX 設計思維：這個畫面要呈現的東西是什麼？有幾個輸入框要讓使用者輸入？這些輸入框的資料是後端來的還是要讓使用者填寫的？
+在設計資料格式前，先從 UI/UX 角度釐清畫面需求：
 
-這些東西思考完，才有辦法去做後端資料的設計。當然也可以在開發階段一邊開發一邊做新增。
+- 畫面需要呈現哪些欄位？
+- 哪些欄位由後端 API 提供？哪些由使用者輸入？
+- 哪些欄位是唯讀的？哪些是可編輯的？
+
+> 確認好需求清單，才能準確定義資料格式與 API 規格。
 
 <!--
 第二步：思考畫面需要的內容。
@@ -148,9 +156,9 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 步驟三：設計你的資料的格式
+# 步驟三：設計資料格式
 
-這點需要想法轉換，是可以訓練的。當你多做過幾次設計就會習慣這種思考模式。
+根據前兩步的畫面分析，套用以下口訣決定資料型別：
 
 以動態問卷為例：
 
@@ -219,7 +227,7 @@ layout: default
 layout: default
 ---
 
-# 練習：解題提示
+# 練習：解題提示（1／2）
 ### 拆解畫面結構
 
 <img src="/images/17-pipes/practice-ecommerce.png" class="rounded shadow-md" style="float: right; width: 38%; margin: 0 0 0.5rem 1.5rem;" />
@@ -228,22 +236,40 @@ layout: default
 
 - **左邊**：廣告區（一張圖 + 標題）→ Object
 - **右上**：menu 分類（多個選項）→ Array
-- **下方**：商品列表（多筆商品，每筆含名稱與價格）→ Array of Object
+- **下方**：商品列表（多筆商品，每筆含**圖片、名稱、價格**）→ Array of Object
+
+<!--
+大家都設計好了嗎？我們一起來拆解一下：
+左邊的廣告區只有一個，但裡面包含圖片網址和標題，所以我們用一個 Object。
+右上角的選單，是「多個純文字分類」，所以我們用簡單的字串陣列。
+下方的商品列表，是「多個商品卡片，而且每個卡片都有名稱和價格」，所以我們用物件陣列。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示（2／2）
+### TypeScript 資料結構
 
 ```typescript
-const ad = { imageUrl: '...', title: '辦公周邊' };
+const ad = {
+  imageUrl: '/images/17-pipes/practice-ecommerce.png',
+  title: '辦公周邊'
+};
+
 const categoryMenu = ['辦公配件', '印表機', '鍵盤滑鼠', '喇叭耳麥'];
+
 const products = [
-  { name: 'iFLYTEK AINOTE Air2', price: 16840 },
-  { name: 'BELKIN USB-C 7合1',   price: 1130  },
+  { name: 'iFLYTEK AINOTE Air 2 AI智能會議筆記', price: 16840, imageUrl: '/images/products/product-1.png' },
+  { name: 'BELKIN USB-C 7合1高速多媒體集線器',   price: 1130,  imageUrl: '/images/products/product-2.png' },
+  { name: 'TDGB 17-49吋 高承重 20KG 無重力 電',  price: 2391,  imageUrl: '/images/products/product-3.png' },
+  { name: 'Raymii瑞米 LS-98-M1 氣壓式 螢幕支架', price: 999,   imageUrl: '/images/products/product-4.png' },
+  { name: 'BELKIN Thunderbolt 4 5合1 dock 擴',   price: 5752,  imageUrl: '/images/products/product-5.png' },
 ];
 ```
 
 <!--
-大家都設計好了嗎？我們一起來拆解一下：
-左邊的廣告區只有一個，但裡面包含圖片網址和標題，所以我們用一個 Object：`ad = { imageUrl: '...', title: '辦公周邊' }`。
-右上角的選單，是「多個純文字分類」，所以我們用簡單的字串陣列：`categoryMenu = ['辦公配件', '印表機', ...]`。
-下方的商品列表，是「多個商品卡片，而且每個卡片都有名稱和價格」，所以我們用物件陣列：`products = [ { name: '...', price: 16840 }, ... ]`。
 你看，透過這種結構化拆解，複雜的畫面瞬間就變成了清爽的 TypeScript 資料結構。
 這就是前端工程師的功力體現！
 -->
@@ -266,6 +292,196 @@ layout: default
 下一部分的練習就是：請你把剛剛在 TS 裡定義好的 `ad`、`categoryMenu` 和 `products` 變數。
 搭配上我們之前學過的雙大括號和中括號屬性綁定，在 HTML 裡把這個畫面動態呈現出來！
 這題要結合你之前的 HTML/CSS 與變數綁定功力，好好給它寫出來吧！
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（1／6）
+### TypeScript — 資料宣告
+
+```typescript
+ad = {
+  imageUrl: '/images/products/ad.png',
+  title: '辦公周邊'
+};
+
+categoryMenu = ['辦公配件', '印表機', '鍵盤滑鼠', '喇叭耳麥'];
+
+products = [
+  { name: 'iFLYTEK AINOTE Air 2 AI智能會議筆記', price: 16840, imageUrl: '/images/products/product-1.png' },
+  { name: 'BELKIN USB-C 7合1高速多媒體集線器',   price: 1130,  imageUrl: '/images/products/product-2.png' },
+  { name: 'TDGB 17-49吋 高承重 20KG 無重力 電',  price: 2391,  imageUrl: '/images/products/product-3.png' },
+  { name: 'Raymii瑞米 LS-98-M1 氣壓式 螢幕支架', price: 999,   imageUrl: '/images/products/product-4.png' },
+  { name: 'BELKIN Thunderbolt 4 5合1 dock 擴',   price: 5752,  imageUrl: '/images/products/product-5.png' },
+];
+```
+
+<!--
+三個變數：廣告物件、分類字串陣列、商品物件陣列。
+每筆商品包含名稱、價格、圖片網址三個欄位。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（2／6）
+### HTML — 廣告區與分類選單
+
+```html
+<div class="shop-layout">
+  <!-- 廣告區 -->
+  <div class="ad-panel">
+    <img [src]="ad.imageUrl" alt="廣告" />
+    <p>{{ ad.title }}</p>
+  </div>
+
+  <div class="main-panel">
+    <!-- 分類選單 -->
+    <div class="category-menu">
+      <button>{{ categoryMenu[0] }}</button>
+      <button>{{ categoryMenu[1] }}</button>
+      <button>{{ categoryMenu[2] }}</button>
+      <button>{{ categoryMenu[3] }}</button>
+    </div>
+
+    <!-- 商品列表見下一頁 -->
+    <div class="product-grid"> ... </div>
+  </div>
+</div>
+```
+
+<!--
+[src] 是 Angular 屬性綁定，把 ad.imageUrl 的值傳給 img 的 src 屬性。
+categoryMenu 是字串陣列，用索引 [0]~[3] 逐一取值放進 button。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（3／6）
+### HTML — 商品列表
+
+```html
+<!-- product-grid 內部 -->
+<div class="product-grid">
+  <div class="product-card">
+    <img [src]="products[0].imageUrl" alt="{{ products[0].name }}" />
+    <p>{{ products[0].name }}</p>
+    <p class="price">${{ products[0].price }}</p>
+  </div>
+
+  <div class="product-card">
+    <img [src]="products[1].imageUrl" alt="{{ products[1].name }}" />
+    <p>{{ products[1].name }}</p>
+    <p class="price">${{ products[1].price }}</p>
+  </div>
+
+  <!-- products[2] ~ products[4] 結構相同，以此類推 -->
+</div>
+```
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 目前用索引取值是暫時做法。完整的動態清單需使用 <b>第 26 章</b>的 <code>*ngFor</code> 語法。
+</div>
+
+<!--
+每張商品卡片結構相同：圖片用 [src] 綁定，名稱與價格用雙大括號插值。
+目前手動複製五份，之後學 *ngFor 就能自動產生。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（4／6）
+### CSS — 整體版型與廣告區
+
+```css
+/* 整體左右版型 */
+.shop-layout {
+  display: flex;
+  gap: 1rem;
+}
+
+/* 廣告區固定寬度，不隨畫面縮小 */
+.ad-panel {
+  width: 220px;
+  flex-shrink: 0;
+}
+.ad-panel img {
+  width: 100%;
+  border-radius: 8px;
+}
+```
+
+<!--
+shop-layout 用 flex 做左右欄分割。
+ad-panel 固定 220px，flex-shrink: 0 防止它被壓縮。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（5／6）
+### CSS — 分類選單與商品列表
+
+```css
+/* 分類選單水平排列 */
+.category-menu {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* 商品列表五欄 grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+}
+```
+
+<!--
+category-menu 用 flex 讓四個按鈕水平排列。
+product-grid 用 grid 五欄平均分配空間。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（6／6）
+### CSS — 商品卡片與價格
+
+```css
+/* 商品卡片圖片 */
+.product-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+/* 商品名稱 */
+.product-card p {
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+/* 價格紅字 */
+.price {
+  color: #e53e3e;
+  font-weight: bold;
+}
+```
+
+<!--
+aspect-ratio: 1 / 1 讓圖片保持正方形比例，object-fit: contain 避免圖片變形。
+price class 對應 HTML 中 <p class="price"> 的紅色價格樣式。
 -->
 
 ---

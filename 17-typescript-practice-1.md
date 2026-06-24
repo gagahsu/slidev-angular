@@ -149,6 +149,76 @@ if (a > b && a > 0) {
 -->
 
 ---
+
+# if 判斷式 — else if
+
+當有**超過兩種情況**時，在 `if` 與 `else` 之間加入 `else if` 分支：
+
+```typescript
+let score = 75;
+
+if (score >= 90) {
+  console.log('優秀');
+} else if (score >= 70) {
+  console.log('良好');  // 75 >= 70，印出此行
+} else if (score >= 60) {
+  console.log('及格');
+} else {
+  console.log('不及格');
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 條件由上往下依序比對，<b>第一個成立的分支</b>執行後即跳出，不再往下判斷
+</div>
+
+<!--
+如果條件不只兩個，那「if/else」就不夠用了。
+我們可以在中間加入一個或多個 else if，讓程式在多個情境下各自走不同的路線。
+例如成績判斷：90 分以上優秀；70 到 89 良好；60 到 69 及格；其餘不及格。
+條件是從上往下一個一個比對，只要遇到第一個成立的，就執行那個區塊，後面的 else if 全部略過。
+-->
+
+---
+layout: default
+---
+
+# if 判斷式 — 小節練習
+
+宣告變數 `score = 85`，用 if / else if / else 判斷成績等級後印出對應字母：
+- 90 以上：`'A'`
+- 80 以上：`'B'`
+- 70 以上：`'C'`
+- 其他：`'不及格'`
+
+<!--
+考 else if 的層疊判斷，條件由高到低依序比對，第一個符合就停止。
+-->
+
+---
+layout: default
+---
+
+# if 判斷式 — 小節練習解答
+
+```typescript
+let score = 85;
+if (score >= 90) {
+  console.log('A');
+} else if (score >= 80) {
+  console.log('B');  // 印出 B
+} else if (score >= 70) {
+  console.log('C');
+} else {
+  console.log('不及格');
+}
+```
+
+<!--
+score = 85，不滿足 90，但滿足 80，因此印出 B，後面的分支全部跳過。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -218,6 +288,41 @@ console.log(typeof s2);  // string
 第二種是「工程師偷懶法」：寫一個空字串 `''` 加上數字 `n`。
 因為 JavaScript 看到加號一邊是字串，就會自動把另一邊的數字也強行轉成字串來做拼接。
 兩種方法結果完全一樣，大叔個人偏好第一種，因為程式碼的可讀性比較高。
+-->
+
+---
+layout: default
+---
+
+# 類型轉換 — 小節練習
+
+有兩個字串 `a = '150'` 和 `b = '80'`，先將它們轉換為數字後，計算並印出兩數之**和**與**積**。
+
+<!--
+直接用 + 做加法會得到字串拼接結果 '15080'，一定要先 Number() 轉型。
+-->
+
+---
+layout: default
+---
+
+# 類型轉換 — 小節練習解答
+
+```typescript
+let a = '150';
+let b = '80';
+let numA = Number(a);
+let numB = Number(b);
+console.log(numA + numB);  // 230
+console.log(numA * numB);  // 12000
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 未轉型直接 <code>'150' + '80'</code> 會得到 <code>'15080'</code>，而非 <code>230</code>！
+</div>
+
+<!--
+最常踩的坑：忘記轉型，直接做加法，得到字串拼接結果。
 -->
 
 ---
@@ -309,6 +414,35 @@ console.log(parsed.age);   // 25
 我們必須用 `JSON.parse()` 把這個字串「加水還原」成 TS 裡的實體物件，這樣才能寫 `parsed.name` 讀取資料。
 這個過程叫做「反序列化（Deserialization）」。
 雖然在 Angular 的 HttpClient 模組裡，框架會貼心地幫我們自動 parse 掉，但基本原理大家一定要懂喔！
+-->
+
+---
+layout: default
+---
+
+# JSON — 小節練習
+
+建立物件 `user = { name: '小明', age: 22, city: '台北' }`，用 `JSON.stringify` 轉為 JSON 字串並印出，再驗證其型別為 `string`。
+
+<!--
+stringify 把 TS 物件打包成純文字字串，這是前後端溝通前必做的動作。
+-->
+
+---
+layout: default
+---
+
+# JSON — 小節練習解答
+
+```typescript
+let user = { name: '小明', age: 22, city: '台北' };
+let json = JSON.stringify(user);
+console.log(json);         // {"name":"小明","age":22,"city":"台北"}
+console.log(typeof json);  // string
+```
+
+<!--
+輸出是純文字字串，不是物件，所以 typeof 會得到 'string'，這點要注意。
 -->
 
 ---
@@ -530,6 +664,37 @@ if (x && !y) {
 -->
 
 ---
+layout: default
+---
+
+# 運算符 — 小節練習
+
+宣告 `price = 2000`，套用指派運算符計算最終售價後印出：
+- 打九折（`*= 0.9`）
+- 再扣除折扣券 100 元（`-= 100`）
+
+<!--
+考指派運算符的鏈式使用，讓學員感受累計計算的便利性。
+-->
+
+---
+layout: default
+---
+
+# 運算符 — 小節練習解答
+
+```typescript
+let price = 2000;
+price *= 0.9;  // price = 1800
+price -= 100;  // price = 1700
+console.log(price);  // 1700
+```
+
+<!--
+乘完是 1800，再扣 100 得 1700。每步都把結果存回 price 本身。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -550,12 +715,14 @@ class: flex flex-col justify-center items-center text-center
 | `.length` | 回傳字串的字元數量 |
 | `.slice(起始, 終止)` | 擷取從起始到終止（不含終止）位置的子字串 |
 | `.indexOf(搜尋值)` | 搜尋指定內容，回傳第一個符合的位置（找不到回傳 -1） |
+| `.split(分隔符號)` | 依分隔符號切割字串，回傳陣列；傳入 `''` 可逐字拆分 |
 
 <!--
-這三個是處理字串時最常召喚的函數：
+這四個是處理字串時最常召喚的函數：
 `.length` 告訴你這串字有幾個字元。
 `.slice(起始, 終止)` 幫你把字串「切一塊下來」。
 `.indexOf(搜尋值)` 幫你搜尋特定關鍵字在第幾個位置（注意：如果找不到，會回傳 -1）。
+`.split()` 是字串轉陣列的標準做法，傳入空字串時逐字拆分；配合 reverse() 和 join('') 三步可反轉字串。
 -->
 
 ---
@@ -565,25 +732,57 @@ class: flex flex-col justify-center items-center text-center
 ```typescript
 let str = 'Hello World';
 
-console.log(str.length);         // 11
-console.log(str.slice(0, 5));    // Hello
-console.log(str.slice(6));       // World
-console.log(str.indexOf('W'));   // 6
-console.log(str.indexOf('xyz')); // -1（找不到）
+console.log(str.length);           // 11
+console.log(str.slice(0, 5));      // Hello
+console.log(str.slice(6));         // World
+console.log(str.indexOf('W'));     // 6
+console.log(str.indexOf('xyz'));   // -1（找不到）
+console.log('Hello'.split(''));    // ['H', 'e', 'l', 'l', 'o']
+console.log('a,b,c'.split(','));   // ['a', 'b', 'c']
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 字串的索引從 <code>0</code> 開始；<code>slice</code> 的終止位置不包含在結果中
+💡 <code>split('') → reverse() → join('')</code> 三步可反轉字串：<code>'Hello'.split('').reverse().join('')</code> → <code>'olleH'</code>
 </div>
 
 <!--
-看一下範例程式碼。
-字串的索引是從 `0` 開始的，這點是程式界的共識，老大都是從 0 開始算起。
-所以 `'Hello World'` 裡的 `'Hello'` 是第 0 到第 4 個字元。
-當我們寫 `str.slice(0, 5)`，切出來的就是 `'Hello'`（注意：終止點的 5 是不包含在內的）。
-而 `'W'` 的位置是 6。
-要是搜尋一個根本不存在的 `'xyz'`，就會拿到 `-1`。
-這些小細節在後面的實作題會用到，先看仔細囉。
+字串索引從 0 開始；slice 終止位置不含在結果中；indexOf 找不到回傳 -1。
+split 傳入空字串逐字拆分，傳入分隔符號則按符號切割。
+split → reverse → join 三步組合技可做字串反轉，在後面的實作題會用到！
+-->
+
+
+---
+layout: default
+---
+
+# 字串常用函數 — 小節練習
+
+有字串 `email = 'student@school.edu.tw'`：
+- 印出此字串的長度
+- 用 `indexOf` 找出 `'@'` 符號的位置
+- 用 `slice` 擷取 `'@'` 前面的使用者名稱部分
+
+<!--
+indexOf + slice 的組合拳，是字串處理最常見的實戰技巧。
+-->
+
+---
+layout: default
+---
+
+# 字串常用函數 — 小節練習解答
+
+```typescript
+let email = 'student@school.edu.tw';
+console.log(email.length);           // 21
+let atIdx = email.indexOf('@');
+console.log(atIdx);                  // 7
+console.log(email.slice(0, atIdx));  // student
+```
+
+<!--
+'student' 共 7 個字元，所以 '@' 在 index 7；slice(0, 7) 就截出使用者名稱部分。
 -->
 
 ---
@@ -654,6 +853,8 @@ console.log(evens);        // [2, 4]
 | `.pop()` | 刪除並回傳陣列最後一筆資料 |
 | `.forEach(函數)` | 逐一執行每個元素，無法中斷，不產生新陣列 |
 | `.map(函數)` | 逐一處理每個元素，回傳一個新陣列 |
+| `.reverse()` | 將陣列元素反轉順序（**直接修改**原陣列） |
+| `.join(連接符號)` | 將所有元素合併成一個字串 |
 
 <!--
 第二組常用陣列工具：
@@ -661,6 +862,8 @@ console.log(evens);        // [2, 4]
 `.pop()` 把陣列最後一個東西拔出來丟掉。
 `.forEach()` 就像是閱兵儀式，讓陣列裡的每個兵排隊站出來，讓你對他們做點事，但沒有回傳值。
 `.map()` 則是「影分身魔改術」，它把陣列裡的每個元素拿出來加工，然後回傳一個魔改後的全新陣列！
+`.reverse()` 就地反轉陣列順序，原陣列本身會被改掉，要注意！
+`.join()` 把陣列元素用指定符號黏合成字串，傳入空字串就是直接連在一起。
 -->
 
 ---
@@ -680,17 +883,54 @@ arr.forEach(n => console.log(n));  // 依序印出 1, 2, 3
 
 let doubled = arr.map(n => n * 2);
 console.log(doubled);  // [2, 4, 6]
+
+let chars = ['H', 'e', 'l', 'l', 'o'];
+chars.reverse();
+console.log(chars.join(''));   // olleh
+console.log(chars.join('-'));  // o-l-l-e-H
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>forEach</code> 不回傳值；<code>map</code> 產生新陣列，原陣列不變
+💡 <code>forEach</code> 不回傳值；<code>map</code> 產生新陣列，原陣列不變；<code>reverse</code> 直接修改原陣列
 </div>
 
 <!--
-看程式碼。
-`arr.push(4)` 後陣列變長。
-`arr.map(n => n * 2)`，這句就是把陣列裡的 `1, 2, 3` 通通拿去乘以 2，最後生成一個全新的陣列 `[2, 4, 6]`。
-這個 `map` 與 `filter` 可是我們前端工程師人人都得隨身攜帶的神兵利器，一定要非常熟練！
+push/pop 直接修改原陣列；forEach 逐一執行但不回傳；map 回傳新陣列，原陣列不變。
+reverse 就地反轉，join 把元素黏合成字串。
+split → reverse → join 三步組合技可做字串反轉，在後面的實作題會用到！
+-->
+
+
+---
+layout: default
+---
+
+# 陣列常用函數 — 小節練習
+
+有成績陣列 `scores = [72, 45, 88, 91, 63, 78, 55]`：
+- 用 `filter` 篩選出 **70 分以上**的成績
+- 用 `map` 將原陣列每個分數乘以 `1.05`（加分），結果用 `Math.floor` 取整數
+
+<!--
+filter 和 map 是前端工程師最常用的兩把武器，注意兩者都不修改原陣列。
+-->
+
+---
+layout: default
+---
+
+# 陣列常用函數 — 小節練習解答
+
+```typescript
+let scores = [72, 45, 88, 91, 63, 78, 55];
+let passing = scores.filter(s => s >= 70);
+console.log(passing);  // [72, 88, 91, 78]
+let boosted = scores.map(s => Math.floor(s * 1.05));
+console.log(boosted);  // [75, 47, 92, 95, 66, 81, 57]
+```
+
+<!--
+filter 篩選出符合條件的新陣列；map 把每個元素加工後產生新陣列，兩者都不動原陣列。
 -->
 
 ---
@@ -783,6 +1023,68 @@ for (let data of arr) {
 大叔強烈建議大家用更優雅的 `for (let data of arr)` 語法！
 這行翻成白話就是：「幫我把 `arr` 陣列裡的每個資料，依序拿出來裝進 `data` 變數裡，直到拿完為止。」
 不用寫計數器，也不用寫 length 判斷，代碼少寫一半，Bug 自然少一半，爽度爆表！
+-->
+
+---
+
+# 展開運算子 — Spread Operator
+
+`...` 可以將陣列「展開」成個別元素，常與 `Math.min()` / `Math.max()` 搭配使用：
+
+```typescript
+let arr = [4, 6, 1, 2, 7];
+
+// ❌ 直接傳陣列：Math.min 不接受陣列格式
+console.log(Math.min(arr));    // NaN
+
+// ✅ 用 ... 展開陣列
+console.log(Math.min(...arr)); // 1（最小值）
+console.log(Math.max(...arr)); // 7（最大值）
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>Math.min()</code> 與 <code>Math.max()</code> 只接受「一個個分開的數字」；<code>...</code> 負責把陣列拆開再傳入，等同於 <code>Math.min(4, 6, 1, 2, 7)</code>
+</div>
+
+<!--
+Math.min 和 Math.max 只認識一個個分開傳入的數字，直接傳陣列會拿到 NaN，非常困惑。
+這時候展開運算子 ... 就是救星！
+在陣列前面加三個點，它就會幫你把陣列裡的所有元素，一個一個展開再傳給函數。
+這招在練習 5 裡找最小值時會直接用到！
+-->
+
+---
+layout: default
+---
+
+# For 迴圈 — 小節練習
+
+用傳統 for 迴圈計算 **1 到 100 的總和**，印出結果。
+
+<!--
+累加是 for 迴圈最經典的使用場景，考驗學員對初始值、判斷式、遞增三元素的掌握。
+-->
+
+---
+layout: default
+---
+
+# For 迴圈 — 小節練習解答
+
+```typescript
+let sum = 0;
+for (let i = 1; i <= 100; i++) {
+  sum += i;
+}
+console.log(sum);  // 5050
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 數學小知識：1 + 2 + ... + 100 = 5050，可用公式 <code>n × (n+1) / 2</code> 驗證
+</div>
+
+<!--
+宣告 sum = 0 作為累加器，每次迭代把 i 加進去，跑完 100 圈後印出 5050。
 -->
 
 ---

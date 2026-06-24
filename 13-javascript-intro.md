@@ -62,13 +62,17 @@ layout: default
 - **TypeScript 是什麼？**
 - **TypeScript VS JavaScript**
 - **JavaScript 實例**
+- **TypeScript 在 Angular 中**
+- **實作練習**
 
 <!--
-今天我們的作戰路線圖很單純：
+今天我們的作戰路線圖：
 首先，我們要了解 JavaScript 的基本定位。
 接著，介紹我們在 Angular 專案中天天都會寫的 TypeScript 又是什麼。
 再來，我們把這兩兄弟拉出來 PK 一下，看看它們的差別。
-最後，我們會用一個極其簡單的「按鈕點擊」小實例，讓你親眼看看 HTML、CSS 與 JS 是怎麼合體運作的！
+接著，我們會用一個極其簡單的「按鈕點擊」小實例，讓你親眼看看 HTML、CSS 與 JS 是怎麼合體運作的！
+然後，我們進入 Angular 的 TypeScript 世界，看看怎麼在 class 裡宣告帶型別的變數。
+最後，兩道實作練習——分別針對 TypeScript 和 JavaScript！
 -->
 
 ---
@@ -306,35 +310,210 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
-layout: default
+layout: section
+class: flex flex-col justify-center items-center text-center
 ---
 
-# 練習：JavaScript 實例
+# TypeScript 在 Angular 中
+# TypeScript in Angular
 
-<div class="space-y-4 mt-2">
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q1. 要讓使用者「點擊按鈕」時執行 <code>clickBnt()</code> 函數，應在 <code>&lt;button&gt;</code> 標籤中加入哪個屬性？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500">A) <code>onload="clickBnt()"</code></div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">B) <code>onclick="clickBnt()"</code> ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500">C) <code>onchange="clickBnt()"</code></div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500">D) <code>trigger="clickBnt()"</code></div>
-    </div>
-  </div>
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q2. <code>alert("你按按鈕了！")</code> 這段程式碼，應該寫在哪個 HTML 標籤內？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500">A) <code>&lt;style&gt;</code></div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500">B) <code>&lt;link&gt;</code></div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">C) <code>&lt;script&gt;</code> ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500">D) <code>&lt;div&gt;</code></div>
-    </div>
-  </div>
+<!--
+好，現在我們知道 TypeScript 是什麼了，也看完了 JavaScript 的基本運作方式。
+接下來，大叔帶你看看 TypeScript 在 Angular 專案裡長什麼樣子、要怎麼寫。
+-->
+
+---
+
+# TypeScript 在 Angular — 元件結構
+
+Angular 的邏輯寫在 `.ts` 檔案裡。打開 `app.component.ts`，你會看到這樣的結構：
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  // ← 在這裡宣告變數
+  // ← 在這裡宣告方法
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>export class AppComponent { }</code> 就是我們撰寫 TypeScript 的舞台，所有邏輯都寫在這對大括號裡
 </div>
 
 <!--
-Q1 答案：B。教材的 Step 1 明確示範 onclick="clickBnt()"，表示「點擊時，執行名為 clickBnt 的方法」。
-Q2 答案：C。教材的 Step 3 示範：JavaScript 程式碼（包含 function 宣告與 alert）寫在 <script> 標籤內。<style> 是寫 CSS，<link> 是引入外部資源。
+打開 Angular 專案的 app.component.ts，你會看到這樣的結構。
+上面的 @Component({}) 是「裝飾器」，告訴 Angular 這個 class 是一個元件。
+真正要寫的邏輯，包括變數和方法，全部寫在最下面 export class AppComponent { } 的大括號裡。
+這個大括號，就是我們寫 TypeScript 的家！
+-->
+
+---
+
+# TypeScript 在 Angular — 宣告帶型別的變數
+
+在 class 的大括號內，用 `變數名稱: 型別 = 初始值` 格式宣告變數：
+
+```typescript
+export class AppComponent {
+  title: string = 'Hello Angular';
+  count: number = 0;
+  isLoading: boolean = false;
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 型別緊接在冒號後面。賦值型別不符時，TypeScript 立刻劃紅線警告——不必等到執行才發現錯誤
+</div>
+
+<!--
+格式是：變數名稱，冒號，型別，等號，初始值。
+title 後面寫 : string，代表這個變數只能裝字串。
+count 後面寫 : number，只能裝數字。
+isLoading 後面寫 : boolean，只能是 true 或 false。
+如果你不小心把數字塞給 string 的變數，TypeScript 在你打完的瞬間就會劃紅線——這就是 TypeScript 最大的價值！
+-->
+
+---
+layout: default
+---
+
+# TypeScript 練習：任務說明
+### 在 Angular 中宣告帶型別的變數
+
+在 `app.component.ts` 的 `AppComponent` class 中，宣告以下三個帶型別的變數：
+
+1. `myName`：字串型別，初始值為你的名字
+2. `myAge`：數字型別，初始值為你的年齡
+3. `isStudent`：布林型別，初始值為 `true` 或 `false`
+
+完成後，試著把 `myAge` 指定為一個字串（如 `'twenty'`），觀察 TypeScript 的報錯訊息，再改回數字。
+
+<!--
+這個練習的目的很單純：讓你親眼確認「TypeScript 的型別保護是真實存在的」。
+當你改成字串，VSCode 會立刻劃紅線，告訴你型別不對。
+這種「寫錯立刻知道」的保護，正是我們要用 TypeScript 而不用 JavaScript 的核心原因。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 練習：解題提示
+
+在 `app.component.ts` 的 class 裡加入三行：
+
+```typescript
+export class AppComponent {
+  myName: string = '你的名字';
+  myAge: number = 20;
+  isStudent: boolean = true;
+}
+```
+
+嘗試把 `myAge` 改成字串時，TypeScript 立刻報錯：
+
+```
+Type 'string' is not assignable to type 'number'
+```
+
+改回數字後紅線消失。這就是**靜態型別檢查**的威力——在編譯階段就攔截錯誤！
+
+<!--
+解法非常單純，就是三行變數宣告。
+重點在於體驗那個報錯訊息：Type 'string' is not assignable to type 'number'。
+意思是：「你想把字串塞給一個只能裝數字的盒子，我不幹！」
+這種保護機制，在你的 Angular 專案規模變大之後，會讓你省下非常多除錯時間。
+-->
+
+---
+layout: default
+---
+
+# 練習：任務說明
+### 整合 HTML、CSS、JavaScript
+
+建立一個 HTML 網頁，在同一個檔案中整合三層，實作以下功能：
+
+1. 建立「打招呼」和「掰掰」兩個按鈕
+2. 點擊「打招呼」按鈕時，`alert` 顯示 `'哈囉！歡迎來到 JavaScript 的世界！'`
+3. 點擊「掰掰」按鈕時，`alert` 顯示 `'掰掰！下次再見！'`
+4. 在 `<style>` 中為兩個按鈕各自設定不同的文字顏色
+
+<!--
+這題考驗的是 HTML、CSS、JavaScript 三者如何在同一個檔案裡互相配合。
+可以直接新建一個 .html 檔案，用 VSCode 開啟後以 Live Server 執行，或貼入 CodePen 測試。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示（1 / 2）
+### Step 1 & 2 — HTML 結構與 CSS 樣式
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .btn-hello { color: green; }
+    .btn-bye   { color: red;   }
+  </style>
+</head>
+<body>
+
+  <button class="btn-hello" onclick="sayHello()">打招呼</button>
+  <button class="btn-bye"   onclick="sayBye()">掰掰</button>
+
+</body>
+</html>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 按鈕的 <code>onclick</code> 填入方法名稱（<code>sayHello()</code>），方法名稱可自訂，但要與下一步的 function 名稱完全一致
+</div>
+
+<!--
+先把 HTML 的按鈕骨架與 CSS 樣式寫好。
+兩個按鈕分別給不同的 class，style 裡用 class 選擇器各自設定顏色。
+onclick 屬性先填好要呼叫的方法名稱，但方法的本體還沒寫，所以現在點按鈕不會有反應。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示（2 / 2）
+### Step 3 — 在 `</body>` 前加入 JavaScript
+
+```html
+  <script>
+    function sayHello() {
+      alert('哈囉！歡迎來到 JavaScript 的世界！');
+    }
+    function sayBye() {
+      alert('掰掰！下次再見！');
+    }
+  </script>
+
+</body>
+</html>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>&lt;script&gt;</code> 內的 <code>function</code> 名稱必須與 HTML 的 <code>onclick</code> 完全一致；這裡不是 Angular，不需要 <code>class</code>，直接宣告 <code>function</code> 即可
+</div>
+
+<!--
+最後在 </body> 前面加入 <script> 標籤，宣告兩個 function。
+function 名稱跟 HTML 裡 onclick 填的名稱完全一致，三層就正式接通了。
+儲存後用 Live Server 或直接用瀏覽器開啟，點兩個按鈕，確認 alert 各自彈出對應訊息。
 -->
 
 ---

@@ -57,6 +57,7 @@ layout: default
 
 # Outline
 
+- **TypeScript 宣告語法**
 - **全域變數**
 - **區域變數**
 - **let / const / var 比較**
@@ -67,10 +68,72 @@ layout: default
 
 <!--
 今天我們的作戰計畫如下：
-我們會先探討變數的「勢力範圍」，也就是全域跟區域變數。
-接著，我們會釐清 `let`、`const` 與 `var` 的歷史糾葛，特別是為什麼現代開發中，`var` 已經成了人人喊打的過街老鼠。
-然後，我們正式進入 Angular 世界，看看在專案裡要怎麼宣告變數、怎麼解決「沒有初始值」的紅字報錯。
-最後，我們會玩玩資料綁定，並做一個把 HTML 內容全部用變數替代的實作練習！
+首先，把 ch14 學過的型別標註，和本章常見的省略寫法做個對照，再說明業界慣例。
+接著，探討變數的「勢力範圍」——全域跟區域變數。
+然後，釐清 let、const 與 var 的歷史糾葛。
+再來，進入 Angular 世界，看看宣告變數的實務寫法，以及怎麼解決「沒有初始值」的紅字報錯。
+最後，玩玩資料綁定，並做一個實作練習！
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# TypeScript 宣告語法
+# Declaration Syntax
+
+<!--
+在開始學習變數之前，我們先把 ch14 學到的型別標註，跟本章之後常見的省略寫法做個對照，讓你看後面範例時不會困惑。
+-->
+
+---
+
+# TypeScript 宣告語法 — 兩種等價寫法
+
+ch14 學過的**顯式標註**與本章的**型別推斷**完全等價，兩者型別保護效果相同：
+
+```typescript
+// 顯式標註：明確寫出型別（ch14 寫法）
+title: string = 'Hello Angular';
+count: number = 0;
+isLoading: boolean = false;
+
+// 型別推斷：有初始值時省略型別，TypeScript 自動推斷
+title = 'Hello Angular';  // 推斷為 string
+count = 0;                 // 推斷為 number
+isLoading = false;         // 推斷為 boolean
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 省略型別標註不等於「沒有型別保護」——TypeScript 仍然知道 <code>title</code> 是 <code>string</code>，賦值 <code>title = 123</code> 一樣報錯
+</div>
+
+<!--
+有初始值的時候，TypeScript 可以從值本身推斷出型別，不需要你手動寫，這叫做「型別推斷（Type Inference）」。
+兩種寫法型別保護完全一樣，只是一個你寫出來、一個讓 TypeScript 自己算。
+-->
+
+---
+
+# TypeScript 宣告語法 — 業界慣例
+
+| 情境 | 建議寫法 | 原因 |
+| --- | --- | --- |
+| 有初始值、型別明顯 | `title = 'demo'` | 型別一眼可見，標註是冗餘 |
+| 有初始值、型別不明顯 | `users: User[] = []` | 空陣列看不出裝什麼 |
+| 無初始值 | `data!: ApiResponse` | 沒有值就沒有推斷依據，必須標註 |
+| 函式參數 | `(name: string)` | 參數一律明確標註，不省略 |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 本課程之後的範例，有初始值的簡單型別皆採用<b>型別推斷（省略）</b>，這是 Angular 專案最常見的寫法
+</div>
+
+<!--
+業界的口訣是：型別從值一眼看出來就省略，看不出來就標註。
+空陣列 [] 看不出裡面要裝什麼，所以要寫 User[]。
+沒有初始值就完全沒有推斷依據，一定要標型別。
+函式的參數因為沒有賦值的動作，一律要明確標，這是大家都遵守的規範。
 -->
 
 ---
@@ -188,6 +251,10 @@ showTitle() {
   alert(title);
 }
 ```
+
+<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ <b>Hoisting（提升）</b>是什麼？JavaScript 引擎在實際執行程式碼之前，會先掃描一遍，把所有 <code>var</code> 宣告「搬到」函式的最頂端。所以不管 <code>var title</code> 寫在第幾行，宣告都已經在執行前被提升了——導致在賦值前使用不會報錯，只會得到 <code>undefined</code>。<code>let</code> 沒有這個行為，宣告前使用會直接拋出 <code>ReferenceError</code>。
+</div>
 
 <!--
 來，我們把 `let` 和 `var` 拿出來鞭屍一下。
@@ -343,7 +410,7 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 屬性內容使用<b>屬性綁定（Property Binding）</b>語法 <code>[屬性名稱]="變數名稱"</code>，而非 <code>{{ }}</code>
+💡 屬性內容使用<b>屬性綁定（Property Binding）</b>語法 <code>[屬性名稱]="變數名稱"</code>，而非 <code>&#123;&#123; &#125;&#125;</code>
 </div>
 
 <!--

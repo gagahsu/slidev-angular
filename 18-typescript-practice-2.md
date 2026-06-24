@@ -194,6 +194,38 @@ console.log(sDate.getTime() > eDate.getTime()); // false
 -->
 
 ---
+layout: default
+---
+
+# Date 日期物件 — 小節練習
+
+建立日期物件 `new Date('1997-07-01 12:30:00')`，依序印出：年份、**正確月份**（注意 +1）、日期、星期幾、小時。
+
+<!--
+getMonth() 回傳 0–11，這是最容易踩的日期地雷，記得 +1 才是人類看得懂的月份。
+-->
+
+---
+layout: default
+---
+
+# Date 日期物件 — 小節練習解答
+
+```typescript
+let date = new Date('1997-07-01 12:30:00');
+console.log(date.getFullYear());    // 1997
+console.log(date.getMonth() + 1);  // 7（getMonth() 回傳 6，需 +1）
+console.log(date.getDate());       // 1
+console.log(date.getDay());        // 2（週二）
+console.log(date.getHours());      // 12
+```
+
+<!--
+getMonth() 回傳 6 代表 7 月，記得加 1 才顯示正確。
+getDay() 回傳 2 代表週二（0 = 週日，1 = 週一，以此類推）。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -234,7 +266,7 @@ let jsonData = {
 
 ---
 
-# 重組資料 — 範例
+# 重組資料 — 範例（物件）
 
 將原始資料每個欄位加上 `user` 前綴，放進新物件：
 
@@ -249,18 +281,81 @@ console.log(newJsonData);
 // { userName: 'Allen', userAge: 12, userSex: 'M' }
 ```
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 若資料是陣列，可用 <code>map</code> 對每筆資料做同樣的重組，回傳新陣列
-</div>
-
 <!--
 怎麼重組呢？
 其實就是「乾坤大挪移」！
 我們宣告一個全新的物件 `newJsonData`。
 裡面的 `userName` 指向舊的 `jsonData.name`；`userAge` 指向 `jsonData.age`。
 這樣一來，一個乾淨、完全符合前端規格的新物件就誕生了。
+-->
+
+---
+
+# 重組資料 — 範例（陣列）
+
+若後端回傳的是陣列，用 `map` 對每筆資料做同樣的重組：
+
+```typescript
+let jsonArray = [
+  { name: 'Allen', age: 12, sex: 'M' },
+  { name: 'Bob',   age: 25, sex: 'M' }
+];
+
+let newArray = jsonArray.map(item => ({
+  userName: item.name,
+  userAge:  item.age,
+  userSex:  item.sex
+}));
+
+console.log(newArray);
+// [
+//   { userName: 'Allen', userAge: 12, userSex: 'M' },
+//   { userName: 'Bob',   userAge: 25, userSex: 'M' }
+// ]
+```
+
+<!--
 如果資料是個陣列，我們就用上一章學過的 `.map()` 函數，巡邏一次，對裡面的每筆資料都做這樣的對應，就能瞬間把整個陣列重組完畢。
 學會這招，前後端合作無間，天下太平！
+-->
+
+---
+layout: default
+---
+
+# 重組資料 — 小節練習
+
+後端傳來以下資料，請重組為前端需要的格式，並印出新物件：
+
+```typescript
+let apiData = { account: 'allen123', score: 95, passed: true };
+// 目標格式：{ loginId: ..., examScore: ..., isPass: ... }
+```
+
+<!--
+前後端欄位命名不一致是家常便飯，學會乾坤大挪移把資料搬進新物件，是前端工程師必備技能。
+-->
+
+---
+layout: default
+---
+
+# 重組資料 — 小節練習解答
+
+```typescript
+let apiData = { account: 'allen123', score: 95, passed: true };
+let formData = {
+  loginId:   apiData.account,
+  examScore: apiData.score,
+  isPass:    apiData.passed
+};
+console.log(formData);
+// { loginId: 'allen123', examScore: 95, isPass: true }
+```
+
+<!--
+建立新物件，把舊欄位的值一一對應到新欄位名稱即可。
+若資料是陣列，改用 map() 對每筆資料做同樣的重組。
 -->
 
 ---
@@ -308,6 +403,71 @@ this.showAlert('HI');
 如果是在 HTML 裡，要用小括號事件綁定 `(click)="showAlert('HI')"`。
 好，複習完畢，大家應該都對變數、方法跟日期非常有信心了。
 接下來，準備接受我們的實作測驗！
+-->
+
+---
+
+# 補充語法：次方與數字格式化
+
+本章練習題會用到以下兩個語法，先來認識一下：
+
+| 語法 | 說明 | 範例 | 結果 |
+| --- | --- | --- | --- |
+| `** n` | 次方運算符，計算 n 次方 | `2 ** 3` | `8` |
+| `.toFixed(n)` | 四捨五入至小數點後 n 位，**回傳字串** | `(3.1415).toFixed(2)` | `'3.14'` |
+
+```typescript
+console.log(2 ** 3);              // 8（2 的 3 次方）
+console.log(3 ** 2);              // 9（3 的平方）
+console.log((3.1415).toFixed(2)); // '3.14'
+console.log((1.8).toFixed(0));    // '2'（四捨五入到整數）
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 BMI 公式中的 <code>(height / 100) ** 2</code> 就是身高（m）的平方；<code>.toFixed(1)</code> 讓結果只顯示一位小數。注意 <code>toFixed</code> 回傳的是<b>字串</b>，若需繼續計算要再用 <code>Number()</code> 轉型。
+</div>
+
+<!--
+次方運算符 ** 是 ES2016 加入的現代語法，TypeScript 完全支援。
+平方就是 ** 2，立方就是 ** 3，以此類推。
+toFixed 的功用是「固定小數點位數」，會幫你做四捨五入。
+但有一點要特別注意：它回傳的是字串型別，不是數字！
+如果你拿它的結果繼續做加減乘除，要先包一層 Number() 轉回數字，否則會變成字串拼接。
+-->
+
+---
+layout: default
+---
+
+# 宣告方法複習 — 小節練習
+
+寫一個方法 `circleArea(radius: number)`，計算圓面積（`π × r²`，π 取 `3.14159`），並用 `toFixed(2)` 印出結果。呼叫 `this.circleArea(5)`。
+
+<!--
+綜合練習：方法宣告 + 參數 + ** 次方 + toFixed 格式化，全部串在一起。
+-->
+
+---
+layout: default
+---
+
+# 宣告方法複習 — 小節練習解答
+
+```typescript
+circleArea(radius: number) {
+  let area = 3.14159 * radius ** 2;
+  console.log('面積：' + area.toFixed(2));
+}
+
+this.circleArea(5);  // 面積：78.54
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>radius ** 2</code> 是 r 的平方；<code>toFixed(2)</code> 回傳字串，若需繼續計算要用 <code>Number()</code> 轉型
+</div>
+
+<!--
+3.14159 × 25 = 78.53975，toFixed(2) 四捨五入後顯示 78.54。
 -->
 
 ---

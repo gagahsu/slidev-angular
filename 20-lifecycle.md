@@ -609,6 +609,71 @@ export class AllHooksComponent implements OnChanges, OnInit, DoCheck,
 -->
 
 ---
+layout: default
+---
+
+# 練習：任務說明
+### 觀察生命週期與 ngOnInit 初始化資料
+
+在 Angular 專案中完成以下任務，並觀察執行結果：
+
+1. 宣告一個全域變數 `welcomeMessage!: string`（使用 `!` 非空斷言，**不給初始值**）
+2. 在 `constructor()` 中加入 `console.log('1. constructor 執行')`
+3. 在 `ngOnInit()` 中加入 `console.log('2. ngOnInit 執行')`，並設定 `this.welcomeMessage = '歡迎來到 Angular！'`
+4. 在 `ngAfterViewInit()` 中加入 `console.log('3. ngAfterViewInit 執行')`
+5. 在 `app.component.html` 中用 `{{ welcomeMessage }}` 顯示訊息
+
+**打開 F12 → Console，確認三個 log 依序出現；確認變數雖無初始值，畫面仍正確顯示訊息。**
+
+<!--
+這道練習有兩個核心目標：
+第一，親眼確認 constructor → ngOnInit → ngAfterViewInit 的觸發順序。
+第二，體驗把變數初始化邏輯放在 ngOnInit 中的「Angular 標準做法」——日後呼叫 API、把回傳資料塞進變數，都是這樣寫的！
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+### 完成步驟
+
+1. 在 `app.component.ts` 引入並 `implements OnInit, AfterViewInit`：
+
+```typescript
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+
+@Component({ selector: 'app-root', standalone: true, templateUrl: './app.component.html' })
+export class AppComponent implements OnInit, AfterViewInit {
+  welcomeMessage!: string;
+
+  constructor() {
+    console.log('1. constructor 執行');
+  }
+
+  ngOnInit() {
+    console.log('2. ngOnInit 執行');
+    this.welcomeMessage = '歡迎來到 Angular！';
+  }
+
+  ngAfterViewInit() {
+    console.log('3. ngAfterViewInit 執行');
+  }
+}
+```
+
+2. 在 `app.component.html` 加入 `<p>{{ welcomeMessage }}</p>`
+
+3. 儲存後開啟 F12 → Console，確認順序：`1. constructor 執行` → `2. ngOnInit 執行` → `3. ngAfterViewInit 執行`
+
+<!--
+最重要的驗收點有兩個：
+一、Console 裡三個 log 依照固定順序出現，不會亂掉。
+二、雖然 welcomeMessage 宣告時沒有給值，但 ngOnInit 在元件渲染時就設好了，所以畫面不會出現空白。
+這就是日後呼叫 API 的標準樣板：在 ngOnInit 裡呼叫 API，把回傳資料賦值給全域變數！
+-->
+
+---
 layout: end
 ---
 

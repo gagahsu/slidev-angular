@@ -205,38 +205,6 @@ arrayType2: Array<string> = ['a', 'b', 'c'];
 -->
 
 ---
-layout: default
----
-
-# 練習：基本類型
-
-<div class="space-y-4 mt-2">
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q1. 以下哪一個 <code>boolean</code> 類型的宣告是「正確的」？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) booleanType: boolean = 1</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) booleanType: boolean = "true"</div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">C) booleanType: boolean = true ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) booleanType: boolean = null</div>
-    </div>
-  </div>
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q2. 想宣告一個存放字串的陣列，以下哪個寫法是「正確的」？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) arrayType: string = ['a', 'b']</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) arrayType: number[] = ['a', 'b']</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">C) arrayType: string[] = [1, 2]</div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">D) arrayType: string[] = ['a', 'b'] ✓</div>
-    </div>
-  </div>
-</div>
-
-<!--
-Q1 答案：C。boolean 只能是 true 或 false，不能是數字 1、字串 "true" 或 null。
-Q2 答案：D。string[] 宣告字串陣列，陣列內的資料型態必須與宣告一致，不能混入數字。
--->
-
----
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -328,38 +296,6 @@ else if (statusType == requestStatusCodes.error) {
 -->
 
 ---
-layout: default
----
-
-# 練習：TypeScript 特有類型
-
-<div class="space-y-4 mt-2">
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q1. 想宣告一個 tuple，第一個元素為字串、第二個為數字，以下哪個寫法是「正確的」？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) tupleType: [number, string] = ['a', 1]</div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">B) tupleType: [string, number] = ['a', 1] ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">C) tupleType: [string, number] = [1, 'a']</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) tupleType: string[] = ['a', 1]</div>
-    </div>
-  </div>
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q2. 已定義 <code>enum requestStatusCodes &#123; error = 0, success = 1 &#125;</code>，判斷「成功」的正確寫法是？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) if (statusType == 1)</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) if (statusType == "success")</div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">C) if (statusType == requestStatusCodes.success) ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) if (statusType == requestStatusCodes[1])</div>
-    </div>
-  </div>
-</div>
-
-<!--
-Q1 答案：B。tuple 的類型順序必須與值的順序一致：[string, number] 對應 ['a', 1]，不能顛倒。
-Q2 答案：C。使用 enum 的正確方式是透過「列舉名稱.成員名稱」來存取，讓判斷條件有語意、易讀，這正是 enum 存在的目的。
--->
-
----
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -426,25 +362,26 @@ nullType: number | null | undefined;
 # Object（物件）
 
 當你資料的最外框為 `{}` 時，我們就會稱它叫做物件。  
-裡面通常會存放「鍵值對」，鍵（Key）建議是字串（需用 `"` 或 `'` 包起來），後面會放上對應的值。
+裡面存放「鍵值對」，鍵（Key）**不需要**加引號，後面接冒號再放對應的值。
 
 ```typescript
-{
-  "id": 101,
-  "username": "Allen",
-  "age": 18
-}
+const user = {
+  id: 101,
+  username: 'Allen',
+  age: 18
+};
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 在 TypeScript 中，物件的鍵（Key）在程式碼中通常不加引號；加引號的寫法常見於 JSON 格式
+💡 TypeScript 物件的鍵不加引號；若鍵有加雙引號（如 <code>"id"</code>），那是 <b>JSON 格式</b>——前後端傳輸資料時才會看到，兩者語法不同
 </div>
 
 <!--
 最後是 `Object` 物件。
-當你的資料最外層用大括號 `{}` 包起來時，它就是個物件。
-物件內部是以「Key-Value（鍵值對）」的形式來存放資料。
-這就像是你的員工檔案，`"id": 101`、`"username": "Allen"`。
+當你的資料最外層用大括號 {} 包起來時，它就是個物件。
+物件內部是以「Key-Value（鍵值對）」的形式存放資料，鍵不加引號，冒號後面放值。
+這就像是你的員工檔案：id 101、username Allen。
+有一點要特別注意：前後端之間傳輸資料時，格式是 JSON，鍵要加雙引號；但在 TypeScript 程式碼裡宣告物件，鍵是不加引號的，兩者長得很像，初學者很容易搞混！
 在真實的專案或是 API 資料傳遞時，百分之九十的資料都是包裝成物件格式。
 搞懂了物件，你就能輕鬆掌控前後端串接的資料結構了！
 -->
@@ -453,32 +390,55 @@ nullType: number | null | undefined;
 layout: default
 ---
 
-# 練習：特殊類型
+# 練習：任務說明
+### 宣告各種型別的變數
 
-<div class="space-y-4 mt-2">
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q1. 想宣告一個變數「可能是數字，也可能是 null」，以下哪個寫法是「正確的」？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) nullType: number = null</div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">B) nullType: number | null ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">C) nullType: null</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) nullType: any</div>
-    </div>
-  </div>
-  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
-    <div class="font-bold text-teal-700 mb-2">Q2. 以下哪一個是「合法的」物件（Object）格式？</div>
-    <div class="grid grid-cols-2 gap-2 text-sm">
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) id = 101, username = "Allen"</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) [ id: 101, username: "Allen" ]</div>
-      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">C) &#123; id: 101, username: "Allen" &#125; ✓</div>
-      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) ( id: 101, username: "Allen" )</div>
-    </div>
-  </div>
-</div>
+在 Angular 專案的 `app.component.ts` 的 `AppComponent` class 中，依正確型別宣告以下五個全域變數：
+
+1. `isLoggedIn`：布林值，初始為 `false`
+2. `userId`：數字，初始為 `1001`
+3. `userName`：字串，初始為你的名字
+4. `userTags`：字串陣列，包含至少三個標籤（例如 `'Angular'`、`'TypeScript'` 等）
+5. `loginScore`：可以是數字或 null，初始為 `null`
+
+完成後，試著把 `isLoggedIn` 的值改為數字 `1`，觀察 TypeScript 報什麼錯誤，再改回 `true`。
 
 <!--
-Q1 答案：B。使用 | 符號宣告聯合類型（Union Type），表示這個變數可以是 number 或 null。直接寫 number = null 在嚴格模式下會報錯，而用 any 會放棄型別保護。
-Q2 答案：C。物件的外層必須用大括號 {} 包起來，內部使用冒號 : 分隔鍵（Key）與值（Value）。中括號 [] 是陣列、圓括號 () 是函數呼叫，兩者都不是物件格式。
+這道練習的目的是讓大家親眼看到 TypeScript 的型別保護。
+當你把 isLoggedIn 改成數字 1，VSCode 會立刻劃紅線，告訴你型別不對——這就是 TypeScript 最珍貴的地方！
+boolean 只能是 true 或 false，任何其他型別都過不了。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+### 完成步驟
+
+在 `app.component.ts` 中宣告五個變數：
+
+```typescript
+export class AppComponent {
+  isLoggedIn: boolean = false;
+  userId: number = 1001;
+  userName: string = '你的名字';
+  userTags: string[] = ['Angular', 'TypeScript', '前端'];
+  loginScore: number | null = null;
+}
+```
+
+嘗試把 `isLoggedIn = 1` 時，TypeScript 報錯：
+
+```
+Type 'number' is not assignable to type 'boolean'
+```
+
+改回 `isLoggedIn = true` 後，錯誤消失。這就是型別系統的最佳示範——在你寫錯的瞬間就告知你，而不是等程式跑起來才炸。
+
+<!--
+五個變數各自對應到本章的五個基本型別：boolean、number、string、string[]、union type。
+loginScore 用 number | null 的聯合型別，代表「可以是數字，也可以是 null」，這在日後接 API 資料時非常常見。
 -->
 
 ---
