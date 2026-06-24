@@ -6,7 +6,7 @@ lineNumbers: true
 drawings:
   persist: false
 transition: slide-left
-title: JavaScript 介紹
+title: JavaScript 與 TypeScript 介紹
 routeAlias: ch13
 style: |
   .slidev-layout p,
@@ -36,11 +36,11 @@ style: |
     Angular Full-Stack Masterclass
   </p>
   <h1 style="color: #1a5c5c; font-size: 3.8rem; font-weight: 900; line-height: 1.15; margin-bottom: 1.5rem;">
-    JavaScript 介紹
+    JavaScript 與 TypeScript 介紹
   </h1>
   <div style="height: 4px; width: 320px; background: linear-gradient(90deg, #5eada0, #a7d9d0); border-radius: 2px; margin-bottom: 1.5rem;"></div>
   <p style="color: #4a7c7c; font-size: 1.15rem; font-style: italic;">
-    「讓網頁動起來的語言」
+    「讓網頁動起來，從 JS 到 TS 的演進」
   </p>
   <Link to="home" style="color: #9dc4c4; font-size: 0.85rem; margin-top: 2rem; text-decoration: none; letter-spacing: 0.05em;">← 返回目錄</Link>
 </div>
@@ -62,7 +62,7 @@ layout: default
 - **TypeScript 是什麼？**
 - **TypeScript VS JavaScript**
 - **JavaScript 實例**
-- **TypeScript 在 Angular 中**
+- **TypeScript 在 Angular 中** — 元件結構、`@Component` 裝飾器
 - **實作練習**
 
 <!--
@@ -351,6 +351,35 @@ export class AppComponent {
 上面的 @Component({}) 是「裝飾器」，告訴 Angular 這個 class 是一個元件。
 真正要寫的邏輯，包括變數和方法，全部寫在最下面 export class AppComponent { } 的大括號裡。
 這個大括號，就是我們寫 TypeScript 的家！
+-->
+
+---
+
+# TypeScript 在 Angular — @Component 裝飾器
+
+`@Component` 是 Angular 的**裝飾器（Decorator）**，告訴框架這個 class 是一個元件，並設定它的基本行為：
+
+| 屬性 | 說明 | 範例值 |
+| --- | --- | --- |
+| `selector` | 此元件在 HTML 中使用的自訂標籤名稱 | `'app-root'` |
+| `standalone` | 是否為獨立元件（Angular 14+ 推薦） | `true` |
+| `templateUrl` | 此元件對應的 HTML 模板檔案路徑 | `'./app.component.html'` |
+
+```typescript
+@Component({
+  selector: 'app-root',       // → 在 HTML 中以 <app-root> 使用
+  standalone: true,           // → 不需要 NgModule 包裝
+  templateUrl: './app.component.html',  // → 對應的 HTML 檔案
+})
+export class AppComponent { }
+```
+
+<!--
+@Component 是 Angular 賦予這個 class「元件身份」的魔法標籤。
+selector 就是這個元件的「身份證名稱」，設定成 app-root 後，你就可以在其他 HTML 裡寫 <app-root> 來嵌入它。
+standalone: true 是 Angular 14 之後推薦的寫法，代表這個元件不需要傳統的 NgModule 來管理，可以獨立運作。
+templateUrl 則是告訴 Angular：「這個元件的畫面長什麼樣，請去 app.component.html 那個檔案裡找。」
+這三行是 Angular 元件的標準配備，之後每個章節的程式碼範例都會看到它，記住這三個屬性的意義就對了！
 -->
 
 ---

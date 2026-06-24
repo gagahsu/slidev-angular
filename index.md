@@ -139,7 +139,7 @@ style: |
     </Link>
     <Link to="ch13" class="chapter-card">
       <div class="chapter-num">Ch 13</div>
-      <div>JavaScript 介紹</div>
+      <div>JavaScript 與 TypeScript 介紹</div>
       <div class="chapter-subtitle">JS & TypeScript</div>
     </Link>
     <Link to="ch14" class="chapter-card">
