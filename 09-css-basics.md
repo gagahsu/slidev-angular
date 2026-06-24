@@ -86,18 +86,21 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# CSS 常用屬性（一）— 文字
+# CSS 常用屬性（一）— 文字（1/2）
 
-| 屬性 | 說明 |
-| --- | --- |
-| `color` | 字體顏色 |
-| `font-size` | 字體大小 |
-| `font-weight` | 字體粗細（`bold` 粗體、`normal` 正常、`100`～`900` 數值） |
-| `font-family` | 字型（`Arial`、`sans-serif`、`monospace` 等） |
-| `line-height` | 行距，影響文字上下間隔（建議值 `1.5`～`1.8`） |
-| `text-align` | 文字對齊（`left`、`right`、`center`、`end`） |
-| `text-decoration` | 文字裝飾（`underline` 底線、`line-through` 刪除線） |
-| `letter-spacing` | 文字間距 |
+| 屬性 | 說明 | 範例 |
+| --- | --- | --- |
+| `color` | 字體顏色（不含背景） | `color: red;` `color: #ff0000;` |
+| `font-size` | 字體大小 | `font-size: 16px;` `font-size: 1.5rem;` |
+| `font-weight` | 字體粗細：`bold`、`normal`、`100`～`900` | `font-weight: bold;` `font-weight: 700;` |
+| `font-family` | 字型 | `font-family: Arial, sans-serif;` |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+🎨 <b>顏色查詢工具：</b>
+<a href="https://htmlcolorcodes.com/" target="_blank" style="color:#3b82f6;">htmlcolorcodes.com</a>（HEX / RGB 色票選色）・
+<a href="https://www.w3schools.com/colors/colors_picker.asp" target="_blank" style="color:#3b82f6;">W3Schools Color Picker</a>（顏色名稱 ↔ 色碼）・
+<a href="https://www.color-hex.com/" target="_blank" style="color:#3b82f6;">color-hex.com</a>（輸入色碼查詢）
+</div>
 
 <!--
 第一組旋鈕專門管「文字的長相」。
@@ -107,30 +110,99 @@ class: flex flex-col justify-center items-center text-center
 在 CSS 裡，`color` 專指「文字本身的顏色」喔！
 如果你想要把一整個區塊的背景塗成黃色，請不要用 `color: yellow`，那會讓字體變黃、背景依然是白的。你必須要叫出 `background-color` 背景色這顆旋鈕！
 `font-weight` 最常用的就是 `bold`（粗）和 `normal`（細），進階用法可以寫數字，`400` 等於 normal，`700` 等於 bold。
-`line-height` 沒有單位時代表「幾倍行距」，例如 `1.6` 代表字體大小的 1.6 倍，閱讀起來更舒服。
 -->
 
 ---
 
-# CSS 常用屬性（二）— 外觀與排版
+# CSS 常用屬性（一）— 文字（2/2）
 
-| 屬性 | 說明 |
-| --- | --- |
-| `background-color` | 背景顏色（與 `color` 不同，`color` 只改文字） |
-| `width` | 寬度 |
-| `height` | 高度 |
-| `border` | 邊框（語法：`粗細 樣式 顏色`，例如 `1px solid black`） |
-| `border-radius` | 外框圓弧效果（`999px` 可做膠囊形） |
-| `box-shadow` | 陰影效果 |
-| `display` | 元素排版方式（`block`、`inline`、`flex`、`none`） |
-| `cursor` | 滑鼠游標樣式（`pointer` 手指、`default` 預設、`not-allowed` 禁止） |
+| 屬性 | 說明 | 範例 |
+| --- | --- | --- |
+| `line-height` | 行距（建議 `1.5`～`1.8`） | `line-height: 1.6;` |
+| `text-align` | 對齊：`left`、`right`、`center`、`end` | `text-align: center;` |
+| `text-decoration` | 裝飾：`underline`（底線）、`line-through`（刪除線）、`none` | `text-decoration: underline;` |
+| `letter-spacing` | 文字間距 | `letter-spacing: 2px;` |
+
+<!--
+`line-height` 沒有單位時代表「幾倍行距」，例如 `1.6` 代表字體大小的 1.6 倍，閱讀起來更舒服。
+`text-align` 控制文字在容器裡的水平對齊方式，`center` 置中是最常用的。
+`text-decoration` 最常見用途是 `none`，用來把超連結預設的底線去掉。
+`letter-spacing` 常搭配標題使用，讓字間距更寬鬆、閱讀更舒適。
+-->
+
+---
+
+# CSS 常用屬性（二）— 外觀與排版（1/2）
+
+| 屬性 | 說明 | 範例 |
+| --- | --- | --- |
+| `background-color` | 背景顏色（`color` 只改文字色） | `background-color: yellow;` `background-color: #f5f5f5;` |
+| `width` | 寬度：`px`、`%`、`vw`、`auto` | `width: 200px;` `width: 50%;` |
+| `height` | 高度：`px`、`%`、`vh`、`auto` | `height: 100px;` `height: 100vh;` |
+| `border` | 邊框樣式：`solid`（實線）、`dashed`（虛線）、`dotted`（點線） | `border: 1px solid black;` `border: 2px dashed red;` |
 
 <!--
 第二組旋鈕管的是「物件的外觀與排列方式」。
 `background-color` 是最常用的屬性之一，記住：`color` 改字色，`background-color` 改背景色，這兩個要分清楚！
 `border` 三個參數缺一不可：粗細、樣式（solid/dashed）、顏色，少寫任何一個邊框就不會出現。
+-->
+
+---
+
+# CSS 常用屬性（二）— 外觀與排版（2/2）
+
+| 屬性 | 說明 | 範例 |
+| --- | --- | --- |
+| `border-radius` | 圓弧效果（`999px` = 膠囊形） | `border-radius: 8px;` `border-radius: 999px;` |
+| `box-shadow` | 陰影：`x偏移 y偏移 模糊 顏色` | `box-shadow: 2px 2px 4px gray;` |
+| `display` | 排版：`block`、`inline`、`flex`、`none`（隱藏） | `display: flex;` `display: none;` |
+| `cursor` | 游標：`pointer`（手指）、`default`、`not-allowed`（禁止） | `cursor: pointer;` |
+
+<!--
 `display: none` 可以讓元素完全消失（連空間也不佔），是做條件顯示時的超常用招式。
 `cursor: pointer` 會讓滑鼠移到元素上時變成手指形狀，告訴使用者「這個可以點」——按鈕一定要加，使用者體驗的基本！
+`border-radius: 999px` 是做膠囊形按鈕的萬能技法，不用計算精確圓角值。
+`box-shadow` 是現代設計常用來取代 border 的方式，視覺上更有層次感。
+-->
+
+---
+
+# 小節練習 — CSS 常用屬性
+
+請用 CSS 屬性將 `<p class="highlight">歡迎來到 CSS 的世界！</p>` 設定成指定樣式：
+
+| 需求 | 值 |
+| --- | --- |
+| 字體顏色 | `#e74c3c`（紅色） |
+| 字體大小 | `24px` |
+| 字體粗細 | 粗體 |
+| 文字對齊 | 置中 |
+| 行距 | `1.8` |
+
+<!--
+請大家先試著自己完成，再對照下一頁的參考答案！
+-->
+
+---
+
+# 小節練習 — CSS 常用屬性 — 參考答案
+
+```css
+.highlight {
+  color: #e74c3c;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.8;
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>重點：</b> <code>color</code> 只改字色；<code>font-weight: bold</code> 等同 <code>700</code>；<code>line-height: 1.8</code> 無單位 = 1.8 倍行距
+</div>
+
+<!--
+大家對照一下！特別注意 line-height 如果寫 1.8px 跟 1.8 是完全不同的意思，前者是固定像素，後者才是倍數行距。
 -->
 
 ---
@@ -220,6 +292,47 @@ class: flex flex-col justify-center items-center text-center
 你想想看，如果你的網頁有一百個按鈕都要變紅色，你難道要在一百個地方複製貼上 `style="color:red;"` 嗎？
 萬一明天老闆拍腦袋說想改成藍色，你不就要改到手抽筋？
 所以，接下來我們要學更聰明的遠端遙控法！
+-->
+
+---
+
+# 小節練習 — Inline Style
+
+請用 Inline Style 在 `<button>` 標籤上達成以下效果：
+
+| 需求 | 值 |
+| --- | --- |
+| 背景顏色 | `#3498db` |
+| 字體顏色 | 白色 |
+| Padding | 上下 `8px`、左右 `16px` |
+| 圓角 | `4px` |
+| 游標 | 手指形狀 |
+
+```html
+<button style="???">送出表單</button>
+```
+
+<!--
+大家先把 style 屬性補齊，下一頁有完整答案！
+-->
+
+---
+
+# 小節練習 — Inline Style — 參考答案
+
+```html
+<button style="background-color: #3498db; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+  送出表單
+</button>
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>重點：</b> padding 兩個值 = 上下、左右；<code>cursor: pointer</code> 讓使用者知道按鈕可以點擊<br/>
+⚠️ Inline Style 適合快速測試；正式專案應使用 class 選擇器統一管理
+</div>
+
+<!--
+你有沒有寫到 cursor: pointer？這個細節常被遺忘，但使用者體驗非常重要！
 -->
 
 ---
@@ -381,6 +494,53 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
+# 小節練習 — CSS 選擇器
+
+HTML 結構如下，請用元素選擇器和 class 選擇器完成樣式：
+
+```html
+<p>這是普通段落</p>
+<p class="important">這是重要段落（紅色 + 粗體）</p>
+<p class="important large">這是更重要段落（紅色 + 粗體 + 30px）</p>
+```
+
+| 目標 | 效果 |
+| --- | --- |
+| 所有 `<p>` | `color: gray` |
+| `.important` | `color: red; font-weight: bold` |
+| `.large` | `font-size: 30px` |
+
+<!--
+三種選擇器混用，試著寫出 CSS，下一頁看答案！
+-->
+
+---
+
+# 小節練習 — CSS 選擇器 — 參考答案
+
+```css
+p { color: gray; }
+
+.important {
+  color: red;
+  font-weight: bold;
+}
+
+.large {
+  font-size: 30px;
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>重點：</b> 第三個 &lt;p&gt; 同時有 <code>important</code> 和 <code>large</code>，兩個 class 都會套用；<code>color: red</code> 優先權高於 <code>p { color: gray }</code>（class 分數 10 分 &gt; 標籤 1 分）
+</div>
+
+<!--
+注意第三個段落顏色是紅色不是灰色，因為 class 選擇器的優先權比標籤選擇器高！
+-->
+
+---
+
 # Class 命名慣例
 
 為讓程式易讀易維護，class 名稱應具有意義並採用固定格式：
@@ -402,6 +562,43 @@ class: flex flex-col justify-center items-center text-center
 這裡有兩個鐵律請一定要刻在心底：
 第一，class 名字裡**絕對不能有空格**，因為有空格瀏覽器會以為那是兩個不同的 class！
 第二，**絕對不能用數字當作開頭**（例如 `1st-text`），否則瀏覽器會拒絕讀取它！
+-->
+
+---
+
+# 小節練習 — Class 命名慣例
+
+以下 class 名稱，哪些**不符合**命名慣例？請找出問題並改正：
+
+| 名稱 | 合法？ | 問題 |
+| --- | --- | --- |
+| `1st-title` | ❌ | ??? |
+| `login-btn` | ✅ | — |
+| `main Area` | ❌ | ??? |
+| `navBar` | ✅ | — |
+| `card_title` | ⚠️ | ??? |
+
+<!--
+想想看！class 名稱有哪些鐵律？下一頁揭曉答案。
+-->
+
+---
+
+# 小節練習 — Class 命名慣例 — 參考答案
+
+| 名稱 | 問題 | 改正 |
+| --- | --- | --- |
+| `1st-title` | 數字開頭，瀏覽器拒讀 | `first-title` |
+| `main Area` | 含空格，會被視為兩個 class | `main-area` |
+| `card_title` | 底線非前端慣例（可用但不推薦） | `card-title` |
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ 兩大鐵律：① 不能以數字開頭　② 不能含空格<br/>
+推薦格式：<b>kebab-case</b>（<code>login-btn</code>）或 <b>camelCase</b>（<code>loginBtn</code>）
+</div>
+
+<!--
+底線命名法（snake_case）在後端很常見，但在前端 CSS 是不推薦的！大家在 Angular 專案裡記得統一用 kebab-case。
 -->
 
 ---
@@ -630,6 +827,54 @@ Padding 和 Margin 支援多種縮寫語法（兩者寫法完全相同）：
 如果你只寫兩個數字，比如 `padding: 2px 3px;`。
 這代表「上下是 2px，左右是 3px」，呈現左右對稱的結構。
 在真實開發中，我們超常用兩個數字的縮寫（比如 `margin: 10px 0;`，代表上下推開 10px，左右貼齊），這可以幫你的代碼節省非常多的行數！
+-->
+
+---
+
+# 小節練習 — Box Model
+
+請用 CSS 完成一個卡片元件，符合以下規格：
+
+| 屬性 | 值 |
+| --- | --- |
+| 寬 × 高 | `200px × 100px` |
+| Padding | 四邊 `16px` |
+| Margin | 上下 `24px`、左右 `auto`（水平置中） |
+| Border | `2px solid #cccccc` |
+| 背景色 | `#f8f9fa` |
+| 圓角 | `8px` |
+
+```html
+<div class="card">卡片內容</div>
+```
+
+<!--
+把剛剛學到的 Box Model 四層全部用上，下一頁有參考答案！
+-->
+
+---
+
+# 小節練習 — Box Model — 參考答案
+
+```css
+.card {
+  width: 200px;
+  height: 100px;
+  padding: 16px;
+  margin: 24px auto;
+  border: 2px solid #cccccc;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>重點：</b> <code>margin: 24px auto</code> = 上下 24px + 左右自動（水平置中的經典技法）<br/>
+⚠️ <code>padding: 16px</code> 會讓元素的實際佔用空間超過 200px（除非加 <code>box-sizing: border-box</code>）
+</div>
+
+<!--
+margin: auto 水平置中是超級常用的技法！但注意它只對「有明確寬度的 block 元素」有效，記下來！
 -->
 
 ---

@@ -265,6 +265,51 @@ background-size: contain;
 -->
 
 ---
+
+# 小節練習 — 背景設定
+
+請設定一個 `400px × 250px` 的 `div`，使用網路圖片作為背景：
+
+| 屬性 | 要求 |
+| --- | --- |
+| `background-image` | 使用任意圖片網址 |
+| `background-repeat` | 不重複 |
+| `background-position` | 水平垂直置中（`50% 50%`） |
+| `background-size` | 填滿容器（可裁切） |
+
+```html
+<div class="hero-banner"></div>
+```
+
+<!--
+四大旋鈕全用上！下一頁有參考答案。
+-->
+
+---
+
+# 小節練習 — 背景設定 — 參考答案
+
+```css
+.hero-banner {
+  width: 400px;
+  height: 250px;
+  background-image: url("https://picsum.photos/400/250");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: cover;
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <code>background-size: cover</code> 填滿容器（可裁切）；<code>contain</code> 完整顯示（可能留白）<br/>
+✅ <code>background-position: center center</code> 與 <code>50% 50%</code> 效果相同，英文關鍵字更易讀
+</div>
+
+<!--
+做大型 Hero Banner 時，cover + center 幾乎是標配！記下來以後會一直用到。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -437,6 +482,69 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+
+# 小節練習 — Position
+
+請用 `relative` + `absolute` 做出**右上角通知徽章**效果：
+
+```html
+<div class="icon-wrapper">
+  <div class="icon">🔔</div>
+  <span class="badge">3</span>
+</div>
+```
+
+| 元素 | 要求 |
+| --- | --- |
+| `.icon-wrapper` | `60px × 60px`，定位基準（relative） |
+| `.icon` | 文字大小 `2rem` |
+| `.badge` | `20px × 20px`，圓形（`border-radius: 50%`），背景紅色，白字，釘在右上角 |
+
+<!--
+釘住小孩的關鍵：老爸 relative，小孩 absolute！下一頁看答案。
+-->
+
+---
+
+# 小節練習 — Position — 參考答案
+
+```css
+.icon-wrapper {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: inline-block;
+}
+
+.icon {
+  font-size: 2rem;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  color: white;
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>父 relative + 子 absolute</b> 是通知徽章、標籤貼紙的萬用組合；<code>border-radius: 50%</code> 讓正方形變圓形
+</div>
+
+<!--
+這個通知徽章效果在業界超常用！下次在 LINE、Gmail 看到右上角的紅色數字，你就知道它是怎麼做的了。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -475,6 +583,43 @@ class: flex flex-col justify-center items-center text-center
 這裡有兩個新手一定要背下來的超級鐵律：
 第一，`z-index` **只對有設定定位（position）的元素有效**！如果你給一個普通老百姓 `div` 下 `z-index: 9999`，瀏覽器會直接當作沒看到，完全不會生效。
 第二，父層的 `relative` 優先權非常霸道。如果老爸的 `z-index` 輸了，小孩再高也沒用。這就像是拼爹的社會一樣，老爸輸了，小孩在外面也翻不了身！
+-->
+
+---
+
+# 小節練習 — z-index
+
+以下三個 `div` 互相重疊，請設定 `z-index` 讓**綠色**在最上層、**藍色**在中間、**紅色**在最底層：
+
+```css
+.red   { position: absolute; top: 0;   left: 0;   width: 100px; height: 100px; background: red; }
+.blue  { position: absolute; top: 30px; left: 30px; width: 100px; height: 100px; background: blue; }
+.green { position: absolute; top: 60px; left: 60px; width: 100px; height: 100px; background: green; }
+```
+
+每個 class 需加上多少 `z-index`？
+
+<!--
+記住：z-index 只對有設定 position 的元素有效！
+-->
+
+---
+
+# 小節練習 — z-index — 參考答案
+
+```css
+.red   { /* ... */  z-index: 1; }
+.blue  { /* ... */  z-index: 2; }
+.green { /* ... */  z-index: 3; }
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ 數值大 = 越前面；三個值只要維持相對大小關係即可（<code>1/2/3</code> 或 <code>10/20/30</code> 效果相同）<br/>
+⚠️ <b>z-index 兩大鐵律：</b> ① 必須搭配 <code>position</code>（非 static）才生效　② 父層 z-index 決定上限，小孩再高也有天花板
+</div>
+
+<!--
+z-index 的數字不要亂用 9999！業界慣例是用 10/20/30 或 100/200/300，方便日後插入新層次。
 -->
 
 ---
@@ -610,6 +755,53 @@ h1 { color: blue; }
 萬一你改爛了，根本還原不回去。
 建議你新建一個 `custom.css`，用後蓋前或是更高權重的 class 選擇器，在你的新檔案裡覆蓋舊樣式。這樣原檔安全，你的修改也一目了然。
 第二，專案大了之後，要保持「CSS 與 TS 分開存放」的原則，共用的東西抽出來，代碼才不會變成一坨拉撒麵。
+-->
+
+---
+
+# 小節練習 — CSS 優先權
+
+以下 CSS，`<h2 id="title" class="highlight">標題</h2>` 最終顯示什麼顏色？
+
+```css
+h2          { color: gray; }
+.highlight  { color: blue; }
+#title      { color: green; }
+h2          { color: red; }
+```
+
+| 選擇器 | 分數 | 順序 |
+| --- | --- | --- |
+| `h2`（第二條） | 1 | 最後 |
+| `.highlight` | 10 | — |
+| `#title` | 100 | — |
+
+最終顏色是哪個？
+
+<!--
+按優先權計算，不是按順序！
+-->
+
+---
+
+# 小節練習 — CSS 優先權 — 參考答案
+
+最終顏色：**綠色（`#title { color: green }`）**
+
+| 選擇器 | 分數 | 顏色 | 結果 |
+| --- | --- | --- | --- |
+| `h2`（第一條） | 1 | gray | ❌ 輸 |
+| `h2`（第二條） | 1 | red | ❌ 同分但仍輸 class |
+| `.highlight` | 10 | blue | ❌ 輸給 #id |
+| `#title` | **100** | green | ✅ 勝出 |
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ 優先權計分：<b>id（100）&gt; class（10）&gt; 標籤（1）</b>，分數高者勝出，與順序無關<br/>
+⚠️ 因此業界避免用 <code>id</code> 寫樣式——分數太高，日後難以被覆蓋
+</div>
+
+<!--
+這題是面試超常考的題目！記住分數制，不是後蓋前，後蓋前只在分數「相同」時才適用。
 -->
 
 ---

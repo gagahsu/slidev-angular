@@ -187,6 +187,55 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+
+# 小節練習 — CSS 互動
+
+請為以下按鈕寫 SCSS，達成：
+- 預設：背景 `#3498db`、白色文字
+- `:hover`：背景變 `#2980b9`（深一點），過渡時間 `0.3s`
+- `:active`：背景變 `#1a5276`（更深）
+
+```html
+<button class="my-btn">點我</button>
+```
+
+<!--
+試試看！記得要在哪裡設定 transition？
+-->
+
+---
+
+# 小節練習 — CSS 互動 — 參考答案
+
+```scss
+.my-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #2980b9;
+  }
+
+  &:active {
+    background-color: #1a5276;
+  }
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>重點：</b> <code>transition</code> 要寫在<b>原始狀態</b>（不是寫在 :hover 裡），這樣進出都有動畫效果<br/>
+✅ <code>cursor: pointer</code> 不要忘記！告訴使用者「這是可點擊的按鈕」
+</div>
+
+<!--
+很多人把 transition 寫進 :hover 裡，結果 hover 進去有動畫但離開瞬間消失——因為離開時 :hover 消失了，transition 也跟著沒了！
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -270,6 +319,59 @@ class: flex flex-col justify-center items-center text-center
 這就像是教官一聲令下，大家從原本的「直排直隊」一秒轉身成「橫排橫隊」。
 在現代的前端實務開發中，百分之九十九點九的排版都在使用 Flexbox。
 如果你說你懂前端，但你不會 Flexbox，那面試官大約只會叫你回去寫記事本。這招是必修課！
+-->
+
+---
+
+# 小節練習 — display: flex
+
+請讓以下三個色塊並排在同一行（不使用 `width`），父容器高度 `80px`：
+
+```html
+<div class="container">
+  <div class="box red"></div>
+  <div class="box blue"></div>
+  <div class="box green"></div>
+</div>
+```
+
+| 元素 | 樣式 |
+| --- | --- |
+| `.container` | 啟用 flex，高度 `80px`，`gap: 8px` |
+| `.box` | 寬 `60px`、高 `60px` |
+| `.red` / `.blue` / `.green` | 各自背景色 |
+
+<!--
+老爸加 flex，小孩自動並排！試試看，下一頁有答案。
+-->
+
+---
+
+# 小節練習 — display: flex — 參考答案
+
+```css
+.container {
+  display: flex;
+  height: 80px;
+  gap: 8px;
+}
+
+.box {
+  width: 60px;
+  height: 60px;
+}
+
+.red   { background-color: #e74c3c; }
+.blue  { background-color: #3498db; }
+.green { background-color: #2ecc71; }
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>重點：</b> <code>display: flex</code> 下在<b>父容器</b>，不是子元素；<code>gap</code> 是 flex 子元素之間的間距，比用 margin 更簡潔
+</div>
+
+<!--
+gap 是比較新的屬性，但現代瀏覽器全數支援，推薦用它取代在子元素上加 margin！
 -->
 
 ---
@@ -384,6 +486,60 @@ align-items: center;
 -->
 
 ---
+
+# 小節練習 — justify-content & align-items
+
+請讓 `.card` 在 `.wrapper` 容器中**水平+垂直置中**，wrapper 固定 `400px × 300px`：
+
+```html
+<div class="wrapper">
+  <div class="card">我在正中間</div>
+</div>
+```
+
+| 元素 | 要求 |
+| --- | --- |
+| `.wrapper` | `400px × 300px`，啟用 flex，讓 card 水平+垂直置中 |
+| `.card` | `120px × 60px`，背景 `#3498db`，白色文字，置中 |
+
+<!--
+必殺組合技！下一頁看答案。
+-->
+
+---
+
+# 小節練習 — justify-content & align-items — 參考答案
+
+```css
+.wrapper {
+  width: 400px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ecf0f1;
+}
+
+.card {
+  width: 120px;
+  height: 60px;
+  background-color: #3498db;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>J 橫 A 直</b>：<code>justify-content: center</code>（主軸水平置中）+ <code>align-items: center</code>（次軸垂直置中）= 完美正中央
+</div>
+
+<!--
+這三行組合技——display flex + justify-content center + align-items center——是你整個前端生涯中最常打的三行字！
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -393,6 +549,83 @@ class: flex flex-col justify-center items-center text-center
 
 <!--
 大功告成！學完了 Flex 神功，今天最後一戰，我們要去借用前端巨人的肩膀——來安裝 Bootstrap 框架！
+-->
+
+---
+
+# 什麼是 Bootstrap？
+
+Bootstrap 是全球最多人使用的**開源 CSS 框架**，由 Twitter 工程師於 2011 年開發並開源：
+
+- 內建幾萬行已寫好的 CSS，涵蓋按鈕、卡片、表單、導覽列、格線系統等常用元件
+- 只需在 HTML 標籤上加 class，就能直接套用專業樣式
+- 內建**響應式設計（RWD）**：自動依螢幕寬度調整排版
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>核心觀念：</b> Bootstrap = 一組別人幫你寫好的 CSS class，你只要「貼 class」就能套用樣式，不需要每次從零手刻
+</div>
+
+<!--
+Bootstrap 就像是一套「前端廚師的調理包」。你知道廚師自己從頭炒一盤番茄炒蛋，跟直接開一包半成品調理包比起來，哪個速度比較快？
+當然是調理包！Bootstrap 就是前端開發的調理包，裡面幫你備好了按鈕、卡片、表格、排版格線...所有你可能需要的元件。
+你只要在 HTML 標籤上寫幾個 class 名稱，Bootstrap 就會自動幫你呈現出精緻的樣式，大幅降低你的開發時間。
+-->
+
+---
+
+# 為什麼要用 Bootstrap？
+
+從零手寫 vs. 使用 Bootstrap 的差距：
+
+<div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
+  <div style="flex: 1; padding: 1rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
+    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #dc2626;">❌ 從零手寫按鈕</div>
+    <pre style="font-size: 0.72rem; margin: 0; line-height: 1.5; color: #374151;">background-color: #0d6efd;
+color: white;
+padding: 6px 12px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 1rem;
+transition: 0.15s;
+/* + hover 狀態... */</pre>
+  </div>
+  <div style="flex: 1; padding: 1rem; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
+    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #16a34a;">✅ 用 Bootstrap</div>
+    <pre style="font-size: 0.8rem; margin: 0; line-height: 1.5; color: #374151;">&lt;button class="btn btn-primary"&gt;
+  送出
+&lt;/button&gt;
+</pre>
+    <div style="margin-top: 0.8rem; font-size: 0.85rem; color: #374151;">結果完全相同，hover 效果也內建</div>
+  </div>
+</div>
+
+<!--
+大家看這個比較，左邊你要寫一大堆 CSS 才能做出一顆像樣的按鈕，右邊你只要在 HTML 標籤上寫 `class="btn btn-primary"` 三個字，Bootstrap 就幫你搞定一切！
+在業界，特別是在 sprint（衝刺開發週期）裡，我們的時間非常緊迫，不可能每次都從零手刻每個按鈕和表單。
+這時候 Bootstrap 就是你的最強後盾，讓你可以在一小時內做出一個視覺完整、RWD 也沒問題的網頁原型！
+-->
+
+---
+
+# Bootstrap vs. 自己寫 CSS — 什麼時候用？
+
+| 場景 | 建議 |
+| --- | --- |
+| 快速做原型、內部工具、Demo | ✅ 直接用 Bootstrap |
+| 需要高度客製化設計（品牌風格） | ⚠️ 自己寫 + 局部借用 Bootstrap |
+| 練習 CSS 基礎能力 | ✅ 先自己寫，再學框架 |
+| 正式產品開發 | ✅ Bootstrap / PrimeNG / TailwindCSS 擇一 |
+
+<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ <b>業界現狀：</b> Angular 生態圈更常用 <b>PrimeNG</b> 或 <b>Angular Material</b>；Bootstrap 是最普遍的入門框架，學會後學其他框架會更快上手
+</div>
+
+<!--
+Bootstrap 不是萬靈丹，也不是每個專案都適合。
+有些有強烈品牌識別的網站，他們的按鈕就是不能長成 Bootstrap 那個樣子，這時候你就需要自己動手。
+但業界的現實是：大多數 B2B 後台系統、內部工具、快速原型，用 Bootstrap 或類似框架搭建起來完全沒問題，而且效率極高！
+把今天學到的 Bootstrap 基礎打好，以後換到 PrimeNG 或 Angular Material，觸類旁通，學習曲線會平很多。
 -->
 
 ---
@@ -446,6 +679,50 @@ Bootstrap 是全世界最著名、市佔率最高的 CSS 框架。
 現在，你只要在 HTML 的 button 標籤上貼個 `class="btn btn-primary"`。
 Bootstrap 就會一秒幫你變出一個圓角、無邊框、自帶 hover 漸變動畫的精品深藍按鈕！
 在業界的快速迭代開發中，我們很少會像藝術家一樣從零去捏每一個按鈕，幾乎都是借助像 Bootstrap 或是 PrimeNG 這樣的框架，來高速搭建出漂亮的介面！
+-->
+
+---
+
+# 小節練習 — Bootstrap 安裝與使用
+
+安裝好 Bootstrap 後，請用 Bootstrap class 做出以下元件（不需自己寫 CSS）：
+
+1. 一個**藍色主要按鈕**（`btn btn-primary`）
+2. 一個**紅色危險按鈕**（`btn btn-danger`）
+3. 一個**成功提示框**（`alert alert-success`），內容為「操作成功！」
+
+```html
+<!-- 試著只用 HTML class 完成，不需要自己寫任何 CSS -->
+<div>
+  <button class="???">主要按鈕</button>
+  <button class="???">危險按鈕</button>
+  <div class="??? mt-2">操作成功！</div>
+</div>
+```
+
+<!--
+Bootstrap 的 class 名稱有固定格式，試著猜猜看！下一頁揭曉。
+-->
+
+---
+
+# 小節練習 — Bootstrap 安裝與使用 — 參考答案
+
+```html
+<div>
+  <button class="btn btn-primary">主要按鈕</button>
+  <button class="btn btn-danger">危險按鈕</button>
+  <div class="alert alert-success mt-2">操作成功！</div>
+</div>
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ Bootstrap 常用 class 格式：<code>btn btn-{顏色}</code> / <code>alert alert-{類型}</code> / <code>mt-{1~5}</code>（margin-top）<br/>
+✅ 顏色關鍵字：<code>primary</code>（藍）、<code>success</code>（綠）、<code>danger</code>（紅）、<code>warning</code>（黃）、<code>secondary</code>（灰）
+</div>
+
+<!--
+Bootstrap 的 class 命名系統非常有規律，記住幾個關鍵字就能推導出大部分的 class 名稱！
 -->
 
 ---
