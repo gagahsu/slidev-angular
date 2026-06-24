@@ -65,8 +65,8 @@ layout: default
 - **繫結介紹** — 什麼是繫結、四種類型
 - **單向 vs 雙向綁定** — 差異比較
 - **內嵌繫結** `{{ }}`
-- **屬性繫結** `[attr]`
-- **事件繫結** `(event)`
+- **屬性繫結** `[attr]` — 含 `[disabled]`、`[class.xxx]`、`[ngClass]`
+- **事件繫結** `(event)` — 含 `$event` 事件物件
 - **雙向繫結** `[(ngModel)]`
 - **實作練習**
 
@@ -207,6 +207,51 @@ export class AppComponent {
 -->
 
 ---
+layout: default
+---
+
+# 內嵌繫結 — 小節練習
+
+宣告以下三個變數，並在 HTML 中顯示商品名稱、單價、數量，以及用 `{{ }}` 直接計算總價：
+
+```typescript
+product = '筆記型電腦';
+price = 25000;
+qty = 3;
+```
+
+<!--
+試試看！{{ price * qty }} 這樣的表達式可以直接在雙大括號裡計算。
+-->
+
+---
+layout: default
+---
+
+# 內嵌繫結 — 小節練習解答
+
+```typescript
+product = '筆記型電腦';
+price = 25000;
+qty = 3;
+```
+
+```html
+<p>商品：{{ product }}</p>
+<p>單價：{{ price }} 元</p>
+<p>數量：{{ qty }}</p>
+<p>總計：{{ price * qty }} 元</p>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>{{ price * qty }}</code> 會直接計算並顯示 <code>75000</code>，雙大括號內可以寫簡單的運算表達式
+</div>
+
+<!--
+price * qty = 25000 * 3 = 75000，Angular 在渲染時自動計算並替換。
+-->
+
+---
 
 # 屬性繫結 Property Binding
 
@@ -237,14 +282,14 @@ export class AppComponent {
 
 ---
 
-# 屬性繫結 — 兩種寫法比較
+# 屬性繫結 — 兩種寫法比較（1／2）
 
-兩種寫法皆可運行，建議依情況選擇最清晰的方式。
+兩種寫法皆可運行，建議依情況選擇最清晰的方式：
 
-| 寫法 | 語法 | 值的來源 | 建議時機 |
-| --- | --- | --- | --- |
-| 屬性繫結 | `[placeholder]="變數"` | 只能放變數 | ✅ 確定值是變數時 |
-| 內嵌屬性 | `src="{{ 變數 }}"` | 可混合文字與變數 | 需要拼接字串時 |
+| 寫法 | 語法 | 建議時機 |
+| --- | --- | --- |
+| 屬性繫結 | `[placeholder]="變數"` | ✅ 值是純變數時 |
+| 內嵌屬性 | `src="{{ 變數 }}"` | 需要拼接字串時 |
 
 ```typescript
 // app.component.ts
@@ -256,10 +301,178 @@ export class AppComponent {
 
 <!--
 我們把這兩種寫法做個對比。
-雖然寫 `src="{{ 變數 }}"` 在某些情況下還行，
-但大叔強力建議大家，只要是設定純變數，一律使用標準的 `[src]="變數"`！
+只要是設定純變數，一律使用標準的 [src]="變數"！
+只有在你要拼接字串的時候，才用雙大括號拼接。
+-->
+
+---
+
+# 屬性繫結 — 兩種寫法比較（2／2）
+
+```html
+<!-- ✅ 屬性繫結：值直接來自變數（推薦） -->
+<input [placeholder]="hintText">
+<img [src]="imgUrl">
+
+<!-- 內嵌寫法：需要與固定字串拼接時使用 -->
+<img src="https://example.com/{{ imgUrl }}">
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 純變數一律用 <code>[attr]="變數"</code>；只有需要拼接字串（如 URL 前綴）時，才改用 <code>attr="{{ 變數 }}"</code>
+</div>
+
+<!--
 代碼看起來乾淨，編譯器解析效率也高。
-只有在你要拼接字串的時候，比如 `'assets/' + 變數`，才用雙大括號拼接。
+只有在你要拼接字串的時候，比如加上固定網址前綴，才用雙大括號拼接。
+-->
+
+---
+
+# 屬性繫結 — [disabled] 條件控制
+
+`[disabled]` 可傳入**布林變數**或**方法回傳值**來動態啟用或禁用按鈕。建議將條件邏輯抽到 TS 方法，模板只負責呼叫：
+
+```typescript
+export class AppComponent {
+  level = 1;
+
+  isMinLevel() { return this.level <= 1;  }
+  isMaxLevel() { return this.level >= 99; }
+}
+```
+
+```html
+<button [disabled]="isMinLevel()">降級</button>
+<button [disabled]="isMaxLevel()">升級</button>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 條件為 <code>true</code> 時按鈕禁用、<code>false</code> 時可用。含 <code>&lt;</code> 的條件式放在 TS 方法裡，可避免 HTML 屬性值中 <code>&lt;</code> 被誤判為標籤的問題。
+</div>
+
+<!--
+[disabled] 不只能傳入變數，還可以傳入方法的回傳值。
+只要方法回傳 true，disabled 屬性就會被加上，按鈕就會鎖死。
+回傳 false，disabled 就會被移除，按鈕可以點擊。
+另外要注意：在 HTML 屬性值裡直接寫 < 符號（例如 level <= 1）會讓 HTML 解析器誤以為是新標籤的開頭，導致語法報錯。
+把條件邏輯寫在 TypeScript 方法裡，是更安全也更推薦的做法！
+-->
+
+---
+
+# 屬性繫結 — Class 繫結 `[class.xxx]`
+
+`[class.xxx]="條件"` — 條件為 `true` 時加上該 class，`false` 時移除：
+
+```typescript
+// app.component.ts
+isSelected = false;
+select() { this.isSelected = !this.isSelected; }
+```
+
+```html
+<!-- app.component.html -->
+<button [class.selected]="isSelected" (click)="select()">選取</button>
+```
+
+```scss
+/* app.component.scss */
+button { padding: 8px 16px; border: 1px solid #ccc; cursor: pointer; }
+.selected { background-color: #3498db; color: white; border-color: #2980b9; }
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 Angular 在 <code>isSelected</code> 為 <code>true</code> 時，自動將 <code>selected</code> class 加進 HTML；<code>false</code> 時移除。CSS 裡定義 <code>.selected</code> 的樣式即可生效。
+</div>
+
+<!--
+流程是這樣的：
+TS 裡宣告 isSelected，點擊按鈕後 select() 把它翻轉。
+HTML 的 [class.selected]="isSelected" 告訴 Angular：當 isSelected 是 true，就把 selected 這個 class 加到這個按鈕上。
+SCSS 裡定義 .selected 要長什麼樣子——藍底白字。
+三個檔案各司其職，Angular 自動幫你串在一起！
+-->
+
+---
+
+# 屬性繫結 — `[ngClass]` 多個 Class
+
+同時控制多個 class 時，改用 `[ngClass]`，傳入一個物件（key = class 名稱，value = 條件）：
+
+```typescript
+// app.component.ts
+import { NgClass } from '@angular/common';
+// 在 @Component imports 加入 NgClass
+
+isActive = true;
+hasError = false;
+```
+
+```html
+<!-- app.component.html -->
+<div [ngClass]="{'active': isActive, 'error': hasError}">狀態區塊</div>
+```
+
+```scss
+/* app.component.scss */
+.active { background-color: #d4edda; padding: 8px; }
+.error  { background-color: #f8d7da; padding: 8px; }
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>isActive</code> 與 <code>hasError</code> 可同時為 <code>true</code>，兩個 class 會同時套用；使用 <code>[ngClass]</code> 前需在 <code>@Component</code> 的 <code>imports</code> 加入 <code>NgClass</code>
+</div>
+
+<!--
+[ngClass] 跟 [class.xxx] 差別是：[class.xxx] 一次只控制一個 class；[ngClass] 可以一次管理多個。
+物件裡面，key 是 CSS class 的名稱，value 是條件。
+兩個條件可以同時成立，這樣兩個 class 就會同時被套上去。
+記得要在 imports 陣列加入 NgClass，否則 Angular 不認識這個指令！
+-->
+
+---
+layout: default
+---
+
+# 屬性繫結 — 小節練習
+
+宣告以下變數，用屬性繫結完成 HTML，讓輸入框有提示文字、VIP 標籤有高亮樣式、按鈕在非 VIP 時禁用：
+
+```typescript
+isVip = true;
+inputHint = '請輸入會員編號';
+```
+
+```scss
+.highlight { color: #f39c12; font-weight: bold; }
+```
+
+<!--
+三種屬性繫結一次練習：[placeholder]、[class.xxx]、[disabled]。
+-->
+
+---
+layout: default
+---
+
+# 屬性繫結 — 小節練習解答
+
+```html
+<input [placeholder]="inputHint" />
+<p [class.highlight]="isVip">VIP 會員</p>
+<button [disabled]="!isVip">專屬優惠</button>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>[disabled]="!isVip"</code>：<code>isVip</code> 為 <code>true</code> 時 <code>!isVip</code> 是 <code>false</code>，按鈕可用；<code>isVip</code> 為 <code>false</code> 時按鈕禁用
+</div>
+
+<!--
+三種屬性繫結各司其職：
+[placeholder] 設定輸入框提示文字；
+[class.highlight] 控制 VIP 標籤的高亮 class；
+[disabled] 控制按鈕是否可點擊。
 -->
 
 ---
@@ -320,6 +533,78 @@ TS 裡執行 `this.level++`，等級加 1。
 因為 `level` 變數跟上面的 `{{ level }}` 內嵌繫結綁定在一起，
 所以當 `level` 一加，畫面上的「目前等級：2」就會瞬間同步變高！
 這就是單向繫結互相搭配的經典化學反應！
+-->
+
+---
+
+# 事件繫結 — $event 事件物件
+
+`$event` 是 Angular 傳入事件處理方法的**原生事件物件**，可用來取得使用者輸入的值：
+
+```typescript
+export class AppComponent {
+  keyword = '';
+
+  onSearch(event: Event) {
+    this.keyword = (event.target as HTMLInputElement).value;
+  }
+}
+```
+
+```html
+<input (input)="onSearch($event)" placeholder="搜尋...">
+<p>目前輸入：{{ keyword }}</p>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>$event</code> 的型別是 <code>Event</code>，需用 <code>as HTMLInputElement</code> 轉型才能存取 <code>.value</code>；若不需要事件物件，方法可以不帶參數
+</div>
+
+<!--
+當我們用 (input) 監聽輸入框的輸入事件時，Angular 會自動把原生的 Event 物件傳進來。
+但因為 TypeScript 的型別系統不知道這個事件一定是來自 input 標籤，
+所以我們需要用「as HTMLInputElement」告訴它：「相信我，這個 event.target 就是個 input 元素！」
+然後就能讀到 .value 屬性，拿到使用者輸入的文字了。
+-->
+
+---
+layout: default
+---
+
+# 事件繫結 — 小節練習
+
+做一個點擊計數器：畫面顯示點擊次數，點擊按鈕次數 +1，並提供重置按鈕歸零。
+
+<!--
+兩個按鈕各自綁定不同方法，{{ count }} 即時反映變數變化。
+-->
+
+---
+layout: default
+---
+
+# 事件繫結 — 小節練習解答
+
+```typescript
+count = 0;
+
+addCount() { this.count++; }
+reset()    { this.count = 0; }
+```
+
+```html
+<p>點擊次數：{{ count }}</p>
+<button (click)="addCount()">點擊 +1</button>
+<button (click)="reset()">重置</button>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 每次點擊觸發方法修改 <code>count</code>，<code>{{ count }}</code> 透過內嵌繫結即時同步畫面，不需要手動更新 DOM
+</div>
+
+<!--
+addCount 讓 count 加 1，reset 讓 count 歸零。
+{{ count }} 的內嵌繫結會在變數改變時自動更新畫面，這就是事件繫結與內嵌繫結搭配的標準用法。
 -->
 
 ---
@@ -388,9 +673,15 @@ export class AppComponent {
 
 ```typescript
 // app.component.ts
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-@Component({ standalone: true, imports: [FormsModule] })
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './app.component.html',
+})
 export class AppComponent {
   inputLevel = 1;
 
@@ -413,6 +704,45 @@ export class AppComponent {
 按鈕觸發 `updateStats()`。
 TS 就能直接調用已經同步好的 `this.inputLevel` 進行數值運算。
 整個流程非常絲滑！
+-->
+
+---
+layout: default
+---
+
+# 雙向繫結 — 小節練習
+
+用 `[(ngModel)]` 做一個即時暱稱輸入框，使用者輸入時下方同步顯示歡迎語；若未輸入則顯示「陌生人」。
+
+<!--
+記得在 imports 加入 FormsModule，||（邏輯或）可在變數為空字串時提供預設值。
+-->
+
+---
+layout: default
+---
+
+# 雙向繫結 — 小節練習解答
+
+```typescript
+import { FormsModule } from '@angular/forms';
+// 在 @Component imports 加入 FormsModule
+
+nickname = '';
+```
+
+```html
+<input [(ngModel)]="nickname" placeholder="輸入暱稱">
+<p>你好，{{ nickname || '陌生人' }}！</p>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>nickname || '陌生人'</code>：當 <code>nickname</code> 是空字串（falsy）時，顯示 <code>'陌生人'</code> 作為預設值
+</div>
+
+<!--
+[(ngModel)] 讓輸入框與 nickname 雙向同步。
+|| 是 JavaScript 的邏輯或運算符，空字串是 falsy 值，所以未輸入時會顯示「陌生人」。
 -->
 
 ---
@@ -494,6 +824,10 @@ layout: two-cols
 1. **UI 美化**：排版成較美觀的版面（可使用 Bootstrap 或自訂 CSS）
 2. **新增降級功能**：點擊降級按鈕，等級 -1
 3. **等級下限判斷**：等級不可小於 1（降級時需判斷）
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 Bootstrap 安裝方式請參考 <b>ch11「CSS 樣式編輯」</b> 的「安裝 Bootstrap」章節
+</div>
 
 ::right::
 

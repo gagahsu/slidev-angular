@@ -487,12 +487,15 @@ layout: default
 3. 在 `app.component.ts` 加入 import：
 
 ```typescript
+import { Component } from '@angular/core';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
+  selector: 'app-root',
   standalone: true,
   imports: [HeaderComponent, FooterComponent],
+  templateUrl: './app.component.html',
 })
 export class AppComponent {}
 ```
