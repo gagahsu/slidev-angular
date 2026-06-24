@@ -306,6 +306,38 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+layout: default
+---
+
+# 練習：JavaScript 實例
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 要讓使用者「點擊按鈕」時執行 <code>clickBnt()</code> 函數，應在 <code>&lt;button&gt;</code> 標籤中加入哪個屬性？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) <code>onload="clickBnt()"</code></div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">B) <code>onclick="clickBnt()"</code> ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">C) <code>onchange="clickBnt()"</code></div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) <code>trigger="clickBnt()"</code></div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. <code>alert("你按按鈕了！")</code> 這段程式碼，應該寫在哪個 HTML 標籤內？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) <code>&lt;style&gt;</code></div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) <code>&lt;link&gt;</code></div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">C) <code>&lt;script&gt;</code> ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) <code>&lt;div&gt;</code></div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：B。教材的 Step 1 明確示範 onclick="clickBnt()"，表示「點擊時，執行名為 clickBnt 的方法」。
+Q2 答案：C。教材的 Step 3 示範：JavaScript 程式碼（包含 function 宣告與 alert）寫在 <script> 標籤內。<style> 是寫 CSS，<link> 是引入外部資源。
+-->
+
+---
 layout: end
 ---
 

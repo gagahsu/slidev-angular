@@ -205,6 +205,38 @@ arrayType2: Array<string> = ['a', 'b', 'c'];
 -->
 
 ---
+layout: default
+---
+
+# 練習：基本類型
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 以下哪一個 <code>boolean</code> 類型的宣告是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) booleanType: boolean = 1</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) booleanType: boolean = "true"</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">C) booleanType: boolean = true ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) booleanType: boolean = null</div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. 想宣告一個存放字串的陣列，以下哪個寫法是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) arrayType: string = ['a', 'b']</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) arrayType: number[] = ['a', 'b']</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">C) arrayType: string[] = [1, 2]</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">D) arrayType: string[] = ['a', 'b'] ✓</div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：C。boolean 只能是 true 或 false，不能是數字 1、字串 "true" 或 null。
+Q2 答案：D。string[] 宣告字串陣列，陣列內的資料型態必須與宣告一致，不能混入數字。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -296,6 +328,38 @@ else if (statusType == requestStatusCodes.error) {
 -->
 
 ---
+layout: default
+---
+
+# 練習：TypeScript 特有類型
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 想宣告一個 tuple，第一個元素為字串、第二個為數字，以下哪個寫法是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) tupleType: [number, string] = ['a', 1]</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">B) tupleType: [string, number] = ['a', 1] ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">C) tupleType: [string, number] = [1, 'a']</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) tupleType: string[] = ['a', 1]</div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. 已定義 <code>enum requestStatusCodes &#123; error = 0, success = 1 &#125;</code>，判斷「成功」的正確寫法是？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) if (statusType == 1)</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) if (statusType == "success")</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">C) if (statusType == requestStatusCodes.success) ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) if (statusType == requestStatusCodes[1])</div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：B。tuple 的類型順序必須與值的順序一致：[string, number] 對應 ['a', 1]，不能顛倒。
+Q2 答案：C。使用 enum 的正確方式是透過「列舉名稱.成員名稱」來存取，讓判斷條件有語意、易讀，這正是 enum 存在的目的。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -383,6 +447,38 @@ nullType: number | null | undefined;
 這就像是你的員工檔案，`"id": 101`、`"username": "Allen"`。
 在真實的專案或是 API 資料傳遞時，百分之九十的資料都是包裝成物件格式。
 搞懂了物件，你就能輕鬆掌控前後端串接的資料結構了！
+-->
+
+---
+layout: default
+---
+
+# 練習：特殊類型
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 想宣告一個變數「可能是數字，也可能是 null」，以下哪個寫法是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) nullType: number = null</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">B) nullType: number | null ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">C) nullType: null</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) nullType: any</div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. 以下哪一個是「合法的」物件（Object）格式？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">A) id = 101, username = "Allen"</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">B) [ id: 101, username: "Allen" ]</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800 font-mono">C) &#123; id: 101, username: "Allen" &#125; ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500 font-mono">D) ( id: 101, username: "Allen" )</div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：B。使用 | 符號宣告聯合類型（Union Type），表示這個變數可以是 number 或 null。直接寫 number = null 在嚴格模式下會報錯，而用 any 會放棄型別保護。
+Q2 答案：C。物件的外層必須用大括號 {} 包起來，內部使用冒號 : 分隔鍵（Key）與值（Value）。中括號 [] 是陣列、圓括號 () 是函數呼叫，兩者都不是物件格式。
 -->
 
 ---
