@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 網頁儲存
-routeAlias: ch24
+routeAlias: ch25
 style: |
   .slidev-layout p,
   .slidev-layout li,

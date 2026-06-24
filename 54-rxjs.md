@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: RXJS
-routeAlias: ch53
+routeAlias: ch54
 style: |
   .slidev-layout p,
   .slidev-layout li,

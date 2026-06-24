@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: CSS 樣式編輯
-routeAlias: ch10
+routeAlias: ch11
 style: |
   .slidev-layout p,
   .slidev-layout li,

@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 資料傳遞
-routeAlias: ch23
+routeAlias: ch24
 style: |
   .slidev-layout p,
   .slidev-layout li,

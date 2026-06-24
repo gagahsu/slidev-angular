@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Mat-radio & Checkbox
-routeAlias: ch49
+routeAlias: ch50
 style: |
   .slidev-layout p,
   .slidev-layout li,

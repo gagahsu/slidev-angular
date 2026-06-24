@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: RWD
-routeAlias: ch52
+routeAlias: ch53
 style: |
   .slidev-layout p,
   .slidev-layout li,

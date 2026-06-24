@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Tabs
-routeAlias: ch39
+routeAlias: ch40
 style: |
   .slidev-layout p,
   .slidev-layout li,

@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 資料排序
-routeAlias: ch30
+routeAlias: ch31
 style: |
   .slidev-layout p,
   .slidev-layout li,

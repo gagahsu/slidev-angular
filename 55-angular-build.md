@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Angular 包板
-routeAlias: ch54
+routeAlias: ch55
 style: |
   .slidev-layout p,
   .slidev-layout li,

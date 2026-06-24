@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 方法
-routeAlias: ch15
+routeAlias: ch16
 style: |
   .slidev-layout p,
   .slidev-layout li,

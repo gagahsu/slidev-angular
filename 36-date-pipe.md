@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: DatePipe
-routeAlias: ch35
+routeAlias: ch36
 style: |
   .slidev-layout p,
   .slidev-layout li,

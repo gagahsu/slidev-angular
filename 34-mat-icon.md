@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Mat-icon
-routeAlias: ch33
+routeAlias: ch34
 style: |
   .slidev-layout p,
   .slidev-layout li,

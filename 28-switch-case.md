@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: "@switch 條件切換"
-routeAlias: ch27
+routeAlias: ch28
 style: |
   .slidev-layout p,
   .slidev-layout li,

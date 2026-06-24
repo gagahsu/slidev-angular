@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Select
-routeAlias: ch40
+routeAlias: ch41
 style: |
   .slidev-layout p,
   .slidev-layout li,

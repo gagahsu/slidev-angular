@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 同步與非同步
-routeAlias: ch43
+routeAlias: ch44
 style: |
   .slidev-layout p,
   .slidev-layout li,

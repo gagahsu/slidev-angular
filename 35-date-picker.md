@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 日期選擇器
-routeAlias: ch34
+routeAlias: ch35
 style: |
   .slidev-layout p,
   .slidev-layout li,

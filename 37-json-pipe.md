@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: JsonPipe
-routeAlias: ch36
+routeAlias: ch37
 style: |
   .slidev-layout p,
   .slidev-layout li,

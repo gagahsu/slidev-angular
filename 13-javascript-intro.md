@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: JavaScript 介紹
-routeAlias: ch12
+routeAlias: ch13
 style: |
   .slidev-layout p,
   .slidev-layout li,

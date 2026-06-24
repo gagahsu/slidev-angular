@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 陣列顯示
-routeAlias: ch25
+routeAlias: ch26
 style: |
   .slidev-layout p,
   .slidev-layout li,

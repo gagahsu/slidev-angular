@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 訂閱
-routeAlias: ch44
+routeAlias: ch45
 style: |
   .slidev-layout p,
   .slidev-layout li,

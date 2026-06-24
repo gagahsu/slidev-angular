@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Mat-table
-routeAlias: ch32
+routeAlias: ch33
 style: |
   .slidev-layout p,
   .slidev-layout li,

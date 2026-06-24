@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 資料轉換與呈現
-routeAlias: ch18
+routeAlias: ch19
 style: |
   .slidev-layout p,
   .slidev-layout li,

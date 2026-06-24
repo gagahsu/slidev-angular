@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 串接 API
-routeAlias: ch28
+routeAlias: ch29
 style: |
   .slidev-layout p,
   .slidev-layout li,

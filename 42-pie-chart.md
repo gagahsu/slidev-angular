@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 圓餅圖
-routeAlias: ch41
+routeAlias: ch42
 style: |
   .slidev-layout p,
   .slidev-layout li,

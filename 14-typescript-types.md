@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: TypeScript 數據類型
-routeAlias: ch13
+routeAlias: ch14
 style: |
   .slidev-layout p,
   .slidev-layout li,

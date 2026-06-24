@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Dialog
-routeAlias: ch42
+routeAlias: ch43
 style: |
   .slidev-layout p,
   .slidev-layout li,

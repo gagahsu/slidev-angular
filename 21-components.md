@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 新增組件
-routeAlias: ch20
+routeAlias: ch21
 style: |
   .slidev-layout p,
   .slidev-layout li,

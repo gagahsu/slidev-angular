@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 即時搜尋
-routeAlias: ch37
+routeAlias: ch38
 style: |
   .slidev-layout p,
   .slidev-layout li,

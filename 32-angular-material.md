@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: 安裝 Angular Material
-routeAlias: ch31
+routeAlias: ch32
 style: |
   .slidev-layout p,
   .slidev-layout li,

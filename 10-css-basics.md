@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: CSS 基礎語法
-routeAlias: ch09
+routeAlias: ch10
 style: |
   .slidev-layout p,
   .slidev-layout li,

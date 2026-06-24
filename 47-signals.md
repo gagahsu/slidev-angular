@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Signals
-routeAlias: ch46
+routeAlias: ch47
 style: |
   .slidev-layout p,
   .slidev-layout li,

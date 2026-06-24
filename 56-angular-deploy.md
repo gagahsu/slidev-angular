@@ -7,7 +7,7 @@ drawings:
   persist: false
 transition: slide-left
 title: Angular 部署
-routeAlias: ch55
+routeAlias: ch56
 style: |
   .slidev-layout p,
   .slidev-layout li,
