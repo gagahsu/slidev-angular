@@ -138,6 +138,38 @@ HTML、CSS、JavaScript 分別負責網頁的不同層次：
 -->
 
 ---
+layout: default
+---
+
+# 練習：JavaScript 是什麼？
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 以下哪一個功能，最符合 JavaScript 在網頁中扮演的角色？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) 設定文字的大小與顏色</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) 建立按鈕、段落等頁面結構</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">C) 讓使用者點擊地圖時能即時滑動互動 ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) 設定網頁標題與段落文字</div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. HTML、CSS、JavaScript 三層架構中，哪一個配對是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) HTML → 互動與行為</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) CSS → 結構與內容</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">C) JavaScript → 樣式與排版</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">D) JavaScript → 互動與行為 ✓</div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：C。影片播放控制、地圖互動、即時更新——這些都需要 JavaScript。設定顏色是 CSS，建立結構是 HTML。
+Q2 答案：D。三層架構：HTML 負責結構與內容、CSS 負責樣式與排版、JavaScript 負責互動與行為。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -180,6 +212,38 @@ TypeScript 是微軟（Microsoft）大爸爸開發的一門程式語言。
 -->
 
 ---
+layout: default
+---
+
+# 練習：TypeScript 是什麼？
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. TypeScript 是由哪家公司開發的開源程式語言？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) Google</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) Apple</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">C) Microsoft ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) Facebook</div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. 以下關於 TypeScript 的描述，哪一個是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) TypeScript 是全新語言，與 JavaScript 完全不同</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">B) 任何合法的 JS 程式碼，也是合法的 TS 程式碼 ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">C) TypeScript 不支援 Interfaces 和 Generics</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) Angular 是使用 JavaScript 而非 TypeScript 開發</div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：C。教材明確提到 TypeScript 是由 Microsoft（微軟）開發的開源程式語言。
+Q2 答案：B。TypeScript 是 JavaScript 的超集（Superset），任何有效的 JS 都是有效的 TS；它新增了 Interfaces、Generics、Enums；Angular 使用 TypeScript 開發。
+-->
+
+---
 
 # TypeScript VS JavaScript
 
@@ -197,6 +261,38 @@ TypeScript 是微軟（Microsoft）大爸爸開發的一門程式語言。
 第二是「執行方式」：瀏覽器其實只看得懂 JavaScript。所以，我們寫的 TypeScript 程式碼，在給瀏覽器跑之前，都必須經過編譯器「翻譯」成標準的 JavaScript。
 第三是「物件導向」：TS 提供了非常完整、像 Java 那樣的 `interface` 功能，讓架構規劃起來更舒服。
 因為 Angular 框架原生就是以 TypeScript 為核心設計的，所以今天我們先建立好 JS 的基本觀念，等一下寫 TS 才會如魚得水喔！
+-->
+
+---
+layout: default
+---
+
+# 練習：TypeScript VS JavaScript
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 關於「型別系統」，以下哪一個描述是「正確的」？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) JavaScript 是靜態型別，變數類型在宣告時固定</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) TypeScript 是動態型別，變數類型可在執行時改變</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">C) JavaScript 是動態型別，變數類型可在執行期間改變 ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) TypeScript 和 JavaScript 都是動態型別</div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. TypeScript 與 JavaScript 在「執行方式」上最大的差別是？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) JavaScript 需要先編譯才能在瀏覽器執行</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) TypeScript 可以直接在瀏覽器執行，不需要編譯</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">C) 兩者都需要編譯才能在瀏覽器執行</div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">D) TypeScript 需要先編譯成 JavaScript，才能在瀏覽器執行 ✓</div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：C。比較表格中明確說明：JavaScript 是動態型別（變數類型可在執行期間改變）；TypeScript 是靜態型別（宣告時確定類型，有助於預先找出錯誤）。
+Q2 答案：D。比較表格的「編譯器」欄：JS 無需編譯，可在瀏覽器直接執行；TS 需要編譯成 JavaScript 才能在瀏覽器執行。
 -->
 
 ---
@@ -303,6 +399,38 @@ class: flex flex-col justify-center items-center text-center
 這個 `alert` 是瀏覽器內建的功能，它會彈出一個系統警告對話框。
 一旦這三者在同一個網頁合體，當使用者伸出手指點擊紅色按鈕時，按鈕就會觸發 `onclick`，去執行 JS 裡的 `clickBnt()`，網頁就會「噹」一聲彈出「你按按鈕了！」的對話框！
 這就是網頁前端互動最基本的運行公式啦！
+-->
+
+---
+layout: default
+---
+
+# 練習：JavaScript 實例
+
+<div class="space-y-4 mt-2">
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q1. 要讓使用者「點擊按鈕」時執行 <code>clickBnt()</code> 函數，應在 <code>&lt;button&gt;</code> 標籤中加入哪個屬性？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) <code>onload="clickBnt()"</code></div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">B) <code>onclick="clickBnt()"</code> ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">C) <code>onchange="clickBnt()"</code></div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) <code>trigger="clickBnt()"</code></div>
+    </div>
+  </div>
+  <div class="p-3 bg-gray-50 rounded-lg border border-gray-200">
+    <div class="font-bold text-teal-700 mb-2">Q2. <code>alert("你按按鈕了！")</code> 這段程式碼，應該寫在哪個 HTML 標籤內？</div>
+    <div class="grid grid-cols-2 gap-2 text-sm">
+      <div class="p-2 bg-gray-100 rounded text-gray-500">A) <code>&lt;style&gt;</code></div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">B) <code>&lt;link&gt;</code></div>
+      <div class="p-2 bg-green-100 border border-green-400 rounded font-bold text-green-800">C) <code>&lt;script&gt;</code> ✓</div>
+      <div class="p-2 bg-gray-100 rounded text-gray-500">D) <code>&lt;div&gt;</code></div>
+    </div>
+  </div>
+</div>
+
+<!--
+Q1 答案：B。教材的 Step 1 明確示範 onclick="clickBnt()"，表示「點擊時，執行名為 clickBnt 的方法」。
+Q2 答案：C。教材的 Step 3 示範：JavaScript 程式碼（包含 function 宣告與 alert）寫在 <script> 標籤內。<style> 是寫 CSS，<link> 是引入外部資源。
 -->
 
 ---
