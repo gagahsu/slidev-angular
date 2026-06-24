@@ -562,7 +562,8 @@ Bootstrap 是全球最多人使用的**開源 CSS 框架**，由 Twitter 工程�
 - 內建**響應式設計（RWD）**：自動依螢幕寬度調整排版
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>核心觀念：</b> Bootstrap = 一組別人幫你寫好的 CSS class，你只要「貼 class」就能套用樣式，不需要每次從零手刻
+💡 <b>核心觀念：</b> Bootstrap = 一組別人幫你寫好的 CSS class，你只要「貼 class」就能套用樣式，不需要每次從零手刻<br/>
+💡 <b>官方網站：</b> <code>getbootstrap.com</code> — CDN 連結、元件文件、範例一次找齊
 </div>
 
 <!--
@@ -630,7 +631,93 @@ Bootstrap 不是萬靈丹，也不是每個專案都適合。
 
 ---
 
-# 安裝 Bootstrap — 步驟
+# 一般 HTML 使用方式 — CDN
+
+不需安裝，直接在 HTML 加入兩行標籤即可使用 Bootstrap：
+
+| 位置 | 標籤 | 用途 |
+| --- | --- | --- |
+| `<head>` 內 | `<link>` | 載入 Bootstrap CSS 樣式 |
+| `</body>` 前 | `<script>` | 載入 Bootstrap JS（互動元件用） |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 CDN 連結從 <code>getbootstrap.com</code> 首頁複製，確保版本最新
+</div>
+
+<!--
+對一般的純 HTML 專案來說，最快速的方式就是使用 CDN——也就是直接連到 Bootstrap 官方的雲端伺服器，不需要下載任何東西到自己電腦。
+只要在 head 裡貼上 link 標籤，在 body 結尾前貼上 script 標籤，你的 HTML 就立刻擁有 Bootstrap 的全部樣式和互動功能！
+這就像是不用自己買咖啡機，直接插管子到星巴克的咖啡桶喝——超省事，但你要連得到網路才能喝到。
+-->
+
+---
+
+# 一般 HTML 使用方式 — CDN 範例
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <!-- ① 在 head 加入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <button type="button" class="btn btn-primary">Primary Button</button>
+    <!-- ② 在 body 結尾前加入 Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
+```
+
+<!--
+這就是最簡單的 Bootstrap CDN 範例。
+兩個重點：第一，CSS 的 link 標籤要放在 head 裡面，這樣頁面一載入就先套用樣式；
+第二，JS 的 script 標籤要放在 body 結尾前，確保 HTML 元素都載入完畢後才執行互動邏輯。
+CDN 方式適合快速練習、小型靜態頁面；正式的 Angular 專案則有另一套安裝方式，我們下一張來看。
+-->
+
+---
+
+# 一般 HTML 使用方式 — CDN 說明
+
+<div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
+  <div style="flex: 1; padding: 1rem; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
+    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #16a34a;">✅ CDN 優點</div>
+    <ul style="font-size: 0.9rem; margin: 0; padding-left: 1.2rem; line-height: 2;">
+      <li>零安裝，貼兩行就能用</li>
+      <li>適合靜態 HTML 練習頁</li>
+      <li>瀏覽器可能已快取，載入更快</li>
+    </ul>
+  </div>
+  <div style="flex: 1; padding: 1rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
+    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #dc2626;">⚠️ CDN 限制</div>
+    <ul style="font-size: 0.9rem; margin: 0; padding-left: 1.2rem; line-height: 2;">
+      <li>需要網路連線才能載入</li>
+      <li>Angular 專案不適用此方式</li>
+      <li>無法客製化 Bootstrap 變數</li>
+    </ul>
+  </div>
+</div>
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>選擇原則：</b>純 HTML 練習 → CDN；Angular / React / Vue 專案 → npm 安裝
+</div>
+
+<!--
+CDN 不是萬能的，有幾個限制要知道：
+第一，你的電腦或使用者裝置需要連上網路，才能從 CDN 伺服器下載 Bootstrap 檔案。
+第二，在 Angular 這類框架專案裡，我們有專屬的套件管理方式，直接貼 CDN 連結反而會造成管理混亂。
+所以記住這個選擇原則：純 HTML → CDN；框架專案 → npm。
+-->
+
+---
+
+# Angular 專案安裝 Bootstrap — 步驟
 
 | 步驟 | 操作 |
 | --- | --- |
@@ -647,18 +734,16 @@ Bootstrap 不是萬靈丹，也不是每個專案都適合。
 ```
 
 <!--
-Bootstrap 是全世界最著名、市佔率最高的 CSS 框架。
-它裡面已經幫你預先寫好了幾萬行精美的按鈕、卡片、導覽列和響應式網頁排版。
-你在專案裡要安裝任何第三方套件，都有一個非常標準的 SOP 三部曲：
-第一步，我們要在專案根目錄下指令 `npm i bootstrap`。這就等於是在購物網站上下單，把 Bootstrap 套件下載到你電腦裡的 `node_modules` 倉庫。
-第二步，開啟你的 `angular.json` 設定檔，在裡面的 `styles` 陣列中把剛買回來的 Bootstrap CSS 路徑填寫進去。這是在向 Angular 登記：「喂，我買了這套名牌衣服，請幫我跟專案連結在一起！」
-第三步，**一定要重新啟動你的開發伺服器（重新跑一次專案）**！
-因為 `angular.json` 是大總管，它只在專案一開始啟動時讀取一次設定，如果你沒重啟，它是不會發現你剛剛登記的新衣服喔！
+Angular 專案不能用 CDN，因為 Angular 有自己的建置系統（webpack / esbuild）統一管理所有資源。
+所以我們要走 npm 安裝這條路，分成四個標準步驟。
+第一步，執行 `npm i bootstrap`，把套件下載進 `node_modules` 倉庫。
+第二步三步，開啟 `angular.json`，在 styles 陣列裡登記 Bootstrap CSS 路徑，告訴 Angular 建置時要把它打包進去。
+第四步，**一定要重新啟動開發伺服器**！`angular.json` 只在專案啟動時讀取一次，不重啟就看不到效果。
 -->
 
 ---
 
-# 安裝 Bootstrap — 原理
+# Angular 專案安裝 Bootstrap — 原理（為什麼不用 CDN？）
 
 `npm i bootstrap` 的用途是將 Bootstrap 套件**安裝進專案**，就像 HTML 的 `<link>` import 一樣（差別在於 `npm i` 是安裝套件進專案中）。
 
