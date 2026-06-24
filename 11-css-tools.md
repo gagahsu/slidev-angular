@@ -60,6 +60,7 @@ layout: default
 # Outline
 
 - **背景設定 — background-image / repeat / position / size**
+- **display — block / inline / inline-block / flex / none**
 - **Position — fixed / relative & absolute**
 - **z-index — 堆疊順序**
 - **後蓋前觀念 — CSS 優先權**
@@ -314,6 +315,196 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
+# display 屬性
+# 元素的排列方式
+
+<!--
+在學 Position 之前，我們先把 display 屬性的各種值整理清楚。
+之前在 ch09 和 ch10 都有提到 block、inline、flex、none，現在再加入業界常用的 inline-block，把完整圖像建立起來。
+-->
+
+---
+
+# display — 屬性值比較
+
+| 值 | 排列方式 | 可設 width/height | 說明 |
+| --- | --- | --- | --- |
+| `block` | 獨占一整行，直排 | ✅ | `div`、`p`、`h1` 預設值 |
+| `inline` | 橫排，不換行 | ❌ | `span`、`a` 預設值；只能設左右 margin |
+| `inline-block` | 橫排，不換行 | ✅ | 兼具 inline 的橫排與 block 的尺寸控制 |
+| `flex` | 啟用 Flexbox | ✅ | 子元素自動排列，詳見 ch10 |
+| `none` | 完全隱藏 | — | 元素從畫面消失，不佔空間 |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>inline-block 使用時機：</b>需要橫排、但又要設定 <code>width</code> / <code>height</code> 時（如通知徽章的父容器）
+</div>
+
+<!--
+這張表把所有常見的 display 值整理在一起。
+block 是最常見的，獨占一行，可以設寬高。
+inline 橫排，但不能設寬高，這讓很多新手抓狂。
+inline-block 是兩者的混合版，橫排的同時又可以設尺寸，是做小型 UI 元件時的好選擇。
+flex 就是我們 ch10 學的彈性盒子。
+none 讓元素消失，連空間都不佔，跟 visibility: hidden（隱藏但保留空間）不同。
+-->
+
+---
+
+# display — 視覺對比
+
+<div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">block</div>
+    <div style="border: 2px solid #888; padding: 6px;">
+      <div style="background: #93c5fd; margin-bottom: 4px; padding: 4px;">block 1</div>
+      <div style="background: #93c5fd; margin-bottom: 4px; padding: 4px;">block 2</div>
+      <div style="background: #93c5fd; padding: 4px;">block 3</div>
+    </div>
+    <div style="font-size: 0.78rem; color: #555; margin-top: 0.3rem;">各佔一行，垂直排列</div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">inline</div>
+    <div style="border: 2px solid #888; padding: 6px;">
+      <span style="background: #86efac; padding: 4px;">inline 1</span>
+      <span style="background: #86efac; padding: 4px;">inline 2</span>
+      <span style="background: #86efac; padding: 4px;">inline 3</span>
+    </div>
+    <div style="font-size: 0.78rem; color: #555; margin-top: 0.3rem;">橫排，無法設 width/height</div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">inline-block</div>
+    <div style="border: 2px solid #888; padding: 6px;">
+      <div style="display: inline-block; background: #fca5a5; width: 56px; height: 40px; margin-right: 4px; vertical-align: top; font-size: 0.75rem; padding: 2px;">60×40</div>
+      <div style="display: inline-block; background: #fca5a5; width: 56px; height: 40px; margin-right: 4px; vertical-align: top; font-size: 0.75rem; padding: 2px;">60×40</div>
+      <div style="display: inline-block; background: #fca5a5; width: 56px; height: 40px; vertical-align: top; font-size: 0.75rem; padding: 2px;">60×40</div>
+    </div>
+    <div style="font-size: 0.78rem; color: #555; margin-top: 0.3rem;">橫排 ＋ 可設 width/height</div>
+  </div>
+</div>
+
+```css
+.block-item        { display: block; }
+.inline-item       { display: inline; }
+.inline-block-item { display: inline-block; width: 60px; height: 40px; }
+```
+
+<!--
+直接看三欄對比最清楚。
+block 各佔一行，獨立存在。
+inline 橫排，但你設 width: 100px 完全沒效果。
+inline-block 橫排，同時 width 和 height 都乖乖生效。
+現代開發中 inline-block 通常用在「父容器包住內容、不想撐滿整行」的小型元件，比如通知徽章的外框、tag 標籤等。
+-->
+
+---
+
+# display: flex + column vs block
+
+`flex-direction: column` 讓子元素垂直排列，**看起來像 block，但能力更強**：
+
+| | `block`（預設） | `flex` + `column` |
+| --- | --- | --- |
+| 子元素排列 | 垂直往下 | 垂直往下 |
+| 子元素間距 | 各自設 `margin` | 父層用 `gap` 統一控制 |
+| 子元素對齊 | ❌ 無法控制 | ✅ `align-items` 橫向對齊 |
+| 子元素佔比 | ❌ 無法等分 | ✅ `flex: 1` 等分空間 |
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 只要「讓 div 往下排」不需要特地加 flex——block 預設就是直排。加 <code>flex + column</code> 是為了使用 <code>gap</code>、<code>align-items</code>、<code>justify-content</code> 等額外能力
+</div>
+
+<!--
+很多初學者看到 flex + column 和 block 效果差不多就搞混了。
+關鍵在於：你需不需要額外的對齊、間距、等分控制？
+-->
+
+---
+
+# display: flex + column vs block — 範例
+
+```css
+/* 只是垂直排列 → block 預設就是，不需要 flex */
+.list-simple { }
+
+/* 垂直排列 + 需要 gap / align-items → 用 flex + column */
+.list-flex {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+```
+
+<div style="display: flex; gap: 3rem; margin-top: 0.8rem;">
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem; font-size: 0.9rem;">block（各自 margin）</div>
+    <div style="border: 2px solid #888; padding: 6px; width: 130px;">
+      <div style="background: #93c5fd; padding: 4px; margin-bottom: 8px; font-size: 0.8rem;">item 1</div>
+      <div style="background: #93c5fd; padding: 4px; margin-bottom: 8px; font-size: 0.8rem;">item 2</div>
+      <div style="background: #93c5fd; padding: 4px; font-size: 0.8rem;">item 3</div>
+    </div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem; font-size: 0.9rem;">flex + column + gap + align-items: center</div>
+    <div style="display: flex; flex-direction: column; gap: 8px; align-items: center; border: 2px solid #888; padding: 6px; width: 130px;">
+      <div style="background: #fca5a5; padding: 4px; width: 70px; text-align: center; font-size: 0.8rem;">item 1</div>
+      <div style="background: #fca5a5; padding: 4px; width: 70px; text-align: center; font-size: 0.8rem;">item 2</div>
+      <div style="background: #fca5a5; padding: 4px; width: 70px; text-align: center; font-size: 0.8rem;">item 3</div>
+    </div>
+  </div>
+</div>
+
+<!--
+左邊 block：每個子元素自己設 margin-bottom，間距分散管理。
+右邊 flex + column：父容器統一用 gap 控制間距，align-items: center 讓所有子元素橫向置中——這是 block 做不到的。
+需要額外控制 → flex + column；單純直排 → 保持 block。
+-->
+
+---
+
+# 小節練習 — display
+
+以下三個元素，請分別改用適合的 display 值，讓它們符合需求：
+
+| 元素 | 目前 | 需求 | 應改成 |
+| --- | --- | --- | --- |
+| `<div class="tag">標籤</div>` | block（獨占一行） | 橫排 ＋ 可設寬高 | ??? |
+| `<span class="title">標題</span>` | inline（無法設高） | 獨占一行 ＋ 可設寬高 | ??? |
+| `<div class="hidden">隱藏</div>` | block（可見） | 完全隱藏不佔空間 | ??? |
+
+<!--
+想想看每種需求對應哪個 display 值！下一頁看答案。
+-->
+
+---
+
+# 小節練習 — display — 參考答案
+
+| 元素 | 答案 | 原因 |
+| --- | --- | --- |
+| `.tag` | `inline-block` | 橫排 ＋ 可設 width/height |
+| `.title` | `block` | 獨占一行 ＋ 可設尺寸 |
+| `.hidden` | `none` | 完全隱藏且不佔空間 |
+
+```css
+.tag    { display: inline-block; width: 80px; height: 28px; }
+.title  { display: block; }
+.hidden { display: none; }
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ 選擇 display 口訣：橫排要設尺寸 → <code>inline-block</code>；獨占一行 → <code>block</code>；多子元素排版 → <code>flex</code>；消失 → <code>none</code>
+</div>
+
+<!--
+記住這個選擇口訣，以後看到排版需求馬上就能判斷要用哪個 display。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
 # Position（位置）
 # fixed / relative / absolute
 
@@ -506,27 +697,46 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 小節練習 — Position — 參考答案
+# 小節練習 — Position — 參考答案（HTML + 父層）
+
+```html
+<div class="icon-wrapper">
+  <div class="icon">🔔</div>
+  <span class="badge">3</span>
+</div>
+```
 
 ```css
 .icon-wrapper {
-  position: relative;
+  position: relative;    /* 定位基準 */
   width: 60px;
   height: 60px;
-  display: inline-block;
+  display: inline-block; /* 橫排 + 可設尺寸，不撐滿整行 */
 }
 
-.icon {
-  font-size: 2rem;
-}
+.icon { font-size: 2rem; }
+```
 
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>inline-block</code>：讓父容器可設 60×60 尺寸，同時不佔滿整行
+</div>
+
+<!--
+icon-wrapper 用 inline-block，因為我們不希望它撐滿整行。
+-->
+
+---
+
+# 小節練習 — Position — 參考答案（徽章）
+
+```css
 .badge {
-  position: absolute;
+  position: absolute; /* 子元素釘在父層內 */
   top: 0;
   right: 0;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
+  border-radius: 50%; /* 正方形 → 圓形（寬高各半） */
   background-color: red;
   color: white;
   font-size: 0.7rem;
@@ -537,7 +747,8 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
-✅ <b>父 relative + 子 absolute</b> 是通知徽章、標籤貼紙的萬用組合；<code>border-radius: 50%</code> 讓正方形變圓形
+✅ <b>父 relative + 子 absolute</b> 是通知徽章的萬用組合<br/>
+✅ <code>border-radius: 50%</code> 做圓形；<code>border-radius: 999px</code> 做膠囊形
 </div>
 
 <!--

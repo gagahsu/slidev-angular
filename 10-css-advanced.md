@@ -60,8 +60,8 @@ layout: default
 # Outline
 
 - **CSS 互動 — :hover 與 :active**
-- **display: flex — 主軸、次軸與 flex-direction**
-- **對齊 — justify-content、align-items 與 align-self**
+- **display: flex — 排列、方向與彈性佔比**
+- **Flexbox 對齊 — justify-content、align-items 與 align-self**
 - **安裝 Bootstrap**
 - **練習**
 
@@ -241,7 +241,7 @@ class: flex flex-col justify-center items-center text-center
 ---
 
 # display: flex
-# 主軸與次軸
+# 排列、方向與彈性佔比
 
 <!--
 結束了互動小把戲，現在我們要進入今天真正的重頭戲、也是現代網頁排版的終極神器——「Flexbox（彈性盒模型）」！
@@ -402,6 +402,71 @@ row-reverse 跟 column-reverse 實務上比較少用，但在做「由下往上�
 
 ---
 
+# flex: 1 — 彈性佔比
+
+`flex` 是三個屬性的縮寫，控制子元素如何**分配剩餘空間**：
+
+```css
+flex: 1;
+/* 等同於 */
+flex-grow: 1;    /* 有多餘空間時，我要分 */
+flex-shrink: 1;  /* 空間不夠時，我可以縮 */
+flex-basis: 0%;  /* 起始大小從 0 開始計算 */
+```
+
+| 值 | 效果 |
+| --- | --- |
+| `flex: 1` | 等比分配剩餘空間（最常用） |
+| `flex: 2` | 佔的空間是 `flex: 1` 的兩倍 |
+| `flex: none` | 不伸不縮，維持內容原本大小 |
+
+<!--
+flex: 1 是 Flexbox 裡最常用的比例分配技巧。
+想像三個朋友平分一塊蛋糕，每人 flex: 1，就各拿三分之一。
+如果其中一個 flex: 2，他就拿走一半，其他兩人各拿四分之一。
+-->
+
+---
+
+# flex: 1 — 視覺說明
+
+容器寬 **300px**，子元素使用不同 `flex` 值：
+
+<div style="display: flex; flex-direction: column; gap: 1.2rem; margin-top: 0.8rem;">
+  <div>
+    <div style="font-size: 0.85rem; margin-bottom: 0.3rem; color: #555;">全部 flex: 1（等分）</div>
+    <div style="display: flex; width: 300px; height: 44px; border: 2px solid #888; gap: 2px;">
+      <div style="flex: 1; background: #93c5fd; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+      <div style="flex: 1; background: #93c5fd; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+      <div style="flex: 1; background: #93c5fd; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size: 0.85rem; margin-bottom: 0.3rem; color: #555;">中間 flex: 2（佔兩倍）</div>
+    <div style="display: flex; width: 300px; height: 44px; border: 2px solid #888; gap: 2px;">
+      <div style="flex: 1; background: #86efac; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+      <div style="flex: 2; background: #fca5a5; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:2</div>
+      <div style="flex: 1; background: #86efac; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size: 0.85rem; margin-bottom: 0.3rem; color: #555;">左側 flex: none（固定內容寬），其餘等分</div>
+    <div style="display: flex; width: 300px; height: 44px; border: 2px solid #888; gap: 2px;">
+      <div style="flex: none; width: 80px; background: #fde68a; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">none</div>
+      <div style="flex: 1; background: #93c5fd; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+      <div style="flex: 1; background: #93c5fd; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">flex:1</div>
+    </div>
+  </div>
+</div>
+
+<!--
+三種情境一眼看懂。
+第一排三等份，第二排中間胖一倍，第三排左側固定寬（側邊欄常用），右邊兩個等分剩餘空間。
+flex: none + flex: 1 的組合在做「固定側邊欄 + 彈性內容區」的版型時超常用！
+-->
+
+---
+
 # 小節練習 — display: flex
 
 請讓以下三個色塊並排在同一行（不使用 `width`），父容器高度 `80px`：
@@ -458,8 +523,8 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 對齊
-# justify-content & align-items
+# Flexbox 對齊
+# justify-content / align-items / align-self
 
 <!--
 把小孩並排只是第一步。接下來，我們要學習怎麼控制它們在輸送帶上的對齊方式。
@@ -496,126 +561,110 @@ A 字母像是一座頂天立地的「直立高塔」，所以 `align-items` 管
 
 # justify-content — 主軸對齊
 
-<div style="display: flex; gap: 2rem; margin-top: 1rem;">
-  <div style="flex: 1;">
-    <div style="font-weight: bold; margin-bottom: 0.4rem;">無 justify-content</div>
-    <div style="display: flex; border: 2px solid #888; height: 110px; align-items: flex-start;">
-      <div style="background: aqua; width: 80px; height: 80px;"></div>
-      <div style="background: #e8a090; width: 80px; height: 80px;"></div>
+| 常用值 | 效果 |
+| --- | --- |
+| `flex-start` | 靠主軸起點（**預設**，靠左） |
+| `flex-end` | 靠主軸終點（靠右） |
+| `center` | 主軸置中 |
+| `space-between` | 兩端貼齊，中間平均留空 |
+| `space-around` | 每個 item 左右等距留空 |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>最常用：</b> <code>center</code>（置中）與 <code>space-between</code>（導覽列左右分開）
+</div>
+
+<!--
+center 把所有 item 聚在中間。
+space-between 是做導覽列最常用的值——左邊 Logo、右邊按鈕，中間空間自動撐開，省去人工計算寬度。
+-->
+
+---
+
+# justify-content — 視覺對比
+
+<div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.8rem;">
+  <div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">flex-start（預設）</div>
+    <div style="display: flex; border: 2px solid #888; height: 48px; align-items: center; justify-content: flex-start; gap: 4px; padding: 0 4px;">
+      <div style="background: #93c5fd; width: 60px; height: 34px;"></div>
+      <div style="background: #fca5a5; width: 60px; height: 34px;"></div>
+      <div style="background: #86efac; width: 60px; height: 34px;"></div>
     </div>
   </div>
-  <div style="flex: 1;">
-    <div style="font-weight: bold; margin-bottom: 0.4rem;">justify-content: center</div>
-    <div style="display: flex; border: 2px solid #888; height: 110px; align-items: flex-start; justify-content: center;">
-      <div style="background: aqua; width: 80px; height: 80px;"></div>
-      <div style="background: #e8a090; width: 80px; height: 80px;"></div>
+  <div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">center</div>
+    <div style="display: flex; border: 2px solid #888; height: 48px; align-items: center; justify-content: center; gap: 4px;">
+      <div style="background: #93c5fd; width: 60px; height: 34px;"></div>
+      <div style="background: #fca5a5; width: 60px; height: 34px;"></div>
+      <div style="background: #86efac; width: 60px; height: 34px;"></div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">space-between</div>
+    <div style="display: flex; border: 2px solid #888; height: 48px; align-items: center; justify-content: space-between; padding: 0 4px;">
+      <div style="background: #93c5fd; width: 60px; height: 34px;"></div>
+      <div style="background: #fca5a5; width: 60px; height: 34px;"></div>
+      <div style="background: #86efac; width: 60px; height: 34px;"></div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">space-around</div>
+    <div style="display: flex; border: 2px solid #888; height: 48px; align-items: center; justify-content: space-around;">
+      <div style="background: #93c5fd; width: 60px; height: 34px;"></div>
+      <div style="background: #fca5a5; width: 60px; height: 34px;"></div>
+      <div style="background: #86efac; width: 60px; height: 34px;"></div>
     </div>
   </div>
 </div>
 
-```css
-display: flex;
-justify-content: center;
-```
-
 <!--
-我們先來看 J 橫，也就是主軸對齊。
-大家看這段程式碼：
-當我們下 `justify-content: center;` 時，裡面的兩個小盒子就不再靠左貼齊，而是會自動以中線為基準，緊緊擁抱在正中央。
-在很久以前，要讓多個元素水平置中是前端工程師的一大痛點。
-現在，只要在老爸身上寫這兩行，一切都完美搞定。
-除了 `center` 置中之外，主軸還有個超常用的設定值叫 `space-between`（左右貼邊，中間平均留空）。
-如果你要做一個頂部導覽列，左邊放商標 Logo、右邊放登入按鈕，直接給它 `space-between` 吹口哨就排好了，省去你人工計算寬度的功夫！
+四種值一次對比看清楚差異。
 -->
 
 ---
 
 # align-items — 次軸對齊
 
-<div style="display: flex; gap: 2rem; margin-top: 1rem;">
-  <div style="flex: 1;">
-    <div style="font-weight: bold; margin-bottom: 0.4rem;">無 align-items</div>
-    <div style="display: flex; border: 2px solid #888; height: 130px; align-items: flex-start;">
-      <div style="background: aqua; width: 80px; height: 80px;"></div>
-      <div style="background: #e8a090; width: 80px; height: 80px;"></div>
-    </div>
-  </div>
-  <div style="flex: 1;">
-    <div style="font-weight: bold; margin-bottom: 0.4rem;">align-items: center</div>
-    <div style="display: flex; border: 2px solid #888; height: 130px; align-items: center;">
-      <div style="background: aqua; width: 80px; height: 80px;"></div>
-      <div style="background: #e8a090; width: 80px; height: 80px;"></div>
-    </div>
-  </div>
-</div>
-
-```css
-display: flex;
-align-items: center;
-```
-
-<!--
-看完了橫向的 J，我們來看看直向的 A——也就是次軸的 `align-items`。
-大家看右邊這張圖：
-原本兩個不同高度的小方塊，上緣是死板板地靠上貼齊，看起來凹凸不平。
-但只要我們加上 `align-items: center;`，這兩顆小盒子就會立刻對齊它們的「中腹線（垂直置中）」，在直向的空間裡上下平均對稱！
-有了這兩位大將的結合：
-當你想在網頁上做出一個「不管視窗怎麼拉、永遠都在畫面最中心點」的登入框時，
-主動在老爸身上寫上 `display: flex; justify-content: center; align-items: center;`，你的登入框就永遠會被死死地鎖在正中心，這就是現代排版的必殺組合技！
--->
-
----
-
-# 小節練習 — justify-content & align-items
-
-請讓 `.card` 在 `.wrapper` 容器中**水平+垂直置中**，wrapper 固定 `400px × 300px`：
-
-```html
-<div class="wrapper">
-  <div class="card">我在正中間</div>
-</div>
-```
-
-| 元素 | 要求 |
+| 常用值 | 效果 |
 | --- | --- |
-| `.wrapper` | `400px × 300px`，啟用 flex，讓 card 水平+垂直置中 |
-| `.card` | `120px × 60px`，背景 `#3498db`，白色文字，置中 |
+| `stretch` | 延伸填滿容器高度（**預設**） |
+| `flex-start` | 靠上 |
+| `flex-end` | 靠下 |
+| `center` | 垂直置中 |
 
-<!--
-必殺組合技！下一頁看答案。
--->
-
----
-
-# 小節練習 — justify-content & align-items — 參考答案
-
-```css
-.wrapper {
-  width: 400px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ecf0f1;
-}
-
-.card {
-  width: 120px;
-  height: 60px;
-  background-color: #3498db;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-```
-
-<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
-✅ <b>J 橫 A 直</b>：<code>justify-content: center</code>（主軸水平置中）+ <code>align-items: center</code>（次軸垂直置中）= 完美正中央
+<div style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 0.8rem;">
+  <div style="display: flex; gap: 1.5rem;">
+    <div style="flex: 1;">
+      <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">flex-start（靠上）</div>
+      <div style="display: flex; border: 2px solid #888; height: 90px; align-items: flex-start; gap: 4px; padding: 4px;">
+        <div style="background: #93c5fd; width: 50px; height: 50px;"></div>
+        <div style="background: #fca5a5; width: 50px; height: 30px;"></div>
+        <div style="background: #86efac; width: 50px; height: 40px;"></div>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">center（垂直置中）</div>
+      <div style="display: flex; border: 2px solid #888; height: 90px; align-items: center; gap: 4px; padding: 4px;">
+        <div style="background: #93c5fd; width: 50px; height: 50px;"></div>
+        <div style="background: #fca5a5; width: 50px; height: 30px;"></div>
+        <div style="background: #86efac; width: 50px; height: 40px;"></div>
+      </div>
+    </div>
+    <div style="flex: 1;">
+      <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">flex-end（靠下）</div>
+      <div style="display: flex; border: 2px solid #888; height: 90px; align-items: flex-end; gap: 4px; padding: 4px;">
+        <div style="background: #93c5fd; width: 50px; height: 50px;"></div>
+        <div style="background: #fca5a5; width: 50px; height: 30px;"></div>
+        <div style="background: #86efac; width: 50px; height: 40px;"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!--
-這三行組合技——display flex + justify-content center + align-items center——是你整個前端生涯中最常打的三行字！
+align-items 控制次軸（垂直方向）所有子元素的對齊方式。
+最常用的是 center——讓高度不同的元素垂直置中對齊，是做導覽列 icon 與文字並排的必備技巧。
+stretch 是預設值，子元素沒有設高度時會自動延伸填滿容器。
 -->
 
 ---
@@ -629,49 +678,165 @@ align-items: center;
 | `align-items` | 父容器 | 控制**所有**子元素的次軸對齊 |
 | `align-self` | 子元素本身 | 覆蓋父容器設定，只影響**自己** |
 
-| 常用值 | 效果 |
-| --- | --- |
-| `flex-start` | 靠次軸起點（預設靠上） |
-| `flex-end` | 靠次軸終點（靠下） |
-| `center` | 次軸置中 |
-| `stretch` | 延伸填滿容器高度（預設值） |
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>align-self</code> 優先權高於 <code>align-items</code>——父容器廣播全體，子元素可個別反悔
+</div>
 
 <!--
 align-self 是 align-items 的個人版。
 父容器下了 align-items 就是對全體廣播，但有時候你只想讓特定的子元素做出不同的垂直對齊。
-這時候就在那個子元素身上直接寫 align-self，它的優先權高於父容器的 align-items，等於是個人特別許可證。
 -->
 
 ---
 
-# align-self — 範例
+# align-self — 常用值
 
-<div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
+| 常用值 | 效果 |
+| --- | --- |
+| `stretch` | 延伸填滿容器高度（**預設**） |
+| `flex-start` | 靠上 |
+| `flex-end` | 靠下 |
+| `center` | 垂直置中 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 常用值與 <code>align-items</code> 完全相同，差別只在套用對象：<br/>
+<code>align-items</code> → 父容器下，影響所有子元素<br/>
+<code>align-self</code> → 子元素下，只影響自己
+</div>
+
+<!--
+常用值跟 align-items 完全一樣，只是套用對象從父容器改成子元素自己。
+stretch 是預設值，不需要寫；其他三個看情況使用。
+-->
+
+---
+
+# align-self — 視覺對比
+
+<div style="display: flex; gap: 1.5rem; margin-top: 0.8rem;">
   <div style="flex: 1;">
-    <div style="font-weight: bold; margin-bottom: 0.4rem; font-size: 0.9rem;">視覺效果</div>
-    <div style="display: flex; border: 2px solid #888; height: 130px; gap: 4px;">
-      <div style="background: aqua; width: 60px; align-self: flex-start; height: 60px; font-size: 0.7rem; padding: 2px;">flex-start</div>
-      <div style="background: #e8a090; width: 60px; align-self: center; height: 60px; font-size: 0.7rem; padding: 2px;">center</div>
-      <div style="background: #f5c542; width: 60px; align-self: flex-end; height: 60px; font-size: 0.7rem; padding: 2px;">flex-end</div>
-      <div style="background: #90d090; flex: 1; font-size: 0.7rem; padding: 2px;">stretch（預設）</div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">flex-start（靠上）</div>
+    <div style="display: flex; border: 2px solid #888; height: 110px; gap: 4px; padding: 4px;">
+      <div style="background: #93c5fd; width: 50px; align-self: flex-start; height: 50px; font-size: 0.7rem; padding: 2px;">A</div>
+      <div style="background: #fca5a5; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">B</div>
+      <div style="background: #86efac; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">C</div>
+    </div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">center（垂直置中）</div>
+    <div style="display: flex; border: 2px solid #888; height: 110px; gap: 4px; padding: 4px;">
+      <div style="background: #93c5fd; width: 50px; align-self: center; height: 50px; font-size: 0.7rem; padding: 2px;">A</div>
+      <div style="background: #fca5a5; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">B</div>
+      <div style="background: #86efac; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">C</div>
+    </div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">flex-end（靠下）</div>
+    <div style="display: flex; border: 2px solid #888; height: 110px; gap: 4px; padding: 4px;">
+      <div style="background: #93c5fd; width: 50px; align-self: flex-end; height: 50px; font-size: 0.7rem; padding: 2px;">A</div>
+      <div style="background: #fca5a5; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">B</div>
+      <div style="background: #86efac; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">C</div>
+    </div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.2rem;">stretch（延伸，預設）</div>
+    <div style="display: flex; border: 2px solid #888; height: 110px; gap: 4px; padding: 4px;">
+      <div style="background: #93c5fd; width: 50px; align-self: stretch; font-size: 0.7rem; padding: 2px;">A</div>
+      <div style="background: #fca5a5; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">B</div>
+      <div style="background: #86efac; width: 50px; height: 50px; font-size: 0.7rem; padding: 2px;">C</div>
     </div>
   </div>
 </div>
 
-```css
-.container { display: flex; height: 130px; }
+<!--
+四欄各展示一種 align-self 值，只有 A 方塊在每欄套用不同的 align-self，B/C 保持預設對比。
+靠上、置中、靠下、延伸填滿——四種效果一眼看清。
+記住：align-self 下在子元素身上，不是父容器！
+-->
 
-.item-top    { align-self: flex-start; height: 60px; }
-.item-center { align-self: center;     height: 60px; }
-.item-bottom { align-self: flex-end;   height: 60px; }
-.item-fill   { /* stretch 為預設，不需寫 */ }
+---
+
+# 小節練習 — Flexbox 對齊
+
+請做出以下工具列排版，容器 `400px × 120px`：
+
+```html
+<div class="toolbar">
+  <div class="item item-a">A</div>
+  <div class="item item-b">B</div>
+  <div class="item item-c">C</div>
+</div>
+```
+
+<div style="display: flex; justify-content: space-between; align-items: flex-start; width: 360px; height: 100px; background: #f1f5f9; border: 2px solid #ccc; padding: 4px; margin-top: 0.8rem;">
+  <div style="width: 52px; height: 52px; background: #3498db; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">A</div>
+  <div style="width: 52px; height: 52px; background: #e74c3c; align-self: center; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">B</div>
+  <div style="width: 52px; height: 52px; background: #2ecc71; align-self: flex-end; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">C</div>
+</div>
+
+<!--
+三個屬性全用上：justify-content 管左右，align-items 管預設上下，align-self 個別覆蓋！
+-->
+
+---
+
+# 小節練習 — Flexbox 對齊（規格）
+
+| 元素 | 要求 |
+| --- | --- |
+| `.toolbar` | `400px × 120px`，flex，三個 item **左中右均分**，整體靠上 |
+| `.item` | `60px × 60px`，背景色自訂 |
+| `.item-a` | 靠上（預設，不需額外設定） |
+| `.item-b` | 垂直**置中** |
+| `.item-c` | 靠下 |
+
+<!--
+目標排版如上：A 靠上、B 垂直置中、C 靠下，同時三個 item 左中右均分。
+下一頁看答案。
+-->
+
+---
+
+# 小節練習 — Flexbox 對齊 — 參考答案
+
+```css
+.toolbar {
+  display: flex;
+  justify-content: space-between; /* 三個 item 左中右均分 */
+  align-items: flex-start;        /* 預設靠上 */
+  width: 400px;
+  height: 120px;
+  background-color: #f1f5f9;
+}
+
+.item {
+  width: 60px;
+  height: 60px;
+  background-color: #3498db;
+  color: white;
+}
 ```
 
 <!--
-來看實際效果。四個子元素在同一個 flex 容器裡，各自用不同的 align-self 值。
-靠上、置中、靠下、填滿——四種效果同時出現，非常清楚。
-記住：align-self 下在子元素身上，不是父容器！
+justify-content: space-between 讓三個 item 平均散開佔滿整排。
+align-items: flex-start 設定預設靠上，item-b 和 item-c 再各自用 align-self 覆蓋。
 -->
+
+---
+
+# 小節練習 — Flexbox 對齊 — 參考答案（續）
+
+```css
+/* align-self 個別覆蓋父容器的 align-items */
+.item-b { align-self: center; }   /* 垂直置中 */
+.item-c { align-self: flex-end; } /* 靠下 */
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <code>justify-content: space-between</code> 主軸均分<br/>
+✅ <code>align-items: flex-start</code> 設全體靠上預設<br/>
+✅ <code>align-self</code> 讓個別子元素覆蓋 — 三個屬性各司其職
+</div>
 
 ---
 layout: section
