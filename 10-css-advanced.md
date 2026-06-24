@@ -60,8 +60,8 @@ layout: default
 # Outline
 
 - **CSS 互動 — :hover 與 :active**
-- **display: flex — 主軸與次軸**
-- **對齊 — justify-content 與 align-items**
+- **display: flex — 主軸、次軸與 flex-direction**
+- **對齊 — justify-content、align-items 與 align-self**
 - **安裝 Bootstrap**
 - **練習**
 
@@ -323,6 +323,85 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
+# flex-direction — 主軸方向
+
+`flex-direction` 決定子元素的**排列方向**（主軸方向）：
+
+| 值 | 主軸方向 | 說明 |
+| --- | --- | --- |
+| `row` | → 左到右 | **預設值**，子元素橫排 |
+| `row-reverse` | ← 右到左 | 橫排但順序反轉 |
+| `column` | ↓ 上到下 | 子元素直排 |
+| `column-reverse` | ↑ 下到上 | 直排但順序反轉 |
+
+<div style="display: flex; gap: 2rem; margin-top: 1rem;">
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">row（預設）</div>
+    <div style="display: flex; flex-direction: row; border: 2px solid #888; padding: 6px; gap: 4px; height: 60px; align-items: center;">
+      <div style="background: aqua; width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">1</div>
+      <div style="background: #e8a090; width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">2</div>
+      <div style="background: #90d090; width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">3</div>
+    </div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">column</div>
+    <div style="display: flex; flex-direction: column; border: 2px solid #888; padding: 6px; gap: 4px; width: 60px;">
+      <div style="background: aqua; height: 32px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">1</div>
+      <div style="background: #e8a090; height: 32px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">2</div>
+      <div style="background: #90d090; height: 32px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">3</div>
+    </div>
+  </div>
+</div>
+
+<!--
+flex-direction 控制的是輸送帶的走向。
+預設 row 是橫向輸送帶，子元素從左排到右。
+改成 column 就把輸送帶立起來，子元素從上排到下。
+-->
+
+---
+
+# flex-direction — row-reverse & column-reverse
+
+<div style="display: flex; gap: 2rem; margin-top: 1rem;">
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">row-reverse</div>
+    <div style="display: flex; flex-direction: row-reverse; border: 2px solid #888; padding: 6px; gap: 4px; height: 60px; align-items: center;">
+      <div style="background: aqua; width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">1</div>
+      <div style="background: #e8a090; width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">2</div>
+      <div style="background: #90d090; width: 44px; height: 44px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">3</div>
+    </div>
+    <div style="font-size: 0.8rem; color: #555; margin-top: 0.3rem;">← 從右到左，順序反轉</div>
+  </div>
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem;">column-reverse</div>
+    <div style="display: flex; flex-direction: column-reverse; border: 2px solid #888; padding: 6px; gap: 4px; width: 60px;">
+      <div style="background: aqua; height: 32px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">1</div>
+      <div style="background: #e8a090; height: 32px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">2</div>
+      <div style="background: #90d090; height: 32px; display:flex; align-items:center; justify-content:center; font-size:0.8rem;">3</div>
+    </div>
+    <div style="font-size: 0.8rem; color: #555; margin-top: 0.3rem;">↑ 從下到上，順序反轉</div>
+  </div>
+</div>
+
+```css
+.container {
+  display: flex;
+  flex-direction: column; /* row | row-reverse | column | column-reverse */
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>flex-direction: column</code> 常用於「讓多個 flex row 上下堆疊」的版型
+</div>
+
+<!--
+row-reverse 跟 column-reverse 實務上比較少用，但在做「由下往上的訊息列表」（像聊天室）時非常方便。
+記住：reverse 只是改變視覺排列順序，HTML 的 DOM 順序不會變。
+-->
+
+---
+
 # 小節練習 — display: flex
 
 請讓以下三個色塊並排在同一行（不使用 `width`），父容器高度 `80px`：
@@ -537,6 +616,61 @@ align-items: center;
 
 <!--
 這三行組合技——display flex + justify-content center + align-items center——是你整個前端生涯中最常打的三行字！
+-->
+
+---
+
+# align-self — 單一子元素次軸對齊
+
+`align-self` 讓**個別子元素**覆蓋父容器的 `align-items` 設定：
+
+| 屬性 | 套用對象 | 說明 |
+| --- | --- | --- |
+| `align-items` | 父容器 | 控制**所有**子元素的次軸對齊 |
+| `align-self` | 子元素本身 | 覆蓋父容器設定，只影響**自己** |
+
+| 常用值 | 效果 |
+| --- | --- |
+| `flex-start` | 靠次軸起點（預設靠上） |
+| `flex-end` | 靠次軸終點（靠下） |
+| `center` | 次軸置中 |
+| `stretch` | 延伸填滿容器高度（預設值） |
+
+<!--
+align-self 是 align-items 的個人版。
+父容器下了 align-items 就是對全體廣播，但有時候你只想讓特定的子元素做出不同的垂直對齊。
+這時候就在那個子元素身上直接寫 align-self，它的優先權高於父容器的 align-items，等於是個人特別許可證。
+-->
+
+---
+
+# align-self — 範例
+
+<div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
+  <div style="flex: 1;">
+    <div style="font-weight: bold; margin-bottom: 0.4rem; font-size: 0.9rem;">視覺效果</div>
+    <div style="display: flex; border: 2px solid #888; height: 130px; gap: 4px;">
+      <div style="background: aqua; width: 60px; align-self: flex-start; height: 60px; font-size: 0.7rem; padding: 2px;">flex-start</div>
+      <div style="background: #e8a090; width: 60px; align-self: center; height: 60px; font-size: 0.7rem; padding: 2px;">center</div>
+      <div style="background: #f5c542; width: 60px; align-self: flex-end; height: 60px; font-size: 0.7rem; padding: 2px;">flex-end</div>
+      <div style="background: #90d090; flex: 1; font-size: 0.7rem; padding: 2px;">stretch（預設）</div>
+    </div>
+  </div>
+</div>
+
+```css
+.container { display: flex; height: 130px; }
+
+.item-top    { align-self: flex-start; height: 60px; }
+.item-center { align-self: center;     height: 60px; }
+.item-bottom { align-self: flex-end;   height: 60px; }
+.item-fill   { /* stretch 為預設，不需寫 */ }
+```
+
+<!--
+來看實際效果。四個子元素在同一個 flex 容器裡，各自用不同的 align-self 值。
+靠上、置中、靠下、填滿——四種效果同時出現，非常清楚。
+記住：align-self 下在子元素身上，不是父容器！
 -->
 
 ---
