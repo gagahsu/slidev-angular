@@ -261,6 +261,10 @@ Get-ExecutionPolicy -List
 💡 <code>RemoteSigned</code> 在「方便」與「安全」之間取得平衡，是官方建議給開發者的設定
 </div>
 
+<div class="mt-2 p-3 bg-gray-50 border-l-4 border-gray-400 text-gray-700 text-sm text-left">
+🔸 也可以直接用 <code>Set-ExecutionPolicy RemoteSigned</code>（不加 <code>-Scope</code>）。但它預設套用到 <b>LocalMachine（整台機器）</b>，必須<b>以系統管理員身分執行 PowerShell</b>，否則會出現「存取被拒」
+</div>
+
 <!--
 最推薦的做法就是這一行。
 重點是 -Scope CurrentUser，它只改你自己這個帳號，不用開系統管理員、也不會影響整台電腦，相對安全。
