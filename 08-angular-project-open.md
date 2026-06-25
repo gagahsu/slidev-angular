@@ -61,7 +61,9 @@ layout: default
 
 - **用 VS Code 開啟 Angular 專案**
 - **使用 `ng g c` 建立 Angular 元件**
+- **解決 Windows 執行原則錯誤**
 - **快速設定 Route**
+- **啟動 Angular 開發伺服器**
 
 <!--
 今天三個主題，每個都只點到為止，讓你知道「怎麼做」。
@@ -190,6 +192,33 @@ ng g c 是 Angular CLI 最常用的指令之一。
 -->
 
 ---
+
+# 解決 Windows 執行原則錯誤
+
+執行 `ng` 指令時，若出現以下錯誤：
+
+<div class="mt-2 p-3 bg-red-50 border-l-4 border-red-500 text-gray-700 text-sm text-left font-mono">
+ng : 因為這個系統上已停用指令碼執行，所以無法載入 ng.ps1 檔案
+</div>
+
+**原因**：Windows PowerShell 預設禁止執行從外部下載的 `.ps1` 腳本
+
+| 解決方法 | 指令 | 說明 |
+| --- | --- | --- |
+| 方法一（推薦） | `Set-ExecutionPolicy RemoteSigned` | 以**系統管理員**身分開啟 PowerShell 後執行 |
+| 方法二 | `npx ng g c home` | 每次在 `ng` 前加上 `npx`，不修改系統設定 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 執行方法一後，關閉 PowerShell 重新開啟，即可直接使用 <code>ng</code> 指令
+</div>
+
+<!--
+這個錯誤很常見，尤其是第一次在 Windows 上使用 Angular CLI 的同學。
+原因很單純：PowerShell 為了安全性，預設不讓系統執行從外部下載的腳本，ng 的執行檔正好是一支 .ps1 腳本，所以被擋下來了。
+方法一是一勞永逸的解法，只需要執行一次；方法二是臨時解法，適合不想改系統設定的同學。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -237,9 +266,37 @@ app.component.html 裡的 router-outlet 就是「頁面切換的舞台」，Angu
 
 ---
 
+# 啟動 Angular 開發伺服器
+
+所有設定完成後，在專案根目錄的終端機執行：
+
+```bash
+ng serve
+# 縮寫
+ng s
+```
+
+| 指令 | 說明 |
+| --- | --- |
+| `ng serve` | 啟動開發伺服器（預設 http://localhost:4200） |
+| `ng s --open` | 啟動並**自動開啟瀏覽器** |
+| `ng s --port 3000` | 指定自訂 Port |
+
+<div class="mt-4 p-3 bg-teal-50 border-l-4 border-teal-500 text-gray-700 text-sm text-left">
+✅ 伺服器啟動後，每次存檔都會<b>自動重新整理瀏覽器</b>（Hot Reload），不需要手動重整頁面
+</div>
+
+<!--
+ng serve 就是你的「預覽按鈕」。只要在專案根目錄執行這個指令，Angular 會幫你編譯整個專案，然後在 localhost:4200 開起一個開發用的伺服器。
+最棒的是它內建 Hot Reload：你改了程式碼存檔後，瀏覽器會自動更新，完全不用手動重新整理。
+加上 --open 旗標，它甚至會自動幫你打開瀏覽器，超方便！
+-->
+
+---
+
 # 本章流程回顧
 
-<div class="mt-4 grid grid-cols-3 gap-4">
+<div class="mt-4 grid grid-cols-4 gap-4">
   <div class="p-4 bg-teal-50 border-2 border-teal-300 rounded-xl text-center">
     <div class="text-3xl font-black text-teal-600 mb-2">①</div>
     <div class="font-bold text-teal-800 mb-1">開啟專案</div>
@@ -255,16 +312,21 @@ app.component.html 裡的 router-outlet 就是「頁面切換的舞台」，Angu
     <div class="font-bold text-purple-800 mb-1">設定路由</div>
     <div class="text-sm text-gray-600"><code>app.routes.ts</code><br>加上 router-outlet</div>
   </div>
+  <div class="p-4 bg-green-50 border-2 border-green-300 rounded-xl text-center">
+    <div class="text-3xl font-black text-green-600 mb-2">④</div>
+    <div class="font-bold text-green-800 mb-1">啟動伺服器</div>
+    <div class="text-sm text-gray-600"><code>ng s --open</code><br>localhost:4200</div>
+  </div>
 </div>
 
 <div class="mt-6 p-4 bg-green-50 border-l-4 border-green-500 text-gray-700 text-sm text-left">
-✅ 這三個步驟完成後，就能在瀏覽器看到你建立的頁面了！更深入的功能將在後續章節一一介紹。
+✅ 四個步驟完成後，就能在瀏覽器看到你建立的頁面！更深入的功能將在後續章節一一介紹。
 </div>
 
 <!--
-好，我們今天的三步驟就是這樣：開專案、建元件、設路由。
+好，我們今天的四步驟就是這樣：開專案、建元件、設路由、啟動伺服器。
 每一步做完，你的 Angular 應用就能在瀏覽器跑起來看到畫面了。
-後面我們還有很多章節要一起玩，今天先記住這三個基本動作！
+後面我們還有很多章節要一起玩，今天先把這個完整流程跑通！
 -->
 
 ---
