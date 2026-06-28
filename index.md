@@ -162,6 +162,11 @@ style: |
       <div>TypeScript 練習（一）</div>
       <div class="chapter-subtitle">Practice — Control & Arrays</div>
     </Link>
+    <Link to="practice-ch17" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
+      <div class="chapter-num" style="color: #e07b39;">綜合</div>
+      <div>綜合練習 Ch1–17</div>
+      <div class="chapter-subtitle" style="color: #b05a20;">HTML / CSS / TS 大挑戰</div>
+    </Link>
     <Link to="ch18" class="chapter-card">
       <div class="chapter-num">Ch 18</div>
       <div>TypeScript 練習（二）</div>
@@ -427,6 +432,10 @@ src: ./16-methods.md
 
 ---
 src: ./17-typescript-practice-1.md
+---
+
+---
+src: ./practice-ch1-ch17.md
 ---
 
 ---
