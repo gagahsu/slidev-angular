@@ -192,7 +192,7 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — 雙欄 + 頭像 CSS
+# P1：解答提示 — 雙欄 CSS（1/2）
 
 ```css
 .resume {
@@ -208,6 +208,15 @@ layout: default
   flex-direction: column;
   align-items: center;
 }
+```
+
+---
+layout: default
+---
+
+# P1：解答提示 — 頭像 CSS（2/2）
+
+```css
 .avatar {
   width: 120px;
   height: 120px;
