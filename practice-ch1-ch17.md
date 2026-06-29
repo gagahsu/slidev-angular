@@ -215,7 +215,7 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — Angular 初始設定
+# P1：完整解答 — 路由設定
 
 ```bash
 ng g c resume
@@ -239,7 +239,57 @@ export const routes: Routes = [
 layout: default
 ---
 
-# P1：解答提示 — HTML 骨架結構
+# P1：完整解答 — TypeScript（1/2）
+
+```typescript
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+@Component({
+  selector: 'app-resume',
+  imports: [CommonModule],
+  templateUrl: './resume.component.html',
+  styleUrl: './resume.component.css'
+})
+export class ResumeComponent {
+  skills = [
+    { name: 'HTML', percent: 90 },
+    { name: 'CSS', percent: 80 },
+    { name: 'TypeScript', percent: 65 },
+    { name: 'Angular', percent: 55 },
+  ];
+  experiences: { company: string; title: string; start: number; end: number | null }[] = [
+    { company: '科技股份有限公司', title: '前端工程師', start: 2023, end: null },
+    { company: '網路新創公司', title: '工程師', start: 2021, end: 2023 },
+  ];
+```
+
+---
+layout: default
+---
+
+# P1：完整解答 — TypeScript（2/2）
+
+```typescript
+  getDuration(start: number, end: number | null): string {
+    if (end === null) return '~ 現在';
+    return (end - start) + ' 年';
+  }
+  getSkillLevel(percent: number): string {
+    if (percent >= 80) return '熟練';
+    if (percent >= 60) return '進階';
+    return '初學';
+  }
+  getTopSkills() {
+    return this.skills.filter(s => s.percent >= 70);
+  }
+}
+```
+
+---
+layout: default
+---
+
+# P1：完整解答 — HTML（1/2）
 
 ```html
 <div class="resume">
@@ -247,20 +297,43 @@ layout: default
     <div class="avatar">王</div>
     <h2 class="name">王小明</h2>
     <p class="job-title">前端工程師</p>
-    <div class="contact"> ... </div>
+    <div class="contact">
+      <p>📧 email@example.com</p>
+    </div>
     <div class="skills">
+      <h3>技能</h3>
       <div *ngFor="let skill of skills" class="skill-item">
         <span class="skill-name">{{ skill.name }}</span>
         <span class="skill-tag">{{ getSkillLevel(skill.percent) }}</span>
       </div>
     </div>
   </aside>
+```
+
+---
+layout: default
+---
+
+# P1：完整解答 — HTML（2/2）
+
+```html
   <main class="content">
-    <section class="about"> ... </section>
+    <section class="about">
+      <h2>關於我</h2>
+      <p>熱愛前端開發，喜歡把設計稿變成網頁...</p>
+    </section>
     <section class="experience">
+      <h2>工作經歷</h2>
       <div class="timeline">
         <div class="timeline-line"></div>
-        <div *ngFor="let exp of experiences" class="timeline-item"> ... </div>
+        <div *ngFor="let exp of experiences" class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <h3>{{ exp.company }}</h3>
+            <p>{{ exp.title }}</p>
+            <p>{{ exp.start }} {{ getDuration(exp.start, exp.end) }}</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -271,168 +344,59 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — 雙欄 CSS（1/2）
+# P1：完整解答 — CSS（1/2）
 
 ```css
-.resume {
-  display: flex;
-  min-height: 100vh;
-}
+.resume { display: flex; min-height: 100vh; }
 .sidebar {
-  width: 280px;
-  flex-shrink: 0;
-  background: #1a5c5c;
-  color: white;
-  padding: 40px 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 280px; flex-shrink: 0; background: #1a5c5c;
+  color: white; padding: 40px 24px;
+  display: flex; flex-direction: column; align-items: center;
 }
-.content {
-  flex: 1;
-  background: #f8fffe;
-  padding: 40px;
-}
-```
-
----
-layout: default
----
-
-# P1：解答提示 — 雙欄 CSS（2/2）
-
-```css
+.content { flex: 1; background: #f8fffe; padding: 40px; }
 .avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: #5eada0;
-  border: 4px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: #5eada0; border: 4px solid white;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 2.5rem;
 }
 .job-title { color: #a7d9d0; font-size: 0.9rem; }
-```
-
----
-layout: default
----
-
-# P1：解答提示 — 技能等級標籤 CSS
-
-```css
 .skill-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 10px;
 }
 .skill-name { color: white; font-size: 0.9rem; }
 .skill-tag {
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  background: rgba(255,255,255,0.2);
-  color: white;
+  border-radius: 4px; padding: 2px 8px;
+  font-size: 0.78rem; background: rgba(255,255,255,0.2); color: white;
 }
 ```
-
-```html
-<!-- HTML 用 {{ }} 呼叫 getSkillLevel()，顯示等級文字 -->
-<div *ngFor="let skill of skills" class="skill-item">
-  <span class="skill-name">{{ skill.name }}</span>
-  <span class="skill-tag">{{ getSkillLevel(skill.percent) }}</span>
-</div>
-```
-
-<div class="mt-3 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
-✅ 用 <code>{{ }}</code> 插值呼叫 TypeScript 方法，回傳文字標籤，不需要屬性綁定或 CSS 動畫
-</div>
 
 ---
 layout: default
 ---
 
-# P1：解答提示 — 時間軸 CSS（1/2）
+# P1：完整解答 — CSS（2/2）
 
 ```css
-.timeline {
-  position: relative;
-  padding-left: 32px;
-}
+.timeline { position: relative; padding-left: 32px; }
 .timeline-line {
-  position: absolute;
-  left: 8px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #c8e6e3;
+  position: absolute; left: 8px; top: 0; bottom: 0;
+  width: 2px; background: #c8e6e3;
 }
-.timeline-item {
-  position: relative;
-  margin-bottom: 20px;
-}
-```
-
----
-layout: default
----
-
-# P1：解答提示 — 時間軸 CSS（2/2）
-
-```css
+.timeline-item { position: relative; margin-bottom: 20px; }
 .timeline-dot {
-  position: absolute;
-  left: -28px;
-  top: 6px;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #5eada0;
+  position: absolute; left: -28px; top: 6px;
+  width: 14px; height: 14px;
+  border-radius: 50%; background: #5eada0;
 }
 .timeline-card {
-  padding: 12px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: white;
+  padding: 12px; border: 1px solid #e2e8f0;
+  border-radius: 8px; background: white;
   transition: background 0.2s;
 }
 .timeline-card:hover { background: #f0faf9; }
 ```
-
----
-layout: default
----
-
-# P1：解答提示 — TypeScript 方法
-
-```typescript
-getDuration(start: number, end: number | null): string {
-  if (end === null) return '~ 現在';
-  return `${end - start} 年`;
-}
-```
-
-```typescript
-getSkillLevel(percent: number): string {
-  if (percent >= 80) return '熟練';
-  if (percent >= 60) return '進階';
-  return '初學';
-}
-```
-
-```typescript
-getTopSkills() {
-  return this.skills.filter(s => s.percent >= 70);
-}
-```
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>end === null</code> 用三等號嚴格比對；<code>getSkillLevel</code> 用 if/else 判斷回傳等級文字，在 <code>{{ }}</code> 中直接顯示；<code>filter</code> 回傳符合條件的新陣列
-</div>
 
 ---
 layout: section
@@ -550,7 +514,7 @@ interface CartItem { product: Product; qty: number; }
 layout: default
 ---
 
-# P2：解答提示 — Angular 初始設定
+# P2：完整解答 — 路由設定
 
 ```bash
 ng g c shop
@@ -574,7 +538,82 @@ export const routes: Routes = [
 layout: default
 ---
 
-# P2：解答提示 — Navbar HTML
+# P2：完整解答 — TypeScript（1/3）
+
+```typescript
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+interface Product { id: number; name: string; price: number; category: string; emoji: string; }
+interface CartItem { product: Product; qty: number; }
+@Component({
+  selector: 'app-shop',
+  imports: [CommonModule],
+  templateUrl: './shop.component.html',
+  styleUrl: './shop.component.css'
+})
+export class ShopComponent {
+  categories = ['全部', '前端', '後端', '設計'];
+  products: Product[] = [
+    { id: 1, name: 'HTML 入門', price: 299, category: '前端', emoji: '🌐' },
+    { id: 2, name: 'CSS 精通', price: 399, category: '前端', emoji: '🎨' },
+    { id: 3, name: 'Node.js', price: 499, category: '後端', emoji: '🟢' },
+    { id: 4, name: 'Figma 設計', price: 349, category: '設計', emoji: '🖌️' },
+  ];
+  cart: CartItem[] = [];
+  activeCategory: string = '全部';
+```
+
+---
+layout: default
+---
+
+# P2：完整解答 — TypeScript（2/3）
+
+```typescript
+  setCategory(cat: string): void {
+    this.activeCategory = cat;
+  }
+  filterProducts(): Product[] {
+    if (this.activeCategory === '全部') return this.products;
+    return this.products.filter(p => p.category === this.activeCategory);
+  }
+  addToCart(product: Product): void {
+    const existing = this.cart.filter(c => c.product.id === product.id);
+    if (existing.length > 0) {
+      existing[0].qty++;
+    } else {
+      this.cart.push({ product, qty: 1 });
+    }
+  }
+```
+
+---
+layout: default
+---
+
+# P2：完整解答 — TypeScript（3/3）
+
+```typescript
+  getCartCount(): number {
+    let total = 0;
+    for (let item of this.cart) { total += item.qty; }
+    return total;
+  }
+  getCartTotal(): number {
+    let total = 0;
+    for (let item of this.cart) {
+      total += item.product.price * item.qty;
+    }
+    return total;
+  }
+}
+```
+
+---
+layout: default
+---
+
+# P2：完整解答 — HTML（1/2）
 
 ```html
 <nav class="navbar">
@@ -588,13 +627,40 @@ layout: default
     <span class="cart-badge">{{ getCartCount() }}</span>
   </div>
 </nav>
+<div class="filter-bar">
+  <button *ngFor="let cat of categories"
+    class="filter-btn"
+    [class.active]="cat === activeCategory"
+    (click)="setCategory(cat)">{{ cat }}</button>
+</div>
 ```
 
 ---
 layout: default
 ---
 
-# P2：解答提示 — Navbar + Badge CSS
+# P2：完整解答 — HTML（2/2）
+
+```html
+<div class="product-grid">
+  <div *ngFor="let product of filterProducts()"
+    class="product-card">
+    <div class="product-img">{{ product.emoji }}</div>
+    <div class="product-info">
+      <div class="product-name">{{ product.name }}</div>
+      <div class="product-price">NT${{ product.price }}</div>
+      <button class="add-btn"
+        (click)="addToCart(product)">加入購物車</button>
+    </div>
+  </div>
+</div>
+```
+
+---
+layout: default
+---
+
+# P2：完整解答 — CSS（1/3）
 
 ```css
 .navbar {
@@ -602,10 +668,10 @@ layout: default
   height: 64px; background: #1a5c5c;
   display: flex; align-items: center;
   justify-content: space-between;
-  padding: 0 40px; z-index: 100;
+  padding: 0 40px; z-index: 100; color: white;
 }
 body { padding-top: 64px; }
-.cart-icon { position: relative; color: white; }
+.cart-icon { position: relative; }
 .cart-badge {
   position: absolute; top: -8px; right: -12px;
   background: #e53e3e; color: white;
@@ -619,72 +685,57 @@ body { padding-top: 64px; }
 layout: default
 ---
 
-# P2：解答提示 — 商品格 CSS（Flexbox）
+# P2：完整解答 — CSS（2/3）
 
 ```css
+.filter-bar {
+  padding: 16px 40px; display: flex; gap: 8px;
+  background: white; border-bottom: 1px solid #e2e8f0;
+}
+.filter-btn {
+  padding: 6px 16px; border: 1px solid #ccc;
+  border-radius: 4px; cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.filter-btn.active { background: #1a5c5c; color: white; border-color: #1a5c5c; }
 .product-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 32px 40px;
+  display: flex; flex-wrap: wrap; gap: 20px; padding: 32px 40px;
 }
 .product-card {
-  flex: 0 0 calc(25% - 15px);
-  border-radius: 12px;
+  flex: 0 0 calc(25% - 15px); border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  background: white;
-  transition: box-shadow 0.25s;
+  background: white; transition: box-shadow 0.25s;
 }
-.product-card:hover {
-  box-shadow: 0 12px 28px rgba(0,0,0,0.15);
-}
-.product-img {
-  height: 180px; background: #f0faf9;
-  display: flex; align-items: center;
-  justify-content: center; font-size: 4rem;
-}
+.product-card:hover { box-shadow: 0 12px 28px rgba(0,0,0,0.15); }
 ```
 
 ---
 layout: default
 ---
 
-# P2：解答提示 — TypeScript 方法
+# P2：完整解答 — CSS（3/3）
 
-```typescript
-setCategory(cat: string): void {
-  this.activeCategory = cat;
+```css
+.product-img {
+  height: 180px; background: #f0faf9;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 4rem;
+  border-radius: 12px 12px 0 0;
 }
-filterProducts(): Product[] {
-  if (this.activeCategory === '全部') return this.products;
-  return this.products.filter(p => p.category === this.activeCategory);
+.product-info { padding: 16px; }
+.product-name { font-weight: 600; margin-bottom: 8px; }
+.product-price {
+  color: #1a5c5c; font-size: 1.25rem;
+  font-weight: 700; margin-bottom: 12px;
 }
-```
-
-```typescript
-addToCart(product: Product): void {
-  const existing = this.cart.filter(c => c.product.id === product.id);
-  if (existing.length > 0) {
-    existing[0].qty++;
-  } else {
-    this.cart.push({ product, qty: 1 });
-  }
+.add-btn {
+  width: 100%; padding: 8px;
+  background: #1a5c5c; color: white;
+  border: none; border-radius: 8px;
+  cursor: pointer; font-size: 0.9rem;
+  transition: background 0.2s;
 }
-```
-
-```typescript
-getCartCount(): number {
-  let total = 0;
-  for (let item of this.cart) { total += item.qty; }
-  return total;
-}
-getCartTotal(): number {
-  let total = 0;
-  for (let item of this.cart) {
-    total += item.product.price * item.qty;
-  }
-  return total;
-}
+.add-btn:hover { background: #5eada0; }
 ```
 
 ---
@@ -797,7 +848,7 @@ records: CourseRecord[] = [ ... ];
 layout: default
 ---
 
-# P3：解答提示 — Angular 初始設定
+# P3：完整解答 — 路由設定
 
 ```bash
 ng g c dashboard
@@ -821,48 +872,135 @@ export const routes: Routes = [
 layout: default
 ---
 
-# P3：解答提示 — Header CSS
+# P3：完整解答 — TypeScript（1/2）
 
-```css
-.dashboard-header {
-  background: #1a5c5c;
-  color: white;
-  padding: 12px 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.dashboard-header .title { font-weight: 700; }
-.dashboard-header .date  { color: #a7d9d0; }
+```typescript
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+interface CourseRecord { name: string; status: 'completed' | 'in-progress'; date: string; }
+@Component({
+  selector: 'app-dashboard',
+  imports: [CommonModule],
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css'
+})
+export class DashboardComponent {
+  subjects = [
+    { name: 'HTML', progress: 80 },
+    { name: 'CSS', progress: 70 },
+    { name: 'TypeScript', progress: 40 },
+  ];
+  records: CourseRecord[] = [
+    { name: 'HTML 表單練習', status: 'completed', date: '2025/06/01' },
+    { name: 'CSS Flexbox', status: 'completed', date: '2025/06/10' },
+    { name: 'TypeScript 基礎', status: 'in-progress', date: '2025/06/20' },
+  ];
 ```
 
 ---
 layout: default
 ---
 
-# P3：解答提示 — 統計卡片 CSS
+# P3：完整解答 — TypeScript（2/2）
+
+```typescript
+  getCompletedCount(): number {
+    return this.records.filter(r => r.status === 'completed').length;
+  }
+  getInProgressCount(): number {
+    return this.records.filter(r => r.status === 'in-progress').length;
+  }
+  getTotalHours(): number {
+    return this.records.length * 2.5;
+  }
+  getCompletionRate(): string {
+    const rate = this.getCompletedCount() / this.records.length;
+    return Math.round(rate * 100) + '%';
+  }
+  getStatusText(status: string): string {
+    return status === 'completed' ? '已完成' : '學習中';
+  }
+}
+```
+
+---
+layout: default
+---
+
+# P3：完整解答 — HTML（1/2）
+
+```html
+<div class="dashboard-header">
+  <span class="title">📚 學習進度儀表板</span>
+  <span class="date">2025/06/28</span>
+</div>
+<div class="content">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value">{{ getCompletedCount() }}</div>
+      <div>已完成</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:#e07b39">{{ getInProgressCount() }}</div>
+      <div>學習中</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ getTotalHours() }}h</div>
+      <div>總時數</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" style="color:#5eada0">{{ getCompletionRate() }}</div>
+      <div>完成率</div>
+    </div>
+  </div>
+```
+
+---
+layout: default
+---
+
+# P3：完整解答 — HTML（2/2）
+
+```html
+  <div *ngFor="let s of subjects" class="progress-row">
+    <span class="subject-name">{{ s.name }}</span>
+    <span class="progress-num">{{ s.progress }}</span>
+    <span class="progress-unit">%</span>
+  </div>
+  <div class="records">
+    <div *ngFor="let r of records" class="record-item">
+      <span>● {{ r.name }}</span>
+      <span [class.badge-done]="r.status === 'completed'"
+        [class.badge-wip]="r.status === 'in-progress'">
+        {{ getStatusText(r.status) }}
+      </span>
+    </div>
+  </div>
+</div>
+```
+
+---
+layout: default
+---
+
+# P3：完整解答 — CSS（1/2）
 
 ```css
-.stats-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
+.dashboard-header {
+  background: #1a5c5c; color: white; padding: 12px 32px;
+  display: flex; justify-content: space-between; align-items: center;
 }
+.dashboard-header .date { color: #a7d9d0; }
+.content { padding: 24px 32px; }
+.stats-row { display: flex; gap: 16px; margin-bottom: 32px; }
 .stat-card {
-  flex: 1;
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  text-align: center;
+  flex: 1; background: white; border-radius: 12px;
+  padding: 24px; text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: background 0.25s, color 0.25s;
 }
 .stat-card:hover { background: #1a5c5c; color: white; }
-.stat-value {
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: #1a5c5c;
-}
+.stat-value { font-size: 2.5rem; font-weight: 900; color: #1a5c5c; }
 .stat-card:hover .stat-value { color: white; }
 ```
 
@@ -870,63 +1008,26 @@ layout: default
 layout: default
 ---
 
-# P3：解答提示 — 進度數字 CSS
+# P3：完整解答 — CSS（2/2）
 
 ```css
 .progress-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  transition: background 0.2s;
+  display: flex; align-items: center; gap: 16px;
+  padding: 8px; border-radius: 8px;
+  margin-bottom: 8px; transition: background 0.2s;
 }
 .progress-row:hover { background: #f8fffe; }
 .subject-name { width: 80px; color: #555; }
-.progress-num {
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: #1a5c5c;
-  min-width: 60px;
-}
+.progress-num { font-size: 1.6rem; font-weight: 900; color: #1a5c5c; min-width: 60px; }
 .progress-unit { font-size: 0.85rem; color: #888; }
+.record-item {
+  display: flex; justify-content: space-between;
+  padding: 8px 4px; color: #555;
+  border-bottom: 1px solid #f0faf9;
+}
+.badge-done { background: #d4edda; color: #1a6e2e; border-radius: 999px; padding: 2px 10px; }
+.badge-wip  { background: #fff3cd; color: #856404; border-radius: 999px; padding: 2px 10px; }
 ```
-
-```html
-<!-- HTML 用 {{ }} 直接顯示進度數字 -->
-<div *ngFor="let subject of subjects" class="progress-row">
-  <span class="subject-name">{{ subject.name }}</span>
-  <span class="progress-num">{{ subject.progress }}</span>
-  <span class="progress-unit">%</span>
-</div>
-```
-
----
-layout: default
----
-
-# P3：解答提示 — TypeScript 方法
-
-```typescript
-getCompletedCount(): number {
-  return this.records.filter(r => r.status === 'completed').length;
-}
-getInProgressCount(): number {
-  return this.records.filter(r => r.status === 'in-progress').length;
-}
-getTotalHours(): number {
-  return this.records.length * 2.5;
-}
-getCompletionRate(): string {
-  const rate = this.getCompletedCount() / this.records.length;
-  return Math.round(rate * 100) + '%';
-}
-```
-
-<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>Math.round</code> 四捨五入；<code>getCompletionRate</code> 算出比率後乘 100 再四捨五入，加上 <code>'%'</code> 字串回傳；這些方法都在 <code>{{ }}</code> 中呼叫，不需要 <code>(click)</code>
-</div>
 
 ---
 layout: section
@@ -1051,7 +1152,7 @@ interface OrderItem { item: MenuItem; qty: number; }
 layout: default
 ---
 
-# P4：解答提示 — Angular 初始設定
+# P4：完整解答 — 路由設定
 
 ```bash
 ng g c menu
@@ -1075,7 +1176,140 @@ export const routes: Routes = [
 layout: default
 ---
 
-# P4：解答提示 — Header + 分類列 CSS（1/2）
+# P4：完整解答 — TypeScript（1/3）
+
+```typescript
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+interface MenuItem { id: number; name: string; price: number; category: string; emoji: string; }
+interface OrderItem { item: MenuItem; qty: number; }
+@Component({
+  selector: 'app-menu',
+  imports: [CommonModule],
+  templateUrl: './menu.component.html',
+  styleUrl: './menu.component.css'
+})
+export class MenuComponent {
+  categories = ['麵食', '湯品', '小菜', '飲料'];
+  menu: MenuItem[] = [
+    { id: 1, name: '招牌牛肉麵', price: 180, category: '麵食', emoji: '🍜' },
+    { id: 2, name: '雞肉米線',   price: 150, category: '麵食', emoji: '🍝' },
+    { id: 3, name: '酸辣湯',     price: 60,  category: '湯品', emoji: '🍲' },
+    { id: 4, name: '紅燒蹄膀',   price: 120, category: '小菜', emoji: '🍖' },
+    { id: 5, name: '珍珠奶茶',   price: 55,  category: '飲料', emoji: '🧋' },
+  ];
+  order: OrderItem[] = [];
+  activeCategory: string = '麵食';
+```
+
+---
+layout: default
+---
+
+# P4：完整解答 — TypeScript（2/3）
+
+```typescript
+  setCategory(cat: string): void {
+    this.activeCategory = cat;
+  }
+  getMenu(): MenuItem[] {
+    return this.menu.filter(m => m.category === this.activeCategory);
+  }
+  addItem(item: MenuItem): void {
+    const existing = this.order.filter(o => o.item.id === item.id);
+    if (existing.length > 0) {
+      existing[0].qty++;
+    } else {
+      this.order.push({ item, qty: 1 });
+    }
+  }
+```
+
+---
+layout: default
+---
+
+# P4：完整解答 — TypeScript（3/3）
+
+```typescript
+  removeItem(id: number): void {
+    this.order.forEach(o => {
+      if (o.item.id === id) { o.qty--; }
+    });
+    this.order = this.order.filter(o => o.qty > 0);
+  }
+  getOrderCount(): number {
+    let total = 0;
+    for (let o of this.order) { total += o.qty; }
+    return total;
+  }
+  getTotal(): number {
+    let total = 0;
+    for (let o of this.order) {
+      total += o.item.price * o.qty;
+    }
+    return total;
+  }
+}
+```
+
+---
+layout: default
+---
+
+# P4：完整解答 — HTML（1/2）
+
+```html
+<div class="header">
+  <span class="brand">🍜 山水麵館</span>
+  <span class="cart-info">📋 餐點
+    <span class="badge-num">{{ getOrderCount() }}</span>
+  </span>
+</div>
+<div class="category-nav">
+  <button *ngFor="let cat of categories"
+    class="cat-btn"
+    [class.active]="cat === activeCategory"
+    (click)="setCategory(cat)">{{ cat }}</button>
+</div>
+<div class="main-layout">
+  <div class="menu-area">
+    <div class="menu-grid">
+      <div *ngFor="let item of getMenu()" class="menu-card">
+        <div class="item-emoji">{{ item.emoji }}</div>
+        <div class="item-name">{{ item.name }}</div>
+        <div class="item-price">NT${{ item.price }}</div>
+        <button class="add-btn" (click)="addItem(item)">加入</button>
+      </div>
+    </div>
+  </div>
+```
+
+---
+layout: default
+---
+
+# P4：完整解答 — HTML（2/2）
+
+```html
+  <div class="order-panel">
+    <div class="order-title">📋 訂單明細</div>
+    <div *ngFor="let o of order" class="order-item">
+      <span>{{ o.item.name }} x{{ o.qty }}</span>
+      <span>NT${{ o.item.price * o.qty }}</span>
+      <button (click)="removeItem(o.item.id)">－</button>
+    </div>
+    <div class="order-total">總計：NT${{ getTotal() }}</div>
+    <button class="checkout-btn">結帳</button>
+  </div>
+</div>
+```
+
+---
+layout: default
+---
+
+# P4：完整解答 — CSS（1/3）
 
 ```css
 .header {
@@ -1086,140 +1320,79 @@ layout: default
   padding: 0 32px; z-index: 200; color: white;
 }
 body { padding-top: 64px; }
-.category-nav {
-  background: white;
-  padding: 12px 32px;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  gap: 8px;
+.badge-num {
+  background: #e53e3e; color: white; border-radius: 50%;
+  padding: 1px 6px; font-size: 0.8rem; margin-left: 4px;
 }
-```
-
----
-layout: default
----
-
-# P4：解答提示 — Header + 分類列 CSS（2/2）
-
-```css
+.category-nav {
+  background: white; padding: 12px 32px;
+  border-bottom: 1px solid #e2e8f0; display: flex; gap: 8px;
+}
 .cat-btn {
-  padding: 6px 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  cursor: pointer;
-  color: #666;
+  padding: 6px 16px; border: 1px solid #ccc;
+  border-radius: 4px; cursor: pointer; color: #666;
   transition: background 0.2s, color 0.2s;
 }
-.cat-btn.active {
-  background: #1a5c5c;
-  color: white;
-  border-color: #1a5c5c;
-}
+.cat-btn.active { background: #1a5c5c; color: white; border-color: #1a5c5c; }
 ```
 
 ---
 layout: default
 ---
 
-# P4：解答提示 — 主要佈局 CSS（1/2）
+# P4：完整解答 — CSS（2/3）
 
 ```css
 .main-layout {
-  display: flex;
-  gap: 24px;
-  padding: 24px 32px;
-  align-items: flex-start;
+  display: flex; gap: 24px;
+  padding: 24px 32px; align-items: flex-start;
 }
 .menu-area { flex: 1; }
 .menu-grid { display: flex; flex-wrap: wrap; gap: 16px; }
 .menu-card {
   flex: 0 0 calc(50% - 8px);
-  border: 2px solid transparent;
-  border-radius: 12px;
-  background: white;
-  padding: 16px;
-  text-align: center;
+  border: 2px solid transparent; border-radius: 12px;
+  background: white; padding: 16px; text-align: center;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: border-color 0.2s;
 }
+.menu-card:hover { border-color: #5eada0; }
+.item-emoji { font-size: 2.5rem; margin-bottom: 8px; }
+.item-name { font-weight: 600; margin-bottom: 4px; }
+.item-price { color: #1a5c5c; font-weight: 700; margin-bottom: 12px; }
 ```
 
 ---
 layout: default
 ---
 
-# P4：解答提示 — 主要佈局 CSS（2/2）
+# P4：完整解答 — CSS（3/3）
 
 ```css
-.menu-card:hover { border-color: #5eada0; }
+.add-btn {
+  width: 100%; padding: 6px; background: #1a5c5c;
+  color: white; border: none; border-radius: 8px;
+  cursor: pointer; transition: background 0.2s;
+}
+.add-btn:hover { background: #5eada0; }
 .order-panel {
-  width: 280px; flex-shrink: 0;
-  background: white; border-radius: 12px;
-  padding: 20px;
+  width: 280px; flex-shrink: 0; background: white;
+  border-radius: 12px; padding: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
+.order-title { font-weight: 700; color: #1a5c5c; margin-bottom: 12px; }
+.order-item {
+  display: flex; justify-content: space-between;
+  padding: 6px 0; color: #555;
+}
+.order-total { font-weight: 700; color: #1a5c5c; padding: 8px 0; border-top: 1px solid #e2e8f0; }
+.checkout-btn {
+  width: 100%; padding: 10px; background: #1a5c5c;
+  color: white; border: none; border-radius: 8px;
+  cursor: pointer; transition: background 0.2s, color 0.2s;
+}
+.checkout-btn:hover { background: white; color: #1a5c5c; border: 2px solid #1a5c5c; }
 ```
-
----
-layout: default
----
-
-# P4：解答提示 — TypeScript 方法（加 / 移除）
-
-```typescript
-setCategory(cat: string): void {
-  this.activeCategory = cat;
-}
-```
-
-```typescript
-addItem(item: MenuItem): void {
-  const existing = this.order.filter(o => o.item.id === item.id);
-  if (existing.length > 0) {
-    existing[0].qty++;
-  } else {
-    this.order.push({ item, qty: 1 });
-  }
-}
-```
-
-```typescript
-removeItem(id: number): void {
-  this.order.forEach(o => {
-    if (o.item.id === id) { o.qty--; }
-  });
-  this.order = this.order.filter(o => o.qty > 0);
-}
-```
-
----
-layout: default
----
-
-# P4：解答提示 — TypeScript 方法（計算）
-
-```typescript
-getMenu(): MenuItem[] {
-  if (this.activeCategory === '全部') return this.menu;
-  return this.menu.filter(m => m.category === this.activeCategory);
-}
-getOrderCount(): number {
-  let total = 0;
-  for (let o of this.order) { total += o.qty; }
-  return total;
-}
-getTotal(): number {
-  let total = 0;
-  for (let o of this.order) {
-    total += o.item.price * o.qty;
-  }
-  return total;
-}
-```
-
-<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>removeItem</code> 先用 <code>forEach</code> 讓 qty--，再用 <code>filter</code> 清掉 qty 為 0 的項目，避免直接操作索引
-</div>
 
 ---
 layout: end
