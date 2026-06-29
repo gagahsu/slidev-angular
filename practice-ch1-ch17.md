@@ -136,26 +136,36 @@ layout: default
 
 # CSS 技術前導 — CSS Grid
 
-`display: grid` 建立格線容器，`grid-template-columns` 定義欄數與寬度：
+`display: grid` + `grid-template-columns` 定義欄數，`gap` 控制間距：
 
 ```css
-/* repeat(4, 1fr)：均分 4 欄 */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;   /* 欄 / 列間距 */
-}
-
-/* repeat(2, 1fr)：均分 2 欄 */
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.menu-grid    { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 ```
 
+<div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.8rem;">
+  <div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.3rem;"><code>repeat(4, 1fr)</code>：均分 4 欄（P2 商品格）</div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 2px solid #888; padding: 6px;">
+      <div style="background:#93c5fd;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">商品 1</div>
+      <div style="background:#fca5a5;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">商品 2</div>
+      <div style="background:#86efac;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">商品 3</div>
+      <div style="background:#fde68a;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">商品 4</div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size: 0.82rem; color: #555; margin-bottom: 0.3rem;"><code>repeat(2, 1fr)</code>：均分 2 欄（P4 菜單格）</div>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; border: 2px solid #888; padding: 6px;">
+      <div style="background:#93c5fd;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">菜單 A</div>
+      <div style="background:#fca5a5;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">菜單 B</div>
+      <div style="background:#86efac;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">菜單 C</div>
+      <div style="background:#fde68a;height:36px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;">菜單 D</div>
+    </div>
+  </div>
+</div>
+
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>1fr</code> 代表「1 份剩餘空間」；<code>repeat(N, 1fr)</code> 等同於平均分成 N 欄
+💡 <code>1fr</code> 代表「1 份剩餘空間」；<code>repeat(N, 1fr)</code> 等同於平均分成 N 欄；<code>gap</code> 同時控制欄距與列距
 </div>
 
 ---
