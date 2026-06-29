@@ -601,15 +601,15 @@ JS/TS 裡面有兩種等於：
 # 比較運算符 — 範例
 
 ```typescript
-console.log(5 == '5');   // true（值相同，型別不管）
-console.log(5 === '5');  // false（型別不同）
-console.log(5 != 3);     // true
-console.log(5 > 3);      // true
-console.log(5 <= 3);     // false
+console.log((5 as any) == '5');  // true（JS 底層行為，TS 需轉 any 才能執行）
+console.log(5 === '5');          // false（型別不同）
+console.log(5 != 3);             // true
+console.log(5 > 3);              // true
+console.log(5 <= 3);             // false
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 TypeScript 中建議使用 <code class="no-liga-code">===</code>（嚴格相等）避免型別轉換造成的判斷錯誤
+💡 TypeScript 直接寫 <code class="no-liga-code">5 == '5'</code> 會報 TS2367 型別錯誤，這正是 TS 的保護機制。實務上一律用 <code class="no-liga-code">===</code>，讓型別系統替你擋住這類問題
 </div>
 
 <!--
