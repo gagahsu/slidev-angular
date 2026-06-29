@@ -372,34 +372,66 @@ find 和 filter 的差別在於：filter 把所有符合條件的項目抓出來
 layout: default
 ---
 
-# TypeScript 技術前導 — Array.sort() + localeCompare()
+# TypeScript 技術前導 — Array.sort()（1/2）
 
-`Array.sort()` 就地排序陣列；字串比較用 `localeCompare()` 確保跨語言排序正確：
+`Array.sort()` 就地排序陣列，需傳入**比較函數**決定排序方向：
 
 ```typescript
-// 日期字串排序（新 → 舊）
-getSortedByDate(): CourseRecord[] {
-  return [...this.records].sort((a, b) =>
-    b.date.localeCompare(a.date)
-  );
-}
+// 比較函數規則：
+// 回傳負數 → a 排前面
+// 回傳正數 → b 排前面
+// 回傳 0   → 相等，不移動
 
 // 數字排序（小 → 大）
 const nums = [3, 1, 2];
 nums.sort((a, b) => a - b);   // → [1, 2, 3]
 
-// b - a：大 → 小
+// 數字排序（大 → 小）
 nums.sort((a, b) => b - a);   // → [3, 2, 1]
+
+// 字串不能直接相減，要用 localeCompare()
+// b.localeCompare(a) → b 排前面（新日期優先）
 ```
 
-**畫面互動：** P3 儀表板中點擊「依日期排序」→ 呼叫 `getSortedByDate()`，課程記錄重新排列顯示
-
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>[...this.records].sort(...)</code> 先複製陣列再排序，避免修改原始資料
+💡 <code>sort()</code> 直接修改原陣列；若要保留原始資料，先用 <code>[...arr]</code> 複製再排序
 </div>
 
 <!--
-sort 的回呼函數接收兩個比較元素 a 和 b。回傳負數代表 a 排前面，正數代表 b 排前面，0 代表相等。字串要用 localeCompare 而不是直接減法，因為字串不能相減。注意一定要先 [...this.records] 複製一份再排序，否則 sort 會直接修改原陣列，可能導致 Angular 的資料顯示出問題。
+sort 的回呼函數接收兩個比較元素 a 和 b。回傳負數代表 a 排前面，正數代表 b 排前面，0 代表相等。數字可以直接 a - b，但字串不能相減，需要用 localeCompare。sort 會直接修改原陣列，如果你不想動到原始資料，一定要先複製一份。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — Array.sort() + localeCompare()（2/2）
+
+字串排序用 `localeCompare()`；複製陣列用 spread `[...]` 避免修改原始資料：
+
+```typescript
+// 日期字串排序（新 → 舊），不改動原始 records
+getSortedByDate(): CourseRecord[] {
+  return [...this.records].sort((a, b) =>
+    b.date.localeCompare(a.date)
+    // b 在前 → 較大（較新）的日期排前面
+  );
+}
+
+// localeCompare 回傳值：
+// 'b' > 'a' → 正數（b 排前）
+// 'a' > 'b' → 負數（a 排前）
+// 相等       → 0
+```
+
+**畫面互動：** P3 儀表板點擊「依日期排序」→ 呼叫 `getSortedByDate()`，課程列表重新排列
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 日期格式 <code>'2024-03-15'</code> 可直接用 <code>localeCompare</code> 比較，字典序即為時間順序
+</div>
+
+<!--
+localeCompare 回傳正數、負數或 0，跟 sort 的比較函數邏輯完美契合。日期字串只要格式統一（YYYY-MM-DD），字典序就等於時間順序，所以可以直接用 localeCompare 排序。b.date.localeCompare(a.date) 代表「b 排在 a 前面」，也就是較新的日期在前。
 -->
 
 ---
