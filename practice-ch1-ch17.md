@@ -438,34 +438,73 @@ localeCompare 回傳正數、負數或 0，跟 sort 的比較函數邏輯完美�
 layout: default
 ---
 
-# TypeScript 技術前導 — Math.round() 與 spread 複製陣列
+# TypeScript 技術前導 — Math.round()（1/2）
 
-`Math.round()` 四捨五入到整數；`[...arr]` 複製陣列避免 sort 修改原始資料：
+`Math.round()` 將小數四捨五入為整數，常用於計算百分比：
 
 ```typescript
-// Math.round()：四捨五入
+// 基本用法
+Math.round(4.4)   // → 4
+Math.round(4.5)   // → 5
+Math.round(4.6)   // → 5
+
+// P3：計算課程完成率
 getCompletionRate(): number {
   const completed = this.records
     .filter(r => r.status === 'completed').length;
   return Math.round(
     (completed / this.records.length) * 100
   );
-  // completed=7, total=10 → Math.round(70.0) = 70
+  // completed=7, total=10 → 7/10*100 = 70.0 → 70
+  // completed=2, total=3  → 2/3*100  = 66.6… → 67
 }
-
-// [...arr] 複製陣列後再排序
-const copy = [...this.records];   // 新陣列，不影響原始 records
-copy.sort((a, b) => b.date.localeCompare(a.date));
 ```
 
-**畫面互動：** `getCompletionRate()` 在 P3 儀表板即時顯示課程完成百分比（`{{ getCompletionRate() }}%`）
+**畫面互動：** HTML 用 `{{ getCompletionRate() }}%` 即時顯示完成百分比
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <code>Math.floor()</code> 無條件捨去；<code>Math.ceil()</code> 無條件進位；<code>Math.round()</code> 四捨五入
 </div>
 
 <!--
-Math.round 把計算結果從小數變成整數，讓百分比看起來更清楚。completed / total * 100 可能算出 66.666...，用 Math.round 變成 67。spread 複製陣列的原理是把陣列裡每個元素展開，放進新的 [] 中，所以 copy 和 this.records 是完全獨立的兩個陣列，對 copy 做 sort 不會動到 records。
+Math.round 把計算結果從小數變成整數，讓百分比看起來更清楚。completed / total * 100 可能算出 66.666...，用 Math.round 變成 67。在 P3 的儀表板頁面，這個方法直接透過 {{ getCompletionRate() }}% 綁定到 HTML，每次資料更新 Angular 就會重新計算。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — spread 複製陣列（2/2）
+
+`[...arr]` 展開陣列元素到新陣列，常用於「排序前先複製，避免動到原始資料」：
+
+```typescript
+// ❌ 錯誤：sort() 直接修改原陣列
+getSortedByDate(): CourseRecord[] {
+  return this.records.sort(...);  // records 本身被改掉！
+}
+
+// ✅ 正確：先複製再排序
+getSortedByDate(): CourseRecord[] {
+  return [...this.records].sort((a, b) =>
+    b.date.localeCompare(a.date)
+  );
+}
+
+// spread 其他用途
+const nums = [1, 2, 3];
+const copy = [...nums];        // 複製陣列
+const merged = [...a, ...b];   // 合併兩個陣列
+```
+
+**畫面互動：** P3 點擊「依日期排序」→ `getSortedByDate()` 回傳排序後的新陣列供 `*ngFor` 顯示
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>[...arr]</code> 是「淺複製」：陣列本身是新的，但物件元素仍指向同一份參考
+</div>
+
+<!--
+spread 複製陣列的原理是把陣列裡每個元素展開，放進新的 [] 中，所以 copy 和 this.records 是完全獨立的兩個陣列，對 copy 做 sort 不會動到 records。注意 spread 是淺複製，如果陣列裡裝的是物件，修改物件的屬性還是會影響原陣列裡的物件——但對 sort 這個場景來說，淺複製已經足夠了。
 -->
 
 ---
