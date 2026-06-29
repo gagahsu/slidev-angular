@@ -534,6 +534,39 @@ getSortedByDate(): CourseRecord[] {
 -->
 
 ---
+layout: default
+---
+
+# TypeScript 技術前導 — *ngFor 迴圈渲染
+
+`*ngFor` 把陣列每個元素渲染成一個 HTML 區塊，取代手動複製多份標籤：
+
+```html
+<!-- skills 有幾筆，就自動產生幾個 <div> -->
+<div *ngFor="let skill of skills" class="skill-item">
+  <span>{{ skill.name }}</span>
+  <span>{{ getSkillLevel(skill.percent) }}</span>
+</div>
+
+<!-- 搭配 [class] 與 (click) 傳入當前元素 -->
+<button *ngFor="let cat of categories"
+  [class.active]="cat === activeCategory"
+  (click)="setCategory(cat)">
+  {{ cat }}
+</button>
+```
+
+**畫面互動：** 陣列有幾筆資料，畫面就自動產生幾個區塊；陣列更新後畫面即時同步
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>let skill of skills</code>：<code>skill</code> 是每次迭代的當前元素，名稱可自訂；<code>skills</code> 是 TypeScript 中宣告的陣列屬性
+</div>
+
+<!--
+*ngFor 是 Angular 的結構型指令，用來動態產生重複的 HTML 區塊。最常見的場景是：有一個 TypeScript 陣列，把它的每個元素渲染成一張卡片或一個列表項。語法是 *ngFor="let 元素名 of 陣列名"，接著在內部用 {{ 元素名.屬性 }} 取值。搭配 (click)="method(元素名)" 就能把當前元素傳給 TypeScript 方法處理。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
