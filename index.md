@@ -114,241 +114,251 @@ style: |
     </Link>
     <Link to="ch08" class="chapter-card">
       <div class="chapter-num">Ch 8</div>
-      <div>HTML 基礎語法</div>
-      <div class="chapter-subtitle">HTML Essentials</div>
+      <div>開啟 Angular 專案</div>
+      <div class="chapter-subtitle">Open Project & Components</div>
     </Link>
     <Link to="ch09" class="chapter-card">
       <div class="chapter-num">Ch 9</div>
-      <div>CSS 基礎語法</div>
-      <div class="chapter-subtitle">CSS Essentials</div>
+      <div>HTML 基礎語法</div>
+      <div class="chapter-subtitle">HTML Essentials</div>
     </Link>
     <Link to="ch10" class="chapter-card">
       <div class="chapter-num">Ch 10</div>
-      <div>CSS 樣式編輯</div>
-      <div class="chapter-subtitle">Flex & Bootstrap</div>
+      <div>CSS 基礎語法</div>
+      <div class="chapter-subtitle">CSS Essentials</div>
     </Link>
     <Link to="ch11" class="chapter-card">
       <div class="chapter-num">Ch 11</div>
-      <div>CSS 進階工具</div>
-      <div class="chapter-subtitle">Background & Position</div>
+      <div>CSS 樣式編輯</div>
+      <div class="chapter-subtitle">Flex & Bootstrap</div>
     </Link>
     <Link to="ch12" class="chapter-card">
       <div class="chapter-num">Ch 12</div>
-      <div>JavaScript 介紹</div>
-      <div class="chapter-subtitle">JS & TypeScript</div>
+      <div>CSS 進階工具</div>
+      <div class="chapter-subtitle">Background & Position</div>
     </Link>
     <Link to="ch13" class="chapter-card">
       <div class="chapter-num">Ch 13</div>
-      <div>數據類型</div>
-      <div class="chapter-subtitle">TypeScript Types</div>
+      <div>JavaScript 與 TypeScript 介紹</div>
+      <div class="chapter-subtitle">JS & TypeScript</div>
     </Link>
     <Link to="ch14" class="chapter-card">
       <div class="chapter-num">Ch 14</div>
-      <div>變數使用</div>
-      <div class="chapter-subtitle">Variables & Binding</div>
+      <div>數據類型</div>
+      <div class="chapter-subtitle">TypeScript Types</div>
     </Link>
     <Link to="ch15" class="chapter-card">
       <div class="chapter-num">Ch 15</div>
-      <div>方法</div>
-      <div class="chapter-subtitle">Methods & Functions</div>
+      <div>變數使用</div>
+      <div class="chapter-subtitle">Variables & Binding</div>
     </Link>
     <Link to="ch16" class="chapter-card">
       <div class="chapter-num">Ch 16</div>
-      <div>TypeScript 練習（一）</div>
-      <div class="chapter-subtitle">Practice — Control & Arrays</div>
+      <div>方法</div>
+      <div class="chapter-subtitle">Methods & Functions</div>
     </Link>
     <Link to="ch17" class="chapter-card">
       <div class="chapter-num">Ch 17</div>
-      <div>TypeScript 練習（二）</div>
-      <div class="chapter-subtitle">Date, Restructure & Methods</div>
+      <div>TypeScript 練習（一）</div>
+      <div class="chapter-subtitle">Practice — Control & Arrays</div>
+    </Link>
+    <Link to="practice-ch17" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
+      <div class="chapter-num" style="color: #e07b39;">綜合</div>
+      <div>綜合練習 Ch1–17</div>
+      <div class="chapter-subtitle" style="color: #b05a20;">HTML / CSS / TS 大挑戰</div>
     </Link>
     <Link to="ch18" class="chapter-card">
       <div class="chapter-num">Ch 18</div>
-      <div>資料轉換與呈現</div>
-      <div class="chapter-subtitle">Data Design & Presentation</div>
+      <div>TypeScript 練習（二）</div>
+      <div class="chapter-subtitle">Date, Restructure & Methods</div>
     </Link>
     <Link to="ch19" class="chapter-card">
       <div class="chapter-num">Ch 19</div>
-      <div>生命週期</div>
-      <div class="chapter-subtitle">Component Lifecycle</div>
+      <div>資料轉換與呈現</div>
+      <div class="chapter-subtitle">Data Design & Presentation</div>
     </Link>
     <Link to="ch20" class="chapter-card">
       <div class="chapter-num">Ch 20</div>
-      <div>新增組件</div>
-      <div class="chapter-subtitle">Components</div>
+      <div>生命週期</div>
+      <div class="chapter-subtitle">Component Lifecycle</div>
     </Link>
     <Link to="ch21" class="chapter-card">
       <div class="chapter-num">Ch 21</div>
-      <div>繫結</div>
-      <div class="chapter-subtitle">Data Binding</div>
+      <div>新增組件</div>
+      <div class="chapter-subtitle">Components</div>
     </Link>
     <Link to="ch22" class="chapter-card">
       <div class="chapter-num">Ch 22</div>
-      <div>路由</div>
-      <div class="chapter-subtitle">Angular Routing</div>
+      <div>繫結</div>
+      <div class="chapter-subtitle">Data Binding</div>
     </Link>
     <Link to="ch23" class="chapter-card">
       <div class="chapter-num">Ch 23</div>
-      <div>資料傳遞</div>
-      <div class="chapter-subtitle">Data Passing</div>
+      <div>路由</div>
+      <div class="chapter-subtitle">Angular Routing</div>
     </Link>
     <Link to="ch24" class="chapter-card">
       <div class="chapter-num">Ch 24</div>
-      <div>網頁儲存</div>
-      <div class="chapter-subtitle">Web Storage</div>
+      <div>資料傳遞</div>
+      <div class="chapter-subtitle">Data Passing</div>
     </Link>
     <Link to="ch25" class="chapter-card">
       <div class="chapter-num">Ch 25</div>
-      <div>陣列顯示</div>
-      <div class="chapter-subtitle">Array Display</div>
+      <div>網頁儲存</div>
+      <div class="chapter-subtitle">Web Storage</div>
     </Link>
     <Link to="ch26" class="chapter-card">
       <div class="chapter-num">Ch 26</div>
-      <div>@if 條件顯示</div>
-      <div class="chapter-subtitle">Conditional Rendering</div>
+      <div>陣列顯示</div>
+      <div class="chapter-subtitle">Array Display</div>
     </Link>
     <Link to="ch27" class="chapter-card">
       <div class="chapter-num">Ch 27</div>
-      <div>@switch 條件切換</div>
-      <div class="chapter-subtitle">Switch Case</div>
+      <div>@if 條件顯示</div>
+      <div class="chapter-subtitle">Conditional Rendering</div>
     </Link>
     <Link to="ch28" class="chapter-card">
       <div class="chapter-num">Ch 28</div>
-      <div>串接 API</div>
-      <div class="chapter-subtitle">HTTP & API</div>
+      <div>@switch 條件切換</div>
+      <div class="chapter-subtitle">Switch Case</div>
     </Link>
     <Link to="ch29" class="chapter-card">
       <div class="chapter-num">Ch 29</div>
-      <div>Interface</div>
-      <div class="chapter-subtitle">TypeScript Interface</div>
+      <div>串接 API</div>
+      <div class="chapter-subtitle">HTTP & API</div>
     </Link>
     <Link to="ch30" class="chapter-card">
       <div class="chapter-num">Ch 30</div>
-      <div>資料排序</div>
-      <div class="chapter-subtitle">Data Sorting</div>
+      <div>Interface</div>
+      <div class="chapter-subtitle">TypeScript Interface</div>
     </Link>
     <Link to="ch31" class="chapter-card">
       <div class="chapter-num">Ch 31</div>
-      <div>安裝 Angular Material</div>
-      <div class="chapter-subtitle">Angular Material Setup</div>
+      <div>資料排序</div>
+      <div class="chapter-subtitle">Data Sorting</div>
     </Link>
     <Link to="ch32" class="chapter-card">
       <div class="chapter-num">Ch 32</div>
-      <div>Mat-table</div>
-      <div class="chapter-subtitle">Material Table</div>
+      <div>安裝 Angular Material</div>
+      <div class="chapter-subtitle">Angular Material Setup</div>
     </Link>
     <Link to="ch33" class="chapter-card">
       <div class="chapter-num">Ch 33</div>
-      <div>Mat-icon</div>
-      <div class="chapter-subtitle">Material Icons</div>
+      <div>Mat-table</div>
+      <div class="chapter-subtitle">Material Table</div>
     </Link>
     <Link to="ch34" class="chapter-card">
       <div class="chapter-num">Ch 34</div>
-      <div>日期選擇器</div>
-      <div class="chapter-subtitle">Date Picker</div>
+      <div>Mat-icon</div>
+      <div class="chapter-subtitle">Material Icons</div>
     </Link>
     <Link to="ch35" class="chapter-card">
       <div class="chapter-num">Ch 35</div>
-      <div>DatePipe</div>
-      <div class="chapter-subtitle">Date Formatting</div>
+      <div>日期選擇器</div>
+      <div class="chapter-subtitle">Date Picker</div>
     </Link>
     <Link to="ch36" class="chapter-card">
       <div class="chapter-num">Ch 36</div>
-      <div>JsonPipe</div>
-      <div class="chapter-subtitle">JSON Display in HTML</div>
+      <div>DatePipe</div>
+      <div class="chapter-subtitle">Date Formatting</div>
     </Link>
     <Link to="ch37" class="chapter-card">
       <div class="chapter-num">Ch 37</div>
-      <div>即時搜尋</div>
-      <div class="chapter-subtitle">Live Search</div>
+      <div>JsonPipe</div>
+      <div class="chapter-subtitle">JSON Display in HTML</div>
     </Link>
     <Link to="ch38" class="chapter-card">
       <div class="chapter-num">Ch 38</div>
-      <div>ngClass</div>
-      <div class="chapter-subtitle">Dynamic CSS Binding</div>
+      <div>即時搜尋</div>
+      <div class="chapter-subtitle">Live Search</div>
     </Link>
     <Link to="ch39" class="chapter-card">
       <div class="chapter-num">Ch 39</div>
-      <div>Tabs</div>
-      <div class="chapter-subtitle">Angular Material Tabs</div>
+      <div>ngClass</div>
+      <div class="chapter-subtitle">Dynamic CSS Binding</div>
     </Link>
     <Link to="ch40" class="chapter-card">
       <div class="chapter-num">Ch 40</div>
-      <div>Select</div>
-      <div class="chapter-subtitle">Mat-select</div>
+      <div>Tabs</div>
+      <div class="chapter-subtitle">Angular Material Tabs</div>
     </Link>
     <Link to="ch41" class="chapter-card">
       <div class="chapter-num">Ch 41</div>
-      <div>圓餅圖</div>
-      <div class="chapter-subtitle">Pie Chart / Chart.js</div>
+      <div>Select</div>
+      <div class="chapter-subtitle">Mat-select</div>
     </Link>
     <Link to="ch42" class="chapter-card">
       <div class="chapter-num">Ch 42</div>
-      <div>Dialog</div>
-      <div class="chapter-subtitle">MatDialog</div>
+      <div>圓餅圖</div>
+      <div class="chapter-subtitle">Pie Chart / Chart.js</div>
     </Link>
     <Link to="ch43" class="chapter-card">
       <div class="chapter-num">Ch 43</div>
-      <div>同步與非同步</div>
-      <div class="chapter-subtitle">Sync &amp; Async</div>
+      <div>Dialog</div>
+      <div class="chapter-subtitle">MatDialog</div>
     </Link>
     <Link to="ch44" class="chapter-card">
       <div class="chapter-num">Ch 44</div>
-      <div>訂閱</div>
-      <div class="chapter-subtitle">RxJS Subscription</div>
+      <div>同步與非同步</div>
+      <div class="chapter-subtitle">Sync &amp; Async</div>
     </Link>
     <Link to="ch45" class="chapter-card">
       <div class="chapter-num">Ch 45</div>
-      <div>Loading</div>
-      <div class="chapter-subtitle">Loading Spinner</div>
+      <div>訂閱</div>
+      <div class="chapter-subtitle">RxJS Subscription</div>
     </Link>
     <Link to="ch46" class="chapter-card">
       <div class="chapter-num">Ch 46</div>
-      <div>Signals</div>
-      <div class="chapter-subtitle">Angular Signals</div>
+      <div>Loading</div>
+      <div class="chapter-subtitle">Loading Spinner</div>
     </Link>
     <Link to="ch47" class="chapter-card">
       <div class="chapter-num">Ch 47</div>
-      <div>Sidenav</div>
-      <div class="chapter-subtitle">Mat-sidenav</div>
+      <div>Signals</div>
+      <div class="chapter-subtitle">Angular Signals</div>
     </Link>
     <Link to="ch48" class="chapter-card">
       <div class="chapter-num">Ch 48</div>
-      <div>Toolbar</div>
-      <div class="chapter-subtitle">Mat-toolbar</div>
+      <div>Sidenav</div>
+      <div class="chapter-subtitle">Mat-sidenav</div>
     </Link>
     <Link to="ch49" class="chapter-card">
       <div class="chapter-num">Ch 49</div>
-      <div>Radio &amp; Checkbox</div>
-      <div class="chapter-subtitle">Mat-radio / Checkbox</div>
+      <div>Toolbar</div>
+      <div class="chapter-subtitle">Mat-toolbar</div>
     </Link>
     <Link to="ch50" class="chapter-card">
       <div class="chapter-num">Ch 50</div>
-      <div>Reactive Forms</div>
-      <div class="chapter-subtitle">Dynamic Form Control</div>
+      <div>Radio &amp; Checkbox</div>
+      <div class="chapter-subtitle">Mat-radio / Checkbox</div>
     </Link>
     <Link to="ch51" class="chapter-card">
       <div class="chapter-num">Ch 51</div>
-      <div>Validators</div>
-      <div class="chapter-subtitle">Form Validation</div>
+      <div>Reactive Forms</div>
+      <div class="chapter-subtitle">Dynamic Form Control</div>
     </Link>
     <Link to="ch52" class="chapter-card">
       <div class="chapter-num">Ch 52</div>
-      <div>RWD</div>
-      <div class="chapter-subtitle">Responsive Web Design</div>
+      <div>Validators</div>
+      <div class="chapter-subtitle">Form Validation</div>
     </Link>
     <Link to="ch53" class="chapter-card">
       <div class="chapter-num">Ch 53</div>
-      <div>RXJS</div>
-      <div class="chapter-subtitle">Reactive Extensions</div>
+      <div>RWD</div>
+      <div class="chapter-subtitle">Responsive Web Design</div>
     </Link>
     <Link to="ch54" class="chapter-card">
       <div class="chapter-num">Ch 54</div>
-      <div>Angular 包板</div>
-      <div class="chapter-subtitle">ng build</div>
+      <div>RXJS</div>
+      <div class="chapter-subtitle">Reactive Extensions</div>
     </Link>
     <Link to="ch55" class="chapter-card">
       <div class="chapter-num">Ch 55</div>
+      <div>Angular 包板</div>
+      <div class="chapter-subtitle">ng build</div>
+    </Link>
+    <Link to="ch56" class="chapter-card">
+      <div class="chapter-num">Ch 56</div>
       <div>Angular 部署</div>
       <div class="chapter-subtitle">Firebase Hosting</div>
     </Link>
@@ -385,193 +395,201 @@ src: ./07-vscode-install.md
 ---
 
 ---
-src: ./08-html.md
+src: ./08-angular-project-open.md
 ---
 
 ---
-src: ./09-css-basics.md
+src: ./09-html.md
 ---
 
 ---
-src: ./10-css-advanced.md
+src: ./10-css-basics.md
 ---
 
 ---
-src: ./11-css-tools.md
+src: ./11-css-advanced.md
 ---
 
 ---
-src: ./12-javascript-intro.md
+src: ./12-css-tools.md
 ---
 
 ---
-src: ./13-typescript-types.md
+src: ./13-javascript-intro.md
 ---
 
 ---
-src: ./14-variables.md
+src: ./14-typescript-types.md
 ---
 
 ---
-src: ./15-methods.md
+src: ./15-variables.md
 ---
 
 ---
-src: ./16-typescript-practice-1.md
+src: ./16-methods.md
 ---
 
 ---
-src: ./17-typescript-practice-2.md
+src: ./17-typescript-practice-1.md
 ---
 
 ---
-src: ./18-pipes.md
+src: ./practice-ch1-ch17.md
 ---
 
 ---
-src: ./19-lifecycle.md
+src: ./18-typescript-practice-2.md
 ---
 
 ---
-src: ./20-components.md
+src: ./19-pipes.md
 ---
 
 ---
-src: ./21-binding.md
+src: ./20-lifecycle.md
 ---
 
 ---
-src: ./22-routing.md
+src: ./21-components.md
 ---
 
 ---
-src: ./23-data-passing.md
+src: ./22-binding.md
 ---
 
 ---
-src: ./24-web-storage.md
+src: ./23-routing.md
 ---
 
 ---
-src: ./25-array-display.md
+src: ./24-data-passing.md
 ---
 
 ---
-src: ./26-if.md
+src: ./25-web-storage.md
 ---
 
 ---
-src: ./27-switch-case.md
+src: ./26-array-display.md
 ---
 
 ---
-src: ./28-api.md
+src: ./27-if.md
 ---
 
 ---
-src: ./29-interface.md
+src: ./28-switch-case.md
 ---
 
 ---
-src: ./30-sorting.md
+src: ./29-api.md
 ---
 
 ---
-src: ./31-angular-material.md
+src: ./30-interface.md
 ---
 
 ---
-src: ./32-mat-table.md
+src: ./31-sorting.md
 ---
 
 ---
-src: ./33-mat-icon.md
+src: ./32-angular-material.md
 ---
 
 ---
-src: ./34-date-picker.md
+src: ./33-mat-table.md
 ---
 
 ---
-src: ./35-date-pipe.md
+src: ./34-mat-icon.md
 ---
 
 ---
-src: ./36-json-pipe.md
+src: ./35-date-picker.md
 ---
 
 ---
-src: ./37-live-search.md
+src: ./36-date-pipe.md
 ---
 
 ---
-src: ./38-ng-class.md
+src: ./37-json-pipe.md
 ---
 
 ---
-src: ./39-tabs.md
+src: ./38-live-search.md
 ---
 
 ---
-src: ./40-select.md
+src: ./39-ng-class.md
 ---
 
 ---
-src: ./41-pie-chart.md
+src: ./40-tabs.md
 ---
 
 ---
-src: ./42-dialog.md
+src: ./41-select.md
 ---
 
 ---
-src: ./43-async.md
+src: ./42-pie-chart.md
 ---
 
 ---
-src: ./44-subscription.md
+src: ./43-dialog.md
 ---
 
 ---
-src: ./45-loading.md
+src: ./44-async.md
 ---
 
 ---
-src: ./46-signals.md
+src: ./45-subscription.md
 ---
 
 ---
-src: ./47-sidenav.md
+src: ./46-loading.md
 ---
 
 ---
-src: ./48-toolbar.md
+src: ./47-signals.md
 ---
 
 ---
-src: ./49-mat-radio-checkbox.md
+src: ./48-sidenav.md
 ---
 
 ---
-src: ./50-reactive-forms.md
+src: ./49-toolbar.md
 ---
 
 ---
-src: ./51-validators.md
+src: ./50-mat-radio-checkbox.md
 ---
 
 ---
-src: ./52-rwd.md
+src: ./51-reactive-forms.md
 ---
 
 ---
-src: ./53-rxjs.md
+src: ./52-validators.md
 ---
 
 ---
-src: ./54-angular-build.md
+src: ./53-rwd.md
 ---
 
 ---
-src: ./55-angular-deploy.md
+src: ./54-rxjs.md
+---
+
+---
+src: ./55-angular-build.md
+---
+
+---
+src: ./56-angular-deploy.md
 ---
