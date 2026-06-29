@@ -79,6 +79,354 @@ layout: default
 -->
 
 ---
+layout: default
+---
+
+# CSS 技術前導 — CSS 變數（Custom Properties）
+
+CSS 變數用 `--名稱` 宣告，用 `var(--名稱)` 取用，可在 HTML 透過 `style` 動態傳入不同值：
+
+```css
+/* 宣告與使用 */
+.fill {
+  width: var(--target);   /* 從外部傳入目標寬度 */
+  background: var(--bar-color, #5eada0);  /* 第二個參數為預設值 */
+}
+```
+
+```html
+<!-- 在 HTML 元素的 style 直接傳入不同值 -->
+<div class="fill" style="--target: 90%; animation-delay: 0.2s"></div>
+<div class="fill" style="--target: 65%; animation-delay: 0.4s"></div>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 CSS 變數的作用域是該元素及其子元素；寫在 <code>:root</code> 則全域可用
+</div>
+
+---
+layout: default
+---
+
+# CSS 技術前導 — @keyframes 動畫
+
+`@keyframes` 定義動畫的「起點 → 終點」，搭配 `animation` 屬性套用：
+
+```css
+/* 定義動畫：從 width: 0 長到 var(--target) */
+@keyframes growBar {
+  from { width: 0; }
+  to   { width: var(--target); }
+}
+
+.fill {
+  width: 0;
+  animation: growBar 1.2s ease forwards;
+  /*         名稱    時間  速度  結束後保持最終狀態 */
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>forwards</code> 讓動畫結束後停在最後一格；<code>animation-delay</code> 可錯開多個元素的起始時間
+</div>
+
+---
+layout: default
+---
+
+# CSS 技術前導 — CSS Grid
+
+`display: grid` 建立格線容器，`grid-template-columns` 定義欄數與寬度：
+
+```css
+/* repeat(4, 1fr)：均分 4 欄 */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;   /* 欄 / 列間距 */
+}
+
+/* repeat(2, 1fr)：均分 2 欄 */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>1fr</code> 代表「1 份剩餘空間」；<code>repeat(N, 1fr)</code> 等同於平均分成 N 欄
+</div>
+
+---
+layout: default
+---
+
+# CSS 技術前導 — transform 位移與縮放
+
+`transform` 讓元素在不影響排版的情況下移動、旋轉或縮放，常搭配 `:hover` + `transition` 做互動效果：
+
+```css
+/* translateX / translateY：X 軸 / Y 軸位移 */
+.card {
+  transition: transform 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);   /* 向上浮起 6px */
+}
+
+/* 組合多個效果 */
+.timeline-dot:hover {
+  transform: translateX(4px) scale(1.05);
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>transform</code> 不會擠壓周圍元素；<code>translateY(-6px)</code> 負值 = 往上，正值 = 往下
+</div>
+
+<!--
+transform 是做 hover 浮起動畫的標準技法。用 translateY(-6px) 讓卡片向上浮起，搭配 transition: transform 0.3s 讓它慢慢移動而不是瞬間跳。和 top/left 不同，transform 不影響其他元素的位置，也不會觸發重排，效能更好。
+-->
+
+---
+layout: default
+---
+
+# CSS 技術前導 — ::before 偽元素
+
+`::before` 在元素「前面」插入一個虛擬子元素，常用來做裝飾線、圖標或遮罩，不需要多寫 HTML 標籤：
+
+```css
+/* 時間軸垂直線：在 .timeline 前插入一條線 */
+.timeline {
+  position: relative;
+}
+.timeline::before {
+  content: '';           /* 必填，空字串也要寫 */
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #5eada0;
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>content: ''</code> 是必填屬性，沒有它 <code>::before</code> 不會出現；父元素需設 <code>position: relative</code>
+</div>
+
+<!--
+::before 是 CSS 裡的隱形子元素。你不用在 HTML 多寫一個 div，CSS 就能幫你插入一條垂直線。重點有三個：第一，content 一定要寫，哪怕是空字串；第二，要讓它可以自由定位，它自己要設 position: absolute，父元素要設 position: relative；第三，用 top: 0; bottom: 0 讓它撐滿父元素的高度。
+-->
+
+---
+layout: default
+---
+
+# CSS 技術前導 — calc() 混合單位計算
+
+`calc()` 允許在 CSS 屬性值中做數學運算，最大用途是**混合不同單位**（如 px + %）：
+
+```css
+/* 固定 header 64px + 分類列 48px，內容區從這高度開始 */
+.category-bar {
+  position: sticky;
+  top: calc(64px + 0px);   /* Navbar 高度 */
+}
+
+.content-area {
+  top: calc(64px + 48px);  /* Navbar + 分類列 */
+}
+
+/* 兩欄間距 20px，左欄寬度 = 整體寬 30% 再減間距 */
+.sidebar {
+  width: calc(30% - 10px);  /* % - px 混合單位 */
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 運算子（<code>+</code> <code>-</code> <code>*</code> <code>/</code>）<b>前後必須有空格</b>，否則部分瀏覽器無法解析
+</div>
+
+<!--
+calc 最常見的用途就是混合 px 和 %。純 CSS 沒辦法說「我要整個寬度的 30% 然後再扣掉 10px 的間距」，但 calc 可以。在 P4 的三層定位中，分類列吸附在 Navbar 下方，所以 top 值 = Navbar 高度 + 分類列高度，這種情況就要用 calc(64px + 48px)。
+-->
+
+---
+layout: default
+---
+
+# CSS 技術前導 — linear-gradient() 漸層背景
+
+`linear-gradient()` 建立線性漸層，可替代純色背景，做出質感更豐富的橫幅或按鈕：
+
+```css
+/* 角度 → 色票列表 */
+.hero-banner {
+  background: linear-gradient(
+    135deg,
+    #1a5c5c 0%,
+    #5eada0 100%
+  );
+}
+
+/* 多色漸層 */
+.gradient-bar {
+  background: linear-gradient(
+    90deg,
+    #5eada0 0%,
+    #a7d9d0 50%,
+    #ffffff 100%
+  );
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 角度 <code>0deg</code> = 由下往上，<code>90deg</code> = 由左往右，<code>135deg</code> = 左上到右下
+</div>
+
+<!--
+linear-gradient 是 CSS 的漸層函數，不需要圖片就能做出漂亮的背景。第一個參數是角度，決定漸層方向。後面接色票列表，每個色票格式是「顏色 + 百分比位置」。在 P2 的 Hero 橫幅，我們用 135deg 從深色到淺色做出立體感。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — interface 介面
+
+`interface` 定義物件的「形狀」（有哪些欄位、各是什麼型別），讓 TypeScript 在編譯時驗證資料結構：
+
+```typescript
+// 定義商品的資料結構
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
+// 定義購物車項目（在 Product 基礎上加 quantity）
+interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+// 使用 interface 宣告陣列型別
+products: Product[] = [];
+cart: CartItem[] = [];
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>interface</code> 只存在於編譯階段，不會編譯進 JavaScript；欄位後加 <code>?</code> 代表可選
+</div>
+
+<!--
+interface 是 TypeScript 最重要的功能之一。它就像是一份「資料合約書」，規定這個物件一定要有哪些欄位。當你宣告 products: Product[]，TypeScript 就知道這個陣列裡每一個物件都必須有 id、name、price、image 四個欄位，少一個就報錯。在 P2 到 P4，每一個 project 都需要先定義 interface，再宣告陣列變數。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — Array.find()
+
+`Array.find()` 回傳陣列中**第一個符合條件的元素**，找不到時回傳 `undefined`：
+
+```typescript
+// 找到購物車中 id 相符的項目
+const existing = this.cart.find(
+  item => item.product.id === product.id
+);
+
+if (existing) {
+  existing.quantity += 1;       // 找到了：數量加一
+} else {
+  this.cart.push({ product, quantity: 1 }); // 沒找到：新增
+}
+```
+
+**畫面互動：** 點擊「加入購物車」按鈕 → `addToCart()` 呼叫此方法，判斷商品是否已在購物車中
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>find()</code> 找到就回傳元素本身（可直接修改）；<code>filter()</code> 回傳所有符合的新陣列
+</div>
+
+<!--
+find 和 filter 的差別在於：filter 把所有符合條件的項目抓出來，組成新陣列；find 只找第一個符合的，直接回傳那個元素本身。在購物車邏輯中，我們用 find 找到已存在的項目，然後直接 existing.quantity += 1 修改它，不需要另外 splice 再 push。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — Array.sort() + localeCompare()
+
+`Array.sort()` 就地排序陣列；字串比較用 `localeCompare()` 確保跨語言排序正確：
+
+```typescript
+// 日期字串排序（新 → 舊）
+getSortedByDate(): CourseRecord[] {
+  return [...this.records].sort((a, b) =>
+    b.date.localeCompare(a.date)
+  );
+}
+
+// 數字排序（小 → 大）
+const nums = [3, 1, 2];
+nums.sort((a, b) => a - b);   // → [1, 2, 3]
+
+// b - a：大 → 小
+nums.sort((a, b) => b - a);   // → [3, 2, 1]
+```
+
+**畫面互動：** P3 儀表板中點擊「依日期排序」→ 呼叫 `getSortedByDate()`，課程記錄重新排列顯示
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>[...this.records].sort(...)</code> 先複製陣列再排序，避免修改原始資料
+</div>
+
+<!--
+sort 的回呼函數接收兩個比較元素 a 和 b。回傳負數代表 a 排前面，正數代表 b 排前面，0 代表相等。字串要用 localeCompare 而不是直接減法，因為字串不能相減。注意一定要先 [...this.records] 複製一份再排序，否則 sort 會直接修改原陣列，可能導致 Angular 的資料顯示出問題。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — Math.round() 與 spread 複製陣列
+
+`Math.round()` 四捨五入到整數；`[...arr]` 複製陣列避免 sort 修改原始資料：
+
+```typescript
+// Math.round()：四捨五入
+getCompletionRate(): number {
+  const completed = this.records
+    .filter(r => r.status === 'completed').length;
+  return Math.round(
+    (completed / this.records.length) * 100
+  );
+  // completed=7, total=10 → Math.round(70.0) = 70
+}
+
+// [...arr] 複製陣列後再排序
+const copy = [...this.records];   // 新陣列，不影響原始 records
+copy.sort((a, b) => b.date.localeCompare(a.date));
+```
+
+**畫面互動：** `getCompletionRate()` 在 P3 儀表板即時顯示課程完成百分比（`{{ getCompletionRate() }}%`）
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>Math.floor()</code> 無條件捨去；<code>Math.ceil()</code> 無條件進位；<code>Math.round()</code> 四捨五入
+</div>
+
+<!--
+Math.round 把計算結果從小數變成整數，讓百分比看起來更清楚。completed / total * 100 可能算出 66.666...，用 Math.round 變成 67。spread 複製陣列的原理是把陣列裡每個元素展開，放進新的 [] 中，所以 copy 和 this.records 是完全獨立的兩個陣列，對 copy 做 sort 不會動到 records。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
