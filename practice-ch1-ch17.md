@@ -65,8 +65,8 @@ layout: default
 | **P4** | 餐廳菜單點餐頁 | 固定 header、分類切換、即時計算 | 1.5 hr |
 
 <div class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-400 text-gray-700 text-sm text-left">
-⚠️ 每一題請從<b>空白 .html 檔案</b>開始，不要直接複製解答。<br>
-建議順序：看畫面需求 → 自己動手 → 卡住再看提示 → 完成後對照解答
+⚠️ 每一題請用 <code>ng g c &lt;名稱&gt;</code> 建立新 component，不要直接複製解答。<br>
+建議順序：<code>ng g c</code> 建立 → 在 <code>app.routes.ts</code> 加 route → 看畫面需求 → 自己動手 → 卡住再看提示 → 完成後對照解答
 </div>
 
 ---
@@ -112,7 +112,7 @@ layout: default
 layout: default
 ---
 
-# P1：需要完成的 CSS 效果
+# P1：需要完成的 CSS 效果（1/2）
 
 **① 整體雙欄排版**
 - `display: flex`，左欄 `width: 280px`，右欄 `flex: 1`
@@ -125,6 +125,12 @@ layout: default
 - 灰色軌道 + 彩色填充，用 `@keyframes` 讓填充從 0% 長到目標寬度
 - 用 CSS 變數 `--target` 傳入不同技能的目標百分比
 
+---
+layout: default
+---
+
+# P1：需要完成的 CSS 效果（2/2）
+
 **④ 工作時間軸**
 - 左側一條垂直線（`position: relative` + `::before`）
 - 每個項目左側圓點（`position: absolute`）
@@ -136,7 +142,7 @@ layout: default
 layout: default
 ---
 
-# P1：需要完成的 TypeScript 邏輯
+# P1：需要完成的 TypeScript 邏輯（1/2）
 
 **① 技能資料陣列**
 
@@ -158,9 +164,39 @@ experiences: {
 }[] = [ ... ];
 ```
 
+---
+layout: default
+---
+
+# P1：需要完成的 TypeScript 邏輯（2/2）
+
 **③ 需實作的方法**
 - `getDuration(start, end)` — end 為 null 回傳 `'~ 現在'`，否則回傳 `'X 年'`
 - `getTopSkills()` — 用 `filter` 回傳 percent ≥ 70 的技能
+
+---
+layout: default
+---
+
+# P1：解答提示 — Angular 初始設定
+
+```bash
+ng g c resume
+```
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { ResumeComponent } from './resume/resume.component';
+
+export const routes: Routes = [
+  { path: 'resume', component: ResumeComponent },
+];
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 確認 <code>app.component.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/resume</code> 即可看到畫面
+</div>
 
 ---
 layout: default
@@ -214,19 +250,22 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — 頭像 CSS（2/2）
+# P1：解答提示 — 頭像 & 右欄 CSS（2/2）
 
 ```css
 .avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: #5eada0;
+  width: 120px; height: 120px;
+  border-radius: 50%; background: #5eada0;
   border: 4px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
+  display: flex; align-items: center;
+  justify-content: center; font-size: 2.5rem;
+}
+.job-title { color: #a7d9d0; font-size: 0.9rem; }
+.content { background: #f8fffe; padding: 40px; }
+.section-title {
+  color: #1a5c5c;
+  border-bottom: 2px solid #5eada0;
+  padding-bottom: 8px; margin-bottom: 16px;
 }
 ```
 
@@ -362,7 +401,7 @@ layout: default
 layout: default
 ---
 
-# P2：需要完成的 CSS 效果
+# P2：需要完成的 CSS 效果（1/2）
 
 **① 固定 Navbar + body 偏移**
 - `position: fixed; top: 0; z-index: 100`
@@ -376,6 +415,12 @@ layout: default
 **③ Hero 橫幅**
 - `background: linear-gradient(135deg, #1a5c5c, #5eada0)`
 - `display: flex; align-items: center; justify-content: center; height: 250px`
+
+---
+layout: default
+---
+
+# P2：需要完成的 CSS 效果（2/2）
 
 **④ 商品 Grid + 卡片 hover**
 - `grid-template-columns: repeat(4, 1fr); gap: 20px`
@@ -410,6 +455,30 @@ interface CartItem {
 2. `addToCart(product)` — 已存在就 `qty++`，否則 `push` 新項目
 3. `getCartCount()` — for...of 加總所有 `qty`
 4. `getCartTotal()` — 回傳 `price × qty` 總金額
+
+---
+layout: default
+---
+
+# P2：解答提示 — Angular 初始設定
+
+```bash
+ng g c shop
+```
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { ShopComponent } from './shop/shop.component';
+
+export const routes: Routes = [
+  { path: 'shop', component: ShopComponent },
+];
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 確認 <code>app.component.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/shop</code> 即可看到畫面
+</div>
 
 ---
 layout: default
@@ -630,6 +699,48 @@ records: CourseRecord[] = [ ... ];
 layout: default
 ---
 
+# P3：解答提示 — Angular 初始設定
+
+```bash
+ng g c dashboard
+```
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
+export const routes: Routes = [
+  { path: 'dashboard', component: DashboardComponent },
+];
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 確認 <code>app.component.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/dashboard</code> 即可看到畫面
+</div>
+
+---
+layout: default
+---
+
+# P3：解答提示 — Header CSS
+
+```css
+.dashboard-header {
+  background: #1a5c5c; color: white;
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dashboard-header .title { font-weight: 700; }
+.dashboard-header .date { color: #a7d9d0; }
+```
+
+---
+layout: default
+---
+
 # P3：解答提示 — 統計卡片 CSS
 
 ```css
@@ -768,7 +879,7 @@ layout: default
 layout: default
 ---
 
-# P4：需要完成的 CSS 效果
+# P4：需要完成的 CSS 效果（1/2）
 
 **① 三層固定排版（最難！）**
 - Header：`position: fixed; top: 0; z-index: 200; height: 64px`
@@ -779,6 +890,12 @@ layout: default
 - `.main-layout { display: flex; gap: 24px; padding: 24px; }`
 - 左側 `flex: 1`，右側訂單欄 `width: 300px; flex-shrink: 0`
 - 右側訂單欄也用 `position: sticky; top: calc(64px + 分類列高度)`
+
+---
+layout: default
+---
+
+# P4：需要完成的 CSS 效果（2/2）
 
 **③ 菜單卡片**
 - 2 欄 Grid：`grid-template-columns: repeat(2, 1fr)`
@@ -815,6 +932,30 @@ interface OrderItem { item: MenuItem; qty: number; }
 layout: default
 ---
 
+# P4：解答提示 — Angular 初始設定
+
+```bash
+ng g c menu
+```
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { MenuComponent } from './menu/menu.component';
+
+export const routes: Routes = [
+  { path: 'menu', component: MenuComponent },
+];
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 確認 <code>app.component.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/menu</code> 即可看到畫面
+</div>
+
+---
+layout: default
+---
+
 # P4：解答提示 — 三層定位 CSS
 
 ```css
@@ -833,8 +974,8 @@ body { padding-top: 64px; }
   display: flex; gap: 8px; z-index: 100;
 }
 .cat-btn.active {
-  color: #1a5c5c; font-weight: 700;
-  border-bottom: 3px solid #1a5c5c;
+  background: #1a5c5c; color: white;
+  border-radius: 4px; font-weight: 700;
 }
 ```
 
@@ -863,6 +1004,10 @@ layout: default
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
 }
 ```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>top: 130px</code> = header 64px + 分類列約 66px，讓訂單欄剛好黏在分類列下方
+</div>
 
 ---
 layout: default
@@ -927,19 +1072,19 @@ layout: end
 # 四大實作專案完成！
 
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; text-align: left;">
-  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem;">
+  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>📄 P1 個人履歷</strong><br>
     Flexbox 雙欄・技能條 @keyframes・時間軸定位
   </div>
-  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem;">
+  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>🛍️ P2 電商展示頁</strong><br>
     fixed Navbar・CSS Grid・badge 定位・分類篩選
   </div>
-  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem;">
+  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>📊 P3 學習儀表板</strong><br>
     Grid 統計卡・進度條動畫・資料排序
   </div>
-  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem;">
+  <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>🍜 P4 餐廳點餐頁</strong><br>
     sticky 三層排版・分類切換・即時計算
   </div>
