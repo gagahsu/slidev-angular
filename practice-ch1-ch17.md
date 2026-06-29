@@ -438,7 +438,7 @@ localeCompare 回傳正數、負數或 0，跟 sort 的比較函數邏輯完美�
 layout: default
 ---
 
-# TypeScript 技術前導 — Math.round()（1/2）
+# TypeScript 技術前導 — Math.round()（1/3）
 
 `Math.round()` 將小數四捨五入為整數，常用於計算百分比：
 
@@ -474,37 +474,63 @@ Math.round 把計算結果從小數變成整數，讓百分比看起來更清楚
 layout: default
 ---
 
-# TypeScript 技術前導 — spread 複製陣列（2/2）
+# TypeScript 技術前導 — spread 複製陣列（2/3）
 
-`[...arr]` 展開陣列元素到新陣列，常用於「排序前先複製，避免動到原始資料」：
+`[...arr]` 把陣列「展開」成新陣列，和原陣列完全獨立：
 
 ```typescript
-// ❌ 錯誤：sort() 直接修改原陣列
+const nums = [3, 1, 2];
+
+// ❌ sort() 會直接修改原陣列
+nums.sort((a, b) => a - b);
+console.log(nums);   // [1, 2, 3]  ← nums 本身被改掉了！
+
+// ✅ spread 先複製，再對副本排序
+const sorted = [...nums].sort((a, b) => a - b);
+console.log(nums);   // [3, 1, 2]  ← 原陣列不變
+console.log(sorted); // [1, 2, 3]  ← 副本已排序
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>[...arr]</code> 是「淺複製」：陣列本身是全新的，但陣列裡的物件仍指向同一份參考
+</div>
+
+<!--
+spread 複製陣列的原理是把陣列裡每個元素展開，放進新的 [] 中，所以 sorted 和 nums 是完全獨立的兩個陣列。sort 是就地修改，所以沒有 spread 的版本會直接改掉原始陣列，這在 Angular 的資料管理中很危險——畫面可能因為資料被改掉而出現預期外的排序行為。
+-->
+
+---
+layout: default
+---
+
+# TypeScript 技術前導 — spread 複製陣列（3/3）
+
+在 P3 中，`getSortedByDate()` 用 spread 保護原始資料，排序後回傳新陣列：
+
+```typescript
+// ❌ 錯誤：直接 sort records，原始資料被破壞
 getSortedByDate(): CourseRecord[] {
-  return this.records.sort(...);  // records 本身被改掉！
+  return this.records.sort((a, b) =>
+    b.date.localeCompare(a.date)
+  );
 }
 
-// ✅ 正確：先複製再排序
+// ✅ 正確：先複製再排序，原始 records 不變
 getSortedByDate(): CourseRecord[] {
   return [...this.records].sort((a, b) =>
     b.date.localeCompare(a.date)
   );
 }
-
-// spread 其他用途
-const nums = [1, 2, 3];
-const copy = [...nums];        // 複製陣列
-const merged = [...a, ...b];   // 合併兩個陣列
 ```
 
-**畫面互動：** P3 點擊「依日期排序」→ `getSortedByDate()` 回傳排序後的新陣列供 `*ngFor` 顯示
+**畫面互動：** P3 點擊「依日期排序」按鈕 → 呼叫 `getSortedByDate()`，將回傳的新陣列賦值給顯示用變數
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>[...arr]</code> 是「淺複製」：陣列本身是新的，但物件元素仍指向同一份參考
+💡 spread 其他常見用途：<code>const copy = [...arr]</code> 複製、<code>[...a, ...b]</code> 合併兩個陣列
 </div>
 
 <!--
-spread 複製陣列的原理是把陣列裡每個元素展開，放進新的 [] 中，所以 copy 和 this.records 是完全獨立的兩個陣列，對 copy 做 sort 不會動到 records。注意 spread 是淺複製，如果陣列裡裝的是物件，修改物件的屬性還是會影響原陣列裡的物件——但對 sort 這個場景來說，淺複製已經足夠了。
+這頁把前一頁的概念直接套到 P3 的實際程式碼上。getSortedByDate 如果直接 sort this.records，原始的 records 陣列就被改掉了，之後想算「未排序的完成率」或是恢復原始順序都會出問題。用 spread 複製一份，就能讓原始資料和排序結果各自獨立存在。
 -->
 
 ---
