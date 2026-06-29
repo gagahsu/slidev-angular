@@ -60,9 +60,9 @@ layout: default
 
 | 題號 | 專案名稱 | 主要技術 | 預估時間 |
 |---|---|---|---|
-| **P1** | 個人履歷頁 | Flexbox 雙欄、技能條（TS 綁定寬度）、工作時間軸 | 1.5 hr |
+| **P1** | 個人履歷頁 | Flexbox 雙欄、技能等級判斷（if/else）、工作時間軸 | 1.5 hr |
 | **P2** | 電商產品展示頁 | Flexbox flex-wrap 商品格、Navbar badge 定位、分類篩選 | 1.5 hr |
-| **P3** | 學習進度儀表板 | Flexbox 統計卡片、進度條（TS 綁定寬度）、資料計算 | 1.5 hr |
+| **P3** | 學習進度儀表板 | Flexbox 統計卡片、資料統計計算、課程記錄顯示 | 1.5 hr |
 | **P4** | 餐廳菜單點餐頁 | 固定 header、左右 Flexbox 分欄、分類切換、即時計算 | 1.5 hr |
 
 <div class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-400 text-gray-700 text-sm text-left">
@@ -121,7 +121,7 @@ layout: default
   </div>
 </div>
 
-- **左欄（固定 280px）**：深色背景、頭像圓形、聯絡資訊、技能進度條
+- **左欄（固定 280px）**：深色背景、頭像圓形、聯絡資訊、技能等級標籤
 - **右欄（flex: 1）**：關於我、工作時間軸（左側有圓點）、學歷
 
 ---
@@ -139,10 +139,12 @@ layout: default
 - `border-radius: 50%`，寬高 `120px`，白色邊框 `border: 4px solid white`
 - `display: flex; align-items: center; justify-content: center`（讓文字置中）
 
-**③ 技能條（重點！）**
-- 灰色軌道：`background: rgba(255,255,255,0.2); border-radius: 4px; height: 8px; overflow: hidden`
-- 彩色填充：`height: 100%; background: #5eada0`
-- **寬度不用 CSS 動畫，改用 TypeScript 的 `[style.width]` 綁定**
+**③ 技能等級標籤**
+- `.skill-item`：`display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px`
+- `.skill-tag`：`border-radius: 4px; padding: 2px 8px; font-size: 0.8em; font-weight: 600`
+- 熟練（percent ≥ 80）：`background: #5eada0; color: white`
+- 進階（percent ≥ 60）：`background: #a7d9d0; color: #1a5c5c`
+- 初學（其他）：`background: rgba(255,255,255,0.2); color: white`
 
 ---
 layout: default
@@ -199,10 +201,15 @@ layout: default
 
 # P1：需要完成的 TypeScript 邏輯（2/2）
 
-**③ 需實作的方法**
-- `getDuration(start, end)` — `end` 為 null 回傳 `'~ 現在'`，否則回傳 `'X 年'`
-- `getBarWidth(percent)` — 回傳 `percent + '%'`，供 `[style.width]` 使用
-- `getTopSkills()` — 用 `filter` 回傳 percent ≥ 70 的技能
+**③ 需實作的方法（與 HTML 呼叫方式）**
+
+| 方法 | HTML 怎麼呼叫 | 說明 |
+|---|---|---|
+| `getDuration(start, end)` | `{{ getDuration(exp.start, exp.end) }}` 在時間軸 `*ngFor` 裡 | `end` 為 null → 回傳 `'~ 現在'`，否則回傳 `'X 年'` |
+| `getSkillLevel(percent)` | `{{ getSkillLevel(skill.percent) }}` 在技能 `*ngFor` 裡 | ≥ 80 → `'熟練'`，≥ 60 → `'進階'`，否則 → `'初學'` |
+| `getTopSkills()` | `*ngFor="let skill of getTopSkills()"` 在技能列表 | 用 `filter` 回傳 percent ≥ 70 的技能 |
+
+💡 P1 是純展示頁，沒有 `(click)` 事件，方法全部在 `{{ }}` 或 `*ngFor` 中被呼叫
 
 ---
 layout: default
@@ -243,10 +250,8 @@ layout: default
     <div class="contact"> ... </div>
     <div class="skills">
       <div *ngFor="let skill of skills" class="skill-item">
-        <span>{{ skill.name }}</span>
-        <div class="skill-bar">
-          <div class="bar-fill" [style.width]="getBarWidth(skill.percent)"></div>
-        </div>
+        <span class="skill-name">{{ skill.name }}</span>
+        <span class="skill-tag">{{ getSkillLevel(skill.percent) }}</span>
       </div>
     </div>
   </aside>
@@ -306,32 +311,36 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — 技能條 CSS（TS 綁定寬度）
+# P1：解答提示 — 技能等級標籤 CSS
 
 ```css
-.skill-bar {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  height: 8px;
-  overflow: hidden;
-  margin: 4px 0 10px;
+.skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
-.bar-fill {
-  height: 100%;
-  background: #5eada0;
-  /* 寬度由 [style.width]="getBarWidth(skill.percent)" 決定 */
+.skill-name { color: white; font-size: 0.9rem; }
+.skill-tag {
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  color: white;
 }
 ```
 
 ```html
-<!-- HTML 用 Angular 屬性綁定設定寬度 -->
-<div class="skill-bar">
-  <div class="bar-fill" [style.width]="getBarWidth(skill.percent)"></div>
+<!-- HTML 用 {{ }} 呼叫 getSkillLevel()，顯示等級文字 -->
+<div *ngFor="let skill of skills" class="skill-item">
+  <span class="skill-name">{{ skill.name }}</span>
+  <span class="skill-tag">{{ getSkillLevel(skill.percent) }}</span>
 </div>
 ```
 
 <div class="mt-3 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
-✅ 不需要 CSS 變數或 @keyframes，直接用 TypeScript 計算寬度，交給 Angular 綁定到 style
+✅ 用 <code>{{ }}</code> 插值呼叫 TypeScript 方法，回傳文字標籤，不需要屬性綁定或 CSS 動畫
 </div>
 
 ---
@@ -390,8 +399,10 @@ getDuration(start: number, end: number | null): string {
 ```
 
 ```typescript
-getBarWidth(percent: number): string {
-  return percent + '%';
+getSkillLevel(percent: number): string {
+  if (percent >= 80) return '熟練';
+  if (percent >= 60) return '進階';
+  return '初學';
 }
 ```
 
@@ -402,7 +413,7 @@ getTopSkills() {
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>end === null</code> 用三等號嚴格比對；<code>getBarWidth</code> 回傳如 <code>'90%'</code> 的字串，<code>[style.width]</code> 會直接套用為 CSS width；<code>filter</code> 回傳符合條件的新陣列
+💡 <code>end === null</code> 用三等號嚴格比對；<code>getSkillLevel</code> 用 if/else 判斷回傳等級文字，在 <code>{{ }}</code> 中直接顯示；<code>filter</code> 回傳符合條件的新陣列
 </div>
 
 ---
@@ -498,25 +509,24 @@ layout: default
 # P2：需要完成的 TypeScript 邏輯
 
 ```typescript
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  emoji: string;
-}
-interface CartItem {
-  product: Product;
-  qty: number;
-}
+interface Product { id: number; name: string; price: number; category: string; emoji: string; }
+interface CartItem { product: Product; qty: number; }
 ```
 
-**需實作的方法：**
+**需要的變數：**
+- `products: Product[]` — 完整商品列表（自行填入資料）
+- `cart: CartItem[] = []` — 購物車
+- `activeCategory: string = '全部'` — 追蹤目前選中的分類
 
-1. `filterProducts(category)` — `'全部'` 回傳全部，否則用 `filter` 篩選
-2. `addToCart(product)` — 用 `filter` 找已有項目，qty++ 或 `push` 新項目
-3. `getCartCount()` — `for...of` 加總所有 `qty`
-4. `getCartTotal()` — `for...of` 計算 `price × qty` 總金額
+**需實作的方法（與觸發事件）：**
+
+| 方法 | 怎麼觸發 | 說明 |
+|---|---|---|
+| `setCategory(cat)` | 分類按鈕 `(click)="setCategory('前端')"` | 更新 `activeCategory`，切換分類 |
+| `filterProducts()` | `*ngFor="let p of filterProducts()"` 在商品格 | 依 `activeCategory` 篩選商品 |
+| `addToCart(product)` | 商品卡片「加入購物車」按鈕 `(click)="addToCart(product)"` | 加入購物車或 qty++ |
+| `getCartCount()` | `{{ getCartCount() }}` 在購物車 badge | 加總所有 qty |
+| `getCartTotal()` | `{{ getCartTotal() }}` 在結帳區 | price × qty 加總 |
 
 ---
 layout: default
@@ -624,9 +634,12 @@ layout: default
 # P2：解答提示 — TypeScript 方法
 
 ```typescript
-filterProducts(category: string): Product[] {
-  if (category === '全部') return this.products;
-  return this.products.filter(p => p.category === category);
+setCategory(cat: string): void {
+  this.activeCategory = cat;
+}
+filterProducts(): Product[] {
+  if (this.activeCategory === '全部') return this.products;
+  return this.products.filter(p => p.category === this.activeCategory);
 }
 ```
 
@@ -723,10 +736,12 @@ layout: default
 - 數字 `.stat-value`：`font-size: 2.5rem; font-weight: 900; color: #1a5c5c`
 - hover：`background: #1a5c5c; color: white; transition: background 0.25s, color 0.25s`
 
-**② 進度條（TS 綁定寬度）**
-- 軌道 `.progress-track`：`flex: 1; height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden`
-- 填充 `.progress-fill`：`height: 100%; border-radius: 6px`
-- **寬度由 `[style.width]`，顏色由 `[style.background-color]` 綁定**
+**② 進度數字區**
+- 每列 `.progress-row`：`display: flex; align-items: center; gap: 16px; margin-bottom: 12px; padding: 8px; border-radius: 8px`
+- 科目名稱 `.subject-name`：`width: 80px; color: #555`
+- 進度數字 `.progress-num`：`font-size: 1.6rem; font-weight: 900; color: #1a5c5c; min-width: 60px`
+- 單位 `.progress-unit`：`font-size: 0.85rem; color: #888`
+- hover：`background: #f8fffe; transition: background 0.2s`
 
 **③ 課程記錄**
 - 已完成 badge：`background: #d4edda; color: #1a6e2e; border-radius: 999px; padding: 2px 10px`
@@ -740,25 +755,25 @@ layout: default
 # P3：需要完成的 TypeScript 邏輯
 
 ```typescript
-interface CourseRecord {
-  name: string;
-  status: 'completed' | 'in-progress';
-  date: string;
-}
+interface CourseRecord { name: string; status: 'completed' | 'in-progress'; date: string; }
 subjects = [
-  { name: 'HTML', progress: 80, color: '#e07b39' },
-  { name: 'CSS',  progress: 70, color: '#5eada0' },
-  { name: 'TypeScript', progress: 40, color: '#a7d9d0' },
+  { name: 'HTML', progress: 80 },
+  { name: 'CSS',  progress: 70 },
+  { name: 'TypeScript', progress: 40 },
 ];
 records: CourseRecord[] = [ ... ];
 ```
 
-**需實作的方法：**
-1. `getCompletedCount()` — `filter` 篩選 `'completed'` 後取 `.length`
-2. `getInProgressCount()` — 同上，篩選 `'in-progress'`
-3. `getTotalHours()` — `records.length × 2.5`（每筆記錄算 2.5 小時）
-4. `getCompletionRate()` — 計算百分比，回傳字串 `'70%'`
-5. `getProgressWidth(progress)` — 回傳 `progress + '%'`（供 [style.width] 使用）
+**需實作的方法（與 HTML 呼叫方式）：**
+
+| 方法 | HTML 怎麼呼叫 | 說明 |
+|---|---|---|
+| `getCompletedCount()` | `{{ getCompletedCount() }}` 在「已完成」統計卡 | `filter` 篩選 `'completed'` 後取 `.length` |
+| `getInProgressCount()` | `{{ getInProgressCount() }}` 在「學習中」統計卡 | 同上，篩選 `'in-progress'` |
+| `getTotalHours()` | `{{ getTotalHours() }}` 在「總時數」統計卡 | `records.length × 2.5` |
+| `getCompletionRate()` | `{{ getCompletionRate() }}` 在「完成率」統計卡 | 回傳字串如 `'70%'` |
+
+💡 P3 是純展示頁，所有方法都在 `{{ }}` 中被呼叫，沒有 `(click)` 事件
 
 ---
 layout: default
@@ -837,36 +852,35 @@ layout: default
 layout: default
 ---
 
-# P3：解答提示 — 進度條 CSS（TS 綁定）
+# P3：解答提示 — 進度數字 CSS
 
 ```css
 .progress-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
+  padding: 8px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
 }
+.progress-row:hover { background: #f8fffe; }
 .subject-name { width: 80px; color: #555; }
-.progress-track {
-  flex: 1;
-  height: 12px;
-  background: #e2e8f0;
-  border-radius: 6px;
-  overflow: hidden;
+.progress-num {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #1a5c5c;
+  min-width: 60px;
 }
-.progress-fill {
-  height: 100%;
-  border-radius: 6px;
-  /* 寬度與顏色由 Angular 屬性綁定設定 */
-}
-.progress-label { width: 40px; text-align: right; color: #555; }
+.progress-unit { font-size: 0.85rem; color: #888; }
 ```
 
 ```html
-<!-- HTML -->
-<div class="progress-fill"
-  [style.width]="getProgressWidth(subject.progress)"
-  [style.background-color]="subject.color">
+<!-- HTML 用 {{ }} 直接顯示進度數字 -->
+<div *ngFor="let subject of subjects" class="progress-row">
+  <span class="subject-name">{{ subject.name }}</span>
+  <span class="progress-num">{{ subject.progress }}</span>
+  <span class="progress-unit">%</span>
 </div>
 ```
 
@@ -890,13 +904,10 @@ getCompletionRate(): string {
   const rate = this.getCompletedCount() / this.records.length;
   return Math.round(rate * 100) + '%';
 }
-getProgressWidth(progress: number): string {
-  return progress + '%';
-}
 ```
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>Math.round</code> 四捨五入；<code>getProgressWidth</code> 回傳字串如 <code>'80%'</code>，可直接用 <code>[style.width]</code> 綁定
+💡 <code>Math.round</code> 四捨五入；<code>getCompletionRate</code> 算出比率後乘 100 再四捨五入，加上 <code>'%'</code> 字串回傳；這些方法都在 <code>{{ }}</code> 中呼叫，不需要 <code>(click)</code>
 </div>
 
 ---
@@ -1002,12 +1013,21 @@ interface MenuItem {
 interface OrderItem { item: MenuItem; qty: number; }
 ```
 
-**需實作的方法：**
-1. `getMenu()` — 依 `activeCategory` 篩選（`'全部'` 不篩選）
-2. `addItem(item)` — 用 `filter` 找已有項目：找到就 `qty++`，否則 `push`
-3. `removeItem(id)` — `forEach` qty--，再 `filter` 移除 qty 為 0 的項目
-4. `getOrderCount()` — `for...of` 加總所有 qty
-5. `getTotal()` — `for...of` 計算 price × qty 總金額
+**需要的變數：**
+- `menu: MenuItem[]` — 完整菜單（自行填入資料）
+- `order: OrderItem[] = []` — 目前訂單
+- `activeCategory: string = '麵食'` — 目前選中的分類
+
+**需實作的方法（與觸發事件）：**
+
+| 方法 | 怎麼觸發 | 說明 |
+|---|---|---|
+| `setCategory(cat)` | 分類按鈕 `(click)="setCategory('湯品')"` | 更新 `activeCategory`，切換菜單分類 |
+| `getMenu()` | `*ngFor="let item of getMenu()"` 在菜單格 | 依 `activeCategory` 篩選菜單 |
+| `addItem(item)` | 菜單卡片「加入」按鈕 `(click)="addItem(item)"` | 加入訂單或 qty++ |
+| `removeItem(id)` | 訂單列「移除」按鈕 `(click)="removeItem(o.item.id)"` | qty--，再移除 qty=0 的項目 |
+| `getOrderCount()` | `{{ getOrderCount() }}` 在 header badge | 加總所有 qty |
+| `getTotal()` | `{{ getTotal() }}` 在訂單面板 | price × qty 加總 |
 
 ---
 layout: default
@@ -1111,6 +1131,12 @@ layout: default
 # P4：解答提示 — TypeScript 方法（加 / 移除）
 
 ```typescript
+setCategory(cat: string): void {
+  this.activeCategory = cat;
+}
+```
+
+```typescript
 addItem(item: MenuItem): void {
   const existing = this.order.filter(o => o.item.id === item.id);
   if (existing.length > 0) {
@@ -1168,7 +1194,7 @@ layout: end
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; text-align: left;">
   <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>📄 P1 個人履歷</strong><br>
-    Flexbox 雙欄・技能條（[style.width]）・時間軸定位
+    Flexbox 雙欄・技能等級判斷（if/else）・時間軸定位
   </div>
   <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>🛍️ P2 電商展示頁</strong><br>
@@ -1176,7 +1202,7 @@ layout: end
   </div>
   <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>📊 P3 學習儀表板</strong><br>
-    Flexbox 統計卡・進度條（[style.width]）・資料計算
+    Flexbox 統計卡・資料統計計算・課程記錄顯示
   </div>
   <div style="background: #f0faf9; border-radius: 12px; padding: 1rem; color: #1a5c5c;">
     <strong>🍜 P4 餐廳點餐頁</strong><br>
