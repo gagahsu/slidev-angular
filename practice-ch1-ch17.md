@@ -271,7 +271,7 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — 雙欄 CSS
+# P1：解答提示 — 雙欄 CSS（1/2）
 
 ```css
 .resume {
@@ -293,6 +293,15 @@ layout: default
   background: #f8fffe;
   padding: 40px;
 }
+```
+
+---
+layout: default
+---
+
+# P1：解答提示 — 雙欄 CSS（2/2）
+
+```css
 .avatar {
   width: 120px;
   height: 120px;
@@ -347,7 +356,7 @@ layout: default
 layout: default
 ---
 
-# P1：解答提示 — 時間軸 CSS
+# P1：解答提示 — 時間軸 CSS（1/2）
 
 ```css
 .timeline {
@@ -366,6 +375,15 @@ layout: default
   position: relative;
   margin-bottom: 20px;
 }
+```
+
+---
+layout: default
+---
+
+# P1：解答提示 — 時間軸 CSS（2/2）
+
+```css
 .timeline-dot {
   position: absolute;
   left: -28px;
@@ -1057,7 +1075,7 @@ export const routes: Routes = [
 layout: default
 ---
 
-# P4：解答提示 — Header + 分類列 CSS
+# P4：解答提示 — Header + 分類列 CSS（1/2）
 
 ```css
 .header {
@@ -1075,6 +1093,15 @@ body { padding-top: 64px; }
   display: flex;
   gap: 8px;
 }
+```
+
+---
+layout: default
+---
+
+# P4：解答提示 — Header + 分類列 CSS（2/2）
+
+```css
 .cat-btn {
   padding: 6px 16px;
   border: 1px solid #ccc;
@@ -1094,7 +1121,7 @@ body { padding-top: 64px; }
 layout: default
 ---
 
-# P4：解答提示 — 主要佈局 CSS
+# P4：解答提示 — 主要佈局 CSS（1/2）
 
 ```css
 .main-layout {
@@ -1115,6 +1142,15 @@ layout: default
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   transition: border-color 0.2s;
 }
+```
+
+---
+layout: default
+---
+
+# P4：解答提示 — 主要佈局 CSS（2/2）
+
+```css
 .menu-card:hover { border-color: #5eada0; }
 .order-panel {
   width: 280px; flex-shrink: 0;
