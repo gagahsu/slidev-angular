@@ -874,6 +874,194 @@ layout: default
 -->
 
 ---
+layout: default
+---
+
+# 練習 2：解題解答
+### TypeScript（1／2）
+
+```typescript
+export class AppComponent {
+  level = 1;
+  attack = 3;
+  defense = 2;
+  inputLevel = 1;
+
+  levelUp() {
+    this.level++;
+    this.attack = this.level * 3;
+    this.defense = this.level * 2;
+  }
+
+  levelDown() {
+    if (this.level > 1) {
+      this.level--;
+      this.attack = this.level * 3;
+      this.defense = this.level * 2;
+    }
+  }
+}
+```
+
+<!--
+練習 2 包含練習 1 全部功能，再加上 levelDown()。
+attack 與 defense 為普通屬性，每次操作後手動重算，不使用 getter。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題解答
+### TypeScript（2／2）
+
+```typescript
+  modifyLevel() {
+    if (this.inputLevel >= 1) {
+      this.level = this.inputLevel;
+      this.attack = this.level * 3;
+      this.defense = this.level * 2;
+    }
+  }
+
+  reset() {
+    this.level = 1;
+    this.attack = 3;
+    this.defense = 2;
+    this.inputLevel = 1;
+  }
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 記得在 <code>@Component</code> 的 <code>imports</code> 加入 <code>FormsModule</code> 才能使用 <code>[(ngModel)]</code>
+</div>
+
+<!--
+modifyLevel() 先判斷輸入值合法才套用；reset() 直接歸回初始值。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題解答
+### HTML（1／2）
+
+```html
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+  <div class="rounded-4 p-4 shadow" style="width: 480px;">
+    <div class="border border-2 border-dark rounded p-4 position-relative">
+
+      <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 m-2"
+              (click)="reset()">重置</button>
+
+      <h2 class="text-center text-danger mb-3">角色等級計算機</h2>
+
+      <p class="fw-bold fs-5">等級：{{ level }}</p>
+
+      <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-outline-dark flex-fill" (click)="levelUp()">升級</button>
+        <button class="btn btn-outline-dark flex-fill"
+                [disabled]="level <= 1" (click)="levelDown()">降級</button>
+      </div>
+```
+
+<!--
+降級按鈕加上 [disabled]="level <= 1"，等級為 1 時自動禁用——屬性繫結的防呆應用。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題解答
+### HTML（2／2）
+
+```html
+      <p class="fw-bold fs-5">攻擊力：{{ attack }}</p>
+      <p class="fw-bold fs-5">防禦力：{{ defense }}</p>
+
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <label class="text-nowrap mb-0">自行輸入等級：</label>
+        <input type="number" class="form-control" [(ngModel)]="inputLevel" />
+      </div>
+
+      <button class="btn btn-outline-dark w-100" (click)="modifyLevel()">修改等級</button>
+
+    </div>
+  </div>
+</div>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 四種繫結全數出現：<code>{{ }}</code> 顯示、<code>[disabled]</code> 屬性、<code>(click)</code> 事件、<code>[(ngModel)]</code> 雙向
+</div>
+
+<!--
+輸入框雙向同步 inputLevel；點「修改等級」才把值套用到 level 並重算攻防。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：Bootstrap Class 說明（1／3）
+### 外層容器
+
+| Class | 說明 |
+| --- | --- |
+| `d-flex` | 啟用 Flexbox 排版 |
+| `justify-content-center` | 水平置中（主軸） |
+| `align-items-center` | 垂直置中（交叉軸） |
+| `min-vh-100` | 最小高度為 100% 視窗高度 |
+| `bg-light` | 淺灰背景色 |
+| `rounded-4` | 大圓角（外框） |
+| `p-4` | 四周 padding（1.5rem） |
+| `shadow` | 預設陰影效果 |
+
+<!--
+這些 class 套在最外層兩個 div，負責置中整體版面與外框視覺。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：Bootstrap Class 說明（2／3）
+### 框線、定位與按鈕
+
+| Class | 說明 |
+| --- | --- |
+| `border` / `border-2` / `border-dark` | 顯示邊框 / 粗細 2px / 深色 |
+| `position-relative` / `position-absolute` | 設為相對 / 絕對定位 |
+| `top-0` / `end-0` / `m-2` | 定位右上角並留邊距 |
+| `btn` / `btn-outline-dark` / `btn-sm` | 按鈕樣式 / 深色外框 / 小尺寸 |
+| `flex-fill` | 按鈕等寬填滿空間 |
+| `gap-2` | Flex 子元素間距（0.5rem） |
+
+<!--
+position-relative 套在內框，讓重置按鈕的 position-absolute 以內框為基準定位。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：Bootstrap Class 說明（3／3）
+### 文字與輸入框
+
+| Class | 說明 |
+| --- | --- |
+| `fw-bold` / `fs-5` | 粗體 / 字級大小（約 1.25rem） |
+| `text-danger` / `text-center` / `text-nowrap` | 紅色 / 置中 / 禁止換行 |
+| `form-control` | 輸入框標準樣式（邊框、padding、focus 效果） |
+| `w-100` | 寬度 100%，按鈕撐滿父容器 |
+
+<!--
+form-control 是 Bootstrap 對 input 的標準美化；w-100 讓修改等級按鈕跨滿整列。
+-->
+
+---
 layout: end
 ---
 
