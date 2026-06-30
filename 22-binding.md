@@ -1015,9 +1015,8 @@ layout: default
 | `align-items-center` | 垂直置中（交叉軸） |
 | `min-vh-100` | 最小高度為 100% 視窗高度 |
 | `bg-light` | 淺灰背景色 |
-| `rounded-4` | 大圓角（外框） |
-| `p-4` | 四周 padding（1.5rem） |
-| `shadow` | 預設陰影效果 |
+| `rounded-4` / `rounded` | 大圓角（外框）/ 小圓角（內框） |
+| `p-4` / `shadow` | 四周 padding（1.5rem）/ 預設陰影效果 |
 
 <!--
 這些 class 套在最外層兩個 div，負責置中整體版面與外框視覺。
@@ -1035,12 +1034,14 @@ layout: default
 | `border` / `border-2` / `border-dark` | 顯示邊框 / 粗細 2px / 深色 |
 | `position-relative` / `position-absolute` | 設為相對 / 絕對定位 |
 | `top-0` / `end-0` / `m-2` | 定位右上角並留邊距 |
-| `btn` / `btn-outline-dark` / `btn-sm` | 按鈕樣式 / 深色外框 / 小尺寸 |
+| `btn` / `btn-outline-secondary` / `btn-outline-dark` / `btn-sm` | 按鈕基礎 / 灰色外框 / 深色外框 / 小尺寸 |
 | `flex-fill` | 按鈕等寬填滿空間 |
 | `gap-2` | Flex 子元素間距（0.5rem） |
+| `mb-3` / `mb-2` / `mb-0` | 下方 margin（1rem / 0.5rem / 0） |
 
 <!--
 position-relative 套在內框，讓重置按鈕的 position-absolute 以內框為基準定位。
+mb-3 用於標題與按鈕列，mb-2 用於輸入框列，mb-0 移除 label 預設下方間距。
 -->
 
 ---
