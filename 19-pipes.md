@@ -409,20 +409,23 @@ layout: default
   border-radius: 12px;         /* 四個角變圓 */
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* 浮雕陰影 */
 }
-
 /* 廣告區固定寬度，不隨畫面縮小 */
 .ad-panel {
-  width: 220px;      /* 固定寬度，不隨視窗縮小 */
-  flex-shrink: 0;    /* 禁止被 flex 壓縮 */
+  width: 220px;           /* 固定寬度，不隨視窗縮小 */
+  flex-shrink: 0;         /* 禁止被 flex 壓縮 */
+  display: flex;          /* 讓子元素可用 flex 撐高 */
+  flex-direction: column; /* 子元素垂直排列 */
 }
 .ad-panel img {
-  width: 100%;       /* 圖片撐滿廣告區寬度 */
-  border-radius: 8px; /* 圖片四角圓角 */
+  width: 100%;            /* 圖片撐滿廣告區寬度 */
+  flex: 1;                /* 撐滿廣告區剩餘高度 */
+  object-fit: cover;      /* 填滿空間，超出部分裁切 */
+  border-radius: 8px;     /* 圖片四角圓角 */
 }
 ```
 
 <!--
-shop-layout 用 flex 做左右欄分割。padding 讓內容和外框保持距離，border-radius 讓四個角變圓，box-shadow 製造出整體區塊浮起來的陰影感。ad-panel 固定 220px，flex-shrink: 0 防止它被壓縮。
+shop-layout 用 flex 做左右欄分割。padding 讓內容和外框保持距離，border-radius 讓四個角變圓，box-shadow 製造出整體區塊浮起來的陰影感。ad-panel 固定 220px，flex-shrink: 0 防止它被壓縮。ad-panel 加 display: flex + flex-direction: column，讓 img 能用 flex: 1 撐滿整個廣告區高度；object-fit: cover 讓圖片填滿空間不留白。
 -->
 
 ---
