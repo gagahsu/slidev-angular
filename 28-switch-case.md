@@ -125,6 +125,56 @@ switch (變數名稱或運算式) {
 -->
 
 ---
+layout: default
+---
+
+# switch — 小節練習
+
+宣告 `statusCode = 404`，用 `switch` 依 HTTP 狀態碼印出對應訊息：
+
+- `200` → `'請求成功'`
+- `404` → `'找不到頁面'`
+- `500` → `'伺服器錯誤'`
+- `default` → `'未知狀態'`
+
+<!--
+考察 switch、case、default、break 四個關鍵字的完整寫法。
+-->
+
+---
+layout: default
+---
+
+# switch — 小節練習解答
+
+```typescript
+let statusCode = 404;
+
+switch (statusCode) {
+  case 200:
+    console.log('請求成功');
+    break;
+  case 404:
+    console.log('找不到頁面');  // 印出此行
+    break;
+  case 500:
+    console.log('伺服器錯誤');
+    break;
+  default:
+    console.log('未知狀態');
+    break;
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 每個 <code>case</code> 結尾必須加 <code>break</code>，否則會繼續往下執行（fall-through），導致多個 case 的程式碼連續被執行
+</div>
+
+<!--
+HTTP 狀態碼是 switch 的絕佳應用場景：有限的已知值、每個 case 對應獨立處理邏輯。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -232,6 +282,62 @@ switch (this.testNum) {
 這種靈異現象在程式界叫作「Fall-through（穿透）」。
 所以，寫 case 時，千萬要養成好習慣：**寫完一行，立刻補上 `break;`**！
 不然你的程式跑出奇怪的雙重執行結果，你可能要對著螢幕哭一整晚！
+-->
+
+---
+layout: default
+---
+
+# case 與 break — 小節練習
+
+`testNum = 2` 時，以下兩個版本各自的輸出是什麼？找出差異並說明原因：
+
+```typescript
+let testNum = 2;
+
+// 版本 A（缺少 break）
+switch (testNum) {
+  case 1: console.log('一');
+  case 2: console.log('二');
+  case 3: console.log('三');
+}
+
+// 版本 B（有 break）
+switch (testNum) {
+  case 1: console.log('一'); break;
+  case 2: console.log('二'); break;
+  case 3: console.log('三'); break;
+}
+```
+
+<!--
+考察 fall-through 穿透機制：版本A缺少 break，匹配後繼續往下執行所有剩餘 case。
+-->
+
+---
+layout: default
+---
+
+# case 與 break — 小節練習解答
+
+**版本 A 輸出（fall-through）：**
+```
+二
+三
+```
+`case 2` 匹配成功後，因為沒有 `break`，程式穿透繼續執行 `case 3`，直到 switch 結束。
+
+**版本 B 輸出（正確）：**
+```
+二
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>break</code> 是跳出 switch 的煞車。缺少 <code>break</code> 的 case 會像剎車壞掉的卡車，撞穿所有後續的 case 繼續執行
+</div>
+
+<!--
+fall-through 在極少數情況下是刻意設計的（例如多個 case 共用同一段邏輯），但 99% 情況下都是 bug。
 -->
 
 ---

@@ -278,6 +278,53 @@ Angular 需要知道每一筆資料的「唯一身分識別」，這樣在更新
 -->
 
 ---
+layout: default
+---
+
+# @for — 小節練習
+
+在 `app.component.ts` 宣告城市名稱陣列，用 `@for` 在 HTML 中依序顯示每個城市：
+
+```typescript
+cities = ['台北', '台中', '高雄', '台南', '桃園'];
+```
+
+```html
+<!-- 補完 @for 語法，顯示每個城市名稱 -->
+@for(___ of ___; track ___) {
+  <p>{{ ___ }}</p>
+}
+```
+
+<!--
+考察 @for 基本語法：迭代變數名、陣列名、track 值三個必填部分。
+-->
+
+---
+layout: default
+---
+
+# @for — 小節練習解答
+
+```typescript
+cities = ['台北', '台中', '高雄', '台南', '桃園'];
+```
+
+```html
+@for(city of cities; track city) {
+  <p>{{ city }}</p>
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>track</code> 是必填欄位，協助 Angular 追蹤每筆資料的唯一識別。純字串陣列直接 <code>track city</code>；若有 id 則建議用 <code>track city.id</code>
+</div>
+
+<!--
+track 缺少編譯器會報錯。純字串陣列沒有唯一 id，直接 track 元素值本身即可。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---

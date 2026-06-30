@@ -345,6 +345,137 @@ export const routes: Routes = [
 -->
 
 ---
+layout: default
+---
+
+# 嵌套路由 — 父子元件設計（一）HTML
+
+**父元件** `first.component.html` 要放自己的第二個 `<router-outlet>`，子路由才有地方渲染：
+
+```html
+<!-- first.component.html -->
+<h2>第一頁</h2>
+
+<!-- 導航到子路由（必須寫完整路徑） -->
+<a routerLink="/first/child-a">前往 Child-A</a>
+
+<!-- 子路由的顯示容器，放在父元件裡，不是根元件 -->
+<router-outlet></router-outlet>
+```
+
+```html
+<!-- child-a.component.html -->
+<p>我是 Child-A 的內容</p>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+⚠️ 根元件與父元件<b>各有自己的</b> <code>&lt;router-outlet&gt;</code>。忘記在父元件放 outlet，子路由切換後畫面一片空白，且 console 不會報錯
+</div>
+
+<!--
+根元件有一個 router-outlet，負責渲染 first、second 這層。
+first.component.html 裡面必須再放一個 router-outlet，負責渲染 child-a 這層。
+如果忘記在父元件放 router-outlet，子路由切換後什麼都不會出現，而且 console 也不會報錯，很難找到原因。
+導航連結要寫完整路徑 /first/child-a，不能只寫 /child-a。
+-->
+
+---
+layout: default
+---
+
+# 嵌套路由 — 父子元件設計（二）TS Import
+
+Standalone component 的 `imports` 各自獨立。父元件 HTML 用了 `routerLink` 與 `<router-outlet>`，就必須在**父元件自己的** `imports` 加入對應模組：
+
+```typescript
+// first.component.ts
+import { RouterOutlet, RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-first',
+  standalone: true,
+  imports: [RouterOutlet, RouterLink],  // 缺少這行 HTML 會報錯
+  templateUrl: './first.component.html',
+})
+export class FirstComponent {}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 根元件（AppComponent）有 import <code>RouterOutlet</code> 不代表子元件也有。每個 Standalone Component 需要用什麼就自己 import 什麼
+</div>
+
+<!--
+這是 Standalone Component 架構最容易誤解的地方：以為根元件 import 了就全局生效。
+實際上每個元件都是獨立的，用到 RouterOutlet 就要自己 import，用到 RouterLink 也要自己 import。
+-->
+
+---
+layout: default
+---
+
+# 定義路線 — 小節練習
+
+根據以下規格，補完 `app.routes.ts` 與 `home.component.html`（已 import 好所有元件）：
+
+- 根路徑 `''` → 重新導向至 `/home`（`pathMatch: 'full'`）
+- `/home` → `HomeComponent`，下有子路由 `/home/news` → `NewsComponent`
+- `/about` → `AboutComponent`
+- 任何未定義路徑 → `NotFoundComponent`
+
+```typescript
+export const routes: Routes = [
+  // 補完路線（含子路由）
+];
+```
+
+```html
+<!-- home.component.html — 補完讓子路由能渲染 -->
+<h2>首頁</h2>
+<a ___="/home/news">最新消息</a>
+<___></___>
+```
+
+<!--
+考察 redirectTo/pathMatch、children 子路由、** 萬用路由順序、父元件必須放 router-outlet 四個重點。
+-->
+
+---
+layout: default
+---
+
+# 定義路線 — 小節練習解答
+
+```typescript
+export const routes: Routes = [
+  { path: '',      redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: 'home',
+    component: HomeComponent,
+    children: [
+      { path: 'news', component: NewsComponent }
+    ]
+  },
+  { path: 'about', component: AboutComponent },
+  { path: '**',    component: NotFoundComponent },  // 必須放最後
+];
+```
+
+```html
+<!-- home.component.html -->
+<h2>首頁</h2>
+<a routerLink="/home/news">最新消息</a>
+<router-outlet></router-outlet>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 子路由 <code>path</code> 只寫最後一段（<code>'news'</code>，不加 <code>/</code>）；導航連結寫完整路徑 <code>/home/news</code>；<code>&lt;router-outlet&gt;</code> 放在父元件 HTML，不是根元件
+</div>
+
+<!--
+兩個常見錯誤：子路由 path 寫成 '/news' 加了斜線會找不到；忘記在 home.component.html 加 router-outlet 導致子頁面空白但 console 不報錯。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -478,10 +609,55 @@ Angular 幫我們寫好這個高難度功能了！
 -->
 
 ---
+layout: default
+---
+
+# HTML 導航 — 小節練習
+
+在 `app.component.html` 補完導航列，讓 `/home` 與 `/about` 連結在選中時自動套用 `active` class，並在下方提供路由元件的顯示容器：
+
+```html
+<nav>
+  <a ___="/home"  ___="active">首頁</a>
+  <a ___="/about" ___="active">關於我們</a>
+</nav>
+
+<!-- 路由元件渲染區域 -->
+<___></___>
+```
+
+<!--
+考察 routerLink、routerLinkActive、router-outlet 三個指令的語法與位置。
+-->
+
+---
+layout: default
+---
+
+# HTML 導航 — 小節練習解答
+
+```html
+<nav>
+  <a routerLink="/home"  routerLinkActive="active">首頁</a>
+  <a routerLink="/about" routerLinkActive="active">關於我們</a>
+</nav>
+
+<router-outlet></router-outlet>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>routerLink</code> 取代原生 <code>href</code>（不會重整頁面）；<code>routerLinkActive</code> 自動加 class；<code>&lt;router-outlet&gt;</code> 是元件的顯示容器，缺少它路由切換不會有任何畫面
+</div>
+
+<!--
+三個缺一不可：routerLink 控制跳轉、routerLinkActive 控制高亮、router-outlet 決定渲染位置。
+-->
+
+---
 
 # TS 導航 — 注入 Router
 
-當換頁需要依據邏輯判斷（例如登入後跳轉），使用 TypeScript 程式導航。首先注入 `Router`：
+當換頁需要依據邏輯判斷（例如登入後跳轉），使用 TypeScript 程式導航。在 `constructor` 注入 `Router` 服務：
 
 ```typescript
 // app.component.ts
@@ -497,12 +673,108 @@ export class AppComponent {
 }
 ```
 
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>constructor</code> 注入是 Angular 依賴注入（DI）的標準寫法。注入後，整個元件都能透過 <code>this.router</code> 呼叫路由方法。
+</div>
+
 <!--
 「大叔，那如果我是要在按鈕按下後，先做 API 檢查，檢查通過才跳轉，這就不能在 HTML 寫死 routerLink 了吧？」
 沒錯！這時候我們就必須在 TypeScript 大腦裡用寫程式的方式切換。
-第一步：在 constructor 裡「注入 `Router` 服務」。
-接著在方法內部呼叫 `this.router.navigate(...)`。
+第一步：在 constructor 裡「注入 Router 服務」。Angular 的 DI 系統會自動把 Router 的實例塞進來，我們只需要用 private router: Router 宣告就好。
+接著在方法內部呼叫 this.router.navigate(...)。
 這樣你就能在程式碼跑完任何判斷邏輯後，隨心所欲地控制跳轉了！
+-->
+
+---
+
+# TS 導航 — 完整範例（一）元件設定
+
+以「登入驗證後跳轉」為例。先看元件的設定部分：
+
+```typescript
+// login.component.ts
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [FormsModule],           // 雙向綁定 [(ngModel)] 需要
+  templateUrl: './login.component.html',
+})
+export class LoginComponent {
+  password = '';   // 綁定輸入框
+  error = false;   // 控制錯誤訊息顯示
+
+  constructor(private router: Router) {}  // 注入 Router
+}
+```
+
+<!--
+來看一個實際情境：登入頁面。
+使用者輸入密碼，點下登入按鈕，我們先做驗證，通過才跳轉，失敗就顯示錯誤訊息。
+這頁先看元件設定：imports 要加 FormsModule 才能用 ngModel；Router 從 constructor 注入，整個元件都可以用 this.router。
+-->
+
+---
+
+# TS 導航 — 完整範例（二）邏輯方法
+
+接著是 `login()` 方法，包含判斷與跳轉邏輯：
+
+```typescript
+export class LoginComponent {
+  // ... 承上頁屬性與 constructor
+
+  login() {
+    if (this.password === '1234') {
+      this.router.navigate(['/dashboard']);  // 驗證通過 → 跳轉
+    } else {
+      this.error = true;                     // 驗證失敗 → 顯示錯誤訊息
+    }
+  }
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 程式導航的核心：<b>先執行邏輯判斷，再決定要不要跳轉</b>。這是 <code>routerLink</code> 做不到的。
+</div>
+
+<!--
+這就是程式導航最關鍵的地方：login() 方法裡先做 if 判斷。
+通過就呼叫 this.router.navigate(['/dashboard'])；失敗就把 error 設為 true，讓畫面顯示錯誤提示。
+先跑邏輯、再決定去哪，這個概念就是 TS 導航的精華。
+-->
+
+---
+
+# TS 導航 — 完整範例（二）HTML
+
+`login.component.html`：
+
+```html
+<input [(ngModel)]="password" placeholder="輸入密碼" />
+<button (click)="login()">登入</button>
+<p *ngIf="error">密碼錯誤，請再試一次</p>
+```
+
+點擊按鈕後的執行流程：
+
+| 步驟 | 說明 |
+| --- | --- |
+| 1. 使用者輸入密碼、按登入 | `(click)="login()"` 觸發 |
+| 2. `login()` 做條件判斷 | `if (password === '1234')` |
+| 3a. 通過 → 跳轉 | `router.navigate(['/dashboard'])` |
+| 3b. 失敗 → 顯示錯誤 | `error = true`，畫面顯示紅字 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 這就是程式導航的核心：<b>先跑邏輯，再決定要不要跳、要跳去哪裡</b>。用 <code>routerLink</code> 做不到條件跳轉。
+</div>
+
+<!--
+HTML 這頁很簡單，三行而已。
+重點是執行流程要說清楚：click 觸發 login()，login() 先判斷，判斷完才決定要跳還是顯示錯誤。
+這個「先判斷再跳」的思路，才是學程式導航最重要的觀念。
 -->
 
 ---
@@ -686,6 +958,62 @@ Query Params 的取值方式大同小異，一樣是用 `ActivatedRoute`。
 通常，如果是定位特定資源的（比如看特定 ID 的會員資料），我們用 Route Params；
 如果是做輔助篩選的（比如排序、分頁、搜尋），我們就用 Query Params。
 把這兩招學起來，你網址帶值的能力就滿分了！
+-->
+
+---
+layout: default
+---
+
+# Query Params — 小節練習
+
+A 頁面點擊按鈕時，帶著 `keyword = 'Angular'` 跳轉至 `/result`；B 頁面在 `constructor` 中讀取並印出該值：
+
+**A 頁面（導航）：**
+```typescript
+search() {
+  // 帶 queryParams 跳轉至 /result
+  this.router.navigate(___);
+}
+```
+
+**B 頁面（取值）：**
+```typescript
+constructor(private route: ActivatedRoute) {
+  // 讀取 keyword 並 console.log
+  console.log(___);
+}
+```
+
+<!--
+考察 navigate 帶 queryParams 物件的寫法，以及在目標頁用 queryParamMap.get() 取值。
+-->
+
+---
+layout: default
+---
+
+# Query Params — 小節練習解答
+
+```typescript
+// A 頁面 — 帶值導航
+search() {
+  this.router.navigate(['/result'], { queryParams: { keyword: 'Angular' } });
+}
+```
+
+```typescript
+// B 頁面 — 取值
+constructor(private route: ActivatedRoute) {
+  console.log(this.route.snapshot.queryParamMap.get('keyword'));  // Angular
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 傳值用 <code>queryParams: &#123; key: value &#125;</code>；取值用 <code>queryParamMap.get('key')</code>，回傳型別為 <code>string | null</code>
+</div>
+
+<!--
+與 Route Params 最大的差異：Query Params 不需要修改 routes，直接在 navigate 的第二個參數物件中帶值。
 -->
 
 ---

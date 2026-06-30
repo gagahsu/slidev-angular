@@ -322,6 +322,58 @@ export class HeaderComponent {}
 -->
 
 ---
+layout: default
+---
+
+# @Component 裝飾器 — 小節練習
+
+根據以下規格，補完 `@Component` 裝飾器的三個屬性，讓 `ProfileComponent` 能被正確識別與渲染：
+
+- HTML 標籤名稱：`app-profile`
+- HTML 模板路徑：`./profile.component.html`
+- 樣式路徑：`./profile.component.scss`
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: ___,
+  templateUrl: ___,
+  styleUrl: ___,
+})
+export class ProfileComponent {}
+```
+
+<!--
+考察 @Component 三個核心屬性的寫法：selector 決定 HTML 標籤名稱，templateUrl 和 styleUrl 指定對應檔案路徑。
+-->
+
+---
+layout: default
+---
+
+# @Component 裝飾器 — 小節練習解答
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.scss',
+})
+export class ProfileComponent {}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 Angular CLI 執行 <code>ng g c profile</code> 會自動產生此結構，實務上不需手動填寫，但理解每個屬性的意義非常重要
+</div>
+
+<!--
+三個屬性缺一不可：selector 定義 HTML 標籤名稱，templateUrl 告訴 Angular 去哪找 HTML，styleUrl 指定樣式來源。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -391,6 +443,63 @@ export class AppComponent {}
 <!--
 完成 import 之後，在 `app.component.html` 裡，我們就可以像使用普通 div 標籤一樣，把 `<app-header>` 和 `<app-footer>` 擺在頁面的最上方 and 最下方。
 這時候，整個網頁就順利拼裝成功囉！
+-->
+
+---
+layout: default
+---
+
+# 引用元件 — 小節練習
+
+假設已用 CLI 建立了 `sidebar` 元件，路徑為 `./components/sidebar/sidebar.component`，請補完 `app.component.ts` 的 import 語句與 `imports` 陣列，讓 HTML 中的 `<app-sidebar>` 能正確顯示：
+
+```typescript
+import { Component } from '@angular/core';
+// ① 在這裡加入 import
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [/* ② 在這裡加入元件 */],
+  templateUrl: './app.component.html',
+})
+export class AppComponent {}
+```
+
+<!--
+考察引用元件最容易遺漏的兩步：import 語句與 imports 陣列，兩者缺一 HTML 標籤都會顯示紅線錯誤。
+-->
+
+---
+layout: default
+---
+
+# 引用元件 — 小節練習解答
+
+```typescript
+import { Component } from '@angular/core';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [SidebarComponent],
+  templateUrl: './app.component.html',
+})
+export class AppComponent {}
+```
+
+```html
+<!-- app.component.html -->
+<app-sidebar></app-sidebar>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 兩步缺一不可：① <code>import &#123; SidebarComponent &#125; from '...'</code> ② 加入 <code>imports: [SidebarComponent]</code>
+</div>
+
+<!--
+初學者最常踩的坑：只寫 import 語句，忘記把元件類別加入 @Component 的 imports 陣列，導致 HTML 標籤無法被辨識。
 -->
 
 ---

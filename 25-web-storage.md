@@ -230,6 +230,49 @@ console.log(this.cookieService.get('user_display_name'));
 -->
 
 ---
+layout: default
+---
+
+# Cookie — 小節練習
+
+注入 `CookieService` 後，儲存一個有效期 **30 天**的 Cookie（`key: 'theme'`，`value: 'dark'`），再讀取並用 `console.log` 印出：
+
+```typescript
+// 補完儲存
+this.cookieService.___(
+  ___,  // key
+  ___,  // value
+  ___   // 過期天數
+);
+
+// 補完讀取
+console.log(this.cookieService.___('theme'));
+```
+
+<!--
+考察 cookieService.set() 前三個參數（key、value、過期天數）與 cookieService.get() 的基本語法。
+-->
+
+---
+layout: default
+---
+
+# Cookie — 小節練習解答
+
+```typescript
+this.cookieService.set('theme', 'dark', 30);
+console.log(this.cookieService.get('theme'));  // dark
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>set</code> 第三個參數為天數，到期後瀏覽器自動刪除；<code>get</code> 若 key 不存在或已過期則回傳空字串
+</div>
+
+<!--
+set 的第三個參數過期天數是 Cookie 的重要特性：不設定的話預設是 Session Cookie，關掉瀏覽器就消失。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -327,6 +370,54 @@ sessionStorage.getItem('name');
 如果你要把一個複雜的 JS 物件（Object）存進去，你直接丟進去，它會變成一串沒用的 `[object Object]`。
 所以如果想存物件，我們要先用 `JSON.stringify()` 把物件烤成 JSON 字串才能存；
 讀出來時，再用 `JSON.parse()` 把它還原成物件。這個是業界最常用的小技巧，大家先記在大腦裡！
+-->
+
+---
+layout: default
+---
+
+# localStorage — 小節練習
+
+將使用者物件 `{ name: 'Allen', level: 5 }` 儲存到 localStorage（key 為 `'user'`），再讀取並解析還原成物件，印出 `name` 與 `level`：
+
+```typescript
+const user = { name: 'Allen', level: 5 };
+
+// 儲存（localStorage 只能存字串，請先轉換）
+localStorage.setItem('user', ___);
+
+// 讀取並還原成物件
+const raw = localStorage.getItem('user');
+const parsed = ___(raw!);
+console.log(parsed.name, parsed.level);
+```
+
+<!--
+考察 localStorage 只能存字串的限制：存入前需 JSON.stringify()，取出後需 JSON.parse()，這是存物件的必備組合技。
+-->
+
+---
+layout: default
+---
+
+# localStorage — 小節練習解答
+
+```typescript
+const user = { name: 'Allen', level: 5 };
+
+localStorage.setItem('user', JSON.stringify(user));
+
+const raw = localStorage.getItem('user');
+const parsed = JSON.parse(raw!);
+console.log(parsed.name, parsed.level);  // Allen 5
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>JSON.stringify()</code> 把物件序列化成字串才能存入；<code>JSON.parse()</code> 把讀出的字串還原成物件——這個組合技是前端儲存物件的標準做法
+</div>
+
+<!--
+直接存物件會得到 [object Object] 字串，完全無法還原。stringify + parse 是處理 localStorage 物件資料的黃金組合。
 -->
 
 ---

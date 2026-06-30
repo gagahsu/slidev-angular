@@ -283,6 +283,51 @@ export class DemoComponent implements OnInit {
 -->
 
 ---
+layout: default
+---
+
+# ngOnInit — 小節練習
+
+宣告變數 `announcement = ''` 與 `viewCount = 0`，在 `ngOnInit` 中設定公告內容與瀏覽次數，並在 HTML 中顯示：
+
+- `announcement` 設定為 `'歡迎來到 Angular 學習平台！'`
+- `viewCount` 設定為 `1024`
+
+<!--
+模擬從後端 API 取回資料後，在 ngOnInit 中賦值給變數的標準流程。
+-->
+
+---
+layout: default
+---
+
+# ngOnInit — 小節練習解答
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+
+@Component({ selector: 'app-demo', standalone: true, templateUrl: './demo.component.html' })
+export class DemoComponent implements OnInit {
+  announcement = '';
+  viewCount = 0;
+
+  ngOnInit() {
+    this.announcement = '歡迎來到 Angular 學習平台！';
+    this.viewCount = 1024;
+  }
+}
+```
+
+```html
+<p>{{ announcement }}</p>
+<p>累計瀏覽：{{ viewCount }} 次</p>
+```
+
+<!--
+變數先宣告為空值，ngOnInit 觸發後才賦予真實資料——這是日後呼叫 API 並把回傳結果存入變數的標準樣板。
+-->
+
+---
 
 # 常用生命週期：ngAfterViewInit
 
@@ -333,6 +378,49 @@ export class DemoComponent implements AfterViewInit {
 寫了 `this.inputRef.nativeElement.focus()`。
 這樣當網頁一打開，游標就會自動閃爍在輸入框內。
 記住，操作 DOM 一律寫在 AfterViewInit，這是前端開發的安防準則！
+-->
+
+---
+layout: default
+---
+
+# ngAfterViewInit — 小節練習
+
+在 HTML 加入一個 `<input>` 並設定模板變數 `#searchBox`，使用 `@ViewChild` 取得其 `ElementRef`，在 `ngAfterViewInit` 中讓該輸入框自動獲得焦點（`focus()`）：
+
+```html
+<input #searchBox type="text" placeholder="搜尋商品...">
+```
+
+<!--
+ngAfterViewInit 最常見的應用：頁面載入後自動聚焦輸入框，提升使用者體驗。
+-->
+
+---
+layout: default
+---
+
+# ngAfterViewInit — 小節練習解答
+
+```typescript
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+
+@Component({ selector: 'app-demo', standalone: true, templateUrl: './demo.component.html' })
+export class DemoComponent implements AfterViewInit {
+  @ViewChild('searchBox') searchRef!: ElementRef;
+
+  ngAfterViewInit() {
+    this.searchRef.nativeElement.focus();  // 頁面載入後自動聚焦
+  }
+}
+```
+
+```html
+<input #searchBox type="text" placeholder="搜尋商品...">
+```
+
+<!--
+模板變數 #searchBox 標記 DOM 元素；@ViewChild 取得 ElementRef；AfterViewInit 確保 DOM 已渲染才呼叫 focus()。
 -->
 
 ---
@@ -522,6 +610,61 @@ export class DemoComponent implements AfterViewChecked, OnDestroy {
 在 `ngOnDestroy()` 裡面，我們呼叫了 `this.sub.unsubscribe()`。
 這就是典型的清道夫工作，把 RxJS 的訂閱親手掐斷，防止記憶體洩漏。
 這是一個專業 Angular 工程師必須具備的高尚品德！
+-->
+
+---
+layout: default
+---
+
+# ngOnDestroy — 小節練習
+
+在 `ngOnInit` 啟動一個每秒印出一次 `'計時中...'` 的 `setInterval` 並將 ID 存入 `private timer`，再於 `ngOnDestroy` 中呼叫 `clearInterval(this.timer)` 清除計時器：
+
+```typescript
+private timer: any;
+
+ngOnInit() {
+  this.timer = setInterval(() => {
+    console.log('計時中...');
+  }, 1000);
+}
+
+ngOnDestroy() {
+  // 在這裡清除 timer
+}
+```
+
+<!--
+考察 ngOnDestroy 最典型的用途：清除計時器。未清除的 setInterval 在元件銷毀後仍會持續執行，造成記憶體洩漏。
+-->
+
+---
+layout: default
+---
+
+# ngOnDestroy — 小節練習解答
+
+```typescript
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
+@Component({ selector: 'app-demo', standalone: true })
+export class DemoComponent implements OnInit, OnDestroy {
+  private timer: any;
+
+  ngOnInit() {
+    this.timer = setInterval(() => {
+      console.log('計時中...');
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);  // ✅ 清除計時器，防止記憶體洩漏
+  }
+}
+```
+
+<!--
+setInterval 回傳一個 ID，clearInterval(this.timer) 用此 ID 清除。元件銷毀後若不清除，計時器持續佔用記憶體直到瀏覽器關閉。
 -->
 
 ---

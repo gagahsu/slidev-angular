@@ -202,6 +202,52 @@ export class ExampleService {
 -->
 
 ---
+layout: default
+---
+
+# 建立 Service — 小節練習
+
+補完 `CartService` 的裝飾器與共用變數，讓整個應用程式共用同一個 `cartCount`：
+
+```typescript
+import { ___ } from '@angular/core';
+
+@___(___) // 補完裝飾器與 Singleton 設定
+export class CartService {
+  // 宣告 cartCount，型別 number，初始值 0
+}
+```
+
+<!--
+考察 @Injectable 裝飾器與 providedIn: 'root' 的意義：這兩行決定 Service 是否為全域單例。
+-->
+
+---
+layout: default
+---
+
+# 建立 Service — 小節練習解答
+
+```typescript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CartService {
+  cartCount: number = 0;
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>providedIn: 'root'</code> 讓整個應用程式共用同一個 Service 實例（Singleton）——A 頁存入的值，B 頁可以直接讀取
+</div>
+
+<!--
+@Injectable 是 Service 的身份標記，缺少它 Angular 注入系統無法識別。providedIn: 'root' 讓這個倉庫在全站只有一間。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -273,6 +319,118 @@ export class SecondComponent {
 這就是在從置物櫃裡把貨物拿出來，灌給自己的變數！
 這樣，使用者就能在第二頁看到剛剛在第一頁填的 'Allen' 了。
 大叔特別提醒：這招非常適合在「登入後存取 Token」或是「多步驟結帳表單」使用喔！
+-->
+
+---
+
+# 注入 Service — inject() 現代寫法
+
+Angular 14+ 提供 `inject()` 函式，可取代 constructor 參數注入，直接以類別屬性方式宣告。
+
+```typescript
+// first.component.ts（發送方）
+import { inject } from '@angular/core';
+import { ExampleService } from '../@services/example.service';
+
+export class FirstComponent {
+  private exampleService = inject(ExampleService);
+
+  sendData() {
+    this.exampleService.userName = 'Allen';
+  }
+}
+```
+
+```typescript
+// second.component.ts（接收方）
+import { inject } from '@angular/core';
+import { ExampleService } from '../@services/example.service';
+
+export class SecondComponent {
+  userName = '';
+  private exampleService = inject(ExampleService);
+
+  constructor() {
+    this.userName = this.exampleService.userName;
+  }
+}
+```
+
+<!--
+inject() 是 Angular 14 推出的函式式注入，適合 Standalone Component。
+不需要寫 constructor 參數，直接在屬性初始化時呼叫 inject()，程式碼更簡潔。
+-->
+
+---
+
+# constructor 注入 vs inject() 比較
+
+| | constructor 注入 | inject() 注入 |
+| --- | --- | --- |
+| 語法 | `constructor(private s: Service) {}` | `private s = inject(Service)` |
+| Angular 版本 | 所有版本 | Angular 14+ |
+| 宣告位置 | constructor 括號內 | 類別屬性 |
+| 適用情境 | 舊版或需相容性的專案 | 新版 Standalone 推薦 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 兩種寫法注入的是<b>同一個 Service 實例</b>，功能完全相同；本課程新版範例以 <code>inject()</code> 為主流
+</div>
+
+<!--
+constructor 注入是傳統寫法，舊專案幾乎都長這樣。
+inject() 是新式函式寫法，可在 ch25（Cookie）、ch43（Dialog）、ch51（ReactiveForm）看到大量應用。
+-->
+
+---
+layout: default
+---
+
+# 頁面傳遞資料 — 小節練習
+
+A 頁面（`login.component.ts`）登入成功後，將 `token = 'abc123'` 存入 `AuthService`；B 頁面（`dashboard.component.ts`）在 `constructor` 中讀取並存入自己的 `token` 變數。補完兩頁面的程式碼：
+
+```typescript
+// A 頁面
+onLogin() {
+  this.authService.___ = 'abc123';
+}
+
+// B 頁面
+token = '';
+constructor(private authService: AuthService) {
+  this.token = ___;
+}
+```
+
+<!--
+考察 Service 跨頁傳值的完整流程：A 頁存值到 Service 屬性，B 頁讀取 Service 屬性。
+-->
+
+---
+layout: default
+---
+
+# 頁面傳遞資料 — 小節練習解答
+
+```typescript
+// A 頁面 — 存值
+onLogin() {
+  this.authService.token = 'abc123';
+}
+
+// B 頁面 — 取值
+token = '';
+constructor(private authService: AuthService) {
+  this.token = this.authService.token;  // 'abc123'
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 兩個頁面注入「同一個」Service 實例；A 頁寫入後切換到 B 頁，B 頁在 constructor 中即可讀到最新值
+</div>
+
+<!--
+Service 是中央倉庫：A 頁把貨物（token）存進去，B 頁進來直接提貨。這是跨路由傳值最常用的模式。
 -->
 
 ---

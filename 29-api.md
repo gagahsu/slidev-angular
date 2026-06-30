@@ -348,6 +348,62 @@ delApi(url: string) {
 -->
 
 ---
+layout: default
+---
+
+# HttpClient Service — 小節練習
+
+補完 `HttpClientService` 中的 `getApi` 與 `postApi` 方法：
+
+```typescript
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable({ providedIn: 'root' })
+export class HttpClientService {
+  constructor(private http: HttpClient) {}
+
+  // 補完：接收 url，回傳 GET 請求
+  getApi(___) {
+    return ___;
+  }
+
+  // 補完：接收 url 與 postData，回傳 POST 請求
+  postApi(___) {
+    return ___;
+  }
+}
+```
+
+<!--
+考察 HttpClient 四大方法的封裝寫法，以及 getApi 只需 url、postApi 需額外帶 body 參數的差異。
+-->
+
+---
+layout: default
+---
+
+# HttpClient Service — 小節練習解答
+
+```typescript
+getApi(url: string) {
+  return this.http.get(url);
+}
+
+postApi(url: string, postData: any) {
+  return this.http.post(url, postData);
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>getApi</code> 只需 <code>url</code> 一個參數；<code>postApi</code> 必須帶第二個參數作為 HTTP body——即使沒有資料也要傳入空物件 <code>&#123;&#125;</code>
+</div>
+
+<!--
+所有方法都直接 return this.http.xxx()，讓呼叫方決定如何 subscribe 處理回傳值，這是業界標準的 Service 封裝方式。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -409,6 +465,55 @@ Angular 的 HttpClient 回傳的是一個「神奇的預約信封（Observable�
 外送員（瀏覽器）是死活都不會幫你出餐發送請求的！
 只有當你呼叫了 `.subscribe((res) => { ... })`，訂單才會正式送出，當資料送回來時，就會灌進 `res` 變數裡，讓你可以在裡面印 log 或是指派給變數。
 這顆 subscribe 鈕，是新手漏寫率高達 99% 的超級地雷，請大家一定要牢牢記住！
+-->
+
+---
+layout: default
+---
+
+# 呼叫方法 — 小節練習
+
+在 `ngOnInit` 中透過注入的 `HttpClientService`，呼叫以下 GET API 並用 `console.log` 印出回傳結果：
+
+```
+https://api.freeapi.app/api/v1/public/randomusers
+```
+
+```typescript
+constructor(private http: HttpClientService) {}
+
+ngOnInit(): void {
+  // 補完呼叫與訂閱
+  this.___.___('https://api.freeapi.app/api/v1/public/randomusers')
+    .___((___)  => console.log(___));
+}
+```
+
+<!--
+考察 Service 注入 + getApi 呼叫 + subscribe 訂閱三步驟的完整寫法。
+-->
+
+---
+layout: default
+---
+
+# 呼叫方法 — 小節練習解答
+
+```typescript
+constructor(private http: HttpClientService) {}
+
+ngOnInit(): void {
+  this.http.getApi('https://api.freeapi.app/api/v1/public/randomusers')
+    .subscribe((res) => console.log(res));
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 HttpClient 回傳 Observable，必須 <code>.subscribe()</code> 才會實際發送請求——不加 subscribe 就像點餐沒按送出，瀏覽器不會對伺服器發出任何請求
+</div>
+
+<!--
+subscribe 的回呼函式參數 res 可自行命名，習慣上用 res（response 縮寫）代表伺服器回傳的整個回應物件。
 -->
 
 ---
