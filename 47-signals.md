@@ -51,20 +51,20 @@ layout: default
 
 # Outline
 
-- **第一部分：Signals 概念介紹**
-- **第二部分：以 Observable 實作狀態共享（回顧）**
-- **第三部分：改寫為 Signals 寫法**
-- **第四部分：在 Template 中使用 Signal**
-- **第五部分：偵測 Signal 值變化（effect）**
-- **第六部分：注意事項**
+- **Signals 概念介紹**
+- **以 Observable 實作狀態共享（回顧）**
+- **改寫為 Signals 寫法**
+- **在 Template 中使用 Signal**
+- **computed() 計算 Signal**
+- **偵測 Signal 值變化（effect）**
+- **注意事項**
 
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第一部分
-## Signals 概念介紹
+# Signals 概念介紹
 
 ---
 
@@ -105,8 +105,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第二部分
-## 以 Observable 實作狀態共享（回顧）
+# 以 Observable 實作狀態共享（回顧）
 
 ---
 
@@ -155,8 +154,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第三部分
-## 改寫為 Signals 寫法
+# 改寫為 Signals 寫法
 
 ---
 
@@ -216,8 +214,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第四部分
-## 在 Template 中使用 Signal
+# 在 Template 中使用 Signal
 
 ---
 
@@ -241,8 +238,99 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第五部分
-## 偵測 Signal 值變化（effect）
+# computed() 計算 Signal
+
+---
+
+# TypeScript Getter — 自動計算屬性
+
+**沒有 getter：** 每個方法都要手動更新衍生值
+
+```typescript
+level = 1;
+attack = 3;
+
+levelUp() {
+  this.level++;
+  this.attack = this.level * 3; // 忘記更新就會出錯
+}
+```
+
+**有 getter：** 定義一次，自動計算
+
+```typescript
+level = 1;
+
+get attack(): number {
+  return this.level * 3; // level 變了，attack 自動跟著變
+}
+
+levelUp() {
+  this.level++; // 不需要手動更新 attack
+}
+```
+
+<!--
+getter 是 TypeScript 語法，讓屬性變成「唯讀計算屬性」。
+在 ch22 練習中，我們用手動更新 attack/defense，getter 是更乾淨的替代方案。
+-->
+
+---
+
+# computed() — Signal 的響應式 Getter
+
+`computed()` 是 Signal 版本的 getter：依賴的 Signal 值一變，計算結果自動更新。
+
+```typescript
+import { signal, computed } from '@angular/core';
+
+export class AppComponent {
+  level = signal(1);
+  attack = computed(() => this.level() * 3);
+  defense = computed(() => this.level() * 2);
+
+  levelUp() {
+    this.level.update(v => v + 1);
+    // attack 與 defense 自動重新計算，不需要手動更新
+  }
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>computed()</code> 是<b>唯讀</b>的，不能呼叫 <code>.set()</code>；只要依賴的 Signal 改變，值就自動同步
+</div>
+
+<!--
+computed() 與 getter 概念一樣，差別在於 computed() 追蹤的是 Signal，變化時 Angular 自動通知 template 更新。
+-->
+
+---
+
+# Getter vs computed() 比較
+
+| | TypeScript Getter | Angular computed() |
+| --- | --- | --- |
+| 適用對象 | 一般屬性（非 Signal） | Signal |
+| 讀取方式 | `this.attack` | `this.attack()` |
+| Template 寫法 | `{{ attack }}` | `{{ attack() }}` |
+| 自動追蹤依賴 | ✗ | ✅ |
+| 可呼叫 .set() | ✗ | ✗（唯讀） |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 演進脈絡：手動更新屬性 → getter → computed()，三者解決同一個問題，Signal 場景下優先用 <code>computed()</code>
+</div>
+
+<!--
+總結：getter 和 computed() 都是「計算屬性」，只是適用的資料型態不同。
+記住：Signal 用 computed()，一般屬性用 getter。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 偵測 Signal 值變化（effect）
 
 ---
 
@@ -286,8 +374,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第六部分
-## 注意事項
+# 注意事項
 
 ---
 
