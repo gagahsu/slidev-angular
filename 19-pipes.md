@@ -298,7 +298,7 @@ layout: default
 layout: default
 ---
 
-# 練習 2：解題提示（1／6）
+# 練習 2：解題提示（1／8）
 ### TypeScript — 資料宣告
 
 ```typescript
@@ -327,7 +327,7 @@ products = [
 layout: default
 ---
 
-# 練習 2：解題提示（2／6）
+# 練習 2：解題提示（2／8）
 ### HTML — 廣告區與分類選單
 
 ```html
@@ -339,9 +339,9 @@ layout: default
   </div>
 
   <div class="main-panel">
-    <!-- 分類選單 -->
+    <!-- 分類選單（靠右；active 為藍底白字） -->
     <div class="category-menu">
-      <button>{{ categoryMenu[0] }}</button>
+      <button class="active">{{ categoryMenu[0] }}</button>
       <button>{{ categoryMenu[1] }}</button>
       <button>{{ categoryMenu[2] }}</button>
       <button>{{ categoryMenu[3] }}</button>
@@ -362,7 +362,7 @@ categoryMenu 是字串陣列，用索引 [0]~[3] 逐一取值放進 button。
 layout: default
 ---
 
-# 練習 2：解題提示（3／6）
+# 練習 2：解題提示（3／8）
 ### HTML — 商品列表
 
 ```html
@@ -397,85 +397,144 @@ layout: default
 layout: default
 ---
 
-# 練習 2：解題提示（4／6）
+# 練習 2：解題提示（4／8）
 ### CSS — 整體版型與廣告區
 
 ```css
 /* 整體左右版型 */
 .shop-layout {
-  display: flex;
-  gap: 1rem;
+  display: flex;               /* 左右欄排列 */
+  gap: 1rem;                   /* 廣告區與商品區的間距 */
+  padding: 1.5rem;             /* 內容與外框的距離 */
+  border-radius: 12px;         /* 四個角變圓 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* 浮雕陰影 */
 }
 
 /* 廣告區固定寬度，不隨畫面縮小 */
 .ad-panel {
-  width: 220px;
-  flex-shrink: 0;
+  width: 220px;      /* 固定寬度，不隨視窗縮小 */
+  flex-shrink: 0;    /* 禁止被 flex 壓縮 */
 }
 .ad-panel img {
-  width: 100%;
-  border-radius: 8px;
+  width: 100%;       /* 圖片撐滿廣告區寬度 */
+  border-radius: 8px; /* 圖片四角圓角 */
 }
 ```
 
 <!--
-shop-layout 用 flex 做左右欄分割。
-ad-panel 固定 220px，flex-shrink: 0 防止它被壓縮。
+shop-layout 用 flex 做左右欄分割。padding 讓內容和外框保持距離，border-radius 讓四個角變圓，box-shadow 製造出整體區塊浮起來的陰影感。ad-panel 固定 220px，flex-shrink: 0 防止它被壓縮。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：解題提示（5／6）
-### CSS — 分類選單與商品列表
+# 練習 2：解題提示（5／8）
+### CSS — 分類選單容器
 
 ```css
-/* 分類選單水平排列 */
+/* 分類選單靠右對齊，底部分隔線 */
 .category-menu {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-/* 商品列表五欄 grid */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
+  display: flex;                       /* 按鈕橫向排列 */
+  justify-content: flex-end;           /* 靠右對齊 */
+  gap: 0.5rem;                         /* 按鈕間距 */
+  padding-bottom: 0.75rem;             /* 分隔線上方的內距 */
+  margin-bottom: 1rem;                 /* 分隔線與商品格的距離 */
+  border-bottom: 1px solid #e2e8f0;   /* 灰色分隔線 */
 }
 ```
 
 <!--
-category-menu 用 flex 讓四個按鈕水平排列。
-product-grid 用 grid 五欄平均分配空間。
+category-menu 用 flex + justify-content: flex-end 讓按鈕靠右排列，對應圖片右上角的選單位置。gap 控制按鈕間距。padding-bottom 在選單下方留出內距，border-bottom 畫出一條灰色分隔線，視覺上把選單和商品格分開。margin-bottom 讓分隔線和商品格之間再保留額外空白。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：解題提示（6／6）
+# 練習 2：解題提示（6／8）
+### CSS — 分類按鈕樣式
+
+```css
+/* 分類按鈕：預設無底色、黑字 */
+.category-menu button {
+  padding: 4px 14px;         /* 上下 4px、左右 14px 內距 */
+  border: none;              /* 移除瀏覽器預設邊框 */
+  border-radius: 4px;        /* 輕微圓角 */
+  background: transparent;   /* 預設無底色 */
+  color: #333;               /* 深灰黑字 */
+  cursor: pointer;           /* 滑鼠移過去變手形 */
+  font-size: 0.9rem;         /* 字體略小 */
+}
+
+/* 選中狀態：藍色底色、白字 */
+.category-menu button.active {
+  background: #3b82f6;  /* 藍色底色 */
+  color: white;         /* 白字 */
+}
+```
+
+<!--
+button 預設無底色黑字，加上 .active class 才變成藍底白字。這個「預設 + active 覆蓋」的模式和其他章節的分類按鈕邏輯完全一樣，border: none 移除瀏覽器預設按鈕邊框。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（7／8）
+### CSS — 商品列表
+
+```css
+/* 商品列表五欄 grid */
+.product-grid {
+  display: grid;                          /* 啟用 Grid 排版 */
+  grid-template-columns: repeat(5, 1fr); /* 平均分成 5 欄 */
+  gap: 1rem;                              /* 欄與列的間距 */
+}
+```
+
+**`grid-template-columns` 語法說明：**
+
+| 寫法 | 效果 |
+|---|---|
+| `repeat(5, 1fr)` | 平均分成 5 欄（本例） |
+| `repeat(3, 1fr)` | 改成 3 欄 |
+| `200px 1fr 1fr` | 第一欄固定 200px，其餘兩欄均分 |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>1fr</code> = 「1 份剩餘空間」；<code>repeat(N, 1fr)</code> = 平均切成 N 欄，改數字就能調整欄數
+</div>
+
+<!--
+product-grid 用 CSS Grid 五欄平均分配空間。Grid 和 Flexbox 的差別在於：Flexbox 控制「一個方向」的排列，Grid 同時控制「欄和列」。`repeat(5, 1fr)` 是最常用的等寬多欄語法——同學只要記住這個格式，改數字就能換欄數。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（8／8）
 ### CSS — 商品卡片與價格
 
 ```css
 /* 商品卡片圖片 */
 .product-card img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: contain;
+  width: 100%;            /* 撐滿卡片寬度 */
+  aspect-ratio: 1 / 1;   /* 強制正方形比例 */
+  object-fit: contain;   /* 圖片縮放不裁切、不變形 */
 }
 
 /* 商品名稱 */
 .product-card p {
-  font-size: 0.9rem;
-  margin: 0.25rem 0;
+  font-size: 0.9rem;     /* 字體略小 */
+  margin: 0.25rem 0;     /* 上下留細間距 */
 }
 
 /* 價格紅字 */
 .price {
-  color: #e53e3e;
-  font-weight: bold;
+  color: #e53e3e;        /* 紅色 */
+  font-weight: bold;     /* 粗體 */
 }
 ```
 
