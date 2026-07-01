@@ -323,7 +323,7 @@ export class SecondComponent {
 
 ---
 
-# 注入 Service — inject() 現代寫法
+# 注入 Service — inject() 現代寫法（發送方）
 
 Angular 14+ 提供 `inject()` 函式，可取代 constructor 參數注入，直接以類別屬性方式宣告。
 
@@ -341,6 +341,17 @@ export class FirstComponent {
 }
 ```
 
+<!--
+inject() 是 Angular 14 推出的函式式注入，適合 Standalone Component。
+不需要寫 constructor 參數，直接在屬性初始化時呼叫 inject()，程式碼更簡潔。
+-->
+
+---
+
+# 注入 Service — inject() 現代寫法（接收方）
+
+接收方同樣用 `inject()` 取得 Service 實例，讀值邏輯放在 `constructor` 中。
+
 ```typescript
 // second.component.ts（接收方）
 import { inject } from '@angular/core';
@@ -357,8 +368,8 @@ export class SecondComponent {
 ```
 
 <!--
-inject() 是 Angular 14 推出的函式式注入，適合 Standalone Component。
-不需要寫 constructor 參數，直接在屬性初始化時呼叫 inject()，程式碼更簡潔。
+接收方一樣用 inject() 拿到 Service 實例，屬性宣告即完成注入。
+constructor 內讀值時機與傳統寫法相同，需確保發送方已寫入資料。
 -->
 
 ---
