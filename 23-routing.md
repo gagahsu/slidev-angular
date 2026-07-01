@@ -687,7 +687,30 @@ export class AppComponent {
 
 ---
 
-# TS 導航 — 完整範例（一）元件設定
+# TS 導航 — 完整範例（一）路由設定
+
+以「登入驗證後跳轉」為例。先在 `app.routes.ts` 定義 `login` 與 `dashboard` 路線：
+
+```typescript
+// app.routes.ts
+import { LoginComponent }     from './login/login.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
+export const routes: Routes = [
+  { path: 'login',     component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: '',          redirectTo: '/login', pathMatch: 'full' },
+];
+```
+
+<!--
+在看元件程式碼之前，先確認路由表有把 login 和 dashboard 都設定好。
+login 是入口頁，dashboard 是登入成功後的目標頁，根路徑重新導向到 login。
+-->
+
+---
+
+# TS 導航 — 完整範例（二）元件設定
 
 以「登入驗證後跳轉」為例。先看元件的設定部分：
 
@@ -718,7 +741,7 @@ export class LoginComponent {
 
 ---
 
-# TS 導航 — 完整範例（二）邏輯方法
+# TS 導航 — 完整範例（三）邏輯方法
 
 接著是 `login()` 方法，包含判斷與跳轉邏輯：
 
@@ -748,15 +771,26 @@ export class LoginComponent {
 
 ---
 
-# TS 導航 — 完整範例（二）HTML
+# TS 導航 — 完整範例（四）HTML
 
 `login.component.html`：
 
 ```html
 <input [(ngModel)]="password" placeholder="輸入密碼" />
 <button (click)="login()">登入</button>
-<p *ngIf="error">密碼錯誤，請再試一次</p>
+@if (error) {
+  <p>密碼錯誤，請再試一次</p>
+}
 ```
+
+<!--
+HTML 這頁很簡單，三行而已。
+ngModel 綁定輸入框，click 觸發 login()，@if 控制錯誤訊息顯示。
+-->
+
+---
+
+# TS 導航 — 完整範例（五）執行流程
 
 點擊按鈕後的執行流程：
 
@@ -772,7 +806,6 @@ export class LoginComponent {
 </div>
 
 <!--
-HTML 這頁很簡單，三行而已。
 重點是執行流程要說清楚：click 觸發 login()，login() 先判斷，判斷完才決定要跳還是顯示錯誤。
 這個「先判斷再跳」的思路，才是學程式導航最重要的觀念。
 -->
