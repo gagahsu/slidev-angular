@@ -146,6 +146,7 @@ npm install ngx-cookie-service@19.0.0
 使用 `inject()` 將 `CookieService` 注入為類別屬性，後續即可透過該屬性操作 cookie。
 
 ```typescript
+// app.component.ts
 import { Component, inject } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -175,15 +176,22 @@ export class AppComponent {
 使用 `cookieService.set()` 儲存資料，前三個參數最為關鍵：key 名稱、儲存值、過期天數。Cookie 到期後瀏覽器將自動刪除。
 
 ```typescript
-this.cookieService.set(
-  'user_display_name', // 1. Name（名稱）
-  'Allen',             // 2. Value（值）
-  7,                   // 3. Expires（過期天數）
-  '/',                 // 4. Path（路徑）
-  '',                  // 5. Domain（網域）
-  true,                // 6. Secure（加密傳輸）
-  'Strict'             // 7. SameSite（跨站限制）
-);
+// app.component.ts
+export class AppComponent {
+  cookieService = inject(CookieService);
+
+  constructor() {
+    this.cookieService.set(
+      'user_display_name', // 1. Name（名稱）
+      'Allen',             // 2. Value（值）
+      7,                   // 3. Expires（過期天數）
+      '/',                 // 4. Path（路徑）
+      '',                  // 5. Domain（網域）
+      true,                // 6. Secure（加密傳輸）
+      'Strict'             // 7. SameSite（跨站限制）
+    );
+  }
+}
 ```
 
 <!--
@@ -219,7 +227,14 @@ this.cookieService.set(
 使用 `cookieService.get(key)` 讀取對應 key 的 cookie值，不存在或已過期則回傳空字串。
 
 ```typescript
-console.log(this.cookieService.get('user_display_name'));
+// app.component.ts
+export class AppComponent {
+  cookieService = inject(CookieService);
+
+  showName() {
+    console.log(this.cookieService.get('user_display_name'));
+  }
+}
 ```
 
 <!--
@@ -235,22 +250,16 @@ layout: default
 
 # Cookie — 小節練習
 
-注入 `CookieService` 後，儲存一個有效期 **30 天**的 Cookie（`key: 'theme'`，`value: 'dark'`），再讀取並用 `console.log` 印出：
+請實作以下需求：
 
-```typescript
-// 補完儲存
-this.cookieService.___(
-  ___,  // key
-  ___,  // value
-  ___   // 過期天數
-);
-
-// 補完讀取
-console.log(this.cookieService.___('theme'));
-```
+1. 在 `LoginComponent`（`login.component.ts`）注入 `CookieService`
+2. 新增 `onLoginSuccess()` method，登入成功時將 `theme` 設為 `'dark'`，有效期 **30 天**
+3. 在 `DashboardComponent`（`dashboard.component.ts`）注入 `CookieService`
+4. 進入 dashboard 時（`constructor`），讀取 `theme` 的值並用 `console.log` 印出
 
 <!--
 考察 cookieService.set() 前三個參數（key、value、過期天數）與 cookieService.get() 的基本語法。
+情境改為登入頁存值、儀表板頁讀值，貼近實務上跨頁面共享 Cookie 的用法。改為需求描述題，讓學員自行寫出完整程式碼而非填空。
 -->
 
 ---
@@ -260,16 +269,34 @@ layout: default
 # Cookie — 小節練習解答
 
 ```typescript
-this.cookieService.set('theme', 'dark', 30);
-console.log(this.cookieService.get('theme'));  // dark
+// login.component.ts
+export class LoginComponent {
+  cookieService = inject(CookieService);
+
+  onLoginSuccess() {
+    this.cookieService.set('theme', 'dark', 30);
+  }
+}
+```
+
+```typescript
+// dashboard.component.ts
+export class DashboardComponent {
+  cookieService = inject(CookieService);
+
+  constructor() {
+    console.log(this.cookieService.get('theme'));  // dark
+  }
+}
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>set</code> 第三個參數為天數，到期後瀏覽器自動刪除；<code>get</code> 若 key 不存在或已過期則回傳空字串
+💡 <code>set</code> 第三個參數為天數，到期後瀏覽器自動刪除；Cookie 綁定網域而非單一元件，故不同頁面（login → dashboard）都能讀到同一份資料
 </div>
 
 <!--
 set 的第三個參數過期天數是 Cookie 的重要特性：不設定的話預設是 Session Cookie，關掉瀏覽器就消失。
+Cookie 綁定網域，所以就算換了頁面元件，只要同網域就能共用，這也是它跟元件內部變數最大的不同。
 -->
 
 ---
@@ -349,16 +376,29 @@ localStorage 與 sessionStorage 皆以 key-value 方式儲存資料，提供兩�
 
 # 儲存跟讀取 — 程式碼範例
 
-兩者 API 語法相同，只需替換前綴。屬於原生 Web API，不需安裝套件。
+兩者 API 語法相同，只需替換前綴。屬於原生 Web API，不需 import、不需 inject，元件內直接呼叫即可。
 
-```javascript
-// 儲存資料
-localStorage.setItem('name', 'Allen');
-sessionStorage.setItem('name', 'Allen');
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
 
-// 讀取資料
-localStorage.getItem('name');
-sessionStorage.getItem('name');
+@Component({
+  selector: 'app-root',
+  imports: [],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
+})
+export class AppComponent {
+  saveName() {
+    localStorage.setItem('name', 'Allen');
+    sessionStorage.setItem('name', 'Allen');
+  }
+
+  showName() {
+    console.log(localStorage.getItem('name'));
+    console.log(sessionStorage.getItem('name'));
+  }
+}
 ```
 
 <!--
@@ -378,22 +418,15 @@ layout: default
 
 # localStorage — 小節練習
 
-將使用者物件 `{ name: 'Allen', level: 5 }` 儲存到 localStorage（key 為 `'user'`），再讀取並解析還原成物件，印出 `name` 與 `level`：
+請實作以下需求：
 
-```typescript
-const user = { name: 'Allen', level: 5 };
-
-// 儲存（localStorage 只能存字串，請先轉換）
-localStorage.setItem('user', ___);
-
-// 讀取並還原成物件
-const raw = localStorage.getItem('user');
-const parsed = ___(raw!);
-console.log(parsed.name, parsed.level);
-```
+1. 定義使用者物件 `const user = { name: 'Allen', level: 5 }`
+2. 將 `user` 物件儲存到 localStorage（`key: 'user'`）— 注意 localStorage 只能存字串
+3. 讀取 localStorage 中的 `user`，還原成物件
+4. 用 `console.log` 印出還原後物件的 `name` 與 `level`
 
 <!--
-考察 localStorage 只能存字串的限制：存入前需 JSON.stringify()，取出後需 JSON.parse()，這是存物件的必備組合技。
+考察 localStorage 只能存字串的限制：存入前需 JSON.stringify()，取出後需 JSON.parse()，這是存物件的必備組合技。改為需求描述題，讓學員自行寫出完整程式碼。
 -->
 
 ---
