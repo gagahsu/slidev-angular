@@ -102,6 +102,10 @@ class: flex flex-col justify-center items-center text-center
 
 **Service 不只能放變數，也能放多個頁面共用的方法。**
 
+<div class="mt-4 p-3 bg-red-50 border-l-4 border-red-400 text-gray-700 text-sm text-left">
+⚠️ <b>限制：</b> Service 只在 SPA 應用程式「存活期間」內有效，僅適用於 <b>router 內部路由跳轉</b>。若使用者直接輸入網址、按 F5 重新整理、或開新分頁，Angular 應用程式會重新啟動，Service 中的資料會全部歸零。
+</div>
+
 <!--
 你想想看，今天我們點擊路由從第一頁切換到第二頁。
 因為第一頁的元件已經被卸載、銷毀了，所以第二頁根本抓不到第一頁大腦裡的變數。
@@ -287,6 +291,7 @@ export class FirstComponent {
 接著在送出方法裡，直接寫 `this.exampleService.userName = 'Allen'`。
 看！我們直接把貨物塞進了倉庫的置物櫃裡。
 A 頁的任務到此圓滿完成！
+大叔特別提醒：這個倉庫只在應用程式「運作期間」有效！只要使用者按 F5 重新整理、直接在網址列輸入新網址、或是開新分頁，整個 Angular 應用程式會重新啟動，倉庫就會被砸掉重蓋，裡面的貨物通通清空。這招只適合處理 SPA 內部靠路由（router）切換頁面的情境。
 -->
 
 ---
@@ -744,27 +749,66 @@ layout: two-cols
 layout: default
 ---
 
-# 練習 2：解題提示
+# 練習 2：解題提示（子元件）
 ### 提示說明
 
-1. 子元件宣告 `output<string>()` 變數與 `inputValue` 變數
-2. 子元件按鈕 `(click)` 呼叫方法，方法中執行 `.emit(this.inputValue)`
-3. 父元件 HTML 監聽子元件的 output：
-   ```html
-   <app-second (myOutput)="onReceive($event)"></app-second>
+用物件 `{ key1: value1, key2: value2 }` 的形式打包資料，而不是只傳單一字串：
+
+1. 宣告一個物件變數存放要傳遞的值：
+   ```typescript
+   inputData = { value: '', time: '' };
    ```
-4. 父元件宣告接收變數，在 `onReceive()` 方法中賦值
+2. 宣告 output，型別也寫成物件：
+   ```typescript
+   myOutput = output<{ value: string; time: string }>();
+   ```
+3. 按鈕 `(click)` 觸發方法，把整個物件 `emit` 出去：
+   ```typescript
+   sendData() {
+     this.myOutput.emit(this.inputData);
+   }
+   ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>記得</b> 子元件需匯入 <code>FormsModule</code>（雙向繫結用），父元件需匯入子元件。
+💡 用物件包裝的好處：以後想多傳一個欄位，只要在物件裡加 <code>key</code>，不需要改 output 的參數個數。
 </div>
 
 <!--
-大叔揭曉這題的實作重點：
-子元件宣告 `myOutput = output<string>()`，並在按鈕 click 時調用 `this.myOutput.emit(this.inputValue)`。
-父元件在 HTML 寫上 `(myOutput)="onReceive($event)"`。
-在 TS 大腦裡寫 `onReceive(event: string) { this.receivedValue = event; }`。
-只要多寫幾次，這種「子元件 emit，父元件 event 接收」的黃金公式就會變成你的反射動作了！
+大叔提醒：子元件不要直接 emit 一個字串，而是先把值包成一個物件，比如 `inputData = { value: '', time: '' }`。
+宣告輸出時，型別也跟著寫成物件泛型：`myOutput = output<{ value: string; time: string }>()`。
+按鈕點擊時，直接把整個 `inputData` 物件 emit 出去，這樣一次可以帶多個欄位，比起單獨傳一個字串更有彈性。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示（父元件）
+### 提示說明
+
+父元件用同形狀的物件 `{ key1: value1, key2: value2 }` 接收資料：
+
+```typescript
+receivedData = { value: '', time: '' };
+
+onReceive(event: { value: string; time: string }) {
+  this.receivedData = event;  // $event 直接整包存起來
+}
+```
+
+```html
+<app-second (myOutput)="onReceive($event)"></app-second>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>$event</code> 是整包物件，直接存起來即可，不用逐欄位拆開賦值。父元件記得匯入子元件。
+</div>
+
+<!--
+父元件這邊，一樣準備一個同樣形狀的物件 `receivedData = { value: '', time: '' }` 來裝收到的貨。
+在 HTML 監聽 `(myOutput)="onReceive($event)"`，這時候的 `$event` 就是那整包物件，不是單一字串了。
+在 `onReceive` 方法裡，直接把 `event` 整包塞進 `receivedData` 即可，不需要拆開一個一個賦值。
+這樣做的好處是，物件是「傳址」的容器，以後想多傳幾個欄位，只要往物件裡加屬性，不需要改 output 的參數個數，擴充性更好！
 -->
 
 ---

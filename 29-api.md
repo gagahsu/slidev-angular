@@ -353,30 +353,17 @@ layout: default
 
 # HttpClient Service — 小節練習
 
-補完 `HttpClientService` 中的 `getApi` 與 `postApi` 方法：
+請根據前面投影片的內容，建立 `HttpClientService`：
 
-```typescript
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
-@Injectable({ providedIn: 'root' })
-export class HttpClientService {
-  constructor(private http: HttpClient) {}
-
-  // 補完：接收 url，回傳 GET 請求
-  getApi(___) {
-    return ___;
-  }
-
-  // 補完：接收 url 與 postData，回傳 POST 請求
-  postApi(___) {
-    return ___;
-  }
-}
-```
+1. 建立 `http-service/http-client.service.ts`，加上 `@Injectable({ providedIn: 'root' })`
+2. 透過 constructor 注入 `HttpClient`
+3. 撰寫 `getApi(url: string)`，回傳 GET 請求
+4. 撰寫 `postApi(url: string, postData: any)`，回傳 POST 請求
+5. 撰寫 `putApi(url: string, putData: any)`，回傳 PUT 請求
+6. 撰寫 `delApi(url: string)`，回傳 DELETE 請求
 
 <!--
-考察 HttpClient 四大方法的封裝寫法，以及 getApi 只需 url、postApi 需額外帶 body 參數的差異。
+考察 HttpClient 四大方法的封裝寫法，getApi/delApi 只需 url，postApi/putApi 需額外帶 body 參數。改為需求描述題，讓學員自行從零建立 Service 檔案與方法。
 -->
 
 ---
@@ -393,10 +380,18 @@ getApi(url: string) {
 postApi(url: string, postData: any) {
   return this.http.post(url, postData);
 }
+
+putApi(url: string, putData: any) {
+  return this.http.put(url, putData);
+}
+
+delApi(url: string) {
+  return this.http.delete(url);
+}
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>getApi</code> 只需 <code>url</code> 一個參數；<code>postApi</code> 必須帶第二個參數作為 HTTP body——即使沒有資料也要傳入空物件 <code>&#123;&#125;</code>
+💡 <code>getApi</code>、<code>delApi</code> 只需 <code>url</code> 一個參數；<code>postApi</code>、<code>putApi</code> 必須帶第二個參數作為 HTTP body——即使沒有資料也要傳入空物件 <code>&#123;&#125;</code>
 </div>
 
 <!--
