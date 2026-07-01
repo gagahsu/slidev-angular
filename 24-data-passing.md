@@ -592,14 +592,14 @@ layout: default
 # 練習 1：解題提示
 ### 提示說明
 
-1. 子元件宣告三個 `@Input` 變數（對應三個欄位）
-2. 父元件宣告三個變數，各用 `[(ngModel)]` 與輸入框雙向繫結
+1. 子元件宣告三個 `@Input` 變數：`userName`、`userEmail`、`userAddress`
+2. 父元件宣告三個變數，各用 `[(ngModel)]` 與輸入框（使用者名稱、使用者 Email、使用者地址）雙向繫結
 3. 父元件 HTML 中的子元件標籤：
    ```html
-   <app-second [name]="name" [age]="age" [title]="title">
+   <app-second [userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress">
    </app-second>
    ```
-4. 子元件 HTML 中用 `{{ name }}`、`{{ age }}`、`{{ title }}` 顯示
+4. 子元件 HTML 中用 `{{ userName }}`、`{{ userEmail }}`、`{{ userAddress }}` 顯示
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 父元件需匯入 <code>FormsModule</code>（雙向繫結用）與 <code>SecondComponent</code>（子元件用）。
@@ -607,11 +607,100 @@ layout: default
 
 <!--
 大叔給大家點出核心思路：
-子元件的 TS 要寫三個帶有 `@Input()` 裝飾器的變數。
-父元件在 HTML 呼叫子元件時，要連寫三個中括號綁定，像是 `[name]="name" [age]="age" [title]="title"`。
+子元件的 TS 要寫三個帶有 `@Input()` 裝飾器的變數：userName、userEmail、userAddress。
+父元件在 HTML 呼叫子元件時，要連寫三個中括號綁定，像是 `[userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress"`。
 還有，別忘了在父元件的 TS 匯入子元件的 class，並且在 HTML 輸入框加上 `[(ngModel)]` 雙向綁定。
 小括號、中括號要分清楚喔。
-只要這幾條線連上了，你在父網頁打字，子元件的卡片就會即時亮起來！
+只要這幾條線連上了，你在頁面A打字，頁面B（組件）就會即時亮起來！
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（子元件）
+
+```typescript
+// second.component.ts
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-second',
+  standalone: true,
+  templateUrl: './second.component.html',
+})
+export class SecondComponent {
+  @Input() userName: string = '';
+  @Input() userEmail: string = '';
+  @Input() userAddress: string = '';
+}
+```
+
+```html
+<!-- second.component.html -->
+<h3>頁面B(組件)</h3>
+<p>使用者名稱：{{ userName }}</p>
+<p>使用者Email：{{ userEmail }}</p>
+<p>使用者地址：{{ userAddress }}</p>
+```
+
+<!--
+子元件開三個接收天線：userName、userEmail、userAddress，並在 HTML 上用雙大括號直接顯示出來。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（父元件 TS）
+
+```typescript
+// first.component.ts
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { SecondComponent } from './second.component';
+
+@Component({
+  selector: 'app-first',
+  standalone: true,
+  imports: [FormsModule, SecondComponent],
+  templateUrl: './first.component.html',
+})
+export class FirstComponent {
+  userName = '';
+  userEmail = '';
+  userAddress = '';
+}
+```
+
+<!--
+父元件需匯入 FormsModule（供 ngModel 雙向繫結用）與 SecondComponent（子元件）。
+宣告 userName、userEmail、userAddress 三個變數，對應三個輸入欄位。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（父元件 HTML）
+
+```html
+<!-- first.component.html -->
+<h3>頁面A</h3>
+使用者名稱：<input [(ngModel)]="userName">
+使用者Email：<input [(ngModel)]="userEmail">
+使用者地址：<input [(ngModel)]="userAddress">
+
+<app-second [userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress"></app-second>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 三個輸入框各自 <code>[(ngModel)]</code> 雙向繫結，再各自用 <code>[屬性]="變數"</code> 傳給子元件，缺一不可。
+</div>
+
+<!--
+父元件用 ngModel 雙向繫結三個輸入框的值，再逐一用中括號綁定傳給子元件的三個 @Input 插孔。
+只要輸入框字一變，userName/userEmail/userAddress 立刻更新，子元件的三個插孔也跟著同步顯示。
 -->
 
 ---
@@ -750,33 +839,32 @@ layout: default
 ---
 
 # 練習 2：解題提示（子元件）
-### 提示說明
 
-用物件 `{ key1: value1, key2: value2 }` 的形式打包資料，而不是只傳單一字串：
+頁面B(組件) 有三個輸入框（使用者名稱、使用者Email、使用者地址）與一個按鈕。用物件 `{ key1: value1, key2: value2 }` 打包三個欄位，而不是分開傳三次：
 
-1. 宣告一個物件變數存放要傳遞的值：
+1. 宣告一個物件變數存放三個欄位的值：
    ```typescript
-   inputData = { value: '', time: '' };
+   userData = { userName: '', userEmail: '', userAddress: '' };
    ```
 2. 宣告 output，型別也寫成物件：
    ```typescript
-   myOutput = output<{ value: string; time: string }>();
+   myOutput = output<{ userName: string; userEmail: string; userAddress: string }>();
    ```
 3. 按鈕 `(click)` 觸發方法，把整個物件 `emit` 出去：
    ```typescript
    sendData() {
-     this.myOutput.emit(this.inputData);
+     this.myOutput.emit(this.userData);
    }
    ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 用物件包裝的好處：以後想多傳一個欄位，只要在物件裡加 <code>key</code>，不需要改 output 的參數個數。
+💡 三個欄位用一個物件包起來，一次 emit 就能把三筆資料一起傳給父元件，不用開三個 output。
 </div>
 
 <!--
-大叔提醒：子元件不要直接 emit 一個字串，而是先把值包成一個物件，比如 `inputData = { value: '', time: '' }`。
-宣告輸出時，型別也跟著寫成物件泛型：`myOutput = output<{ value: string; time: string }>()`。
-按鈕點擊時，直接把整個 `inputData` 物件 emit 出去，這樣一次可以帶多個欄位，比起單獨傳一個字串更有彈性。
+大叔提醒：子元件不要對三個欄位各自開一個 output，而是先把三個欄位包成一個物件，比如 `userData = { userName: '', userEmail: '', userAddress: '' }`。
+宣告輸出時，型別也跟著寫成物件泛型：`myOutput = output<{ userName: string; userEmail: string; userAddress: string }>()`。
+按鈕點擊時，直接把整個 `userData` 物件 emit 出去，一次搞定三筆資料。
 -->
 
 ---
@@ -786,12 +874,12 @@ layout: default
 # 練習 2：解題提示（父元件）
 ### 提示說明
 
-父元件用同形狀的物件 `{ key1: value1, key2: value2 }` 接收資料：
+頁面A 沒有輸入框，只負責顯示從頁面B(組件) 收到的三個欄位。父元件用同形狀的物件 `{ key1: value1, key2: value2 }` 接收資料：
 
 ```typescript
-receivedData = { value: '', time: '' };
+receivedData = { userName: '', userEmail: '', userAddress: '' };
 
-onReceive(event: { value: string; time: string }) {
+onReceive(event: { userName: string; userEmail: string; userAddress: string }) {
   this.receivedData = event;  // $event 直接整包存起來
 }
 ```
@@ -805,10 +893,128 @@ onReceive(event: { value: string; time: string }) {
 </div>
 
 <!--
-父元件這邊，一樣準備一個同樣形狀的物件 `receivedData = { value: '', time: '' }` 來裝收到的貨。
-在 HTML 監聽 `(myOutput)="onReceive($event)"`，這時候的 `$event` 就是那整包物件，不是單一字串了。
+父元件這邊，一樣準備一個同樣形狀的物件 `receivedData = { userName: '', userEmail: '', userAddress: '' }` 來裝收到的貨。
+在 HTML 監聽 `(myOutput)="onReceive($event)"`，這時候的 `$event` 就是那整包物件，包含三個欄位。
 在 `onReceive` 方法裡，直接把 `event` 整包塞進 `receivedData` 即可，不需要拆開一個一個賦值。
 這樣做的好處是，物件是「傳址」的容器，以後想多傳幾個欄位，只要往物件裡加屬性，不需要改 output 的參數個數，擴充性更好！
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（子元件 TS）
+
+```typescript
+// second.component.ts
+import { Component, output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-second',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './second.component.html',
+})
+export class SecondComponent {
+  userData = { userName: '', userEmail: '', userAddress: '' };
+  myOutput = output<{ userName: string; userEmail: string; userAddress: string }>();
+
+  sendData() {
+    this.myOutput.emit(this.userData);
+  }
+}
+```
+
+<!--
+子元件宣告 userData 物件裝三個欄位，並開一個 output 型別同樣是三個欄位的物件。
+按鈕點擊時呼叫 sendData()，把整包 userData 一次 emit 出去。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（子元件 HTML）
+
+```html
+<!-- second.component.html -->
+<h3>頁面B(組件)</h3>
+使用者名稱：<input [(ngModel)]="userData.userName"><br>
+使用者Email：<input [(ngModel)]="userData.userEmail"><br>
+使用者地址：<input [(ngModel)]="userData.userAddress"><br>
+<button (click)="sendData()">output輸出</button>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 三個輸入框都用 <code>[(ngModel)]</code> 直接綁定物件的屬性（如 <code>userData.userName</code>），不用額外宣告三個獨立變數。
+</div>
+
+<!--
+三個輸入框直接雙向繫結 userData 物件裡的三個屬性，這樣打字時物件內容會即時更新，按鈕按下去 emit 出去的就是最新資料。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（父元件 TS）
+
+```typescript
+// first.component.ts
+import { Component } from '@angular/core';
+import { SecondComponent } from './second.component';
+
+@Component({
+  selector: 'app-first',
+  standalone: true,
+  imports: [SecondComponent],
+  templateUrl: './first.component.html',
+})
+export class FirstComponent {
+  receivedData = { userName: '', userEmail: '', userAddress: '' };
+
+  onReceive(event: { userName: string; userEmail: string; userAddress: string }) {
+    this.receivedData = event;
+  }
+}
+```
+
+<!--
+父元件宣告 receivedData 物件，形狀跟子元件傳來的一致。onReceive 方法直接把收到的整包 event 存進 receivedData。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（父元件 HTML）
+
+```html
+<!-- first.component.html -->
+<h3>頁面A</h3>
+使用者名稱：{{ receivedData.userName }}<br>
+使用者Email：{{ receivedData.userEmail }}<br>
+使用者地址：{{ receivedData.userAddress }}
+
+<app-second (myOutput)="onReceive($event)"></app-second>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 頁面A 只顯示資料、沒有輸入框；按下頁面B的「output輸出」按鈕後，頁面A 上方三個欄位才會即時顯示收到的值。
+</div>
+
+<!--
+頁面A 沒有輸入框，只用雙大括號顯示 receivedData 的三個屬性。
+子元件按下按鈕 emit 後，(myOutput) 監聽器觸發 onReceive，畫面上的三個欄位就會立刻更新顯示。
+-->
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 父元件不需要知道子元件內部怎麼組裝資料，只要照物件形狀宣告 <code>receivedData</code> 接住 <code>$event</code> 即可。
+</div>
+
+<!--
+父元件監聽子元件的 myOutput 事件，收到的 $event 就是子元件那包 { value, time } 物件，直接整包存進 receivedData，畫面上就能各自取出 value 跟 time 顯示。
 -->
 
 ---
