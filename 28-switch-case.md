@@ -125,56 +125,6 @@ switch (變數名稱或運算式) {
 -->
 
 ---
-layout: default
----
-
-# switch — 小節練習
-
-宣告 `statusCode = 404`，用 `switch` 依 HTTP 狀態碼印出對應訊息：
-
-- `200` → `'請求成功'`
-- `404` → `'找不到頁面'`
-- `500` → `'伺服器錯誤'`
-- `default` → `'未知狀態'`
-
-<!--
-考察 switch、case、default、break 四個關鍵字的完整寫法。
--->
-
----
-layout: default
----
-
-# switch — 小節練習解答
-
-```typescript
-let statusCode = 404;
-
-switch (statusCode) {
-  case 200:
-    console.log('請求成功');
-    break;
-  case 404:
-    console.log('找不到頁面');  // 印出此行
-    break;
-  case 500:
-    console.log('伺服器錯誤');
-    break;
-  default:
-    console.log('未知狀態');
-    break;
-}
-```
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 每個 <code>case</code> 結尾必須加 <code>break</code>，否則會繼續往下執行（fall-through），導致多個 case 的程式碼連續被執行
-</div>
-
-<!--
-HTTP 狀態碼是 switch 的絕佳應用場景：有限的已知值、每個 case 對應獨立處理邏輯。
--->
-
----
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -285,62 +235,6 @@ switch (this.testNum) {
 -->
 
 ---
-layout: default
----
-
-# case 與 break — 小節練習
-
-`testNum = 2` 時，以下兩個版本各自的輸出是什麼？找出差異並說明原因：
-
-```typescript
-let testNum = 2;
-
-// 版本 A（缺少 break）
-switch (testNum) {
-  case 1: console.log('一');
-  case 2: console.log('二');
-  case 3: console.log('三');
-}
-
-// 版本 B（有 break）
-switch (testNum) {
-  case 1: console.log('一'); break;
-  case 2: console.log('二'); break;
-  case 3: console.log('三'); break;
-}
-```
-
-<!--
-考察 fall-through 穿透機制：版本A缺少 break，匹配後繼續往下執行所有剩餘 case。
--->
-
----
-layout: default
----
-
-# case 與 break — 小節練習解答
-
-**版本 A 輸出（fall-through）：**
-```
-二
-三
-```
-`case 2` 匹配成功後，因為沒有 `break`，程式穿透繼續執行 `case 3`，直到 switch 結束。
-
-**版本 B 輸出（正確）：**
-```
-二
-```
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>break</code> 是跳出 switch 的煞車。缺少 <code>break</code> 的 case 會像剎車壞掉的卡車，撞穿所有後續的 case 繼續執行
-</div>
-
-<!--
-fall-through 在極少數情況下是刻意設計的（例如多個 case 共用同一段邏輯），但 99% 情況下都是 bug。
--->
-
----
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -386,6 +280,61 @@ switch (this.testNum * 3) {
 比如結果是 6，它再拿著這個 6，去底下每一個 `case` 裡敲門，看看誰是 6。
 所以在 switch 括號裡，算術加減乘除都是完全合法的！
 大家回去可以在自己的 TS 練習檔裡，試著把這段 code 敲敲看，觀察它的執行結果！
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 章節總練習
+# Chapter Practice
+
+<!--
+好，switch case 的重點都學完了，我們馬上來做一個總複習的實戰練習！
+-->
+
+---
+layout: default
+---
+
+# 練習：HTTP 狀態碼分類
+### 任務說明
+
+1. 宣告 `let statusCode = 404;`
+2. `switch()` 括號內**必須放入運算式**，取出 `statusCode` 的百位數
+3. 依百位數印出對應訊息：
+   - `2` → `'請求成功'`
+   - `4` → `'客戶端錯誤'`
+   - `5` → `'伺服器錯誤'`
+   - `default` → `'未知狀態'`
+4. 每個 `case` 記得加上 `break`
+
+<!--
+這題把整章重點串起來：switch/case/default/break 的基本結構，加上括號內運算式的應用。
+比對 HTTP 狀態碼百位數是業界常見的實務寫法，例如 404 屬於 4xx 客戶端錯誤。
+動手寫寫看，注意括號裡不能只放變數本身，要放一個運算式！
+-->
+
+---
+layout: default
+---
+
+# 練習：HTTP 狀態碼分類 解題提示
+### 提示說明
+
+1. 取百位數可以用除以 100 取整數（提示：`Math.floor()`）
+2. `switch (Math.floor(statusCode / 100))` — 括號內就是運算式
+3. `case` 要對應計算後的結果（`2`、`4`、`5`），不是原本的 `statusCode`
+4. 別忘了每個 `case` 結尾加 `break`，否則會 fall-through 到下一個 case
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>Math.floor(404 / 100)</code> 結果為 <code>4</code>，switch 會先算出運算式的值，再拿這個值去比對各 case
+</div>
+
+<!--
+如果卡關，提示大家用 Math.floor 而不是直接寫死數字判斷。
+這一步的關鍵是先算出運算式的結果，再讓 switch 拿這個結果去跟 case 比對，而不是直接拿 statusCode 原始值比對。
 -->
 
 ---
