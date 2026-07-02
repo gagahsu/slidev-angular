@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@iconify-json/logos": "^1.2.11",
+    "ngx-cookie-service": "19.0.0",
     "pdf-lib": "^1.17.1",
     "slidev-theme-penguin": "^2.3.1"
   }
