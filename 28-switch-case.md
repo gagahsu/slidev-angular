@@ -68,6 +68,7 @@ layout: default
 - **switch vs if 比較** — 兩種寫法的對照範例
 - **case 與 break 說明** — case() 比對值、break 結束執行
 - **switch 中使用運算式** — 在 switch() 內撰寫運算邏輯
+- **@switch — HTML 模板語法** — Angular 模板中的 switch case 寫法
 
 <!--
 今天我們的分支切換作戰計畫如下：
@@ -75,7 +76,8 @@ layout: default
 接著，拆解 `switch case` 的四大零件：switch、case、default 和 break。
 然後，把 `switch` 和 `if` 放在拳擊場上進行實況 PK，看看它們的代碼長相。
 隨後，深入探討最容易遺忘、也是新手最常踩雷的 `break` 與穿透（fall-through）機制。
-最後，看看如何在 `switch` 裡面塞入算術運算式！
+接著，看看如何在 `switch` 裡面塞入算術運算式！
+最後，把這套邏輯搬進 HTML 模板，學習 Angular 17+ 的 `@switch` 語法。
 -->
 
 ---
@@ -287,6 +289,100 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
+# @switch — HTML 模板語法
+# Switch Case in Templates
+
+<!--
+剛才我們學的 switch case 都是寫在 TypeScript 大腦裡的邏輯運算。但還記得開頭大叔賣的關子嗎？Angular 17 的 HTML 模板裡，其實也內建了一套長得非常相似的 @switch 機制！我們現在就來看看它怎麼用。
+-->
+
+---
+
+# 什麼是 @switch？
+
+`@switch` 是 Angular 模板中的多分支條件語法，效果等同於連續多個 `@if` / `@else if`，但比對單一變數的多種值時更簡潔，語法與 TypeScript 的 `switch` 相同。
+
+```html
+@switch (變數或運算式) {
+  @case (值一) {
+    <!-- 符合值一時顯示的內容 -->
+  }
+  @case (值二) {
+    <!-- 符合值二時顯示的內容 -->
+  }
+  @default {
+    <!-- 都不符合時顯示的內容 -->
+  }
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> @switch 是 Angular 17+ 引入的新語法，用來取代舊版的 <code>*ngSwitch</code>、<code>*ngSwitchCase</code>、<code>*ngSwitchDefault</code> 結構型指令。
+</div>
+
+<!--
+`@switch` 的長相跟 TypeScript 的 `switch` 幾乎是雙胞胎。
+括號 `()` 裡放你要判斷的變數或運算式，底下用一個個 `@case (值)` 來比對。
+比對成功，花括號 `{}` 裡的 HTML 就會被畫到畫面上。
+都比對不到，就交給 `@default` 收尾，效果跟 TS 的 `default` 一樣。
+最大的差異是：HTML 模板裡完全不用寫 `break`！Angular 會自動幫你在比對成功後停止往下比對，不會有 fall-through 穿透的問題，這點比 TypeScript 的 switch 更省心。
+-->
+
+---
+layout: default
+---
+
+# @switch — 小節練習
+
+請實作以下需求：
+
+1. 宣告 `role: string = 'admin';`
+2. 用 `@switch` / `@case` / `@default` 讓畫面依 `role` 顯示對應文字：
+   - `'admin'` → `管理員`
+   - `'editor'` → `編輯者`
+   - 其他 → `一般會員`
+
+<!--
+考察 @switch / @case / @default 基本語法，以及和 TypeScript switch 的對照。
+-->
+
+---
+layout: default
+---
+
+# @switch — 小節練習解答
+
+```typescript
+role: string = 'admin';
+```
+
+```html
+@switch (role) {
+  @case ('admin') {
+    <p>管理員</p>
+  }
+  @case ('editor') {
+    <p>編輯者</p>
+  }
+  @default {
+    <p>一般會員</p>
+  }
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>@case</code> 不用寫 <code>break</code>，比對成功就直接停止，不會有 TypeScript switch 的 fall-through 問題
+</div>
+
+<!--
+role 改成 'editor' 或其他任意字串，畫面會自動切換顯示對應文字，且未命中的區塊完全不會出現在 DOM 中，這點跟 @if 一樣安全。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
 # 章節總練習
 # Chapter Practice
 
@@ -342,11 +438,11 @@ layout: end
 ---
 
 # 課程結束
-### 熟悉 switch case，讓多條件判斷更整潔易讀
+### 熟悉 TypeScript switch 與 Angular @switch，讓多條件判斷更整潔易讀
 
 <!--
-恭喜大家！成功收服了 `switch case` 這個強大的分支語法！
+恭喜大家！成功收服了 `switch case` 這個強大的分支語法，而且是 TypeScript 和 HTML 模板兩邊一起收服！
 今天你學會了這招，以後遇到十幾種職業、或是多種狀態切換的畫面，就能寫出極度整潔、好讀的代碼了。
-回去把 `break` 的觀念牢牢記住。
+回去把 TS 的 `break` 觀念，跟 HTML 模板 `@switch` 不用寫 break 的差異牢牢記住。
 下一堂課，我們要迎來整個前端課程的終極重頭戲——「串接 API（Fetch API）」，去學習如何用程式碼向政府或是遠端的伺服器要資料，把真實世界的實時數據搬到我們的網頁上！大家休息一下，我們等一下見！
 -->
