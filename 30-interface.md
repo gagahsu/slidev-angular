@@ -127,7 +127,7 @@ layout: two-cols
 
 ```typescript
 interface Person {
-  name: string,
+  name: string;
   age: number
 }
 
@@ -218,7 +218,7 @@ let laptop: Product = {
 
 ```typescript
 interface Person {
-  name: string,
+  name: string;
   age?: number
 }
 
