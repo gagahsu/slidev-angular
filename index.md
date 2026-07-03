@@ -166,11 +166,6 @@ style: |
       <div class="chapter-num" style="color: #e07b39;">補充</div>
       <div>綜合實作補充教材</div>
     </Link>
-    <Link to="practice-ch17" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
-      <div class="chapter-num" style="color: #e07b39;">綜合</div>
-      <div>綜合練習 Ch1–17</div>
-      <div class="chapter-subtitle" style="color: #b05a20;">HTML / CSS / TS 大挑戰</div>
-    </Link>
     <Link to="ch18" class="chapter-card">
       <div class="chapter-num">Ch 18</div>
       <div>TypeScript 練習（二）</div>
@@ -240,6 +235,11 @@ style: |
       <div class="chapter-num">Ch 31</div>
       <div>資料排序</div>
       <div class="chapter-subtitle">Data Sorting</div>
+    </Link>
+    <Link to="practice-ch31" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
+      <div class="chapter-num" style="color: #e07b39;">綜合</div>
+      <div>綜合練習 Ch1–31</div>
+      <div class="chapter-subtitle" style="color: #b05a20;">四張業界規格書實作</div>
     </Link>
     <Link to="ch32" class="chapter-card">
       <div class="chapter-num">Ch 32</div>
@@ -443,10 +443,6 @@ src: ./practice-ch1-ch17-supplement.md
 ---
 
 ---
-src: ./practice-ch1-ch17.md
----
-
----
 src: ./18-typescript-practice-2.md
 ---
 
@@ -500,6 +496,10 @@ src: ./30-interface.md
 
 ---
 src: ./31-sorting.md
+---
+
+---
+src: ./practice-ch1-ch17.md
 ---
 
 ---
