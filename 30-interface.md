@@ -45,6 +45,14 @@ style: |
   <Link to="home" style="color: #9dc4c4; font-size: 0.85rem; margin-top: 2rem; text-decoration: none; letter-spacing: 0.05em;">← 返回目錄</Link>
 </div>
 
+<!--
+大家好，今天我們要來聊 TypeScript 裡一個很重要的角色：Interface（介面）。
+
+我們寫程式的時候，常常會遇到一個問題：物件裡到底該有哪些屬性？少寫一個會不會出錯？這種「型別安全」的疑慮，正是 Interface 要解決的痛點。
+
+學完這一章，我們會知道怎麼用 interface 定義物件的形狀，讓 TypeScript 幫我們把關，減少執行時才發現的低級錯誤。
+-->
+
 ---
 layout: default
 ---
@@ -58,6 +66,12 @@ layout: default
 - **Class implements Interface** — 讓 class 實作 interface
 - **練習** — 建立巢狀資料的 interface
 
+<!--
+今天的大綱大概分成六個部分：先從概念講起，接著學基本語法、可選屬性，再來看怎麼把 interface 抽成獨立檔案管理，然後介紹 class 怎麼實作 interface，最後用一個練習把這些觀念串起來。
+
+我們會按照這個順序一步步來，前面的觀念會是後面的基礎，所以大家跟緊一點。
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -65,6 +79,12 @@ class: flex flex-col justify-center items-center text-center
 
 # 什麼是 Interface？
 # What is an Interface?
+
+<!--
+先問大家一個問題：如果我們寫了一個函式，接收一個「使用者」物件，我們怎麼確定呼叫的人一定會傳對格式？少傳一個欄位、傳錯型別，這些問題很容易在專案變大之後爆出來。
+
+這就是 Interface 要解決的問題，我們接下來就來看看它到底是什麼。
+-->
 
 ---
 
@@ -76,6 +96,14 @@ interface（介面）定義了物件應具備的形狀（屬性與型別）。�
 💡 <b>概念：</b> 建立物件時，TypeScript 會比對 interface 的定義，缺少任一必填屬性即視為不合法的物件。
 </div>
 
+<!--
+我們可以把 interface 想成一張「規格表」，就像蓋房子前建築師畫的藍圖一樣，藍圖上寫明了這間房子一定要有幾個房間、幾扇窗戶，蓋出來的房子如果少了規定的房間，就不算合格。
+
+interface 也是同樣道理：它定義物件應該長成什麼樣子，屬性有哪些、型別是什麼。這裡用臉部當例子，一張臉一定要有眼睛、鼻子、嘴巴、耳朵，缺一個就不是一張完整的臉。
+
+實際在 TypeScript 裡，建立物件的時候，編譯器會拿這張「規格表」去比對，只要少了任何一個必填屬性，就會直接報錯，讓我們在寫程式的當下就發現問題，而不是等程式跑起來才出包。
+-->
+
 ---
 layout: section
 class: flex flex-col justify-center items-center text-center
@@ -83,6 +111,10 @@ class: flex flex-col justify-center items-center text-center
 
 # Interface 基本語法
 # Basic Syntax
+
+<!--
+了解 interface 的概念之後，我們來看看實際上怎麼用程式碼寫出一個 interface，以及怎麼把它套用到變數上。
+-->
 
 ---
 layout: two-cols
@@ -112,6 +144,14 @@ let personDate: Person = {
 <div class="flex items-center justify-center h-full ml-6">
   <img src="/images/29-interface/ts-error.png" class="rounded shadow-md max-w-full" />
 </div>
+
+<!--
+我們來看實際的寫法。左邊定義了一個 Person interface，規定物件一定要有 name（字串）跟 age（數字）兩個屬性。
+
+接著我們宣告一個變數 personDate，型別標注為 Person，但物件裡只給了 name，沒有給 age。這時候 TypeScript 馬上就會報錯，右邊這張截圖就是編輯器實際跳出的錯誤訊息：「類型缺少屬性 age」。
+
+⚠️ 這裡要提醒大家，interface 裡列出來的屬性，預設全部都是必填的，少寫一個都不行。這正是我們前面說的「規格表」概念在實際程式碼裡的體現，編輯器幫我們把關，不用等到執行時才發現漏東西。
+-->
 
 ---
 layout: default
@@ -190,6 +230,14 @@ let personDate: Person = {
 💡 <b>注意：</b> 在屬性名稱後加上 <code>?</code> 即代表該屬性為選填，物件可以不包含該屬性也不會報錯。
 </div>
 
+<!--
+剛剛我們學到 interface 裡的屬性預設都是必填的，但實務上不一定每個屬性都用得到。舉例來說，填寫個人資料的時候，姓名一定要填，但年齡有些人不想公開，這種情況全部設成必填反而不合理。
+
+這時候就可以用可選屬性，寫法很簡單，只要在屬性名稱後面加一個問號 `?`。像這裡的 age?，代表這個欄位可填可不填，物件裡沒有 age 也不會被 TypeScript 擋下來。
+
+⚠️ 提醒大家一個容易搞混的地方：可選屬性不等於「型別可以是 undefined」，它的意思是這個屬性可以整個不存在。之後如果同學在物件裡真的塞了 age，還是要符合宣告的型別（這裡是 number），不能隨便塞字串進去。
+-->
+
 ---
 
 # 獨立 Interface 檔案
@@ -215,6 +263,14 @@ import { Person } from '../api-result/api-result.interface';
 💡 <b>建議：</b> 將 interface 統一放在獨立的 <code>.interface.ts</code> 檔案中，方便管理與重用。
 </div>
 
+<!--
+目前我們都把 interface 直接寫在同一個檔案裡，但實務上，同一個 interface 常常會被好幾個元件、好幾個服務拿去用。如果每個檔案都各自宣告一次，改一個屬性就要改十個地方，非常容易漏改。
+
+業界的作法是把 interface 統一放到獨立的 .interface.ts 檔案裡管理，就像共用的規格書一樣，放在固定的地方，誰要用就直接 import 進來，維護起來輕鬆很多。
+
+這裡示範把 Person interface 抽到 api-result.interface.ts，用 export 匯出，其他檔案就用 import { Person } from '路徑' 引入使用。同學之後在專案裡看到 .interface.ts 結尾的檔案，就知道那是專門放型別定義的地方。
+-->
+
 ---
 
 # Class implements Interface
@@ -239,6 +295,14 @@ export class AppComponent implements testInterface {
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>注意：</b> 使用 <code>implements</code> 關鍵字讓 class 實作 interface，class 必須包含 interface 中定義的所有屬性與方法。
 </div>
+
+<!--
+前面我們用 interface 來規範「物件」的形狀，其實 interface 也可以拿來規範「class」。這就像簽一份合約，class 簽了這份合約（也就是 implements 這個 interface），就有義務把合約裡列的項目全部兌現。
+
+寫法是在 class 名稱後面加上 implements 加 interface 名稱，這裡 AppComponent implements testInterface，testInterface 裡定義了 name 屬性跟 getName() 方法，所以 AppComponent 裡兩個都要真的寫出來，一個都不能少。
+
+⚠️ 提醒大家，implements 檢查的是「必須要有」，不是「只能有」，class 裡面可以有 interface 沒規定的其他屬性或方法，但 interface 裡要求的項目一項都不能漏掉，不然編輯器馬上會報錯。
+-->
 
 ---
 layout: default
@@ -318,6 +382,12 @@ userArray = {
 };
 ```
 
+<!--
+我們把前面學到的東西整合起來，做個綜合練習。這次的資料比較複雜，是一個「巢狀」結構：外層是使用者資料，裡面又包了一個道具陣列，陣列裡每個道具自己又是一個物件。
+
+大家可以先想想看：這種「物件裡面包陣列，陣列裡面又是物件」的結構，是不是只需要一個 interface 就能搞定？還是需要拆成好幾個？想清楚這點，再動手寫寫看。
+-->
+
 ---
 
 # 練習：參考解答
@@ -339,9 +409,25 @@ interface UserArray {
 💡 <b>重點：</b> <code>props</code> 是陣列，元素類型為另一個 interface <code>Props</code>，寫法為 <code>Props[]</code>。
 </div>
 
+<!--
+解答的關鍵，是把巢狀結構拆成兩個 interface：一個 Props 描述陣列裡「單一道具」長什麼樣子，一個 UserArray 描述外層的使用者資料。
+
+這就像我們前面說的規格表，一份大規格表裡如果包含另一份小規格表，直接把小規格表獨立出來、再拿去引用會更清楚。這裡 UserArray 裡的 props 屬性型別寫成 Props[]，代表「一個裝著 Props 型別物件的陣列」。
+
+同學可以記住這個原則：物件裡如果包了陣列，且陣列裡的元素又是物件，就把陣列元素的形狀獨立成一個 interface，再用 陣列[] 的寫法引用它，結構會乾淨很多。
+-->
+
 ---
 layout: end
 ---
 
 # 課程結束
 ### 善用 Interface，讓你的 TypeScript 程式更安全、更易維護
+
+<!--
+今天我們一起學了 interface：它怎麼定義物件的形狀、怎麼用可選屬性放寬限制、怎麼獨立成檔案方便管理，還有 class 怎麼用 implements 來實作它。
+
+回頭看看，interface 其實就是幫我們的程式先立好規矩，寫程式的當下就能抓到型別不合的問題，不用等到上線才出包。
+
+大家練習的時候，多留意巢狀結構怎麼拆 interface，這是實務上最常用到的技巧，也是今天的重點收穫。辛苦大家了，我們下一章見！
+-->
