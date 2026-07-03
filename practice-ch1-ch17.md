@@ -107,12 +107,9 @@ layout: default
     <div style="text-align:center;margin-bottom:12px;">王小明<br><span style="color:#a7d9d0;font-size:0.85em;">前端工程師</span></div>
     <div style="font-size:0.8em;color:#a7d9d0;">📧 聯絡資訊</div>
     <div style="margin-top:8px;font-size:0.78em;">
-      <div>HTML</div>
-      <div style="background:rgba(255,255,255,0.15);border-radius:3px;height:6px;margin:2px 0 6px;overflow:hidden;"><div style="background:#5eada0;width:90%;height:100%;"></div></div>
-      <div>CSS</div>
-      <div style="background:rgba(255,255,255,0.15);border-radius:3px;height:6px;margin:2px 0 6px;overflow:hidden;"><div style="background:#5eada0;width:80%;height:100%;"></div></div>
-      <div>TypeScript</div>
-      <div style="background:rgba(255,255,255,0.15);border-radius:3px;height:6px;margin:2px 0;overflow:hidden;"><div style="background:#5eada0;width:65%;height:100%;"></div></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span>HTML</span><span style="background:#5eada0;color:white;border-radius:4px;padding:2px 8px;font-size:0.85em;font-weight:600;">熟練</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;"><span>CSS</span><span style="background:#5eada0;color:white;border-radius:4px;padding:2px 8px;font-size:0.85em;font-weight:600;">熟練</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;"><span>TypeScript</span><span style="background:#a7d9d0;color:#1a5c5c;border-radius:4px;padding:2px 8px;font-size:0.85em;font-weight:600;">進階</span></div>
     </div>
   </div>
   <div style="flex:1; padding: 16px; background: #f8fffe;">
@@ -160,13 +157,12 @@ layout: default
 
 **③ 技能等級標籤**
 - `.skill-item`：`display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px`
-- `.skill-tag`：`border-radius: 4px; padding: 2px 8px; font-size: 0.8em; font-weight: 600`
-- 熟練（percent ≥ 80）：`background: #5eada0; color: white`
-- 進階（percent ≥ 60）：`background: #a7d9d0; color: #1a5c5c`
-- 初學（其他）：`background: rgba(255,255,255,0.2); color: white`
+- `.skill-tag`：`border-radius: 4px; padding: 2px 8px; font-size: 0.8em; font-weight: 600`（初學／預設）：`background: rgba(255,255,255,0.2); color: white`
+- `.skill-tag--high`（熟練，percent ≥ 80）：`background: #5eada0; color: white`
+- `.skill-tag--mid`（進階，percent ≥ 60）：`background: #a7d9d0; color: #1a5c5c`
 
 <!--
-技能 tag 的三個顏色狀態不是在 CSS 裡做 if 判斷——CSS 不能判斷百分比數值。判斷邏輯在 TypeScript 的 getSkillLevel() 方法裡，依據 percent 決定要加哪個 CSS class，CSS 只負責定義各 class 對應的樣式。
+技能 tag 的三個顏色狀態不是在 CSS 裡做 if 判斷——CSS 不能判斷百分比數值。判斷邏輯要在 HTML 用 `[class.skill-tag--high]="skill.percent >= 80"` 這種 class binding 依據 percent 決定要不要加上該 class，CSS 只負責定義各 class 對應的樣式；getSkillLevel() 則只負責回傳要顯示的文字（熟練／進階／初學）。
 -->
 
 ---
@@ -183,7 +179,6 @@ layout: default
 
 **⑤ hover 效果**
 - `.timeline-card:hover`：`background: #f0faf9; transition: background 0.2s`
-- 技能條 hover 可以加深底色：`transition: background 0.2s`
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 時間軸垂直線用實際的 <code>&lt;div class="timeline-line"&gt;&lt;/div&gt;</code> 元素製作，不使用 <code>::before</code> 偽元素
@@ -343,14 +338,16 @@ layout: default
     <h2 class="name">王小明</h2>
     <p class="job-title">前端工程師</p>
     <div class="contact">
-      <p>📧 email@example.com</p>
+      <p>📧 email&#64;example.com</p>
     </div>
     <div class="skills">
       <h3>技能</h3>
       @for (skill of skills; track skill.name) {
         <div class="skill-item">
           <span class="skill-name">{{ skill.name }}</span>
-          <span class="skill-tag">{{ getSkillLevel(skill.percent) }}</span>
+          <span class="skill-tag"
+            [class.skill-tag--high]="skill.percent >= 80"
+            [class.skill-tag--mid]="skill.percent >= 60 && skill.percent < 80">{{ getSkillLevel(skill.percent) }}</span>
         </div>
       }
     </div>
@@ -358,7 +355,7 @@ layout: default
 ```
 
 <!--
-HTML 的結構和 CSS 的 class 命名要一一對應。.sidebar 對應左欄，.content 對應右欄。注意 `@for (skill of skills; track skill.name)` 直接用 skills 陣列顯示所有技能，`track` 要填一個能唯一識別每筆資料的值（這裡用 skill.name），Angular 才能有效率地更新畫面。`{{ getSkillLevel(skill.percent) }}` 在每次迭代時呼叫方法，把 percent 數字轉換成「熟練／進階／初學」的文字標籤。
+HTML 的結構和 CSS 的 class 命名要一一對應。.sidebar 對應左欄，.content 對應右欄。注意 `@for (skill of skills; track skill.name)` 直接用 skills 陣列顯示所有技能，`track` 要填一個能唯一識別每筆資料的值（這裡用 skill.name），Angular 才能有效率地更新畫面。`{{ getSkillLevel(skill.percent) }}` 在每次迭代時呼叫方法，把 percent 數字轉換成「熟練／進階／初學」的文字標籤；標籤的顏色高亮則是靠 `[class.skill-tag--high]`／`[class.skill-tag--mid]` 這兩個 class binding 依 `skill.percent` 動態加上去的，兩者各司其職。另外提醒：template 裡的 email 用 `&#64;` 取代 `@` 符號，因為 Angular 17+ 把 `@` 保留給 `@if`/`@for` 等 control flow 語法，直接打 `@` 在 build 時會噴 parse error。
 -->
 
 ---
@@ -401,7 +398,7 @@ layout: default
 layout: default
 ---
 
-# P1：完整解答 — CSS（1/2）
+# P1：完整解答 — CSS（1/3）
 
 ```css
 .resume { display: flex; min-height: 100vh; }
@@ -418,6 +415,19 @@ layout: default
   justify-content: center; font-size: 2.5rem;
 }
 .job-title { color: #a7d9d0; font-size: 0.9rem; }
+```
+
+<!--
+.resume 是整頁最外層容器，display: flex 讓兩個子元素（aside.sidebar 和 main.content）自動橫排。.sidebar 的 flex-shrink: 0 非常關鍵——沒有它，螢幕較小時側欄會被壓縮，讓 280px 的固定寬失去意義。
+-->
+
+---
+layout: default
+---
+
+# P1：完整解答 — CSS（2/3）
+
+```css
 .skill-item {
   display: flex; justify-content: space-between;
   align-items: center; margin-bottom: 10px;
@@ -427,17 +437,19 @@ layout: default
   border-radius: 4px; padding: 2px 8px;
   font-size: 0.78rem; background: rgba(255,255,255,0.2); color: white;
 }
+.skill-tag--high { background: #5eada0; color: white; }
+.skill-tag--mid { background: #a7d9d0; color: #1a5c5c; }
 ```
 
 <!--
-.resume 是整頁最外層容器，display: flex 讓兩個子元素（aside.sidebar 和 main.content）自動橫排。.sidebar 的 flex-shrink: 0 非常關鍵——沒有它，螢幕較小時側欄會被壓縮，讓 280px 的固定寬失去意義。.skill-item 用 justify-content: space-between 把技能名稱和等級 tag 推到兩端，這是 Flexbox 最常見的「兩端對齊」用法。
+.skill-item 用 justify-content: space-between 把技能名稱和等級 tag 推到兩端，這是 Flexbox 最常見的「兩端對齊」用法。.skill-tag 是預設（初學）樣式，.skill-tag--high 和 .skill-tag--mid 這兩個修飾 class 由 HTML 的 class binding 依 percent 動態決定要不要加上去，蓋過預設的灰底色。
 -->
 
 ---
 layout: default
 ---
 
-# P1：完整解答 — CSS（2/2）
+# P1：完整解答 — CSS（3/3）
 
 ```css
 .timeline { position: relative; padding-left: 32px; }
@@ -460,7 +472,7 @@ layout: default
 ```
 
 <!--
-時間軸定位是這題 CSS 最難的部分。.timeline 的 padding-left: 32px 製造空白讓圓點能放進來；.timeline-line 的 top: 0; bottom: 0 讓垂直線撐滿容器高度，不需要寫 height；.timeline-dot 的 left: -28px 讓圓點精確落在垂直線上方。可以讓同學試著先不加 padding-left 或不加 position: relative，觀察破版的情況——除錯的過程比看答案更有學習效果。
+時間軸定位（接續上一頁）是這題 CSS 最難的部分。.timeline 的 padding-left: 32px 製造空白讓圓點能放進來；.timeline-line 的 top: 0; bottom: 0 讓垂直線撐滿容器高度，不需要寫 height；.timeline-dot 的 left: -28px 讓圓點精確落在垂直線上方。可以讓同學試著先不加 padding-left 或不加 position: relative，觀察破版的情況——除錯的過程比看答案更有學習效果。
 -->
 
 ---
@@ -534,7 +546,7 @@ layout: default
 - 紅色圓形：`border-radius: 50%; width: 20px; height: 20px`
 
 **③ Hero 橫幅**
-- `background: #1a5c5c`（純色，不需漸層）
+- `background: #5eada0`（純色，不需漸層，跟深色 Navbar 區隔出層次）
 - `display: flex; align-items: center; justify-content: center; height: 250px`
 
 <!--
@@ -641,6 +653,14 @@ layout: default
 
 ```typescript
 import { Component } from '@angular/core';
+
+const products = [
+  { id: 1, name: 'HTML 入門', price: 299, category: '前端', emoji: '🌐' },
+  { id: 2, name: 'CSS 精通', price: 399, category: '前端', emoji: '🎨' },
+  { id: 3, name: 'Node.js', price: 499, category: '後端', emoji: '🟢' },
+  { id: 4, name: 'Figma 設計', price: 349, category: '設計', emoji: '🖌️' },
+];
+
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
@@ -648,18 +668,13 @@ import { Component } from '@angular/core';
 })
 export class ShopComponent {
   categories = ['全部', '前端', '後端', '設計'];
-  products = [
-    { id: 1, name: 'HTML 入門', price: 299, category: '前端', emoji: '🌐' },
-    { id: 2, name: 'CSS 精通', price: 399, category: '前端', emoji: '🎨' },
-    { id: 3, name: 'Node.js', price: 499, category: '後端', emoji: '🟢' },
-    { id: 4, name: 'Figma 設計', price: 349, category: '設計', emoji: '🖌️' },
-  ];
-  cart: { product: typeof this.products[0]; qty: number }[] = [];
+  products = products;
+  cart: { product: typeof products[0]; qty: number }[] = [];
   activeCategory: string = '全部';
 ```
 
 <!--
-products 沒寫型別，TypeScript 會自動從陣列內容推斷出形狀，效果等同手動宣告匿名型別，寫起來更省事。cart 的型別用 `typeof this.products[0]` 直接「借用」products 陣列元素的形狀，不用重打一次 id/name/price/category/emoji 五個欄位——這是還沒學 interface 時，避免重複打型別的小技巧。之後學到 interface，就能把這個形狀取個名字（Product），寫法會更直覺。
+products 沒寫型別，TypeScript 會自動從陣列內容推斷出形狀，效果等同手動宣告匿名型別，寫起來更省事。products 陣列拉到 class 外面宣告成模組層級常數，是關鍵：cart 的型別要用 `typeof products[0]` 借用它的形狀，但如果寫在 class 屬性裡用 `typeof this.products[0]`，會因為屬性型別標注裡不能出現 `this` 而噴 TS2683 錯誤（this 被 shadow）。搬到外面就沒有這個限制，也還不用學 interface。之後學到 interface，就能把這個形狀取個名字（Product），寫法會更直覺。
 -->
 
 ---
@@ -676,7 +691,7 @@ layout: default
     if (this.activeCategory === '全部') return this.products;
     return this.products.filter(p => p.category === this.activeCategory);
   }
-  addToCart(product: typeof this.products[0]): void {
+  addToCart(product: typeof products[0]): void {
     const existing = this.cart.filter(c => c.product.id === product.id);
     if (existing.length > 0) {
       existing[0].qty++;
@@ -687,7 +702,7 @@ layout: default
 ```
 
 <!--
-filterProducts 不寫回傳型別，TypeScript 會自動推斷成「和 products 一樣的陣列型別」。addToCart 的參數一樣用 `typeof this.products[0]` 借用 products 元素的形狀，不用另外定義型別。setCategory 只做一件事：更新 activeCategory 的值，Angular 的資料綁定就會自動讓畫面更新。addToCart 用 filter 取回陣列再判斷 length > 0——這和技術前導頁的 find 寫法效果相同，兩種方式都可以，find 更精簡但 filter 更直覺。
+filterProducts 不寫回傳型別，TypeScript 會自動推斷成「和 products 一樣的陣列型別」。addToCart 的參數一樣用 `typeof products[0]` 借用模組層級 products 常數的形狀，不用另外定義型別，也不會有 `this` 在型別標注裡的問題。setCategory 只做一件事：更新 activeCategory 的值，Angular 的資料綁定就會自動讓畫面更新。addToCart 用 filter 取回陣列再判斷 length > 0——這和技術前導頁的 find 寫法效果相同，兩種方式都可以，find 更精簡但 filter 更直覺。
 -->
 
 ---
@@ -728,12 +743,14 @@ layout: default
   <ul class="nav-links">
     <li><a href="#">首頁</a></li>
     <li><a href="#">商品</a></li>
+    <li><a href="#">關於</a></li>
   </ul>
   <div class="cart-icon">
     🛒 購物車
     <span class="cart-badge">{{ getCartCount() }}</span>
   </div>
 </nav>
+<div class="hero">歡迎來到 My Shop — 精選好物一次搞定</div>
 <div class="filter-bar">
   @for (cat of categories; track cat) {
     <button class="filter-btn"
@@ -744,7 +761,7 @@ layout: default
 ```
 
 <!--
-Navbar 的結構是「外層 nav.navbar > 左側 div.brand + 右側 div.cart-icon」。.cart-icon 內的 .cart-badge 靠 `{{ getCartCount() }}` 即時更新數字。分類按鈕用 `@for (cat of categories; track cat)` 動態產生，`[class.active]="cat === activeCategory"` 做樣式切換，`(click)="setCategory(cat)"` 呼叫方法——三種 Angular 語法在同一個元素上同時使用，這是非常典型的寫法。
+Navbar 的結構是「外層 nav.navbar > 左側 div.brand + 中間 ul.nav-links + 右側 div.cart-icon」。`.nav-links` 是 `<ul><li><a>`，瀏覽器預設會有項目符號和底線藍字，畫面需求裡是純白文字並排，所以 CSS 一定要重置 `list-style` 和 `a` 的顏色／底線，不然會長得跟瀏覽器預設清單一樣。.cart-icon 內的 .cart-badge 靠 `{{ getCartCount() }}` 即時更新數字。Hero 橫幅是純文字置中的一個 div，直接放在 nav 和 filter-bar 之間。分類按鈕用 `@for (cat of categories; track cat)` 動態產生，`[class.active]="cat === activeCategory"` 做樣式切換，`(click)="setCategory(cat)"` 呼叫方法——三種 Angular 語法在同一個元素上同時使用，這是非常典型的寫法。
 -->
 
 ---
@@ -777,7 +794,7 @@ layout: default
 layout: default
 ---
 
-# P2：完整解答 — CSS（1/3）
+# P2：完整解答 — CSS（1/4）
 
 ```css
 .navbar {
@@ -788,6 +805,29 @@ layout: default
   padding: 0 40px; z-index: 100; color: white;
 }
 body { padding-top: 64px; }
+.nav-links {
+  list-style: none; display: flex; gap: 20px;
+  margin: 0; padding: 0;
+}
+.nav-links a { color: white; text-decoration: none; }
+```
+
+<!--
+.navbar 和 P1 的 .resume 有個共同點：都是 display: flex + justify-content: space-between 把子元素推到兩端。不同的是 Navbar 加了 position: fixed，讓它浮在頁面頂部。`.nav-links` 用 `list-style: none` 拿掉項目符號、`a { text-decoration: none; color: white }` 拿掉底線和藍色，`<ul>` 本身有預設 margin/padding 也要歸零，不然清單會跟 Navbar 其他元素對不齊。
+-->
+
+---
+layout: default
+---
+
+# P2：完整解答 — CSS（2/4）
+
+```css
+.hero {
+  background: #5eada0; color: white; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  height: 250px;
+}
 .cart-icon { position: relative; }
 .cart-badge {
   position: absolute; top: -8px; right: -12px;
@@ -799,14 +839,14 @@ body { padding-top: 64px; }
 ```
 
 <!--
-.navbar 和 P1 的 .resume 有個共同點：都是 display: flex + justify-content: space-between 把子元素推到兩端。不同的是 Navbar 加了 position: fixed，讓它浮在頁面頂部。.cart-badge 的 display: flex + align-items/justify-content: center 是讓小圓點內的數字完美置中的標準方法，也可以用 line-height，但 Flexbox 置中更直覺。
+.hero 用 #5eada0 跟 Navbar 的 #1a5c5c 做出深淺兩層對比。.cart-badge 的 display: flex + align-items/justify-content: center 是讓小圓點內的數字完美置中的標準方法，也可以用 line-height，但 Flexbox 置中更直覺。
 -->
 
 ---
 layout: default
 ---
 
-# P2：完整解答 — CSS（2/3）
+# P2：完整解答 — CSS（3/4）
 
 ```css
 .filter-bar {
@@ -838,7 +878,7 @@ layout: default
 layout: default
 ---
 
-# P2：完整解答 — CSS（3/3）
+# P2：完整解答 — CSS（4/4）
 
 ```css
 .product-img {
@@ -1341,35 +1381,46 @@ layout: default
 layout: default
 ---
 
-# P4：需要完成的 TypeScript 邏輯（1/2）
+# P4：需要完成的 TypeScript 邏輯（1/3）
 
 ```typescript
-menu: { id: number; name: string; price: number; category: '麵食' | '湯品' | '小菜' | '飲料'; emoji: string }[] = [ ... ];
-order: { item: typeof this.menu[0]; qty: number }[] = [];
+const menu: { id: number; name: string; price: number; category: '麵食' | '湯品' | '小菜' | '飲料'; emoji: string }[] = [ ... ];
+// class 內：order: { item: typeof menu[0]; qty: number }[] = [];
 ```
 
 **需要的變數：**
-- `menu` — 完整菜單（自行填入資料）
+- `menu` — 完整菜單（拉到 class 外面宣告成模組層級常數，自行填入資料）
 - `order: []` — 目前訂單，每筆為 `{ item, qty }`
 - `activeCategory: string = '麵食'` — 目前選中的分類
 
 <!--
-menu 的 category 欄位用聯合型別限制只能是四個分類字串，防止打錯分類名稱，這個保護不需要 interface 也能寫。order 一樣用 `typeof this.menu[0]` 借用 menu 元素的形狀。
+menu 的 category 欄位用聯合型別限制只能是四個分類字串，防止打錯分類名稱，這個保護不需要 interface 也能寫。menu 要宣告在 class 外面（模組層級常數），order 才能用 `typeof menu[0]` 借用它的形狀——如果寫成 `typeof this.menu[0]`，會因為屬性型別標注裡不能出現 this 而噴 TS2683 錯誤。
 -->
 
 ---
 layout: default
 ---
 
-# P4：需要完成的 TypeScript 邏輯（2/2）
+# P4：需要完成的 TypeScript 邏輯（2/3）
 
-**需實作的方法（與觸發事件）：**
+**需實作的方法（與觸發事件，1/2）：**
 
 | 方法 | 怎麼觸發 | 說明 |
 |---|---|---|
 | `setCategory(cat)` | 分類按鈕 `(click)="setCategory('湯品')"` | 更新 `activeCategory`，切換菜單分類 |
 | `getMenu()` | `@for (item of getMenu(); track item.id)` 在菜單格 | 依 `activeCategory` 篩選菜單 |
 | `addItem(item)` | 菜單卡片「加入」按鈕 `(click)="addItem(item)"` | 加入訂單或 qty++ |
+
+---
+layout: default
+---
+
+# P4：需要完成的 TypeScript 邏輯（3/3）
+
+**需實作的方法（與觸發事件，2/2）：**
+
+| 方法 | 怎麼觸發 | 說明 |
+|---|---|---|
 | `removeItem(id)` | 訂單列「移除」按鈕 `(click)="removeItem(o.item.id)"` | qty--，再移除 qty=0 的項目 |
 | `getOrderCount()` | `{{ getOrderCount() }}` 在 header badge | 加總所有 qty |
 | `getTotal()` | `{{ getTotal() }}` 在訂單面板 | price × qty 加總 |
@@ -1414,6 +1465,15 @@ layout: default
 
 ```typescript
 import { Component } from '@angular/core';
+
+const menu = [
+  { id: 1, name: '招牌牛肉麵', price: 180, category: '麵食', emoji: '🍜' },
+  { id: 2, name: '雞肉米線',   price: 150, category: '麵食', emoji: '🍝' },
+  { id: 3, name: '酸辣湯',     price: 60,  category: '湯品', emoji: '🍲' },
+  { id: 4, name: '紅燒蹄膀',   price: 120, category: '小菜', emoji: '🍖' },
+  { id: 5, name: '珍珠奶茶',   price: 55,  category: '飲料', emoji: '🧋' },
+];
+
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -1421,19 +1481,13 @@ import { Component } from '@angular/core';
 })
 export class MenuComponent {
   categories = ['麵食', '湯品', '小菜', '飲料'];
-  menu: { id: number; name: string; price: number; category: string; emoji: string }[] = [
-    { id: 1, name: '招牌牛肉麵', price: 180, category: '麵食', emoji: '🍜' },
-    { id: 2, name: '雞肉米線',   price: 150, category: '麵食', emoji: '🍝' },
-    { id: 3, name: '酸辣湯',     price: 60,  category: '湯品', emoji: '🍲' },
-    { id: 4, name: '紅燒蹄膀',   price: 120, category: '小菜', emoji: '🍖' },
-    { id: 5, name: '珍珠奶茶',   price: 55,  category: '飲料', emoji: '🧋' },
-  ];
-  order: { item: typeof this.menu[0]; qty: number }[] = [];
+  menu = menu;
+  order: { item: typeof menu[0]; qty: number }[] = [];
   activeCategory: string = '麵食';
 ```
 
 <!--
-MenuComponent 的初始資料有五個菜單項目，每個都有完整五個欄位，型別用匿名寫法直接標在宣告上。activeCategory 初始值設為 '麵食'，所以畫面一打開就顯示麵食分類的菜單——這就是為什麼要在宣告時給預設值，而不是空字串。order 陣列初始為空，每次 addItem 才加入新項目，getTotal 和 getOrderCount 在 order 為空時會回傳 0，不需要特別處理空陣列的情況。
+menu 陣列拉到 class 外面宣告成模組層級常數，跟 P2 的 products 同一招：order 的型別用 `typeof menu[0]` 借用形狀，避免在屬性型別標注裡出現 `this` 而噴 TS2683（this 被 shadow）。activeCategory 初始值設為 '麵食'，所以畫面一打開就顯示麵食分類的菜單——這就是為什麼要在宣告時給預設值，而不是空字串。order 陣列初始為空，每次 addItem 才加入新項目，getTotal 和 getOrderCount 在 order 為空時會回傳 0，不需要特別處理空陣列的情況。
 -->
 
 ---
@@ -1449,7 +1503,7 @@ layout: default
   getMenu() {
     return this.menu.filter(m => m.category === this.activeCategory);
   }
-  addItem(item: typeof this.menu[0]): void {
+  addItem(item: typeof menu[0]): void {
     const existing = this.order.filter(o => o.item.id === item.id);
     if (existing.length > 0) {
       existing[0].qty++;
@@ -1460,7 +1514,7 @@ layout: default
 ```
 
 <!--
-getMenu 不寫回傳型別，交給 TypeScript 自動推斷；邏輯比 P2 的 filterProducts 簡單——沒有「全部」的特殊情況，直接 filter category 相符的項目。addItem 和 P2 的 addToCart 邏輯一樣：filter 找現有項目 → 已存在就 qty++ → 不存在就 push。可以讓同學比較 P2 的 addToCart 和 P4 的 addItem，觀察兩者的共同點，建立「購物車邏輯」的通用模式。
+getMenu 不寫回傳型別，交給 TypeScript 自動推斷；邏輯比 P2 的 filterProducts 簡單——沒有「全部」的特殊情況，直接 filter category 相符的項目。addItem 的參數型別用 `typeof menu[0]`（模組層級常數），不是 `typeof this.menu[0]`，理由同上一頁。addItem 和 P2 的 addToCart 邏輯一樣：filter 找現有項目 → 已存在就 qty++ → 不存在就 push。可以讓同學比較 P2 的 addToCart 和 P4 的 addItem，觀察兩者的共同點，建立「購物車邏輯」的通用模式。
 -->
 
 ---
