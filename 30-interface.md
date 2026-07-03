@@ -64,6 +64,7 @@ layout: default
 - **可選屬性 `?`** — 讓屬性變成非必填
 - **獨立 interface 檔案** — 將 interface 抽離為 `.ts` 檔並 import
 - **Class implements Interface** — 讓 class 實作 interface
+- **用 Angular CLI 產生 Interface** — `ng g i` 指令自動建檔
 - **練習** — 建立巢狀資料的 interface
 
 <!--
@@ -358,6 +359,35 @@ export class Book implements Describable {
 
 <!--
 試著把 describe() 方法從 Book class 刪掉，TypeScript 會提示「屬性 describe 在類型 Book 中缺少，但在類型 Describable 中是必要的」。
+-->
+
+---
+
+# 用 Angular CLI 產生 Interface
+
+不用手動建檔，可以用 `ng generate interface`（簡寫 `ng g i`）自動產生：
+
+```bash
+ng g i api-result/api-result --type=interface
+```
+
+會產生 `src/app/api-result/api-result.interface.ts`：
+
+```typescript
+export interface ApiResult {
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> 若省略 <code>--type=interface</code>，CLI 預設只會產生 <code>api-result.ts</code>（沒有 <code>.interface</code> 字樣），要維持命名慣例記得加上這個參數。
+</div>
+
+<!--
+前面我們都是手動建立 .interface.ts 檔案，其實 Angular CLI 有提供指令幫我們自動產生，不用自己打檔名、打副檔名。
+
+指令是 ng generate interface，簡寫 ng g i，後面接路徑跟檔名。這裡我們打 ng g i api-result/api-result，CLI 就會在 src/app/api-result 資料夾下建立一個檔案，裡面自動幫我們寫好 export interface 的骨架，內容是空的，交給我們自己填屬性。
+
+⚠️ 這裡有個容易忽略的地方：CLI 預設產生的檔名是 api-result.ts，並不會自動加上 .interface 這個中綴。如果我們想維持「一看檔名就知道是 interface」的命名慣例，要加上 --type=interface 這個參數，CLI 才會產生 api-result.interface.ts。同學之後在專案裡想快速建立 interface，就可以用這個指令，比手動建檔案再自己打 export interface 快很多。
 -->
 
 ---
