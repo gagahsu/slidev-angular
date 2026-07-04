@@ -22,6 +22,7 @@ export class Sidebar {
     { path: 'ch25', label: 'Ch25', title: '@if 條件' },
     { path: 'ch26', label: 'Ch26', title: '@switch' },
     { path: 'ch27', label: 'Ch27', title: 'HTTP API' },
+    { path: 'ch27-weather', label: 'Ch27+', title: '練習：CWA 天氣' },
     { path: 'ch28', label: 'Ch28', title: 'OpenAI 對話' },
     { path: 'ch29', label: 'Ch29', title: 'Interface' },
     { path: 'ch30', label: 'Ch30', title: '排序' },

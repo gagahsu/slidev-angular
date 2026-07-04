@@ -1,0 +1,126 @@
+<!--
+  === 第27章練習解答：CWA 天氣預報畫面 ===
+
+  版面設計重點：
+  ① 漸層天空色 Hero 卡片 — 呈現目前選取行政區最近時段的完整資訊
+  ② 行政區膠囊選單（chips）— 點選切換不同行政區
+  ③ 預報卡片網格 — 每個時段一張卡片，含降雨機率量條
+  ④ 載入骨架屏（skeleton）與錯誤重試畫面
+-->
+
+<div class="weather-page">
+
+  <!-- 頁首 -->
+  <header class="page-head">
+    <div class="page-head-text">
+      <p class="eyebrow">中央氣象署開放資料平臺 · F-D0047-065</p>
+      <h1>{{ cityName() || '鄉鎮' }}天氣預報</h1>
+      @if (datasetDescription()) {
+        <p class="sub">{{ datasetDescription() }}</p>
+      }
+    </div>
+    <button class="refresh-btn" (click)="fetchWeather()" [disabled]="isLoading()">
+      <span class="refresh-icon" [class.spinning]="isLoading()">⟳</span>
+      重新整理
+    </button>
+  </header>
+
+  <!-- 載入中：骨架屏 -->
+  @if (isLoading()) {
+    <div class="skeleton-hero shimmer"></div>
+    <div class="skeleton-grid">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton-card shimmer"></div>
+      }
+    </div>
+  }
+
+  <!-- 錯誤畫面 -->
+  @if (!isLoading() && errorMessage()) {
+    <div class="error-card">
+      <span class="error-emoji">🌀</span>
+      <div>
+        <h3>資料取得失敗</h3>
+        <p>{{ errorMessage() }}</p>
+      </div>
+      <button class="retry-btn" (click)="fetchWeather()">再試一次</button>
+    </div>
+  }
+
+  <!-- 資料畫面 -->
+  @if (!isLoading() && !errorMessage() && districts().length > 0) {
+
+    <!-- 行政區選單 -->
+    <nav class="district-chips" aria-label="行政區選單">
+      @for (district of districts(); track district.name; let i = $index) {
+        <button
+          class="chip"
+          [class.chip-active]="i === selectedIndex()"
+          (click)="selectDistrict(i)">
+          {{ district.name }}
+        </button>
+      }
+    </nav>
+
+    <!-- Hero 卡片：最近時段 -->
+    @if (heroSlot(); as hero) {
+      <section class="hero-card">
+        <div class="hero-main">
+          <span class="hero-emoji">{{ hero.emoji }}</span>
+          <div class="hero-temp-block">
+            <span class="hero-temp">{{ hero.temp || '--' }}<small>°C</small></span>
+            <span class="hero-weather">{{ hero.weather }}</span>
+          </div>
+        </div>
+
+        <div class="hero-meta">
+          <span class="hero-place">{{ selectedDistrict()?.name }}</span>
+          <span class="hero-time">{{ hero.dayLabel }} {{ hero.timeLabel }}</span>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-label">體感溫度</span>
+            <span class="stat-value">{{ hero.feelsLike || '--' }}°</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">相對濕度</span>
+            <span class="stat-value">{{ hero.humidity || '--' }}%</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">降雨機率</span>
+            <span class="stat-value">{{ hero.pop !== null ? hero.pop + '%' : '--' }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">風</span>
+            <span class="stat-value">{{ hero.windDir || '--' }} {{ hero.windSpeed }}<small> m/s</small></span>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- 逐時段預報卡片 -->
+    <section class="forecast-section">
+      <h2 class="section-title">逐時段預報</h2>
+      <div class="forecast-grid">
+        @for (slot of selectedDistrict()?.slots; track slot.startTime) {
+          <article class="forecast-card">
+            <header class="card-when">
+              <span class="card-day">{{ slot.dayLabel }}</span>
+              <span class="card-time">{{ slot.timeLabel }}</span>
+            </header>
+            <span class="card-emoji">{{ slot.emoji }}</span>
+            <span class="card-temp">{{ slot.temp || '--' }}°</span>
+            <span class="card-weather" [title]="slot.weather">{{ slot.weather }}</span>
+            <div class="card-pop">
+              <span class="pop-label">💧 {{ slot.pop !== null ? slot.pop + '%' : '--' }}</span>
+              <div class="pop-track">
+                <div class="pop-fill" [style.width.%]="slot.pop ?? 0"></div>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</div>

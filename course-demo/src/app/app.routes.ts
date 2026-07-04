@@ -68,6 +68,11 @@ export const routes: Routes = [
       import('./chapters/ch27-http-api/ch27-http-api').then(m => m.Ch27HttpApi)
   },
   {
+    path: 'ch27-weather',
+    loadComponent: () =>
+      import('./chapters/ch27-weather-practice/ch27-weather-practice').then(m => m.Ch27WeatherPractice)
+  },
+  {
     path: 'ch28',
     loadComponent: () =>
       import('./chapters/ch28-openai/ch28-openai').then(m => m.Ch28Openai)
