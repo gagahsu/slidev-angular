@@ -229,6 +229,342 @@ export class AppComponent {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 綜合練習
+# Ch33–37 Comprehensive Exercise
+
+<!--
+前面幾章我們分別學了 mat-table、mat-icon、date-picker、DatePipe、JsonPipe 這五個獨立的主題，接下來這個練習要把它們全部串在一起，做一個實際會遇到的畫面：員工資料管理表。
+-->
+
+---
+layout: default
+---
+
+# 練習：員工資料管理表
+### 任務說明
+
+用 `mat-table`、`mat-icon`、`mat-datepicker`、`DatePipe`、`JsonPipe` 做一個員工資料表頁面，需求如下：
+
+1. 定義 `EmployeeData` interface：`id`、`name`、`department`、`hireDate`（`Date`）、`salary`
+2. 準備至少 6 筆假資料，以 `MatTableDataSource` 包裝並加上分頁器（每頁 3 / 5 / 10 筆）
+3. 欄位：ID、姓名、部門、到職日、薪水、操作
+   - 到職日欄位用 `DatePipe` 格式化為 `yyyy/MM/dd`
+   - 操作欄位放兩個 `mat-icon`：`visibility`（檢視）、`delete`（刪除）
+4. 表格上方加入 `mat-datepicker` 篩選欄「到職日期起」，`min` 為所有員工最早到職日，`max` 為今天
+5. 點某員工的 `visibility` icon 後，畫面下方用 `JsonPipe` 顯示該筆完整資料
+
+<!--
+這個練習把 ch33 到 ch37 學過的東西全部用上一次：mat-table 負責顯示跟分頁，mat-icon 負責操作按鈕，mat-datepicker 負責篩選日期，DatePipe 負責把日期欄位排版好看，JsonPipe 負責把選中那筆資料的完整內容印出來除錯用。
+
+大家可以先自己動手做做看，做不出來再往下看提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：員工資料管理表
+### 解題提示
+
+1. 每個欄位都要包在 `ng-container` 裡，`matColumnDef`、`displayedColumns`、資料屬性三者名稱必須一致（ch33 重點）
+2. `MatIconModule` 記得加進 `imports`，icon 名稱去 Google Fonts Icons 網站查（ch34）
+3. `mat-datepicker` 要加 `provideNativeDateAdapter()`，`min` / `max` 綁的是 `Date` 物件，不是字串（ch35）
+4. 表格內格式化日期直接寫 `{{ element.hireDate | date: 'yyyy/MM/dd' }}`，不用在 TS 手動轉換（ch36）
+5. `selectedEmployee` 初始為 `null`，用 `*ngIf="selectedEmployee"` 包住 `<pre>` 區塊，避免顯示 `null`（ch37）
+6. 刪除 icon 呼叫的方法要用 `filter()` 從 `dataSource.data` 排除該筆，再重新指派回 `dataSource.data`，才能觸發表格重新渲染
+
+<!--
+提示的順序就是照著 ch33 到 ch37 的章節順序來對照，大家卡住的時候可以回頭看對應那一章的投影片。
+
+⚠️ 第 6 點是很多同學會忽略的地方：MatTableDataSource 的 data 是用參考比對的，如果直接對陣列做 push 或 splice，畫面不會自動更新，一定要整個重新指派一個新陣列給 dataSource.data。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 完整解答：TypeScript
+
+<!--
+先看 TypeScript 這一側，我們會照順序看過資料型別、假資料、模組匯入、元件設定、屬性宣告，最後是方法實作。
+-->
+
+---
+
+# 完整解答 — Interface
+
+```typescript
+export interface EmployeeData {
+  id: number;
+  name: string;
+  department: string;
+  hireDate: Date;
+  salary: number;
+}
+```
+
+<!--
+先定義資料的型別，跟 ch33 的 PeriodicElement 是一樣的概念，這裡多了 hireDate，型別特別用 Date，不是 string，這樣才能直接搭配 mat-datepicker 跟 DatePipe 使用。
+-->
+
+---
+
+# 完整解答 — 假資料
+
+```typescript
+const EMPLOYEE_DATA: EmployeeData[] = [
+  { id: 1, name: '王小明', department: '研發部', hireDate: new Date('2021/03/15'), salary: 58000 },
+  { id: 2, name: '陳美玲', department: '行銷部', hireDate: new Date('2022/07/01'), salary: 52000 },
+  { id: 3, name: '林大偉', department: '研發部', hireDate: new Date('2020/11/20'), salary: 65000 },
+  { id: 4, name: '張雅婷', department: '人資部', hireDate: new Date('2023/01/10'), salary: 48000 },
+  { id: 5, name: '李志豪', department: '業務部', hireDate: new Date('2019/05/05'), salary: 70000 },
+  { id: 6, name: '黃淑芬', department: '財務部', hireDate: new Date('2022/09/18'), salary: 55000 },
+];
+```
+
+<!--
+準備 6 筆假資料，注意 hireDate 每一筆都是用 new Date() 建立的物件，日期故意設得有前有後，等一下篩選欄的 min 就會抓到最早那一筆，也就是李志豪的 2019/05/05。
+-->
+
+---
+
+# 完整解答 — TS 匯入模組（一）
+
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+```
+
+<!--
+前兩行是 Angular 核心跟共用模組：CommonModule 是 JsonPipe、ngIf 這些指令需要的，FormsModule 則是 ngModel 雙向綁定需要的，少一個都會噴錯。後面兩行是 mat-table 系列，跟 ch33 教的一樣。
+-->
+
+---
+
+# 完整解答 — TS 匯入模組（二）
+
+```typescript
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+```
+
+<!--
+這五個分別對應 mat-icon（ch34）跟 mat-datepicker（ch35）需要的模組，provideNativeDateAdapter 千萬不能漏，漏了 datepicker 會直接壞掉。
+-->
+
+---
+
+# 完整解答 — Component 設定
+
+```typescript
+@Component({
+  selector: 'app-employee-table',
+  imports: [CommonModule, FormsModule, MatTableModule, MatPaginatorModule,
+    MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
+  providers: [provideNativeDateAdapter()],
+  templateUrl: './employee-table.component.html',
+})
+export class EmployeeTableComponent implements AfterViewInit {
+```
+
+<!--
+imports 陣列把前面兩頁匯入的模組全部集合起來，一個都不能少。providers 裡加上 provideNativeDateAdapter()，跟 ch35 教的一樣，是 mat-datepicker 能運作的必要設定。
+-->
+
+---
+
+# 完整解答 — Component 屬性
+
+```typescript
+  displayedColumns: string[] = ['id', 'name', 'department', 'hireDate', 'salary', 'actions'];
+  dataSource = new MatTableDataSource<EmployeeData>(EMPLOYEE_DATA);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  selectedEmployee: EmployeeData | null = null;
+  minDate = new Date(Math.min(...EMPLOYEE_DATA.map(e => e.hireDate.getTime())));
+  maxDate = new Date();
+  filterDate: Date | null = null;
+```
+
+<!--
+displayedColumns 決定表格欄位順序，記得要跟 HTML 的 matColumnDef 完全對上。minDate 這裡用 Math.min 搭配 map，動態算出所有員工裡最早的到職日，不是寫死的日期；maxDate 直接用 new Date() 就是今天，這樣篩選欄的範圍才會跟著假資料自動調整。
+-->
+
+---
+
+# 完整解答 — ngAfterViewInit 與 view()
+
+```typescript
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  view(employee: EmployeeData) {
+    this.selectedEmployee = employee;
+  }
+```
+
+<!--
+ngAfterViewInit 裡把 paginator 接上 dataSource，這是 ch33 教過的必要步驟。view() 方法很單純，把使用者點的那筆員工存進 selectedEmployee，畫面下方的 JsonPipe 就會顯示這筆資料。
+-->
+
+---
+
+# 完整解答 — remove()
+
+```typescript
+  remove(employee: EmployeeData) {
+    this.dataSource.data = this.dataSource.data.filter(
+      e => e.id !== employee.id
+    );
+  }
+}
+```
+
+<!--
+remove() 用 filter() 排除掉被點擊的那一筆，再整個重新指派給 dataSource.data。
+
+⚠️ 這裡一定要重新指派，不能直接對 dataSource.data 做 push 或 splice，因為 Angular 的變更偵測是比對參考位置，直接修改原陣列內容畫面不會更新。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 完整解答：HTML
+
+<!--
+TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過篩選欄、表格欄位、操作按鈕，最後是分頁器跟 JSON 顯示區。
+-->
+
+---
+
+# 完整解答 — 篩選欄
+
+```html
+<mat-form-field>
+  <mat-label>到職日期起</mat-label>
+  <input matInput [matDatepicker]="picker"
+         [min]="minDate" [max]="maxDate"
+         [(ngModel)]="filterDate">
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+```
+
+<!--
+這段跟 ch35 教的 mat-datepicker 結構完全一樣，min 綁 minDate、max 綁 maxDate，這兩個都是 TS 裡動態算出來的 Date 物件，不是寫死的字串。
+-->
+
+---
+
+# 完整解答 — Table 欄位（一）
+
+```html
+<ng-container matColumnDef="id">
+  <th mat-header-cell *matHeaderCellDef> ID </th>
+  <td mat-cell *matCellDef="let e"> {{e.id}} </td>
+</ng-container>
+
+<ng-container matColumnDef="name">
+  <th mat-header-cell *matHeaderCellDef> 姓名 </th>
+  <td mat-cell *matCellDef="let e"> {{e.name}} </td>
+</ng-container>
+```
+
+<!--
+外層仍然是 ch33 教過的 `<div class="mat-elevation-z8"><table mat-table [dataSource]="dataSource">` 結構，這裡從第一個欄位開始看。id、name 兩欄寫法跟 ch33 的範例一模一樣，只是欄位名稱換掉。
+-->
+
+---
+
+# 完整解答 — Table 欄位（二）
+
+```html
+<ng-container matColumnDef="department">
+  <th mat-header-cell *matHeaderCellDef> 部門 </th>
+  <td mat-cell *matCellDef="let e"> {{e.department}} </td>
+</ng-container>
+
+<ng-container matColumnDef="hireDate">
+  <th mat-header-cell *matHeaderCellDef> 到職日 </th>
+  <td mat-cell *matCellDef="let e"> {{e.hireDate | date: 'yyyy/MM/dd'}} </td>
+</ng-container>
+```
+
+<!--
+department 欄跟前面欄位寫法一樣。重點在 hireDate 欄，這裡直接在內嵌繫結後面加上 `| date: 'yyyy/MM/dd'`，就是 ch36 教的 DatePipe，把 Date 物件直接排版成好讀的字串，完全不用在 TS 裡手動轉換。
+-->
+
+---
+
+# 完整解答 — Table 欄位（三）
+
+```html
+<ng-container matColumnDef="salary">
+  <th mat-header-cell *matHeaderCellDef> 薪水 </th>
+  <td mat-cell *matCellDef="let e"> {{e.salary}} </td>
+</ng-container>
+
+<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+```
+
+<!--
+salary 欄跟前面幾欄一樣單純。後面這兩行 tr，是 ch33 教過的收尾寫法，告訴 mat-table 要用 displayedColumns 這個陣列決定顯示哪些欄位、順序又是什麼。
+-->
+
+---
+
+# 完整解答 — Table 欄位（四）— 操作按鈕
+
+```html
+<ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef> 操作 </th>
+  <td mat-cell *matCellDef="let e">
+    <mat-icon (click)="view(e)">visibility</mat-icon>
+    <mat-icon (click)="remove(e)">delete</mat-icon>
+  </td>
+</ng-container>
+```
+
+<!--
+操作欄放了兩個 mat-icon，這是 ch34 教的元件，這裡搭配 (click) 事件繫結，點 visibility 呼叫 TS 的 view() 方法，點 delete 呼叫 remove() 方法，icon 名稱要跟 Google Fonts Icons 網站上查到的名稱完全一致。
+-->
+
+---
+
+# 完整解答 — 分頁器與 JSON 顯示區
+
+```html
+  <mat-paginator [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons></mat-paginator>
+</div>
+
+<pre *ngIf="selectedEmployee">{{ selectedEmployee | json }}</pre>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> <code>*ngIf="selectedEmployee"</code> 一定要加，否則畫面一開始就會顯示 <code>null</code>，點過 visibility 之後才會換成該筆員工的完整 JSON 內容。
+</div>
+
+<!--
+`</table>` 收尾之後接分頁器，`pageSizeOptions` 設定 3、5、10 三種每頁筆數。最下面這行是 ch37 教的 JsonPipe 搭配 `<pre>` 標籤，用來顯示使用者點選的那一筆員工完整資料，方便除錯或確認欄位對不對。
+
+到這裡整個綜合練習的完整解答就講完了，大家可以對照自己寫的版本，看看哪裡卡住、哪裡漏掉。
+-->
+
+---
 layout: end
 ---
 

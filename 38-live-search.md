@@ -144,7 +144,7 @@ class: flex flex-col justify-center items-center text-center
   <img src="/images/37-live-search/mat-table-element-data-preview.png" class="rounded shadow-md max-h-80" />
 </div>
 
-表格包含 No.、Name、Weight、Symbol 四個欄位，共 10 筆元素資料，分頁顯示每頁 5 筆。
+表格包含 No.、Name、Weight、Symbol 四個欄位，共 12 筆元素資料，分頁顯示每頁 5 筆。
 
 <!--
 這張範例的目的是先讓大家有一個可以操作的表格。我們沿用之前教過的 mat-table，準備了一份化學元素的假資料 `ELEMENT_DATA`，一共十筆，包含編號、名稱、重量、符號四個欄位，並且設定每頁顯示五筆做分頁。
@@ -290,6 +290,7 @@ changeData(event: Event) {
 ---
 
 # 完整 TypeScript 範例（一）
+### import 與型別定義
 
 ```typescript
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
@@ -302,27 +303,77 @@ export interface PeriodicElement {
   weight: number;
   symbol: string;
 }
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium',   weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium',  weight: 6.941,  symbol: 'Li' },
-  // ... 更多資料
-];
 ```
 
 <!--
-這兩張投影片的目的，是把剛剛拆開講解的片段組合成一份完整的元件程式碼，讓大家可以對照著自己專案裡的檔案檢查。
+這四張投影片的目的，是把剛剛拆開講解的片段組合成一份完整的元件程式碼，讓大家可以對照著自己專案裡的檔案檢查。這裡刻意把完整內容都列出來，不用 `// ... 更多資料` 或 `{ /* ... */ }` 這種省略寫法，是因為同學實作時常常直接照抄投影片，省略寫法照抄出來的程式碼會編譯不過或缺少必要的 import。
 
-這張是前半段：先 import 需要的 `MatTableDataSource`、`MatPaginator`，定義好 `PeriodicElement` 這個介面描述每一筆資料的形狀，再宣告 `ELEMENT_DATA` 這份原始假資料。這部分其實跟我們之前 mat-table 章節看到的一模一樣，沒有新增任何跟搜尋相關的東西。
+這張先看 import 跟型別定義：`MatTableDataSource`、`MatPaginator` 是等一下會用到的類別，`PeriodicElement` 這個 interface 則描述每一筆資料要有 position、name、weight、symbol 四個屬性。
 -->
 
 ---
 
 # 完整 TypeScript 範例（二）
+### ELEMENT_DATA 假資料
 
 ```typescript
-@Component({ /* ... */ })
+const ELEMENT_DATA: PeriodicElement[] = [
+  { position: 1,  name: 'Hydrogen',  weight: 1.0079,  symbol: 'H'  },
+  { position: 2,  name: 'Helium',    weight: 4.0026,  symbol: 'He' },
+  { position: 3,  name: 'Lithium',   weight: 6.941,   symbol: 'Li' },
+  { position: 4,  name: 'Beryllium', weight: 9.0122,  symbol: 'Be' },
+  { position: 5,  name: 'Boron',     weight: 10.811,  symbol: 'B'  },
+  { position: 6,  name: 'Carbon',    weight: 12.0107, symbol: 'C'  },
+  { position: 7,  name: 'Nitrogen',  weight: 14.0067, symbol: 'N'  },
+  { position: 8,  name: 'Oxygen',    weight: 15.9994, symbol: 'O'  },
+  { position: 9,  name: 'Fluorine',  weight: 18.9984, symbol: 'F'  },
+  { position: 10, name: 'Neon',      weight: 20.1797, symbol: 'Ne' },
+  { position: 11, name: 'Sodium',    weight: 22.9897, symbol: 'Na' },
+  { position: 12, name: 'Magnesium', weight: 24.305,  symbol: 'Mg' }
+];
+```
+
+<!--
+接著宣告 `ELEMENT_DATA` 這份原始假資料，一共 12 筆元素。這部分其實跟我們之前 mat-table 章節看到的一模一樣，沒有新增任何跟搜尋相關的東西，等一下搜尋功能就是從這份資料裡篩選。
+-->
+
+---
+
+# 完整 TypeScript 範例（三）
+### import 與 @Component 設定
+
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule
+  ]
+})
+```
+
+<!--
+這張是元件的 import 跟 `@Component` 設定。因為用 `[(ngModel)]`，一定要 import 並註冊 `FormsModule`，這是同學最常漏掉的一步；其餘的 `MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule`、`MatInputModule` 則是 mat-table 跟搜尋框需要的模組。
+-->
+
+---
+
+# 完整 TypeScript 範例（四）
+### 類別內容（一）— 屬性與 ngAfterViewInit
+
+```typescript
 export class AppComponent implements AfterViewInit {
   inputData: string = '';
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
@@ -333,7 +384,18 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
+```
 
+<!--
+這是今天真正的重點所在，先看類別的前半段。`inputData`、`displayedColumns`、`dataSource` 三個屬性，`dataSource` 一開始是用完整的 `ELEMENT_DATA` 建立的，`ngAfterViewInit()` 裡把分頁器接上表格，這些都是既有的 mat-table 設定，還沒碰到搜尋邏輯。
+-->
+
+---
+
+# 完整 TypeScript 範例（五）
+### 類別內容（二）— changeData 方法
+
+```typescript
   changeData(event: Event) {
     let tidyData: PeriodicElement[] = [];
     ELEMENT_DATA.forEach((res) => {
@@ -347,11 +409,83 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-這是後半段，也是今天真正的重點所在。大家可以看到 `dataSource` 一開始是用完整的 `ELEMENT_DATA` 建立的，`ngAfterViewInit()` 裡把分頁器接上表格，這些都是既有的 mat-table 設定。
-
-真正新增的就是 `changeData()` 這個方法，也就是我們剛剛一步一步拆解過的過濾邏輯，現在放回完整的元件裡，大家可以看到它跟 `inputData`、`dataSource` 之間是怎麼配合運作的。
+這裡接續上一張的類別，收尾的 `}` 是類別本身的結尾。真正新增的就是 `changeData()` 這個方法，也就是我們剛剛一步一步拆解過的過濾邏輯，現在放回完整的元件裡，大家可以看到它跟 `inputData`、`dataSource` 之間是怎麼配合運作的。
 
 大家可以拿這份完整程式碼對照自己專案裡寫的內容，看看有沒有哪個環節漏掉，例如忘記加 `FormsModule`（`[(ngModel)]` 需要用到）或是忘記把事件換成 `(keyup)`。
+-->
+
+---
+
+# 完整 HTML 範例（一）
+### 搜尋框
+
+搭配上面的元件，`app.component.html` 完整內容如下：
+
+```html
+<input
+  matInput
+  (keyup)="changeData($event)"
+  [(ngModel)]="inputData"
+  placeholder="搜尋元素名稱..." />
+```
+
+<!--
+這三張投影片補上完整的 `app.component.html`，讓大家可以跟前面幾張 TypeScript 對照著看，一樣不省略任何一段，避免同學照抄後編譯不過。
+
+這張是搜尋框本身：`matInput` 讓輸入框套用 Material 樣式，`(keyup)` 綁定我們寫好的 `changeData()`，`[(ngModel)]` 則雙向繫結 `inputData`，這兩個事件繫結是即時搜尋能運作的關鍵。
+-->
+
+---
+
+# 完整 HTML 範例（二）
+### 表格欄位定義
+
+```html
+<table mat-table [dataSource]="dataSource">
+
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef>No.</th>
+    <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="weight">
+    <th mat-header-cell *matHeaderCellDef>Weight</th>
+    <td mat-cell *matCellDef="let element">{{ element.weight }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="symbol">
+    <th mat-header-cell *matHeaderCellDef>Symbol</th>
+    <td mat-cell *matCellDef="let element">{{ element.symbol }}</td>
+  </ng-container>
+```
+
+<!--
+這張是 `<table mat-table>` 裡四組 `matColumnDef`，分別對應 position、name、weight、symbol 四個欄位，跟我們之前 mat-table 章節寫法完全一樣，即時搜尋沒有改動這一段。
+-->
+
+---
+
+# 完整 HTML 範例（三）
+### 表頭列、資料列與分頁器
+
+```html
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10]"></mat-paginator>
+```
+
+<!--
+最後這張收尾：`matHeaderRowDef` 跟 `matRowDef` 都吃 `displayedColumns` 這個陣列，決定欄位跟順序；`<mat-paginator>` 負責分頁，記得要在 `ngAfterViewInit()` 把它跟 `dataSource.paginator` 接起來，不然分頁器不會生效。
+
+⚠️ 提醒大家，`matColumnDef` 的名稱、`displayedColumns` 陣列裡的字串、還有資料物件的屬性名稱，這三者一定要完全一致，這是我們在 mat-table 章節就強調過的重點，即時搜尋也不例外。
 -->
 
 ---
