@@ -177,6 +177,62 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
+# 什麼是 ng-container？
+
+HTML table 的結構規範：`<tr>` 底下只能直接放 `<th>`、`<td>`，額外包裹標籤（如 `<div>`）會破壞表格版面與樣式渲染。
+
+`<ng-container>` 為 Angular 提供之邏輯容器，僅存在於範本中，編譯後不會產生對應的 DOM 元素。
+
+| 特性 | 說明 |
+| --- | --- |
+| 不產生 DOM 元素 | 檢查畫面時看不到 `<ng-container>` 標籤，僅顯示其內部子元素 |
+| 常見用途 | 包裹結構型指令（`*ngIf`、`*ngFor`）、群組多個元素、避免多餘標籤影響版面 |
+| 於 mat-table 的用途 | 每個 `matColumnDef` 需容器放置 `<th>` 與 `<td>`，`ng-container` 不會產生額外標籤，維持 table 結構完整 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>Hint：</b> DOM（Document Object Model）為瀏覽器將 HTML 解析後建立的樹狀結構，網頁上每個標籤都對應樹中一個節點，瀏覽器依此結構渲染畫面。
+</div>
+
+<!--
+在看接下來的 HTML 結構之前，先跟大家補充一個常常被忽略的角色：ng-container。
+
+先簡單提一下 DOM：大家可以把它想成瀏覽器讀完 HTML 之後，在背後建立的一棵樹，每個標籤都是樹上的一個節點，瀏覽器就是照著這棵樹的結構去畫出畫面。等一下講 ng-container 不會產生 DOM 元素，指的就是這棵樹裡不會多出對應的節點。
+
+大家可能會想，這個 matColumnDef 為什麼要包在 ng-container 裡面，不能直接包在 div 裡嗎？答案是不行，因為 table 的 DOM 結構有嚴格規定，tr 底下要直接放 th、td，如果我們用 div 多包一層，瀏覽器渲染表格的時候版面就會跑掉，甚至樣式完全失效。
+
+ng-container 特別的地方在於，它只是 Angular 範本裡的一個邏輯標籤，編譯之後不會產生任何實際的 DOM 元素，大家用瀏覽器開發者工具檢查畫面，只會看到裡面的 th、td，完全看不到 ng-container 這個標籤本身。
+-->
+
+---
+
+# 什麼是 ng-container？— 範例
+
+```html
+<!-- ❌ 用 div 包欄位，破壞 table 的 DOM 結構 -->
+<div>
+  <th mat-header-cell *matHeaderCellDef> No. </th>
+  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+</div>
+
+<!-- ✅ 用 ng-container 包欄位，不產生額外標籤 -->
+<ng-container matColumnDef="position">
+  <th mat-header-cell *matHeaderCellDef> No. </th>
+  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+</ng-container>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> mat-table 官方範例固定用 <code>ng-container</code> 搭配 <code>matColumnDef</code>，因其不產生實際 DOM 節點，不影響 table 版面結構。
+</div>
+
+<!--
+帶大家對照一下這兩段程式碼的差異：左邊用 div 包欄位，畫面渲染出來版面會整個跑掉；右邊改用 ng-container，效果完全一樣，但不會多出任何標籤。
+
+⚠️ 提醒大家，這個概念不只用在 mat-table，平常我們用 *ngIf、*ngFor 這些結構型指令，如果不想多包一層 div，也可以用 ng-container 包起來，是滿常用的技巧。
+-->
+
+---
+
 # 使用 Mat-table
 ### HTML 結構（一）
 

@@ -113,7 +113,6 @@ class: flex flex-col justify-center items-center text-center
 <!-- 原生 input -->
 <label for="birthday">Birthday:</label>
 <input type="date" id="birthday" name="birthday">
-
 <!-- mat-datepicker -->
 <mat-form-field>
   <mat-label>Choose a date</mat-label>
@@ -486,6 +485,39 @@ maxDate  = new Date('2024/11/20');
 大家可以看右邊的畫面，超出 11/3 到 11/20 這個範圍的日期，會呈現灰色、點不下去的狀態，這樣就能避免使用者選到不合理的日期，像是訂單日期選到未來很久以後，或是預約日期選到已經過去的時間。
 
 這也是這一章 mat-datepicker 的最後一個重點，接下來我們做個總結。
+-->
+
+---
+
+# 補充：動態計算 min / max 日期範圍
+
+前面範例的 `minDate`、`maxDate` 都是寫死的日期，但實務上像「訂單只能選未來 90 天內」「請假申請只能回溯 7 天」這類需求，日期範圍要跟著「今天」滾動，不能寫死成固定日期。
+
+「用 `new Date()` 取得當下時間，再用 `setDate()` 搭配 `getDate()` 位移天數，就能動態算出以今天為基準的日期範圍」。
+
+```typescript
+today: Date = new Date();
+minDate: Date = new Date();
+maxDate: Date = new Date();
+
+constructor() {
+  this.minDate.setDate(this.today.getDate() - 7);
+  this.maxDate.setDate(this.today.getDate() + 90);
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> <code>setDate()</code> 是直接修改 Date 物件本身（mutate），不是回傳新物件，三個變數一定要各自 <code>new Date()</code>，不能共用同一個參照，否則 <code>setDate()</code> 會互相覆蓋。
+</div>
+
+<!--
+前面我們把 minDate、maxDate 都寫死成固定日期，這在示範的時候沒問題，但實務上很少有需求是「日期範圍永遠固定」，通常都是「以今天為基準，往前往後推算」，像訂單日期通常只能選未來 90 天內，請假申請可能只能回溯 7 天，這種範圍是每天都在滾動的，寫死日期字串完全不合理。
+
+解法就是用 new Date() 先抓到今天的日期物件，再搭配 setDate() 跟 getDate() 這兩個方法做位移運算：getDate() 會回傳目前日期是幾號，setDate() 則是把日期設成我們指定的數字，兩個搭配起來就能做「往前 7 天」「往後 90 天」這種相對運算。
+
+⚠️ 這裡有個大家很容易踩到的坑：setDate() 是直接修改呼叫它的那個 Date 物件本身，不會回傳一個新的物件。所以 today、minDate、maxDate 這三個變數，一定要分別各自呼叫 new Date() 建立三個獨立的物件，如果偷懶讓 minDate、maxDate 指向同一個參照，setDate() 呼叫兩次會互相覆蓋，最後兩個變數會變成同一個日期。
+
+另外要提醒大家，這個範圍是在元件初始化的當下算出來的，也就是使用者打開頁面那一刻的「今天」，不會在畫面停留期間即時更新，這點在大部分情境下沒問題，但如果頁面會開很久跨到隔天，範圍就不會自動往後移動，這是設計上要注意的地方。
 -->
 
 ---
