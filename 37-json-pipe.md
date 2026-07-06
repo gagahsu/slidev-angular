@@ -254,7 +254,7 @@ layout: default
 3. 欄位：ID、姓名、部門、到職日、薪水、操作
    - 到職日欄位用 `DatePipe` 格式化為 `yyyy/MM/dd`
    - 操作欄位放兩個 `mat-icon`：`visibility`（檢視）、`delete`（刪除）
-4. 表格上方加入 `mat-datepicker` 篩選欄「到職日期起」，`min` 為所有員工最早到職日，`max` 為今天
+4. 表格上方加入 `mat-datepicker` 篩選欄「到職日期起」，`min` 為所有員工最早到職日，`max` 為今天；使用者選定日期後，table 只顯示到職日晚於（含等於）該日期的員工
 5. 點某員工的 `visibility` icon 後，畫面下方用 `JsonPipe` 顯示該筆完整資料
 
 <!--
@@ -274,13 +274,14 @@ layout: default
 2. `MatIconModule` 記得加進 `imports`，icon 名稱去 Google Fonts Icons 網站查（ch34）
 3. `mat-datepicker` 要加 `provideNativeDateAdapter()`，`min` / `max` 綁的是 `Date` 物件，不是字串（ch35）
 4. 表格內格式化日期直接寫 `{{ element.hireDate | date: 'yyyy/MM/dd' }}`，不用在 TS 手動轉換（ch36）
-5. `selectedEmployee` 初始為 `null`，用 `*ngIf="selectedEmployee"` 包住 `<pre>` 區塊，避免顯示 `null`（ch37）
-6. 刪除 icon 呼叫的方法要用 `filter()` 從 `dataSource.data` 排除該筆，再重新指派回 `dataSource.data`，才能觸發表格重新渲染
+5. `selectedEmployee` 初始為 `null`，用 `@if (selectedEmployee)` 包住 `<pre>` 區塊，避免顯示 `null`（ch37）
+6. 刪除 icon 呼叫的方法要用 `filter()` 排除該筆，再重新指派回 `dataSource.data`，才能觸發表格重新渲染
+7. `[(ngModel)]` 只會把選到的日期存進變數，不會自動篩選 table；篩選欄要另外綁 `(dateChange)` 事件，選完日期後主動呼叫篩選方法重新計算 `dataSource.data`
 
 <!--
 提示的順序就是照著 ch33 到 ch37 的章節順序來對照，大家卡住的時候可以回頭看對應那一章的投影片。
 
-⚠️ 第 6 點是很多同學會忽略的地方：MatTableDataSource 的 data 是用參考比對的，如果直接對陣列做 push 或 splice，畫面不會自動更新，一定要整個重新指派一個新陣列給 dataSource.data。
+⚠️ 第 6、7 點是很多同學會忽略的地方：MatTableDataSource 的 data 是用參考比對的，直接對陣列做 push 或 splice 畫面不會自動更新；而 ngModel 綁定的變數只是單純存值，並不會反過來驅動任何邏輯，篩選這件事一定要自己寫方法、自己綁事件觸發。
 -->
 
 ---
@@ -344,7 +345,7 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 ```
 
 <!--
-前兩行是 Angular 核心跟共用模組：CommonModule 是 JsonPipe、ngIf 這些指令需要的，FormsModule 則是 ngModel 雙向綁定需要的，少一個都會噴錯。後面兩行是 mat-table 系列，跟 ch33 教的一樣。
+前兩行是 Angular 核心跟共用模組：CommonModule 是 JsonPipe、DatePipe 這些管道需要的，FormsModule 則是 ngModel 雙向綁定需要的，少一個都會噴錯。@if 是 Angular 內建語法，不需要額外 import。後面兩行是 mat-table 系列，跟 ch33 教的一樣。
 -->
 
 ---
@@ -388,7 +389,8 @@ imports 陣列把前面兩頁匯入的模組全部集合起來，一個都不能
 
 ```typescript
   displayedColumns: string[] = ['id', 'name', 'department', 'hireDate', 'salary', 'actions'];
-  dataSource = new MatTableDataSource<EmployeeData>(EMPLOYEE_DATA);
+  employees: EmployeeData[] = EMPLOYEE_DATA;
+  dataSource = new MatTableDataSource<EmployeeData>(this.employees);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   selectedEmployee: EmployeeData | null = null;
   minDate = new Date(Math.min(...EMPLOYEE_DATA.map(e => e.hireDate.getTime())));
@@ -397,7 +399,7 @@ imports 陣列把前面兩頁匯入的模組全部集合起來，一個都不能
 ```
 
 <!--
-displayedColumns 決定表格欄位順序，記得要跟 HTML 的 matColumnDef 完全對上。minDate 這裡用 Math.min 搭配 map，動態算出所有員工裡最早的到職日，不是寫死的日期；maxDate 直接用 new Date() 就是今天，這樣篩選欄的範圍才會跟著假資料自動調整。
+displayedColumns 決定表格欄位順序，記得要跟 HTML 的 matColumnDef 完全對上。這裡多宣告一個 employees 陣列當作「真正的資料來源」，dataSource.data 之後會依篩選條件從 employees 重新算出來，而不是直接指向 EMPLOYEE_DATA。minDate 用 Math.min 搭配 map，動態算出所有員工裡最早的到職日；maxDate 直接用 new Date() 就是今天。
 -->
 
 ---
@@ -420,21 +422,38 @@ ngAfterViewInit 裡把 paginator 接上 dataSource，這是 ch33 教過的必要
 
 ---
 
+# 完整解答 — applyDateFilter()
+
+```typescript
+  applyDateFilter() {
+    this.dataSource.data = this.filterDate
+      ? this.employees.filter(e => e.hireDate >= this.filterDate!)
+      : this.employees;
+  }
+```
+
+<!--
+這個方法才是真正讓篩選欄動起來的關鍵，前面很多同學會漏掉這一步：畫面上的日期輸入框綁的是 filterDate 這個變數，但如果沒有另外寫邏輯把 filterDate 拿去跟 employees 做比對，table 資料當然不會跟著變。
+
+做法是：如果 filterDate 有值，就從 employees 裡篩出到職日晚於（含等於）filterDate 的員工，重新指派給 dataSource.data；如果 filterDate 是 null，就顯示全部。這個方法要在使用者選完日期後被觸發，下一頁 HTML 會看到怎麼接上這個觸發點。
+-->
+
+---
+
 # 完整解答 — remove()
 
 ```typescript
   remove(employee: EmployeeData) {
-    this.dataSource.data = this.dataSource.data.filter(
-      e => e.id !== employee.id
-    );
+    this.employees = this.employees.filter(e => e.id !== employee.id);
+    this.applyDateFilter();
   }
 }
 ```
 
 <!--
-remove() 用 filter() 排除掉被點擊的那一筆，再整個重新指派給 dataSource.data。
+remove() 現在改成先從 employees 這個「真正的資料來源」排除掉被點擊的那一筆，再呼叫 applyDateFilter() 重新套用目前的篩選條件算出 dataSource.data。
 
-⚠️ 這裡一定要重新指派，不能直接對 dataSource.data 做 push 或 splice，因為 Angular 的變更偵測是比對參考位置，直接修改原陣列內容畫面不會更新。
+⚠️ 如果直接對 dataSource.data 做 filter 再重新指派（沒有經過 employees），刪除的員工會在下次篩選日期改變時「復活」，因為篩選邏輯是從 employees 重新算出來的，一定要讓 employees 跟 dataSource.data 保持同步。
 -->
 
 ---
@@ -457,14 +476,38 @@ TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過篩選
   <mat-label>到職日期起</mat-label>
   <input matInput [matDatepicker]="picker"
          [min]="minDate" [max]="maxDate"
-         [(ngModel)]="filterDate">
+         [(ngModel)]="filterDate"
+         (dateChange)="applyDateFilter()">
   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
 </mat-form-field>
 ```
 
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> <code>(dateChange)</code> 只在輸入框變成「完整合法日期」且失焦，或直接用日曆面板點選時才會觸發；只在輸入框打局部文字（例如只打 <code>2022</code>）不會觸發，這是 mat-datepicker 的正常行為，不是 bug。
+</div>
+
 <!--
-這段跟 ch35 教的 mat-datepicker 結構完全一樣，min 綁 minDate、max 綁 maxDate，這兩個都是 TS 裡動態算出來的 Date 物件，不是寫死的字串。
+這段跟 ch35 教的 mat-datepicker 結構大致相同，min 綁 minDate、max 綁 maxDate，這兩個都是 TS 裡動態算出來的 Date 物件，不是寫死的字串。
+
+⚠️ 多加的 (dateChange)="applyDateFilter()" 才是重點：[(ngModel)] 只負責把選到的日期存進 filterDate 變數，並不會自動去改 table 顯示的資料。一定要另外綁 (dateChange) 這個事件，選完日期後主動呼叫 applyDateFilter()，table 才會真的跟著篩選欄變動。
+
+⚠️ 大家實測的時候要注意：如果只在輸入框裡打「2022」這種局部文字，(dateChange) 不會觸發，因為底層的 Date adapter 還沒辦法把這個字串解析成一個完整、合法的日期。一定要打出完整日期（例如 2022/01/01）並且移開焦點，或是直接點日曆圖示、從彈出面板選一天，(dateChange) 才會發生。
+-->
+
+---
+
+# 完整解答 — Table 外層容器
+
+```html
+<mat-form-field> ... </mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource">
+```
+
+<!--
+表格的外層仍然是 ch33 教過的結構：最外面一個 `<div class="mat-elevation-z8">` 負責陰影樣式，裡面才是 `<table mat-table [dataSource]="dataSource">`，接下來每個欄位都定義在這個 table 標籤裡面。
 -->
 
 ---
@@ -484,7 +527,7 @@ TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過篩選
 ```
 
 <!--
-外層仍然是 ch33 教過的 `<div class="mat-elevation-z8"><table mat-table [dataSource]="dataSource">` 結構，這裡從第一個欄位開始看。id、name 兩欄寫法跟 ch33 的範例一模一樣，只是欄位名稱換掉。
+接續上一頁的 table 標籤，這裡從第一個欄位開始看。id、name 兩欄寫法跟 ch33 的範例一模一樣，只是欄位名稱換掉。
 -->
 
 ---
@@ -548,18 +591,21 @@ salary 欄跟前面幾欄一樣單純。後面這兩行 tr，是 ch33 教過的�
 # 完整解答 — 分頁器與 JSON 顯示區
 
 ```html
+  </table>
   <mat-paginator [pageSizeOptions]="[3, 5, 10]" showFirstLastButtons></mat-paginator>
 </div>
 
-<pre *ngIf="selectedEmployee">{{ selectedEmployee | json }}</pre>
+@if (selectedEmployee) {
+  <pre>{{ selectedEmployee | json }}</pre>
+}
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> <code>*ngIf="selectedEmployee"</code> 一定要加，否則畫面一開始就會顯示 <code>null</code>，點過 visibility 之後才會換成該筆員工的完整 JSON 內容。
+💡 <b>注意：</b> <code>@if (selectedEmployee)</code> 一定要加，否則畫面一開始就會顯示 <code>null</code>，點過 visibility 之後才會換成該筆員工的完整 JSON 內容。
 </div>
 
 <!--
-`</table>` 收尾之後接分頁器，`pageSizeOptions` 設定 3、5、10 三種每頁筆數。最下面這行是 ch37 教的 JsonPipe 搭配 `<pre>` 標籤，用來顯示使用者點選的那一筆員工完整資料，方便除錯或確認欄位對不對。
+`</table>` 收尾之後接分頁器，`pageSizeOptions` 設定 3、5、10 三種每頁筆數。最下面這段用 @if 包住 <pre>，是 ch37 教的 JsonPipe 搭配 `<pre>` 標籤，用來顯示使用者點選的那一筆員工完整資料，方便除錯或確認欄位對不對。
 
 到這裡整個綜合練習的完整解答就講完了，大家可以對照自己寫的版本，看看哪裡卡住、哪裡漏掉。
 -->
