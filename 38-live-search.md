@@ -294,8 +294,11 @@ changeData(event: Event) {
 
 ```typescript
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { FormsModule } from '@angular/forms';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 export interface PeriodicElement {
   position: number;
@@ -308,7 +311,7 @@ export interface PeriodicElement {
 <!--
 這四張投影片的目的，是把剛剛拆開講解的片段組合成一份完整的元件程式碼，讓大家可以對照著自己專案裡的檔案檢查。這裡刻意把完整內容都列出來，不用 `// ... 更多資料` 或 `{ /* ... */ }` 這種省略寫法，是因為同學實作時常常直接照抄投影片，省略寫法照抄出來的程式碼會編譯不過或缺少必要的 import。
 
-這張先看 import 跟型別定義：`MatTableDataSource`、`MatPaginator` 是等一下會用到的類別，`PeriodicElement` 這個 interface 則描述每一筆資料要有 position、name、weight、symbol 四個屬性。
+這張先看 import 跟型別定義：`MatTableDataSource`、`MatPaginator` 是等一下會用到的類別，`FormsModule`、`MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule`、`MatInputModule` 則是元件 `imports` 陣列需要註冊的模組，一次列在最前面，後面幾張就不用再重複 import。`PeriodicElement` 這個 interface 描述每一筆資料要有 position、name、weight、symbol 四個屬性。
 -->
 
 ---
@@ -340,16 +343,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ---
 
 # 完整 TypeScript 範例（三）
-### import 與 @Component 設定
+### @Component 設定
 
 ```typescript
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -365,7 +361,7 @@ import { MatInputModule } from '@angular/material/input';
 ```
 
 <!--
-這張是元件的 import 跟 `@Component` 設定。因為用 `[(ngModel)]`，一定要 import 並註冊 `FormsModule`，這是同學最常漏掉的一步；其餘的 `MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule`、`MatInputModule` 則是 mat-table 跟搜尋框需要的模組。
+這張是元件的 `@Component` 設定，用到的模組都已經在範例（一）匯入好了。因為用 `[(ngModel)]`，一定要註冊 `FormsModule`，這是同學最常漏掉的一步；其餘的 `MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule`、`MatInputModule` 則是 mat-table 跟搜尋框需要的模組。
 -->
 
 ---
