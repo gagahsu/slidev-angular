@@ -366,6 +366,11 @@ style: |
       <div>Angular 部署</div>
       <div class="chapter-subtitle">Firebase Hosting</div>
     </Link>
+    <Link to="ch57" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
+      <div class="chapter-num" style="color: #e07b39;">綜合</div>
+      <div>綜合練習 Ch33–40</div>
+      <div class="chapter-subtitle" style="color: #b05a20;">員工管理系統實作</div>
+    </Link>
     <!-- 更多章節將在此處新增 -->
   </div>
 </div>
@@ -600,4 +605,8 @@ src: ./55-angular-build.md
 
 ---
 src: ./56-angular-deploy.md
+---
+
+---
+src: ./57-comprehensive-exercise.md
 ---
