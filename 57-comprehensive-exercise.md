@@ -163,6 +163,34 @@ layout: default
 ---
 
 # 練習：員工管理系統
+### 畫面預覽 — 已封存員工頁籤
+
+<div class="flex flex-col gap-3 mt-2" style="max-width: 560px; margin-left: auto; margin-right: auto;">
+  <div class="flex gap-4 justify-center" style="border-bottom: 2px solid #e2e8f0; padding-bottom: 0.4rem;">
+    <span style="color: #9ca3af;">員工列表</span>
+    <span style="color: #1a5c5c; font-weight: 700; border-bottom: 2px solid #5eada0; padding-bottom: 0.4rem;">已封存員工</span>
+  </div>
+  <div class="flex justify-between items-center rounded-lg px-4 py-2" style="border: 1px solid #e2e8f0;">
+    <span>張雅婷・人資部</span>
+    <span class="text-xs px-2 py-1 rounded" style="border: 1px solid #e2e8f0;">↺ restore</span>
+  </div>
+</div>
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 這裡不是 <code>mat-table</code>，只是簡單的 <code>@for</code> 清單；只顯示姓名跟部門，沒有薪水、到職日這些欄位。清單為空時會換成 <code>@empty</code> 的提示文字。
+</div>
+
+<!--
+這是切到「已封存員工」頁籤之後看到的畫面，張雅婷剛被封存，所以出現在這裡，只留姓名跟部門，旁邊一個 restore icon，點下去就會呼叫 restore() 移回「員工列表」。這個頁籤刻意做得比較陽春，不用 mat-table，凸顯出「不是所有清單都要用同一套重量級元件」的取捨。
+
+如果 archivedEmployees 是空陣列，畫面會顯示 @empty 區塊寫的提示文字，而不是空白一片，這是 ch26 教過的 @for 搭配 @empty 語法。
+-->
+
+---
+layout: default
+---
+
+# 練習：員工管理系統
 ### 解題提示（一）
 
 1. `employees`（在架員工）跟 `archivedEmployees`（已封存員工）是**兩個獨立陣列**，都是「真正的資料來源」；`dataSource.data` 是從 `employees` 篩選後算出來的顯示結果，不要直接對 `dataSource.data` 做增刪（ch33、ch38 重點）
@@ -575,7 +603,7 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 完整解答 — SCSS
+# 完整解答 — SCSS（一）版面與高亮
 
 ```scss
 .tab-content {
@@ -593,7 +621,21 @@ class: flex flex-col justify-center items-center text-center
   color: #92400e;
   font-weight: 700;
 }
+```
 
+<!--
+ngClass 只負責「加不加這個 class」，class 實際長怎樣還是要靠 CSS 定義，這是 ch39 就強調過的分工。.tab-content 給每個頁籤內容一點上下留白，.filters 讓搜尋框跟日期篩選欄並排顯示，.salary-high 則給薪水欄位一個黃底深字的高亮效果，跟畫面預覽那張投影片看到的一致。
+
+下一頁繼續看已封存員工清單的樣式。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — SCSS（二）已封存清單
+
+```scss
 .archived-list {
   list-style: none;
   display: flex;
@@ -612,7 +654,7 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-ngClass 只負責「加不加這個 class」，class 實際長怎樣還是要靠 CSS 定義，這是 ch39 就強調過的分工。.salary-high 給薪水欄位一個黃底深字的高亮效果，跟畫面預覽那張投影片看到的一致。.filters 讓搜尋框跟日期篩選欄並排顯示，.archived-list 系列則是已封存清單的排版，讓它看起來像一份清爽的名單，而不是瀏覽器預設的項目符號。
+.archived-list 系列是已封存清單的排版，把預設的項目符號拿掉，改成每筆一列、左右對齊、外面加邊框圓角，讓它看起來像一份清爽的名單，跟畫面預覽那張投影片一致，而不是瀏覽器預設的項目符號清單。
 
 到這裡整個綜合練習的完整解答就講完了，大家可以對照自己寫的版本，看看 Tabs、搜尋、篩選、ngClass、封存／復原這五個部分有沒有都串起來。
 -->
