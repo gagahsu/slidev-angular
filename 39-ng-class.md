@@ -309,6 +309,210 @@ getClassCss(): string {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 練習
+# Practice Exercise
+
+<!--
+三種用法都學完了，接下來用一個實務情境把它們串在一起：訂單清單依狀態顯示不同顏色標籤。
+-->
+
+---
+layout: default
+---
+
+# 練習：訂單狀態標籤
+### 任務說明
+
+做一個訂單清單，把今天學的三種 `ngClass` 用法都用上：
+
+1. 定義 `Order` interface：`id`、`customer`、`status`（`'pending' | 'shipped' | 'completed' | 'cancelled'`）、`isOverdue`
+2. 準備至少 5 筆假資料，用 `@for` 顯示成清單
+3. 每筆訂單用 `[ngClass]` **物件語法**，依 `status` 套上對應顏色 class：`badge-pending`、`badge-shipped`、`badge-completed`、`badge-cancelled`
+4. 若該筆 `isOverdue` 為 `true`，同一個物件語法裡再多加一個 `badge-overdue` class（同時符合兩個條件）
+5. 寫一個方法 `getRowClass(order)`，若訂單狀態為 `cancelled` 就回傳 `'row-cancelled'`，否則回傳空字串，並用**方法回傳**語法綁在整個 `<li>` 上
+
+<!--
+這個練習把三種用法各用一次：物件語法處理狀態顏色跟逾期提示，方法回傳處理「整列要不要變灰階」這種稍微複雜一點的邏輯。
+
+大家可以先自己動手做做看，做不出來再往下看提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：訂單狀態標籤
+### 畫面預覽
+
+<div class="flex flex-col gap-2 mt-4" style="max-width: 480px; margin-left: auto; margin-right: auto;">
+  <div class="flex justify-between items-center rounded-lg px-4 py-2" style="border: 1px solid #e2e8f0;">
+    <span><span class="text-gray-400 text-xs mr-1">#1</span><b>王小明</b></span>
+    <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#fef3c7; color:#92400e;">pending</span>
+  </div>
+  <div class="flex justify-between items-center rounded-lg px-4 py-2" style="border: 1px solid #e2e8f0;">
+    <span><span class="text-gray-400 text-xs mr-1">#2</span><b>陳美玲</b></span>
+    <span class="flex gap-1">
+      <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#dbeafe; color:#1e40af;">shipped</span>
+      <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#fee2e2; color:#991b1b;">overdue</span>
+    </span>
+  </div>
+  <div class="flex justify-between items-center rounded-lg px-4 py-2" style="border: 1px solid #e2e8f0;">
+    <span><span class="text-gray-400 text-xs mr-1">#3</span><b>林大偉</b></span>
+    <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#dcfce7; color:#166534;">completed</span>
+  </div>
+  <div class="flex justify-between items-center rounded-lg px-4 py-2" style="border: 1px solid #e2e8f0; opacity: 0.5; text-decoration: line-through;">
+    <span><span class="text-gray-400 text-xs mr-1">#4</span><b>張雅婷</b></span>
+    <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#f3f4f6; color:#6b7280;">cancelled</span>
+  </div>
+  <div class="flex justify-between items-center rounded-lg px-4 py-2" style="border: 1px solid #e2e8f0;">
+    <span><span class="text-gray-400 text-xs mr-1">#5</span><b>李志豪</b></span>
+    <span class="flex gap-1">
+      <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#fef3c7; color:#92400e;">pending</span>
+      <span class="text-xs font-semibold rounded-full px-2 py-1" style="background:#fee2e2; color:#991b1b;">overdue</span>
+    </span>
+  </div>
+</div>
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 第 2、5 筆同時掛兩個 badge（物件語法多條件成立）；第 4 筆整列變灰階刪除線（方法回傳 <code>row-cancelled</code>）。
+</div>
+
+<!--
+先讓大家看一下做完之後畫面長什麼樣子，再回頭寫程式會比較有方向感。
+
+大家可以看到第 2 筆跟第 5 筆，狀態標籤旁邊多了一個紅色的 overdue 標籤，這就是物件語法裡兩個條件同時成立的效果：一個管狀態顏色，一個管逾期提示，彼此互不干擾。第 4 筆整列變成半透明加刪除線，這個效果不是物件語法做的，是掛在 `<li>` 上的 getRowClass() 方法回傳的 row-cancelled class 造成的。
+-->
+
+---
+layout: default
+---
+
+# 練習：訂單狀態標籤
+### 解題提示
+
+1. `status` 的型別用聯合型別（union type）宣告，`'pending' | 'shipped' | 'completed' | 'cancelled'`，這樣打錯字 TypeScript 會直接標紅
+2. 物件語法裡可以同時放 4 個狀態 class 加 1 個逾期 class，5 個 key 互不影響，符合條件的都會套用（ch39 動態條件綁定）
+3. `@for` 語法別忘記 `track`，這裡資料有唯一的 `id`，直接 `track order.id`（ch26 重點）
+4. `getRowClass()` 只回傳 `row-cancelled` 或空字串，`[ngClass]="getRowClass(order)"` 綁的是方法呼叫，不是物件（ch39 方法回傳）
+5. `badge-*` 這些 class 的 CSS 樣式本身（顏色、底色）不是這次練習重點，可以先用簡單顏色隨意定義，重點是 class 有沒有正確被套上去
+
+<!--
+提示的順序照著任務說明的步驟走，卡住的時候可以回頭對照對應那一段的投影片。
+
+⚠️ 大家很容易漏掉的地方是 status 明明已經確定只有四種值，物件語法卻還在寫 `order.status == 'pending'` 這種字串比對沒問題，但如果打錯字（例如打成 'pending'），因為型別是聯合型別，TypeScript 編譯期就會抓出來，這也是為什麼建議一開始就把型別定義清楚。
+-->
+
+---
+
+# 完整解答 — Interface 與假資料
+
+```typescript
+export interface Order {
+  id: number;
+  customer: string;
+  status: 'pending' | 'shipped' | 'completed' | 'cancelled';
+  isOverdue: boolean;
+}
+
+orders: Order[] = [
+  { id: 1, customer: '王小明', status: 'pending',   isOverdue: false },
+  { id: 2, customer: '陳美玲', status: 'shipped',   isOverdue: true  },
+  { id: 3, customer: '林大偉', status: 'completed', isOverdue: false },
+];
+```
+
+<!--
+先定義 Order 的型別，status 用聯合型別限制只能是這四種字串，isOverdue 是布林值，代表這筆訂單是否逾期。orders 這裡先放三筆示範，大家實作時記得補到至少 5 筆，涵蓋四種狀態跟逾期、未逾期的情境。
+-->
+
+---
+
+# 完整解答 — 假資料（續）與方法
+
+```typescript
+  { id: 4, customer: '張雅婷', status: 'cancelled', isOverdue: false },
+  { id: 5, customer: '李志豪', status: 'pending',   isOverdue: true  },
+];
+
+getRowClass(order: Order): string {
+  return order.status === 'cancelled' ? 'row-cancelled' : '';
+}
+```
+
+<!--
+補齊剩下兩筆資料，第 4 筆是 cancelled 狀態，第 5 筆是 pending 但 isOverdue 為 true，等一下畫面上會同時看到 badge-pending 跟 badge-overdue 兩個 class 一起出現。
+
+getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態是 cancelled 就回傳 row-cancelled 這個 class 名稱，其他狀態一律回傳空字串，讓 [ngClass] 什麼都不加。
+-->
+
+---
+
+# 完整解答 — HTML
+
+```html
+<ul>
+  @for (order of orders; track order.id) {
+    <li [ngClass]="getRowClass(order)">
+      <span [ngClass]="{
+        'badge-pending': order.status === 'pending',
+        'badge-shipped': order.status === 'shipped',
+        'badge-completed': order.status === 'completed',
+        'badge-cancelled': order.status === 'cancelled',
+        'badge-overdue': order.isOverdue
+      }">
+        {{ order.customer }} — {{ order.status }}
+      </span>
+    </li>
+  }
+</ul>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> <code>@for</code> 是 Angular 17+ 內建語法，不需要額外 import；<code>[ngClass]</code> 物件語法裡的 5 個 key 是各自獨立判斷的，一筆訂單可以同時套上 <code>badge-pending</code> 跟 <code>badge-overdue</code> 兩個 class。
+</div>
+
+<!--
+外層用 @for 搭配 track order.id 跑過整個 orders 陣列，這是 ch26 教過的語法，忘記 track 會直接編譯錯誤。
+
+<li> 上綁的是 getRowClass(order) 這個方法呼叫，狀態是 cancelled 的那一筆會多一個 row-cancelled class，畫面上可以用這個 class 做灰階或刪除線效果。<span> 上綁的是物件語法，四個狀態 class 只會有一個成立，但 badge-overdue 是獨立判斷的，跟狀態沒有關係，只要 isOverdue 是 true 就會出現，所以逾期的訂單畫面上會同時看到狀態顏色跟逾期警示兩個標籤。
+-->
+
+---
+
+# 完整解答 — SCSS
+
+`ngClass` 只負責「加不加這個 class」，class 實際長怎樣（顏色、底色、刪除線）還是要靠 CSS／SCSS 定義：
+
+```scss
+.badge-pending   { background: #fef3c7; color: #92400e; }
+.badge-shipped   { background: #dbeafe; color: #1e40af; }
+.badge-completed { background: #dcfce7; color: #166534; }
+.badge-cancelled { background: #f3f4f6; color: #6b7280; }
+.badge-overdue   { background: #fee2e2; color: #991b1b; }
+
+.row-cancelled {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+```
+
+上述樣式共用的排版（圓角、字級、padding）可另外抽一個 `.badge` 共用 class，`[ngClass]` 綁定時同時放 `'badge': true` 或直接在 HTML 上寫死 `class="badge"`。
+
+<!--
+這頁補上前面一直沒放的 SCSS，讓大家知道 ngClass 跟 CSS 是分工的：ngClass 決定「這個元素現在要不要有 badge-pending 這個名字」，實際 badge-pending 長什麼顏色、字級大小，還是得回到 SCSS 這邊自己定義，Angular 不會幫我們生樣式。
+
+⚠️ 提醒大家，五個 badge class 的顏色只是示範用，重點是每個 class 都要能獨立存在、互不干擾，因為 HTML 那邊 [ngClass] 物件語法本來就可能讓一個元素同時套上兩個 badge（像 badge-pending 加 badge-overdue），所以顏色設計上不要讓兩個 class 用了同一個 CSS 屬性互相覆蓋，例如都設定 background 就會蓋掉，這裡沒有互相衝突的屬性，所以兩個能同時生效。
+
+row-cancelled 就是 getRowClass() 回傳的那個 class，opacity 讓整列變淡，text-decoration: line-through 加上刪除線，兩個效果搭配起來就是畫面預覽看到的「取消訂單」樣式。
+
+到這裡練習的完整解答就講完了，大家可以對照自己寫的版本，看看物件語法跟方法回傳有沒有配對正確，樣式有沒有跟著套上去。
+-->
+
+---
 layout: end
 ---
 
