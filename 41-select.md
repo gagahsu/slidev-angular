@@ -61,7 +61,7 @@ layout: default
 
 - **Select 簡介** — HTML 原生 select 與 Angular Material mat-select 的差異
 - **HTML select 寫法** — `<select>` 搭配 `[(ngModel)]` 雙向綁定
-- **mat-select 寫法** — `<mat-form-field>` 包裝、`matNativeControl` 屬性與必要模組匯入
+- **mat-select 寫法** — `<mat-select>`/`<mat-option>` 元件寫法、`matNativeControl` 屬性與必要模組匯入
 - **何時選擇哪種** — 根據需求選用原生或 Material 元件
 
 <!--
@@ -225,9 +225,77 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
+# mat-select — 基本用法
+
+Angular Material 提供兩種整合方式：`<mat-select>` 元件、與在原生 `<select>` 上加 `matNativeControl` 屬性。先看 `<mat-select>` 元件本身怎麼寫。
+
+```html
+<mat-form-field>
+  <mat-label>Favorite food</mat-label>
+  <mat-select>
+    @for (food of foods; track food) {
+      <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+```
+
+- `<mat-select>` 取代原生 `<select>`，`<mat-option>` 取代 `<option>`
+- `@for` 迴圈搭配 `track food` 產生選項，`[value]` 綁定實際值，內容顯示 `viewValue`
+
+<!--
+先看 mat-select 元件本身的寫法。跟原生 select 最大差異：option 換成 mat-option，而且選項通常用 @for 迴圈從陣列產生，不會像原生那樣一個一個手動寫。
+
+mat-select 標籤本身不用額外屬性，Material 會自動套用樣式；每個 mat-option 用 [value] 綁定實際存到程式碼裡的值，中間文字則是顯示給使用者看的 viewValue。
+
+track food 是 Angular 新版 control flow 語法要求的，用來幫 Angular 追蹤每個選項的身分，避免不必要的重新渲染。
+-->
+
+---
+
+# mat-select — 元件程式碼
+
+```typescript
+import {Component} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+
+interface Food {
+  value: string;
+  viewValue: string;
+}
+
+@Component({
+  selector: 'select-overview-example',
+  templateUrl: 'select-overview-example.html',
+  imports: [MatFormFieldModule, MatSelectModule, FormsModule],
+})
+export class SelectOverviewExample {
+  foods: Food[] = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
+  ];
+}
+```
+
+- `foods` 陣列即為 `@for` 迴圈的資料來源，每筆含 `value`（實際值）與 `viewValue`（顯示文字）
+- 需匯入 `MatFormFieldModule`、`MatSelectModule`
+
+<!--
+配合前一頁的 template，這裡是對應的元件程式碼。重點是 foods 這個陣列，每一筆資料都有 value 跟 viewValue 兩個欄位，分別對應到前面看到的 [value] 綁定跟中間顯示的文字。
+
+imports 陣列要記得放 MatFormFieldModule 跟 MatSelectModule，這是 mat-select 元件運作的基本需求。
+
+大家可以看到，這種寫法很適合選項是動態資料的情境，例如從後端 API 拿到的清單，直接丟進 foods 陣列、模板完全不用改。
+-->
+
+---
+
 # mat-select — 使用 matNativeControl
 
-Angular Material 提供兩種整合方式：`<mat-select>` 元件與在原生 `<select>` 上加 `matNativeControl` 屬性。使用 `matNativeControl` 可保留原生 select 語意，同時套用 Material 樣式。
+`<mat-select>` 元件之外，Angular Material 也支援在原生 `<select>` 上加 `matNativeControl` 屬性。使用 `matNativeControl` 可保留原生 select 語意，同時套用 Material 樣式。
 
 ```html
 <mat-form-field>

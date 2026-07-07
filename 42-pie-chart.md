@@ -96,14 +96,14 @@ Chart.js 是一套基於瀏覽器原生 canvas 畫布的開源圖表函式庫，
 
 **長條圖（Bar Chart）**
 
-<img src="/images/41-pie-chart/bar-chart-monthly-sales.png" class="rounded shadow-md max-h-80" />
+<img src="/images/41-pie-chart/bar-chart-monthly-sales.png" class="rounded shadow-md max-h-80 max-w-full" />
 
 </div>
 <div>
 
 **直線圖（Line Chart）**
 
-<img src="/images/41-pie-chart/line-chart-monthly-sales.png" class="rounded shadow-md max-h-80" />
+<img src="/images/41-pie-chart/line-chart-monthly-sales.png" class="rounded shadow-md max-h-80 max-w-full" />
 
 </div>
 </div>
@@ -123,14 +123,14 @@ Chart.js 是一套基於瀏覽器原生 canvas 畫布的開源圖表函式庫，
 
 **圓餅圖（Pie / Doughnut Chart）**
 
-<img src="/images/41-pie-chart/doughnut-chart-expense-breakdown.png" class="rounded shadow-md max-h-80" />
+<img src="/images/41-pie-chart/doughnut-chart-expense-breakdown.png" class="rounded shadow-md max-h-80 max-w-full" />
 
 </div>
 <div>
 
 **泡泡圖（Bubble Chart）**
 
-<img src="/images/41-pie-chart/bubble-chart-team-coordinates.png" class="rounded shadow-md max-h-80" />
+<img src="/images/41-pie-chart/bubble-chart-team-coordinates.png" class="rounded shadow-md max-h-80 max-w-full" />
 
 </div>
 </div>
@@ -195,14 +195,17 @@ class: flex flex-col justify-center items-center text-center
 
 # 建立圓餅圖 — HTML 範本
 
-在目標元件的 HTML 範本中，加入一個 `<canvas>` 標籤作為圖表的繪製區域：
+在目標元件的 HTML 範本中，加入一個 `<canvas>` 標籤作為圖表的繪製區域，並用一個限制寬高的容器包住：
 
 ```html
-<canvas id="chart"></canvas>
+<div style="width: 300px; height: 300px;">
+  <canvas id="chart"></canvas>
+</div>
 ```
 
 - `id="chart"` 用於在 TypeScript 中透過 DOM 取得該元素
 - Chart.js 以 `<canvas>` 作為繪圖表面，不使用其他 HTML 元素
+- Chart.js 預設 `responsive: true`，畫布會撐滿外層容器 → 外層沒限制寬高時圖表會過大
 
 <!--
 我們先看 HTML 的部分，其實非常單純，只需要一個 canvas 標籤，可以把它想成一塊空白畫布，等一下 Chart.js 會直接在這塊畫布上把圖表畫出來。
@@ -210,67 +213,93 @@ class: flex flex-col justify-center items-center text-center
 這裡的重點是 id="chart"，我們等一下會在 TypeScript 裡用這個 id 找到這個 canvas 元素，所以這個 id 一定要記得對應好，兩邊名稱要一致。
 
 ⚠️ 提醒大家，Chart.js 只認 canvas 這個元素，不能用 div 或其他標籤取代，這是它繪圖機制的基礎。
+
+⚠️ 另一個新手常踩的坑：Chart.js 預設是 responsive，畫布會自動撐滿父層容器的大小。如果 canvas 外面沒有包一層限制寬高的 div，圖表在畫面上可能會變得非常巨大，甚至超出可視範圍。這裡我們用一個 300x300 的 div 包住 canvas，把圖表大小限制住。
 -->
 
 ---
 
 # 建立圓餅圖 — TypeScript（一）
 
-在元件的 TypeScript 檔案中，引入 Chart.js 並取得 canvas 元素，再設定圖表資料：
+在元件的 TypeScript 檔案中，引入 Chart.js，並於 `ngAfterViewInit()` 中取得 canvas 元素：
 
 ```typescript
+import { Component, AfterViewInit } from '@angular/core';
 import Chart from 'chart.js/auto';
 
-// 取得 canvas 元素
-const ctx = document.getElementById('chart') as HTMLCanvasElement;
-
-// 設定圖表資料
-const data = {
-  // 各區塊的標籤
-  labels: ['餐費', '交通費', '租金'],
-  datasets: [
-    {
-      label: '支出比',
-      // 各標籤對應的數值（系統自動換算為百分比）
-      data: [200, 3000, 9000],
+@Component({
+  selector: 'app-expense-pie-chart',
+  standalone: true,
+  templateUrl: './expense-pie-chart.component.html',
+})
+export class ExpensePieChartComponent implements AfterViewInit {
+  ngAfterViewInit() {
+    // 取得 canvas 元素
+    const ctx = document.getElementById('chart') as HTMLCanvasElement;
 ```
 
 <!--
-我們帶大家看一下這段程式碼的關鍵部分。第一步用 document.getElementById 取得剛剛那塊 canvas 畫布；接著準備一個 data 物件，這個物件就是圖表要畫的內容，裡面有 labels 陣列，決定圖表要分成幾個區塊、每個區塊叫什麼名字。
+我們帶大家看一下這段程式碼的關鍵部分。元件實作 AfterViewInit 介面，把畫圖邏輯放進 ngAfterViewInit，因為 canvas 元素要等畫面渲染完才抓得到，這點跟後面完整解答的寫法是一致的。
 
-這裡我們用記帳的例子：餐費、交通費、租金三個分類，對應的數值分別是 200、3000、9000。大家注意這個 data 陣列的順序要跟 labels 的順序對應，第一個數值對應第一個標籤，以此類推。
-
-這段程式碼還沒結束，資料物件還有顏色設定，我們下一頁接著看。
+第一步用 document.getElementById 取得剛剛那塊 canvas 畫布，準備好之後，下一頁接著設定圖表資料。
 -->
 
 ---
 
 # 建立圓餅圖 — TypeScript（二）
 
-```typescript
-      // 各區塊的填充顏色（對應 labels 順序）
-      backgroundColor: [
-        'rgb(255, 99, 132)',
-        'rgb(54, 162, 235)',
-        'rgb(255, 205, 86)',
-      ],
-      // 滑鼠懸停時區塊的偏移距離（px）
-      hoverOffset: 4,
-    },
-  ],
-};
+接續上一頁，設定圖表資料：
 
-// 建立圖表實例
-const chart = new Chart(ctx, {
-  type: 'pie',   // 'pie' 為圓餅圖；'doughnut' 為環狀圖
-  data: data,
-});
+```typescript
+    // 設定圖表資料
+    const data = {
+      // 各區塊的標籤
+      labels: ['餐費', '交通費', '租金'],
+      datasets: [
+        {
+          label: '支出比',
+          // 各標籤對應的數值（系統自動換算為百分比）
+          data: [200, 3000, 9000],
+```
+
+<!--
+接著準備一個 data 物件，這個物件就是圖表要畫的內容，裡面有 labels 陣列，決定圖表要分成幾個區塊、每個區塊叫什麼名字。
+
+這裡我們用記帳的例子：餐費、交通費、租金三個分類，對應的數值分別是 200、3000、9000。大家注意這個 data 陣列的順序要跟 labels 的順序對應，第一個數值對應第一個標籤，以此類推。
+
+這段程式碼還沒結束，資料物件還有顏色設定跟建立圖表的呼叫，我們下一頁接著看。
+-->
+
+---
+
+# 建立圓餅圖 — TypeScript（三）
+
+```typescript
+          // 各區塊的填充顏色（對應 labels 順序）
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+          ],
+          // 滑鼠懸停時區塊的偏移距離（px）
+          hoverOffset: 4,
+        },
+      ],
+    };
+
+    // 建立圖表實例
+    new Chart(ctx, {
+      type: 'pie',   // 'pie' 為圓餅圖；'doughnut' 為環狀圖
+      data: data,
+    });
+  }
+}
 ```
 
 <!--
 接續上一頁，我們補上 backgroundColor，這是每個區塊的填色，順序一樣要對應 labels；hoverOffset 則是滑鼠移過去的時候，那個區塊會往外彈開多少像素，讓使用者更容易看清楚自己指到哪個區塊。
 
-最後一步就是呼叫 new Chart，把剛剛拿到的 canvas 元素跟準備好的 data 物件傳進去，並且指定 type 為 'pie'。
+最後一步就是呼叫 new Chart，把剛剛拿到的 canvas 元素跟準備好的 data 物件傳進去，並且指定 type 為 'pie'，接著收尾 ngAfterViewInit 方法跟整個元件類別。
 
 ⚠️ 這裡容易出錯的地方是：labels、data、backgroundColor 這三個陣列的長度一定要一致，如果數量對不上，圖表可能會顯示錯誤或缺色。
 
@@ -509,11 +538,13 @@ ngAfterViewInit() {
 `expense-pie-chart.component.html` 完整內容：
 
 ```html
-<canvas id="chart"></canvas>
+<div style="width: 300px; height: 300px;">
+  <canvas id="chart"></canvas>
+</div>
 ```
 
 <!--
-這三張投影片把完整的元件程式碼列出來，讓大家可以對照自己寫的內容逐行檢查，不省略任何一段。HTML 這邊很單純，就只有一個 canvas 標籤。
+這三張投影片把完整的元件程式碼列出來，讓大家可以對照自己寫的內容逐行檢查，不省略任何一段。HTML 這邊很單純，canvas 外面包一層限制寬高的 div，避免 Chart.js 的 responsive 特性把圖表撐得過大。
 -->
 
 ---
