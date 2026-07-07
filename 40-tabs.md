@@ -63,6 +63,7 @@ layout: default
 - **mat-tab-group 基本用法** — 靜態內容頁籤
 - **mat-tab-nav-bar 導覽列用法** — 與路由整合的動態頁籤
 - **TypeScript 設定** — 匯入模組、定義 links 與 activeLink
+- **路由設定** — child routes 的配置方式
 - **HTML 完整整合** — 綁定路由與 active 狀態
 - **完成畫面展示** — 頁籤切換成功
 
@@ -371,7 +372,63 @@ activeLink = this.links[0].name;
 
 ⚠️ 提醒大家兩個容易漏掉的地方：第一，activeLink 的比對邏輯要跟 HTML 裡 [active] 的寫法一致，不然底線效果不會正確顯示；第二，這裡的 path 要跟 app.routes.ts 裡實際設定的路由路徑對得起來，路徑打錯的話點擊頁籤會導向不存在的路由。
 
-定義完這兩個變數，我們的 TypeScript 設定就完成了，接下來看一下整合起來的完整效果。
+定義完這兩個變數，我們的 TypeScript 設定就完成了，接下來還有一個關鍵設定要處理：`app.routes.ts` 裡的路由要怎麼配置，才能讓 `<router-outlet>` 正確顯示對應內容。
+-->
+
+---
+
+# 步驟三：路由設定（Child Routes）(一)
+
+`mat-tab-nav-bar` 本身不會換頁，只有中間的 `<mat-tab-nav-panel>` 裡的 `<router-outlet>` 會換內容，因此 `links` 對應的路徑要設定為**同一層的 child routes**，才能保持導覽列常駐、只切換內容。
+
+```typescript
+// app.routes.ts
+export const routes: Routes = [
+  {
+    path: 'test',
+    component: TestParentComponent,   // 內含 mat-tab-nav-bar 的元件
+    children: [
+      { path: '', redirectTo: 'test1', pathMatch: 'full' }, // 預設導向第一個頁籤
+      { path: 'test1', component: Test1Component },
+      { path: 'test2', component: Test2Component },
+      { path: 'test3', component: Test3Component }
+    ]
+  }
+];
+```
+
+<!--
+這張投影片要補充一個很多人容易忽略的環節：路由到底該怎麼設定，才能讓 mat-tab-nav-bar 正常運作。
+
+大家要記得，mat-tab-nav-bar 本身只是換樣式、換 URL，真正負責換內容的是它旁邊的 router-outlet。如果我們希望使用者切換頁籤的時候，導覽列本身保持不動、只有下面的內容跟著變，那 links 裡對應的路徑就必須設定成同一個父路由底下的 child routes，而不是各自獨立、平行的路由。
+
+大家看一下這段 app.routes.ts 的寫法：外層有一個 path 是 test，對應到含有 mat-tab-nav-bar 的父元件，裡面用 children 陣列定義 test1、test2、test3 三個子路由。這樣網址就會變成 test/test1、test/test2、test/test3，而且切換的時候只有子路由對應的元件會在父元件的 router-outlet 裡替換，父元件（也就是我們的導覽列）完全不會重新渲染。
+
+下一頁我們來看幾個關鍵細節跟容易犯的錯。
+-->
+
+---
+
+# 步驟三：路由設定（Child Routes）(二)
+
+- `children`：定義在**父路由底下**的子路由，網址會是 `path/child-path`（例如 `test/test2`）
+- 子路由的元件只會渲染在父元件的 `<router-outlet>` 裡，父元件（含頁籤導覽列）保持不變
+- `redirectTo` + `pathMatch: 'full'`：讓使用者一進入 `test` 就自動導向第一個頁籤，避免內容區空白
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> 若沒有設定成 child routes，而是把 <code>test2</code>、<code>test3</code> 設成跟 <code>test</code> 平行的獨立路由，切換頁籤時整個父元件（含導覽列）會被整個換掉重建，不是我們要的「同畫面切換內容」效果。
+</div>
+
+<!--
+接續上一頁的路由設定，這張投影片補充幾個關鍵細節。
+
+children 定義的是父路由底下的子路由，網址規則是 path 加上 child-path，例如 test/test2。子路由對應的元件只會渲染在父元件的 router-outlet 裡，父元件本身（也就是含有導覽列的那個元件）不會被重新建立。
+
+⚠️ 這裡也補一個常見的搭配寫法：用空字串 path 加上 redirectTo 跟 pathMatch: 'full'，讓使用者一進到 test 這個網址，就自動被導向第一個子頁籤，不然畫面剛載入的時候 router-outlet 會是空的，使用者會看到導覽列但內容區一片空白。
+
+⚠️ 提醒大家最容易犯的錯：如果把 test2、test3 設成跟 test 同一層、平行的路由，而不是它的 children，那切換頁籤的時候，Angular 會把整個父元件（含導覽列本身）銷毀重建，畫面雖然表面上看起來差不多，但效能較差，而且如果父元件裡有其他狀態（例如表單資料），會在切換頁籤時被重置掉，這通常不是我們要的行為。
+
+設定好路由之後，我們就可以看整合起來的完整效果了。
 -->
 
 ---
@@ -416,7 +473,7 @@ class: flex flex-col justify-center items-center text-center
 | 4 | 在 HTML 使用 `<nav mat-tab-nav-bar>` + `@for` 迴圈產生 `<a mat-tab-link>` |
 | 5 | 綁定 `[routerLink]`、`(click)`、`[active]` 屬性 |
 | 6 | 在 `<mat-tab-nav-panel>` 內放置 `<router-outlet>` |
-| 7 | 確認 `app.routes.ts` 有對應路由設定 |
+| 7 | 在 `app.routes.ts` 將各頁籤路徑設為同一父路由的 `children`，並用 `redirectTo` 導向預設頁籤 |
 
 <!--
 這張投影片幫大家把今天學的整合流程，濃縮成七個步驟，之後大家自己動手做的時候，可以直接照這張表一步一步核對。
