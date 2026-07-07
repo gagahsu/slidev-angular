@@ -59,11 +59,11 @@ layout: default
 
 # Outline
 
-- **第一部分：Dialog 概念介紹**
-- **第二部分：Dialog 元件 HTML 結構**
-- **第三部分：Dialog 元件 TypeScript**
-- **第四部分：開啟 Dialog（呼叫端）**
-- **第五部分：設定 Dialog 尺寸**
+- **Dialog 概念介紹**
+- **Dialog 元件 HTML 結構**
+- **Dialog 元件 TypeScript**
+- **開啟 Dialog（呼叫端）**
+- **設定 Dialog 尺寸**
 - **實作練習**
 
 <!--
@@ -75,9 +75,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第一部分
-
-## Dialog 概念介紹
+# Dialog 概念介紹
 
 <!--
 我們先花一點時間了解 Dialog 到底是什麼、什麼時候會用到它，之後再進去看實際的程式碼要怎麼寫。
@@ -154,12 +152,10 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第二部分
-
-## Dialog 元件 HTML 結構
+# Dialog 元件 HTML 結構
 
 <!--
-接下來我們進入第二部分，來看 Dialog 元件的 HTML 檔要怎麼寫，Angular Material 有規定幾個固定的指令跟標籤要使用。
+接下來我們來看 Dialog 元件的 HTML 檔要怎麼寫，Angular Material 有規定幾個固定的指令跟標籤要使用。
 -->
 
 ---
@@ -217,12 +213,10 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第三部分
-
-## Dialog 元件 TypeScript
+# Dialog 元件 TypeScript
 
 <!--
-HTML 結構搞定之後，接下來我們進到第三部分，來看 Dialog 元件的 TypeScript 要怎麼寫，包含要匯入哪些東西、怎麼拿到傳入的資料、怎麼關閉對話框。
+HTML 結構搞定之後，接下來我們來看 Dialog 元件的 TypeScript 要怎麼寫，包含要匯入哪些東西、怎麼拿到傳入的資料、怎麼關閉對話框。
 -->
 
 ---
@@ -335,9 +329,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第四部分
-
-## 開啟 Dialog（呼叫端）
+# 開啟 Dialog（呼叫端）
 
 <!--
 Dialog 元件本身寫完了，接下來我們換個角度，來看「呼叫端」——也就是要開啟這個對話框的那個元件——該怎麼寫。
@@ -427,9 +419,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第五部分
-
-## 設定 Dialog 尺寸
+# 設定 Dialog 尺寸
 
 <!--
 最後一個部分我們來看比較細節的設定：怎麼調整 Dialog 打開來的寬度跟高度。
