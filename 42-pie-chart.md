@@ -54,29 +54,11 @@ style: |
 -->
 
 ---
-layout: default
----
-
-# Outline
-
-- **第一部分：Chart.js 簡介與圖表類型**
-- **第二部分：安裝 Chart.js**
-- **第三部分：建立圓餅圖（HTML 與 TypeScript）**
-- **第四部分：資料結構說明（labels、datasets）**
-- **第五部分：圖表選項說明（hoverOffset、type）**
-- **第六部分：其他圖表類型展示**
-
-<!--
-這張投影片先讓大家看一下今天的六個部分：先認識 Chart.js 跟它支援的圖表類型，接著安裝套件，然後實際動手做出一個圓餅圖，中間會拆開來講資料結構跟圖表選項的細節，最後我們會有一個練習，讓大家自己動手把今天學的東西串起來。
--->
-
----
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第一部分
-## Chart.js 簡介與圖表類型
+# Chart.js 簡介與圖表類型
 
 <!--
 我們先從認識 Chart.js 這個函式庫開始，看看它是什麼、能幫我們畫出哪些類型的圖表。
@@ -164,8 +146,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第二部分
-## 安裝 Chart.js
+# 安裝 Chart.js
 
 <!--
 認識完 Chart.js 能做什麼之後，我們進入第二部分，實際把這個套件裝進我們的 Angular 專案。
@@ -204,8 +185,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第三部分
-## 建立圓餅圖
+# 建立圓餅圖
 
 <!--
 套件裝好了，接下來進入今天的重頭戲：實際動手建立一個圓餅圖，我們會分成 HTML 跟 TypeScript 兩部分來看。
@@ -302,8 +282,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第四部分
-## 資料結構說明
+# 資料結構說明
 
 <!--
 圓餅圖畫出來了，接下來我們花一點時間，把剛剛用到的資料結構拆開來仔細講清楚。
@@ -369,8 +348,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第五部分
-## 圖表選項說明
+# 圖表選項說明
 
 <!--
 資料結構講完了，接下來我們看幾個常用的圖表選項，像是圖表類型跟滑鼠互動效果。
@@ -420,8 +398,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第六部分
-## 完整實作總覽
+# 完整實作總覽
 
 <!--
 最後一部分，我們把今天學的所有步驟整理成一張總表，幫大家做個總複習，也順便安排一個練習讓大家動手做。
@@ -523,6 +500,79 @@ ngAfterViewInit() {
 這是完整的解答：資料裡定義三個 labels、對應三個數值，加上自訂的 backgroundColor，最後呼叫 new Chart 並指定 type 為 'pie'，整個練習就完成了。
 
 大家可以對照一下自己寫的版本，如果數字或顏色不同也沒關係，重點是資料結構跟呼叫方式要正確。做完之後，大家應該能感覺到——只要準備好 labels 跟 data，Chart.js 剩下的比例計算跟畫圖工作都幫我們處理好了，這就是使用現成函式庫的好處。
+-->
+
+---
+
+# 完整解答 — HTML
+
+`expense-pie-chart.component.html` 完整內容：
+
+```html
+<canvas id="chart"></canvas>
+```
+
+<!--
+這三張投影片把完整的元件程式碼列出來，讓大家可以對照自己寫的內容逐行檢查，不省略任何一段。HTML 這邊很單純，就只有一個 canvas 標籤。
+-->
+
+---
+
+# 完整解答 — TypeScript（一）
+
+`expense-pie-chart.component.ts` 完整內容：
+
+```typescript
+import { Component, AfterViewInit } from '@angular/core';
+import Chart from 'chart.js/auto';
+
+@Component({
+  selector: 'app-expense-pie-chart',
+  standalone: true,
+  templateUrl: './expense-pie-chart.component.html',
+})
+export class ExpensePieChartComponent implements AfterViewInit {
+  ngAfterViewInit() {
+    const ctx = document.getElementById('chart') as HTMLCanvasElement;
+```
+
+<!--
+先看 import 跟 @Component 設定：Chart 從 chart.js/auto 匯入，元件實作 AfterViewInit 這個介面，把畫圖邏輯放進 ngAfterViewInit 裡，這是前面特別強調過的重點，canvas 一定要等畫面渲染完才抓得到。
+
+這裡故意留著 ngAfterViewInit 的左大括號沒收尾，下一張投影片接著看資料跟 new Chart 呼叫。
+-->
+
+---
+
+# 完整解答 — TypeScript（二）
+
+```typescript
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['餐費', '交通費', '租金'],
+        datasets: [
+          {
+            label: '月支出',
+            data: [2000, 3000, 9000],
+            backgroundColor: [
+              'rgb(255, 99, 132)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+            ],
+            hoverOffset: 4,
+          },
+        ],
+      },
+    });
+  }
+}
+```
+
+<!--
+接續上一張還沒收尾的 ngAfterViewInit，這裡呼叫 new Chart，傳入剛剛抓到的 ctx，type 指定為 'pie'。data 裡三個 labels 對應三個支出分類，data 陣列是對應的金額，backgroundColor 是自訂的三種顏色，hoverOffset 讓滑鼠移過去時區塊往外彈開。
+
+最後兩個右大括號，一個收尾 ngAfterViewInit 方法，一個收尾整個元件類別。大家可以拿這份完整程式碼對照自己專案裡的檔案，看看有沒有漏掉 import、忘記加 AfterViewInit 介面，或是把 new Chart 誤放到 ngOnInit 裡。
 -->
 
 ---
