@@ -59,11 +59,11 @@ layout: default
 
 # Outline
 
-- **第一部分：部署概念與 Firebase Hosting 介紹**
-- **第二部分：安裝 Firebase CLI 與登入**
-- **第三部分：初始化 Firebase Hosting（firebase init hosting）**
-- **第四部分：連結 Firebase 專案與設定選項**
-- **第五部分：部署至 Firebase（firebase deploy）**
+- **部署概念與 Firebase Hosting 介紹**
+- **安裝 Firebase CLI 與登入**
+- **初始化 Firebase Hosting（firebase init hosting）**
+- **連結 Firebase 專案與設定選項**
+- **部署至 Firebase（firebase deploy）**
 
 <!--
 這張投影片先讓大家看一下今天的流程。我們會先講為什麼要部署、什麼是 Firebase Hosting，接著安裝 Firebase CLI 並登入帳號，然後執行 firebase init hosting 走過一連串的設定問題，最後執行 firebase deploy 把網站真正發布出去。

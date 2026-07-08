@@ -59,15 +59,15 @@ layout: default
 
 # Outline
 
-- **第一部分：RxJS 簡介**
-- **第二部分：可觀察者（Observable）**
-- **第三部分：觀察者（Observer）**
-- **第四部分：運算子（Operators）**
+- **RxJS 簡介**
+- **可觀察者（Observable）**
+- **觀察者（Observer）**
+- **運算子（Operators）**
   - 可聯入通道的運算子（Pipeable Operators）
   - 建立運算子（Creation Operators）
   - 聯結建立運算子（Join Creation Operators）
-- **第五部分：訂閱（Subscription）**
-- **第六部分：主體（Subject）**
+- **訂閱（Subscription）**
+- **主體（Subject）**
 
 <!--
 這張投影片先讓大家看一下今天的地圖，我們會照這個順序走：先認識 RxJS 是什麼，接著介紹 Observable 跟 Observer 這兩個核心角色，再學各種運算子怎麼組合資料流，然後看訂閱的生命週期怎麼管理，最後介紹 Subject 這種可以多播的特殊 Observable。內容不少，我們一步一步來，不用擔心。
@@ -78,7 +78,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第一部分：RxJS 簡介
+# RxJS 簡介
 ## Reactive Extensions for JavaScript
 
 <!--
@@ -133,7 +133,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第二部分：可觀察者
+# 可觀察者
 ## Observable
 
 <!--
@@ -240,7 +240,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第三部分：觀察者
+# 觀察者
 ## Observer
 
 <!--
@@ -294,7 +294,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第四部分：運算子
+# 運算子
 ## Operators
 
 <!--
@@ -424,7 +424,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第五部分：訂閱
+# 訂閱
 ## Subscription
 
 <!--
@@ -499,7 +499,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第六部分：主體
+# 主體
 ## Subject
 
 <!--

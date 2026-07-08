@@ -191,10 +191,13 @@ Dialog 的畫面其實就是一個普通的 Angular 元件，只是要照 Angula
 
 <!-- dialog 按鈕 -->
 <mat-dialog-actions>
-  <button>取消</button>
+  <button (click)="onNoClick()">取消</button>
   <button>確定</button>
 </mat-dialog-actions>
 ```
+
+- `(click)="onNoClick()"` 綁定取消按鈕，呼叫下一節定義的 `onNoClick()` 關閉對話框
+- `mat-dialog-actions` 底下也可用 `mat-dialog-close` 屬性直接關閉，不一定要另外寫方法
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>注意：</b> <code>mat-dialog-title</code> 為 HTML 屬性（Attribute Directive），套用在現有標籤上；<code>mat-dialog-content</code> 與 <code>mat-dialog-actions</code> 為元素（Element Directive）。
@@ -203,9 +206,11 @@ Dialog 的畫面其實就是一個普通的 Angular 元件，只是要照 Angula
 <!--
 我們直接來看一個完整的 Dialog HTML 範例。大家可以看到 h2 上面加了 mat-dialog-title 屬性，接著用 mat-dialog-content 包住訊息文字，最後 mat-dialog-actions 放了取消跟確定兩個按鈕。
 
+取消按鈕這裡用 (click)="onNoClick()" 綁定，onNoClick 就是等一下 TypeScript 那一節會定義的方法，沒有綁定的話按下去不會有任何反應。
+
 ⚠️ 這裡有一個容易搞混的地方要特別提醒大家：mat-dialog-title 是「屬性」，要加在已經存在的標籤上（像 h2）；但 mat-dialog-content 跟 mat-dialog-actions 是「元素」，本身就是一個標籤，不能直接當屬性寫在別的標籤上，這點寫錯的話畫面會跑掉。
 
-執行起來的預期結果，就是一個有標題、內容、跟底部按鈕排版整齊的對話框。
+執行起來的預期結果，就是一個有標題、內容、跟底部按鈕排版整齊的對話框，按下取消會呼叫 onNoClick() 關閉。
 -->
 
 ---
@@ -360,6 +365,25 @@ export class AppComponent {
 
 ---
 
+# 開啟 Dialog — HTML 觸發按鈕
+
+呼叫端的 HTML 需要一個按鈕（或其他事件），透過 `(click)` 綁定呼叫 TypeScript 裡開啟 Dialog 的方法。
+
+```html
+<button (click)="showDialog()">開啟 Dialog</button>
+```
+
+- `(click)="showDialog()"` 綁定按鈕點擊事件，呼叫下一頁定義的 `showDialog()` 方法
+- 沒有觸發元素的話，`dialog.open()` 永遠不會被執行，畫面上也就看不到任何反應
+
+<!--
+剛剛只講了 TypeScript 端要注入 MatDialog，但光注入沒有用，還需要一個東西去觸發它，最常見的做法就是在 HTML 放一個按鈕，用 (click) 綁定到等一下要寫的 showDialog() 方法。
+
+⚠️ 這是很多人容易漏掉的地方：以為把 dialog.open() 寫在 TypeScript 裡就會自動執行，但其實它跟一般方法一樣，一定要有事件觸發才會被呼叫，按鈕只是最常見的觸發方式，也可以換成選單項目、圖示等等。
+-->
+
+---
+
 # 開啟 Dialog — 呼叫 open()（一）
 
 使用 `dialog.open()` 開啟對話框，第一個參數為 Dialog 元件類別，第二個參數為設定物件。
@@ -493,16 +517,182 @@ layout: default
 -->
 
 ---
+layout: default
+---
+
+# 完整解答 — Dialog HTML
+
+`dialog-form.html` 完整內容：
+
+```html
+<h2 mat-dialog-title>{{ data.animal }}</h2>
+
+<mat-dialog-content>
+  <p>請輸入 {{ data.name }}</p>
+  <mat-form-field>
+    <mat-label>{{ data.name }}</mat-label>
+    <input matInput [(ngModel)]="inputValue" />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">取消</button>
+  <button mat-button (click)="onSubmit()">確定</button>
+</mat-dialog-actions>
+```
+
+<!--
+這是 Dialog 元件完整的 HTML。標題直接顯示呼叫端傳進來的 data.animal；內容區放一個輸入框，用 [(ngModel)] 雙向綁定到 inputValue；底部兩個按鈕分別對應取消跟確定，各自呼叫 TypeScript 裡的方法。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — Dialog TypeScript（一）
+
+`dialog-form.ts` 完整內容：
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
+```
+
+<!--
+先看檔案開頭的匯入：FormsModule、MatFormFieldModule、MatInputModule、MatButtonModule 這幾個是畫面上輸入框跟按鈕需要的模組，再匯入 MatDialogTitle、MatDialogContent、MatDialogActions、MatDialogRef、MAT_DIALOG_DATA 這五個 Dialog 相關的 API。
+
+匯入都準備好之後，下一頁接著看 @Component 裝飾器要怎麼設定。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — Dialog TypeScript（二）
+
+```typescript
+@Component({
+  selector: 'dialog-form',
+  templateUrl: './dialog-form.html',
+  standalone: true,
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+  ],
+})
+export class DialogFormComponent {
+```
+
+<!--
+接續上一頁的匯入，@Component 裝飾器的 imports 陣列要把剛剛匯入的模組全部宣告一次，這是 standalone 元件的規則。class 開頭先開起來，內容下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — Dialog TypeScript（三）
+
+```typescript
+  readonly dialogRef = inject(MatDialogRef<DialogFormComponent>);
+  readonly data = inject<{ name: string; animal: string }>(MAT_DIALOG_DATA);
+
+  inputValue = '';
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  onSubmit(): void {
+    this.dialogRef.close(this.inputValue);
+  }
+}
+```
+
+<!--
+接續上一頁的 class，這裡注入 MatDialogRef 跟 MAT_DIALOG_DATA，data 就是呼叫端傳進來的 { name, animal }。inputValue 綁定畫面上的輸入框；按下取消呼叫 close() 不帶值，按下確定則呼叫 close(this.inputValue)，把使用者輸入的內容回傳給呼叫端。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — 呼叫端 TypeScript（一）
+
+`app.component.ts` 完整內容：
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { DialogFormComponent } from './dialog-form';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [MatButtonModule],
+  templateUrl: './app.component.html',
+})
+export class AppComponent {
+  readonly dialog = inject(MatDialog);
+```
+
+<!--
+呼叫端匯入 MatDialog 服務跟剛剛寫好的 DialogFormComponent，@Component 裝飾器裡只需要 MatButtonModule，因為這個元件的 HTML 只用到按鈕。class 裡先注入 MatDialog，方法本體下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — 呼叫端 TypeScript（二）
+
+```typescript
+  showDialog() {
+    const dialogRef = this.dialog.open(DialogFormComponent, {
+      width: '400px',
+      data: { name: '姓名', animal: '請輸入資料' },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('使用者輸入：', result);
+    });
+  }
+}
+```
+
+```html
+<!-- app.component.html -->
+<button mat-raised-button (click)="showDialog()">開啟 Dialog</button>
+```
+
+<!--
+接續上一頁，showDialog() 呼叫 open() 帶入 DialogFormComponent 跟設定物件，data 裡的 name、animal 會傳到 Dialog 裡顯示；訂閱 afterClosed() 之後，只要使用者按下確定，console 就會印出剛剛在 Dialog 裡輸入的值；按取消的話 result 會是 undefined。
+
+大家可以拿這份完整程式碼跟自己寫的對照，確認每個匯入、注入、跟回傳的資料流是不是都一致。
+-->
+
+---
 layout: end
 ---
 
-# 本章重點回顧
-
-- Dialog 由獨立元件提供畫面，透過 `MatDialog` 服務開啟
-- HTML 使用 `mat-dialog-title` / `mat-dialog-content` / `mat-dialog-actions` 劃分區塊
-- Dialog 元件注入 `MatDialogRef` 控制關閉與回傳，注入 `MAT_DIALOG_DATA` 接收資料
-- 呼叫端使用 `dialog.open(Component, { data, width, height })` 開啟並傳入設定
-- 透過 `dialogRef.afterClosed().subscribe()` 接收 Dialog 關閉後的回傳值
+# 課程結束
+### 善用 Dialog 服務，讓使用者確認與輸入的流程更加清楚一致
 
 <!--
 這一章我們學了 Dialog 的完整流程：Dialog 本身是一個獨立元件，畫面用三個固定區塊組成；元件內部靠 MatDialogRef 控制自己的關閉、靠 MAT_DIALOG_DATA 拿到外部資料；呼叫端則是注入 MatDialog、呼叫 open() 開啟，並透過 afterClosed() 拿到使用者操作後的結果。

@@ -59,11 +59,11 @@ layout: default
 
 # Outline
 
-- **第一部分：程式執行模型** — 程式碼逐行執行的基本概念
-- **第二部分：同步執行** — 循序執行的定義與行為
-- **第三部分：非同步執行** — 非阻塞執行的定義與行為
-- **第四部分：同步與非同步的比較** — 兩者差異對照
-- **第五部分：常見非同步寫法** — `setTimeout` 與 `Observable`
+- **程式執行模型** — 程式碼逐行執行的基本概念
+- **同步執行** — 循序執行的定義與行為
+- **非同步執行** — 非阻塞執行的定義與行為
+- **同步與非同步的比較** — 兩者差異對照
+- **常見非同步寫法** — `setTimeout` 與 `Observable`
 
 <!--
 這一章的架構是這樣：先講程式最基本的執行模型，再分別介紹同步跟非同步各自的定義跟特性，接著把兩者放在一起比較，最後看幾個實際會用到的非同步寫法，包含 setTimeout 跟 Angular 常用的 Observable。
@@ -74,9 +74,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第一部分
-
-## 程式執行模型
+# 程式執行模型
 
 <!--
 我們先從最基本的觀念開始：程式碼到底是照什麼順序執行的？這是理解同步跟非同步差異的地基。
@@ -119,9 +117,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第二部分
-
-## 同步執行
+# 同步執行
 
 <!--
 我們先從同步開始講起，因為同步是我們比較直覺、也是預設的執行方式，搞懂它之後，等一下對比非同步會更容易理解。
@@ -194,9 +190,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第三部分
-
-## 非同步執行
+# 非同步執行
 
 <!--
 同步搞懂之後，我們進入這一章的重點：非同步。非同步的行為跟同步很不一樣，這也是很多同學一開始容易搞混的地方。
@@ -273,9 +267,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第四部分
-
-## 同步與非同步的比較
+# 同步與非同步的比較
 
 <!--
 講完同步跟非同步各自的定義跟範例，我們把兩者放在同一張表上做個整理跟比較，方便大家一次記起來。
@@ -305,9 +297,7 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第五部分
-
-## 常見非同步寫法
+# 常見非同步寫法
 
 <!--
 最後一部分，我們把幾種實務上最常見的非同步寫法整理起來，包含 setTimeout 跟 Angular 裡最重要的 Observable。
