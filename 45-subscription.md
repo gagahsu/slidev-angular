@@ -279,6 +279,31 @@ export class LoadingService {
 -->
 
 ---
+
+# Subject 變數命名慣例 — `$` 字尾
+
+```typescript
+private loading$ = new BehaviorSubject<boolean>(false);
+```
+
+變數字尾加 `$`（如 `loading$`）是 RxJS 社群慣例，稱為 **Finnish notation**。
+
+| | `loading` | `loading$` |
+| --- | --- | --- |
+| 型別 | `boolean` | `BehaviorSubject<boolean>` |
+| 取值方式 | 直接使用 | 需 `.subscribe()` 接收 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>提醒：</b> 純命名習慣，非 TypeScript / Angular 語法規定，不加 <code>$</code> 功能相同，但可讀性較差，業界普遍遵守。
+</div>
+
+<!--
+大家應該也注意到變數名稱都是 loading$ 這種字尾加 $ 的寫法，這是 RxJS 社群的命名慣例，叫做 Finnish notation。一看到 $ 結尾，就知道這個變數是 Observable 或 Subject，要呼叫 .subscribe() 才能拿到裡面的值，不能像一般變數直接使用；這樣可以跟 loading（布林值本身）這種一般變數清楚區分開來。
+
+這只是命名習慣，不是 TypeScript 或 Angular 規定的語法，不加 $ 一樣能執行，只是可讀性會變差，業界普遍會遵守這個慣例，大家也養成習慣比較好。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
