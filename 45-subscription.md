@@ -491,6 +491,278 @@ ngOnInit(): void {
 -->
 
 ---
+layout: default
+---
+
+# 練習：購物車數量徽章同步
+### 情境說明
+
+電商網站常見情境：使用者在商品列表頁按下「加入購物車」，畫面上方導覽列的購物車徽章數字要**立即**同步更新，不需重新整理頁面。
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**ProductListComponent**
+- 顯示商品清單
+- 按下「加入購物車」按鈕
+
+</div>
+<div>
+
+**HeaderComponent**
+- 顯示購物車數量徽章
+- 與商品列表頁不在同一個元件
+
+</div>
+</div>
+
+兩個元件彼此沒有父子關係，必須透過 Service 搭配 Subject，才能讓其中一邊改資料、另一邊即時收到通知。
+
+<!--
+這是實務上非常典型的訂閱情境：購物車數量要在網站的好幾個地方同步顯示（導覽列徽章、結帳頁、購物車頁），只要有任何一個地方新增商品，其他地方都要立刻反映最新數字，不能等使用者重新整理頁面才看到正確數量。
+
+大家可以想像今天負責開發一個購物網站，商品列表跟導覽列是完全不同的元件、甚至可能不在同一個路由畫面上，這時候就是我們這一章學的訂閱機制派上用場的時候。
+-->
+
+---
+layout: default
+---
+
+# 練習：購物車數量徽章同步
+### 任務說明
+
+1. 建立 `CartService`，內部以 `private` 的 `BehaviorSubject<number>` 儲存購物車數量，初始值為 `0`
+2. 對外公開 `_cartCount$`（`asObservable()`），供元件訂閱
+3. 提供 `addItem()` 方法，每次呼叫將目前數量 `+1` 並透過 `next()` 推送
+4. 在 `ProductListComponent` 注入 `CartService`，按鈕點擊時呼叫 `addItem()`
+5. 在 `HeaderComponent` 注入 `CartService`，於 `ngOnInit` 訂閱 `_cartCount$`，將收到的最新數量存入元件屬性 `cartCount`
+6. `HeaderComponent` 樣板顯示 `cartCount`，確認按下商品列表的按鈕後，徽章數字會即時更新
+
+<!--
+大家可以先自己動手寫寫看，重點是想清楚：哪個變數該是 private、哪個該公開；ProductListComponent 該呼叫 Service 的哪個方法；HeaderComponent 又該訂閱哪一個變數。卡住的地方沒關係，下一頁會有解題提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+### 提示說明
+
+1. `BehaviorSubject` 一定要給初始值，這裡是 `0`，因為購物車一開始沒有商品
+2. 讀取目前值可用 `.value`（`BehaviorSubject` 專屬），計算 `+1` 後再 `next()` 推送出去
+3. `ProductListComponent` 只需要呼叫 `addItem()`，不需要也不能直接操作 Subject
+4. `HeaderComponent` 訂閱的是公開的 `_cartCount$`，不是 `private` 的原始 Subject
+5. 訂閱動作寫在 `ngOnInit`，確保元件一載入就開始監聽後續的數量變化
+
+<!--
+對照一下大家的答案，最容易搞混的地方是誤以為 ProductListComponent 也要注入、訂閱 Observable——其實它只負責「推資料」，呼叫 addItem() 就好；真正需要「訂閱、接收資料」的是 HeaderComponent。另一個常見疏漏是忘記用 .value 讀取目前數量，直接把 next() 寫死成固定數字，這樣多次點擊也不會累加。下一頁我們直接看完整解答。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — CartService（一）
+
+`cart.service.ts` 資料來源宣告：
+
+```typescript
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CartService {
+
+  private cartCount$ = new BehaviorSubject<number>(0);
+
+  // 取得 cartCount$ 的可觀察物件（供外部訂閱使用）
+  _cartCount$ = this.cartCount$.asObservable();
+
+}
+```
+
+<!--
+先看 CartService 的資料來源部分：private 的 cartCount$ 是真正存資料的 BehaviorSubject，初始值為 0，代表購物車一開始沒有商品；公開的 _cartCount$ 透過 asObservable() 提供給外部訂閱，但無法呼叫 next()，維持資料封裝。負責改資料的方法下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — CartService（二）
+
+`cart.service.ts` 公開方法：
+
+```typescript
+  addItem(): void {
+    this.cartCount$.next(this.cartCount$.value + 1);
+  }
+
+  clear(): void {
+    this.cartCount$.next(0);
+  }
+
+}
+```
+
+<!--
+接續上一頁的 class，addItem() 讀取 cartCount$.value 目前的數量、加一後再 next() 推送出去，這也是為什麼一定要用 BehaviorSubject 而不是 Subject——因為 BehaviorSubject 才有 .value 可以直接讀到目前的值。clear() 則示範結帳完成後把購物車數量歸零的情境，同樣是實務上會需要的操作。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — ProductListComponent
+
+`product-list.component.ts` 與 `product-list.component.html`：
+
+```typescript
+import { Component } from '@angular/core';
+import { CartService } from '../@service/cart.service';
+
+@Component({
+  selector: 'app-product-list',
+  standalone: true,
+  templateUrl: './product-list.component.html',
+})
+export class ProductListComponent {
+
+  constructor(private cartService: CartService) { }
+
+  addToCart(): void {
+    this.cartService.addItem();
+  }
+
+}
+```
+
+```html
+<!-- product-list.component.html -->
+<button (click)="addToCart()">加入購物車</button>
+```
+
+<!--
+ProductListComponent 的角色是「推送資料的一方」，注入 CartService 之後，按鈕的 (click) 綁定 addToCart()，內部只單純呼叫 cartService.addItem()，把「數量要怎麼變」這件事完全交給 Service 處理，元件本身不需要知道、也不需要儲存目前的購物車數量。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — HeaderComponent（一）
+
+`header.component.ts` 完整內容：
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { CartService } from '../@service/cart.service';
+
+@Component({
+  selector: 'app-header',
+  standalone: true,
+  templateUrl: './header.component.html',
+})
+export class HeaderComponent implements OnInit {
+
+  cartCount = 0;
+
+  constructor(private cartService: CartService) { }
+
+  ngOnInit(): void {
+    this.cartService._cartCount$.subscribe((count) => {
+      this.cartCount = count;
+    });
+  }
+
+}
+```
+
+<!--
+HeaderComponent 的角色是「接收資料的一方」，注入 CartService 後，ngOnInit 訂閱公開的 _cartCount$，只要 ProductListComponent 那邊呼叫一次 addItem()，這裡的 subscribe 回呼就會自動執行，把最新數量存進 cartCount 屬性。樣板要怎麼顯示這個屬性，下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — HeaderComponent（二）
+
+`header.component.html` 完整內容：
+
+```html
+<!-- header.component.html -->
+<span class="cart-badge">🛒 {{ cartCount }}</span>
+```
+
+<!--
+樣板只需要單純綁定 cartCount，因為值的更新是在 TypeScript 那邊的 subscribe 回呼裡完成的，Angular 的變更偵測會自動幫我們把最新數字反映到畫面上——完全不需要重新整理頁面，也不需要兩個元件之間有任何父子關係。
+
+大家可以拿這三個元件的完整程式碼跟自己寫的對照，確認「誰負責推資料、誰負責收資料」的分工是不是清楚。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — 兩元件同時運作
+
+`app.component.ts` 需先 `import` 兩個子元件並加入 `imports` 陣列，`app.component.html` 才能直接使用它們的 selector。
+
+```typescript
+// app.component.ts
+import { Component } from '@angular/core';
+import { HeaderComponent } from './header/header.component';
+import { ProductListComponent } from './product-list/product-list.component';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [HeaderComponent, ProductListComponent],
+  templateUrl: './app.component.html',
+})
+export class AppComponent { }
+```
+
+```html
+<!-- app.component.html -->
+<app-header></app-header>
+<app-product-list></app-product-list>
+```
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**ProductListComponent（推資料）**
+- 注入 `CartService`
+- 按鈕點擊呼叫 `addItem()`
+- 不儲存、不關心目前數量
+
+</div>
+<div>
+
+**HeaderComponent（收資料）**
+- 注入 `CartService`
+- `ngOnInit` 訂閱 `_cartCount$`
+- 收到推送即更新 `cartCount` 畫面
+
+</div>
+</div>
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>重點：</b> 兩個元件在 <code>app.component.html</code> 裡是平行關係，沒有互相傳資料，全部靠 <code>CartService</code> 這個共同的訂閱來源串起來。
+</div>
+
+<!--
+這一頁把兩個元件放在同一張投影片上，讓大家看清楚整體運作：ProductListComponent 跟 HeaderComponent 在畫面上是完全平行、互不認識的兩個元件，兩者也沒有 @Input、@Output 這種父子傳值關係。
+
+它們唯一的共同點，就是都注入了同一個 CartService。點擊商品列表的按鈕，會呼叫 addItem() 推送新數量；這個推送會透過 BehaviorSubject 廣播出去，凡是訂閱了 _cartCount$ 的元件（這裡是 HeaderComponent）都會立刻收到通知並更新畫面。這正是訂閱機制最大的價值：讓沒有直接關係的元件也能保持資料同步。
+-->
+
+---
 layout: end
 ---
 
