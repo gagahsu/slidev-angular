@@ -460,20 +460,45 @@ export class AppComponent implements OnInit {
 layout: default
 ---
 
-# 練習：使用者列表載入（Loading / Error / Success）
+# 練習：使用者列表載入
+### API 與資料結構說明
+
+請呼叫真實的免費 API，取得隨機使用者清單。
+
+```
+https://api.freeapi.app/api/v1/public/randomusers
+```
+
+回應結構：使用者陣列位於 `res.data.data`（外層多包一層 `data`）。
+
+| 欄位 | 型別 | 說明 |
+| --- | --- | --- |
+| `id` | `string` | 使用者 ID |
+| `name.first` / `name.last` | `string` | 姓 / 名（巢狀物件） |
+| `email` | `string` | 電子郵件 |
+
+<!--
+這一題模擬的是業界最常見的非同步情境：畫面剛進來時打 API 抓資料。這裡先讓大家看清楚要打的 API 網址，以及回傳資料的結構——特別提醒外層多包了一層 data，真正的使用者陣列要往裡面再拿一層；每個使用者的姓名也是巢狀物件，不是單一字串欄位。搞懂資料結構之後，下一頁我們來看實際要做的需求。
+-->
+
+---
+layout: default
+---
+
+# 練習：使用者列表載入
 ### 任務說明
 
 實務上呼叫 API 幾乎都會遇到「載入中、成功、失敗」三種狀態，請實作一個會員列表元件，完整處理這三種情況。
 
 1. 建立 `UserListComponent`，屬性 `loading`、`errorMessage`、`users` 分別代表三種狀態
 2. `ngOnInit()` 一開始先將 `loading` 設為 `true`
-3. 呼叫 `HttpClient.get<User[]>('/api/users')`，用 `subscribe()` 接收結果
-4. `next` 回呼中將資料存入 `users`，並把 `loading` 設回 `false`
+3. 呼叫 `HttpClient.get(...)` 打上一頁的 API，用 `subscribe()` 接收結果
+4. `next` 回呼中，將 `res.data.data`（使用者陣列）存入 `users`，並把 `loading` 設回 `false`
 5. `error` 回呼中設定 `errorMessage`，同樣把 `loading` 設回 `false`
-6. 樣板依 `loading` / `errorMessage` / `users` 三種狀態切換顯示「載入中」、錯誤訊息、或使用者清單
+6. 樣板依 `loading` / `errorMessage` / `users` 三種狀態切換顯示「載入中」、錯誤訊息、或使用者清單（顯示 `name.first`、`name.last`、`email`）
 
 <!--
-這一題模擬的是業界最常見的非同步情境：畫面剛進來時打 API 抓資料，使用者會先看到 loading 畫面，等資料回來才顯示清單，如果失敗則要顯示錯誤訊息，不能讓畫面一直卡在載入中。
+這一頁是實際要做的需求：畫面剛進來時打 API 抓資料，使用者會先看到 loading 畫面，等資料回來才顯示清單，如果失敗則要顯示錯誤訊息，不能讓畫面一直卡在載入中。
 
 大家可以先自己動手寫寫看，尤其留意 loading 狀態什麼時候該設成 true、什麼時候該設回 false，卡住的地方沒關係，下一頁會有解題提示。
 -->
@@ -489,10 +514,10 @@ layout: default
 2. `error` 回呼一定要處理，否則 API 失敗時畫面會永遠停在「載入中」
 3. 樣板可用 `@if` / `*ngIf` 依 `loading`、`errorMessage`、`users` 三種狀態切換內容
 4. `subscribe()` 是非同步的，`ngOnInit()` 方法本身不會等 API 回應才結束
-5. 型別可用泛型 `HttpClient.get<User[]>(...)` 讓 `next` 收到的資料有型別提示
+5. `freeapi.app` 這支 API 回傳的資料會包一層 `data`，實際使用者陣列在 `res.data.data`，不是 `res.data`
 
 <!--
-對照一下大家寫的答案，最容易漏掉的地方是忘記在 error 回呼裡把 loading 設回 false，這樣一旦 API 失敗，畫面就會卡在載入中動畫，使用者完全不知道發生什麼事。另一個常見疏漏是三種狀態的樣板判斷寫得不完整，導致 loading 跟資料同時顯示。下一頁我們直接看完整解答。
+對照一下大家寫的答案，最容易漏掉的地方是忘記在 error 回呼裡把 loading 設回 false，這樣一旦 API 失敗，畫面就會卡在載入中動畫，使用者完全不知道發生什麼事。另一個常見疏漏是不清楚這支免費 API 的回傳格式外面多包了一層 data，直接把 res.data 當陣列使用會出錯，實際上要拿 res.data.data 才是真正的使用者清單。下一頁我們直接看完整解答。
 -->
 
 ---
@@ -501,18 +526,38 @@ layout: default
 
 # 完整解答 — Component TypeScript（一）
 
-`user-list.component.ts` 匯入與屬性宣告：
+`user-list.component.ts` 匯入與型別定義：
 
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface User {
-  id: number;
-  name: string;
+  id: string;
+  name: { first: string; last: string };
   email: string;
 }
 
+interface RandomUsersResponse {
+  data: {
+    data: User[];
+  };
+}
+```
+
+<!--
+先看檔案開頭：匯入 HttpClient，並定義 User 介面描述每筆使用者資料的形狀，注意 name 是一個包含 first、last 的巢狀物件。RandomUsersResponse 則對應這支免費 API 實際回傳的外層結構，外面包了一層 data，裡面才是真正的使用者陣列。這兩個介面下一頁會用在元件的屬性與回應型別上。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — Component TypeScript（二）
+
+`user-list.component.ts` 類別與屬性宣告：
+
+```typescript
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -527,14 +572,14 @@ export class UserListComponent implements OnInit {
 ```
 
 <!--
-先看檔案開頭：匯入 HttpClient 並定義 User 介面描述每筆會員資料的形狀。@Component 裝飾器設定好 selector 跟 templateUrl 之後，class 裡先用 inject(HttpClient) 拿到服務，接著宣告 loading、errorMessage、users 三個屬性，分別對應載入中、錯誤訊息、成功資料三種狀態。class 本體下一頁接著看。
+接續上一頁的兩個介面，@Component 裝飾器設定好 selector 跟 templateUrl 之後，class 裡先用 inject(HttpClient) 拿到服務，接著宣告 loading、errorMessage、users 三個屬性，分別對應載入中、錯誤訊息、成功資料三種狀態。ngOnInit() 的邏輯下一頁接著看。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — Component TypeScript（二）
+# 完整解答 — Component TypeScript（三）
 
 `ngOnInit()` 發出請求並依結果更新狀態：
 
@@ -542,22 +587,24 @@ layout: default
   ngOnInit(): void {
     this.loading = true;
 
-    this.http.get<User[]>('/api/users').subscribe({
-      next: (data) => {
-        this.users = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        this.errorMessage = '會員資料載入失敗，請稍後再試';
-        this.loading = false;
-      },
-    });
+    this.http
+      .get<RandomUsersResponse>('https://api.freeapi.app/api/v1/public/randomusers')
+      .subscribe({
+        next: (res) => {
+          this.users = res.data.data;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.errorMessage = '會員資料載入失敗，請稍後再試';
+          this.loading = false;
+        },
+      });
   }
 }
 ```
 
 <!--
-接續上一頁的 class，ngOnInit() 一開始先把 loading 設成 true，接著呼叫 http.get() 拿到 Observable，訂閱之後：next 拿到資料時把 users 填入、loading 關掉；error 發生時把 errorMessage 填入、loading 一樣要關掉。這個「先開 loading、無論成功失敗都要關 loading」的模式，是實務上處理 API 請求最基本也最重要的寫法。
+接續上一頁的 class，ngOnInit() 一開始先把 loading 設成 true，接著呼叫 http.get() 打真實的免費 API，訂閱之後：next 拿到回應時，因為外層多包了一層 data，要取 res.data.data 才是真正的使用者陣列，填入 users 後把 loading 關掉；error 發生時把 errorMessage 填入、loading 一樣要關掉。這個「先開 loading、無論成功失敗都要關 loading」的模式，是實務上處理 API 請求最基本也最重要的寫法。
 -->
 
 ---
@@ -576,14 +623,14 @@ layout: default
 } @else {
   <ul>
     @for (user of users; track user.id) {
-      <li>{{ user.name }}（{{ user.email }}）</li>
+      <li>{{ user.name.first }} {{ user.name.last }}（{{ user.email }}）</li>
     }
   </ul>
 }
 ```
 
 <!--
-樣板依序判斷三種狀態：loading 為 true 時顯示「載入中...」；否則如果 errorMessage 有值，顯示錯誤訊息；都不是的話，才代表資料成功回來了，用 @for 把 users 陣列渲染成清單。
+樣板依序判斷三種狀態：loading 為 true 時顯示「載入中...」；否則如果 errorMessage 有值，顯示錯誤訊息；都不是的話，才代表資料成功回來了，用 @for 把 users 陣列渲染成清單，注意姓名要拆 user.name.first、user.name.last 兩個欄位顯示，因為 API 回傳的 name 是巢狀物件。
 
 這三段互斥的判斷，剛好對應到 TypeScript 那邊 loading、errorMessage、users 三個屬性的狀態切換，把畫面跟資料流對照著看，會更清楚「非同步請求」在真實專案裡是怎麼跟畫面串在一起的。
 -->
