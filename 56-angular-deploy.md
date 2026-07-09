@@ -118,7 +118,7 @@ Installing Firebase CLI and Logging In
 
 ---
 
-# 安裝 Firebase CLI
+# 安裝 Firebase CLI（一）
 
 首先全域安裝 Firebase CLI 套件：
 
@@ -132,14 +132,33 @@ npm install -g firebase-tools
 firebase login
 ```
 
-- 系統會自動開啟瀏覽器，引導完成 Google 帳號授權
-- 授權完成後，終端機會顯示登入成功訊息
-- 後續所有 Firebase CLI 操作皆以此帳號身份執行
+- `npm install -g firebase-tools` 加上 `-g` 代表全域安裝，整台電腦都能使用這個指令，不侷限在單一專案裡
+- 安裝完成後，用 `firebase login` 登入 Google 帳號，後續 CLI 操作才知道要用哪個帳號的身份執行
 
 <!--
 這邊有兩個指令，大家帶著一起做一遍。第一個 npm install -g firebase-tools 是全域安裝 Firebase 的指令列工具，加上 -g 代表整台電腦都能用這個指令，不侷限在單一專案裡。
 
-裝好之後，第二個指令 firebase login 是用來登入我們的 Google 帳號。執行之後瀏覽器會自動跳出來，走一次 Google 的授權流程，授權完成後終端機會顯示登入成功的訊息，之後我們在這台電腦上執行的所有 Firebase 指令，都會是用這個帳號的身份在操作。
+裝好之後，第二個指令 firebase login 是用來登入我們的 Google 帳號。執行之後不會馬上跳出瀏覽器，CLI 會先問幾個設定問題，下一頁我們接著看實際會問到什麼。
+-->
+
+---
+
+# 安裝 Firebase CLI（二）
+
+執行 `firebase login` 後，CLI 會先詢問兩個是否啟用的設定：
+
+<div class="flex justify-center"><img src="/images/55-angular-deploy/firebase-login-prompts.png" class="rounded shadow-md max-h-64" /></div>
+
+- **Enable Gemini in Firebase features?**：是否啟用 Gemini 相關功能，選 **No** 即可，不影響部署流程
+- **Allow Firebase to collect CLI and Emulator Suite usage and error reporting information?**：是否允許蒐集使用統計與錯誤回報，選 **Y** 或 **n** 皆可，純屬個人選擇
+- 回答完上述兩題後，系統才會自動開啟瀏覽器，引導完成 Google 帳號授權
+- 授權完成後，終端機會顯示登入成功訊息
+- 後續所有 Firebase CLI 操作皆以此帳號身份執行
+
+<!--
+執行 firebase login 之後不會馬上跳出瀏覽器，CLI 會先問兩個題目：第一個問要不要啟用 Gemini in Firebase 功能，這跟部署沒有直接關係，選 No 就好；第二個問要不要讓 Firebase 蒐集 CLI 跟 Emulator Suite 的使用狀況跟錯誤回報，這純粹是個人選擇，選 Y 或 n 都不影響後續部署流程。
+
+回答完這兩題之後，瀏覽器才會自動跳出來，走一次 Google 的授權流程，授權完成後終端機會顯示登入成功的訊息，之後我們在這台電腦上執行的所有 Firebase 指令，都會是用這個帳號的身份在操作。
 
 ⚠️ 提醒大家，如果瀏覽器沒有自動跳出來，可以看一下終端機有沒有印出一個連結，手動複製貼到瀏覽器打開就可以了。
 -->
