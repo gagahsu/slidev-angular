@@ -354,10 +354,10 @@ onSubmit() {
 
 ```html
 <input formControlName="surveyTitle" />
-<p *ngIf="form.get('surveyTitle')?.invalid &&
-          form.get('surveyTitle')?.touched">
-  標題為必填，且長度不得超過 5 個字元。
-</p>
+@if (form.get('surveyTitle')?.invalid &&
+     form.get('surveyTitle')?.touched) {
+  <p>標題為必填，且長度不得超過 5 個字元。</p>
+}
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -365,7 +365,7 @@ onSubmit() {
 </div>
 
 <!--
-除了在 TypeScript 判斷，我們也常常需要在畫面上即時顯示錯誤訊息。這邊用 *ngIf 搭配 invalid 屬性，只要欄位無效，就顯示提示文字。
+除了在 TypeScript 判斷，我們也常常需要在畫面上即時顯示錯誤訊息。這邊用 @if 搭配 invalid 屬性，只要欄位無效，就顯示提示文字。
 
 ⚠️ 但這裡有個很容易忽略的細節：如果只判斷 invalid，使用者連欄位都還沒點進去，畫面就會馬上顯示一堆紅字錯誤，這樣的體驗很不好。所以我們會再加上 touched 這個條件，只有「使用者曾經點過又離開」這個欄位、而且欄位無效時，才顯示錯誤訊息。這是業界常見的表單體驗做法，大家實作表單時記得帶入這個習慣。
 -->
@@ -388,6 +388,275 @@ onSubmit() {
 這張表把常用的驗證狀態屬性整理起來，我們平常最常用到的是 invalid、valid、touched 這三個組合。dirty 跟 pristine 是判斷「使用者有沒有改過值」，跟 touched／untouched 判斷「有沒有點過」是不同的概念，這兩組很容易搞混，大家可以特別留意。
 
 errors 屬性比較特別，它會回傳一個物件，裡面列出這個欄位到底違反了哪幾條規則，例如同時違反 required 跟 minLength，物件裡就會有對應的兩個 key，這在需要顯示更精確的錯誤訊息時會用到，例如告訴使用者「你少打了 3 個字」而不是只說「格式錯誤」。
+-->
+
+---
+layout: default
+---
+
+# 練習：會員註冊表單
+### 情境說明
+
+會員註冊是最典型會用到多種驗證規則的表單：帳號要有長度限制、Email 要符合格式、年齡要在合理範圍、手機號碼要符合台灣格式、還要強制勾選會員條款才能送出。這一題要把這一章學到的 Validators 跟驗證狀態屬性全部串在一起練習一次。
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**需求**
+- 帳號、Email、年齡、手機、同意條款共 5 個欄位，各自套用對應的驗證規則
+- 欄位未通過驗證且使用者已經點過（`touched`）時，顯示對應的錯誤訊息
+- 表單整體無效時（`form.invalid`），送出按鈕要被停用
+
+</div>
+<div>
+
+**限制**
+- 帳號：必填 + 至少 3 個字元
+- Email：必填 + Email 格式；年齡：必填 + 介於 18～99；手機：必填 + `pattern` 符合 `09` 開頭共 10 碼數字；同意條款：`requiredTrue`
+- 錯誤訊息用 `@if` 搭配 `invalid && touched` 顯示，不能只判斷 `invalid`
+
+</div>
+</div>
+
+<!--
+這一題把前面分開介紹的 required、minLength、email、min/max、pattern、requiredTrue 六種驗證器全部用上，同時也練習 invalid、touched 這兩個驗證狀態屬性怎麼合併判斷、怎麼拿來控制送出按鈕的啟用/停用。
+
+⚠️ 提醒同學，這一題延續 ch51 的 Reactive Forms 架構，用 fb.group() 定義表單，用 [formGroup]、formControlName 繫結畫面，如果對這套語法還不熟，可以回頭複習 ch51。
+-->
+
+---
+layout: default
+---
+
+# 練習：任務說明
+
+1. 建立 `RegisterFormComponent`，`imports` 陣列加入 `ReactiveFormsModule`
+2. 用 `fb.group()` 定義 `form`，包含 `username`、`email`、`age`、`phone`、`agree` 五個欄位，各自套上情境說明限制裡指定的驗證器
+3. HTML 用 `<form [formGroup]="form" (ngSubmit)="onSubmit()">` 包裹整個表單
+4. 每個欄位下方用 `@if` 搭配 `invalid && touched` 顯示對應的錯誤訊息文字
+5. 撰寫 `onSubmit()`：若 `form.invalid` 則印出提示並 `return`，否則印出 `form.value`
+6. 送出按鈕用 `[disabled]="form.invalid"` 控制，表單無效時無法點擊
+
+<!--
+大家可以先自己動手寫寫看。重點是想清楚每個欄位分別要疊加哪些驗證器，以及畫面上錯誤訊息的顯示條件要同時看 invalid 跟 touched，缺一不可。卡住的地方沒關係，下一頁有提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. `age` 的初始值要給 `null` 而不是空字串，數字欄位習慣上用 `null` 代表「尚未填寫」
+2. 手機驗證用 `Validators.pattern(/^09\d{8}$/)`，代表以 `09` 開頭，後面接 8 碼數字，總長度剛好 10 碼
+3. `agree` 用 `Validators.requiredTrue`，不是 `Validators.required`，因為它綁定的是 checkbox 的布林值，一定要是 `true` 才算通過
+4. `[disabled]="form.invalid"` 直接綁在根 `form`，不需要个别檢查每個欄位
+5. `(ngSubmit)="onSubmit()"` 綁在 `<form>` 標籤上，觸發時機是使用者按下送出按鈕或在欄位中按 Enter
+
+<!--
+对照一下大家的答案，最容易搞混的地方是 age 給了空字串當初始值，這樣型別會被推斷成 string，跟 Validators.min/max 預期的數字比較會有落差。另一個常見疏漏是 agree 用了 required 而不是 requiredTrue，required 只檢查「不是 false」，勾不勾都會通過，達不到強制勾選的效果。下一頁看完整解答。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — register-form.component.ts（一）
+
+匯入模組與元件裝飾器：
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-register-form',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  templateUrl: './register-form.component.html',
+})
+export class RegisterFormComponent {
+  fb = inject(FormBuilder);
+  // form 定義見下一頁
+}
+```
+
+<!--
+imports 陣列裡的 ReactiveFormsModule 是使用 [formGroup]、formControlName 這些指令的前提，跟 ch51 學過的一樣。fb 透過 inject(FormBuilder) 取得，之後用來建立表單結構。form 的完整定義下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — register-form.component.ts（二）
+
+`form` 定義與 `onSubmit()`：
+
+```typescript
+export class RegisterFormComponent {
+  fb = inject(FormBuilder);
+
+  form = this.fb.group({
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    age: [null as number | null, [Validators.required, Validators.min(18), Validators.max(99)]],
+    phone: ['', [Validators.required, Validators.pattern(/^09\d{8}$/)]],
+    agree: [false, Validators.requiredTrue],
+  });
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      console.log('表單尚有欄位未通過驗證');
+      return;
+    }
+    console.log('註冊成功', this.form.value);
+  }
+}
+```
+
+<!--
+五個欄位各自疊加需要的驗證器：username 必填加最短長度，email 必填加格式，age 必填加範圍限制，phone 必填加 pattern 格式，agree 用 requiredTrue 強制勾選。onSubmit() 裡先擋一次 form.invalid，通過才印出真正的表單資料，這是實務上表單送出前的標準防線，即使畫面上按鈕已經用 disabled 擋過一次，TypeScript 這邊還是要再檢查一次，避免使用者用其他方式（例如直接按 Enter）繞過畫面限制。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — register-form.component.html（一）
+
+帳號、Email 欄位：
+
+```html
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="form-field">
+    <label>帳號：</label>
+    <input formControlName="username">
+    <div class="field-error">
+      @if (form.get('username')?.invalid && form.get('username')?.touched) {
+        <p>帳號為必填，且至少 3 個字元。</p>
+      }
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label>Email：</label>
+    <input formControlName="email">
+    <div class="field-error">
+      @if (form.get('email')?.invalid && form.get('email')?.touched) {
+        <p>請輸入正確的 Email 格式。</p>
+      }
+    </div>
+  </div>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>注意：</b> 錯誤訊息外面多包一層 <code>.field-error</code>，並用 CSS 給它固定的最小高度，這樣訊息出現/消失時，下面的欄位才不會跟著跳動，樣式見最後一頁。
+</div>
+
+<!--
+每個欄位的錯誤訊息都是同一個套路：@if 判斷 invalid && touched，兩個條件都成立才顯示。這裡故意用 form.get('username')?.invalid 這種寫法而不是額外宣告一堆變數，是為了讓大家熟悉直接從 form 物件讀取欄位狀態的寫法，這在小型表單很常見。
+
+⚠️ 這一版跟前面單欄位範例不一樣的地方，是每個欄位外面多包了一層 .form-field，錯誤訊息外面也多包了一層 .field-error。原因是 @if 為 false 時，<p> 整個不會存在於 DOM 裡，如果沒有額外的容器撐住高度，訊息一出現畫面就會往下推、消失又縮回去，使用者會覺得版面一直在跳動。用一個永遠存在的 .field-error 容器搭配 CSS 最小高度，就能讓這塊區域的高度固定，不管有沒有顯示錯誤文字都一樣。下一頁接著看年齡跟手機欄位。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — register-form.component.html（二）
+
+年齡、手機欄位：
+
+```html
+  <div class="form-field">
+    <label>年齡：</label>
+    <input type="number" formControlName="age">
+    <div class="field-error">
+      @if (form.get('age')?.invalid && form.get('age')?.touched) {
+        <p>年齡需介於 18 到 99 之間。</p>
+      }
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label>手機：</label>
+    <input formControlName="phone" placeholder="09xxxxxxxx">
+    <div class="field-error">
+      @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+        <p>請輸入正確格式的手機號碼（09 開頭共 10 碼）。</p>
+      }
+    </div>
+  </div>
+```
+
+<!--
+年齡欄位的 input 型別用 number，方便使用者用數字鍵盤輸入；驗證邏輯不變，一樣是 invalid && touched。手機欄位用 pattern 驗證格式，錯誤訊息直接把格式規則講清楚（09 開頭共 10 碼），比只寫「格式錯誤」對使用者更友善。每個欄位一樣包在 .form-field / .field-error 裡，維持版面穩定。下一頁補上同意條款跟送出按鈕，完成整份表單。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — register-form.component.html（三）
+
+同意條款與送出按鈕：
+
+```html
+  <div class="form-field">
+    <label>
+      <input type="checkbox" formControlName="agree">
+      我同意會員條款
+    </label>
+    <div class="field-error">
+      @if (form.get('agree')?.invalid && form.get('agree')?.touched) {
+        <p>請勾選同意會員條款。</p>
+      }
+    </div>
+  </div>
+
+  <button type="submit" [disabled]="form.invalid">送出註冊</button>
+</form>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>驗證方式：</b> 任一欄位空白或格式錯誤時，點過該欄位應顯示對應錯誤訊息，且顯示/消失時下方欄位不會跳動；五個欄位都填寫正確且勾選同意條款後，送出按鈕才會從停用變成可點擊，點擊後 Console 應印出「註冊成功」與完整表單資料。
+</div>
+
+<!--
+最後這一段把 agree checkbox 的驗證訊息，跟整份表單的送出按鈕收尾。[disabled]="form.invalid" 直接看整個表單的整體狀態，只要五個欄位裡有任何一個不通過，form.invalid 就是 true，按鈕自動停用，不需要自己寫邏輯去組合五個欄位的狀態。
+
+這一題做完，就是把這一章學到的 6 種驗證器（required、minLength、email、min、max、pattern、requiredTrue，共 7 種但概念上可歸類成 6 類），以及 invalid、touched 兩個驗證狀態屬性，全部實際應用在一份貼近業界真實情境的註冊表單裡。下一頁補上 CSS，讓錯誤訊息的出現與消失不會造成版面跳動。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — register-form.component.scss
+
+固定 `.field-error` 的最小高度，避免錯誤訊息造成版面跳動：
+
+```scss
+.form-field {
+  margin-bottom: 12px;
+}
+
+.field-error {
+  min-height: 1.25rem;
+}
+
+.field-error p {
+  margin: 2px 0 0;
+  color: #d32f2f;
+  font-size: 0.85rem;
+}
+```
+
+<!--
+關鍵是 .field-error 這個容器：不管裡面的 <p> 有沒有被 @if 渲染出來，這個 div 本身永遠存在於 DOM 裡，min-height 保證它至少佔用一行文字的高度。這樣訊息出現時只是把預留的空間填上文字，訊息消失時空間依然保留，下面的欄位跟按鈕就不會因為某一則錯誤訊息忽然出現或消失而上下跳動。
+
+.form-field 則是統一每個欄位區塊之間的間距，讓整份表單排版整齊。這種「預留空間、只換內容」的做法，是業界處理表單錯誤訊息版面跳動問題最常見的技巧，值得記起來，之後遇到類似「內容忽有忽無造成版面晃動」的情境都可以用同樣的思路解決。
 -->
 
 ---
