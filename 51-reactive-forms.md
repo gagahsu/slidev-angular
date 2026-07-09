@@ -465,13 +465,15 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 呈現 `FormArray` 題目列表：
 
 1. 外層 `<div>` 加上 `formArrayName="questions"`，對應 TypeScript 中的 `FormArray`
-2. 以 `@for` 迭代 `questionsArray.controls`，用 `$index` 追蹤索引
+2. 以 `@for` 迭代 `questionsArray.controls`，用 `control` 本身追蹤，**不要用 `$index`**
 3. 迴圈內的 `<div>` 加上 `[formGroupName]="$index"`，對應每筆題目的 `FormGroup`
 
 <!--
 問卷題目是一個陣列，畫面上要用迴圈把每一題都渲染出來，這邊有三個步驟要注意。
 
 第一，外層 div 加 formArrayName="questions"，這行是告訴 Angular「這個範圍裡的內容，對應到 questions 這個 FormArray」。第二，用 @for 迭代 questionsArray.controls，這樣才能拿到陣列裡每一個 FormGroup。第三，迴圈裡的每個 div 要加上 [formGroupName]="$index"，用索引對應到陣列裡的第幾筆題目資料。這三層繫結（FormArray → 迴圈 → 每筆的 FormGroup）是同學第一次接觸時比較容易搞混的地方，我們接下來直接看程式碼會更清楚。
+
+⚠️ 這裡先預告一個地雷：@for 的 track 千萬不要用 $index，要 track control 本身，原因下一頁詳細解釋。
 -->
 
 ---
@@ -485,8 +487,8 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
   <input type="text" formControlName="surveyTitle">
 
   <div formArrayName="questions">
-    <!-- controls 寫法固定，抓這個 formArray 的內容 -->
-    @for (control of questionsArray.controls; track $index) {
+    <!-- track control：用 FormGroup 本身的身分追蹤，不要用 $index -->
+    @for (control of questionsArray.controls; track control) {
       <!-- formGroupName 對應 questionsArray 的索引位置 -->
       <div [formGroupName]="$index">
         <label>題目：</label>
@@ -495,15 +497,21 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
       </div>
     }
   </div>
+
+  <button type="button" (click)="addQuestion()">新增題目</button>
 </form>
 ```
 
 <!--
-帶大家逐段看一下這段 HTML。formArrayName="questions" 鎖定了題目陣列的範圍，@for 迴圈裡用 track $index，這樣 Angular 才知道怎麼追蹤每個項目的變化。
+帶大家逐段看一下這段 HTML。formArrayName="questions" 鎖定了題目陣列的範圍，@for 迴圈裡用 track control，這樣 Angular 才知道怎麼追蹤每個項目的變化。
 
 最關鍵的是 [formGroupName]="$index"，因為 questionsArray 裡面裝的每一個元素都是一個 FormGroup，所以要用「第幾組」這個索引來對應，而不是像 formControlName 那樣用固定的名字。裡面的 input 再用平常熟悉的 formControlName="qTitle" 對應到題目裡的欄位。
 
-執行到這一步，畫面應該會看到：每按一次「新增題目」，就會多出一個題目輸入欄位，並且輸入的內容會即時同步回 TypeScript 的 form 裡。
+⚠️ 提醒同學，畫面上要真的看得到題目輸入欄位，一定要有個按鈕呼叫 addQuestion()，不然 questionsArray 一開始是空陣列，@for 沒有資料可以跑，畫面上除了問卷名稱欄位之外會完全是空的，這是很多人做這個練習卡住的地方。這裡把 button 放在 formArrayName 的 div 外面、form 裡面即可，type="button" 是為了避免它被瀏覽器當成表單送出按鈕。
+
+⚠️ 另一個更隱蔽的地雷：track 千萬不要用 $index。刪除中間某一題時，track $index 會讓 Angular 誤以為「位置」沒變，於是重複使用同一個輸入框 DOM 節點去顯示不同的題目資料，結果不管點哪一列的刪除按鈕，畫面上看起來永遠是最後一列消失，其他列的內容卻沒有正確更新。改成 track control，讓 Angular 用每個 FormGroup 物件本身的身分去追蹤，DOM 節點才會跟著正確的資料一起被建立或刪除。
+
+執行到這一步，畫面應該會看到：每按一次「新增題目」，就會多出一個題目輸入欄位，並且輸入的內容會即時同步回 TypeScript 的 form 裡；點任何一列的「刪除題目」，也會正確刪掉那一列，而不是永遠刪最後一列。
 -->
 
 ---
@@ -541,7 +549,7 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 
 大家可以看到 select 裡的 qType 對應題目類型，checkbox 的 need 對應是否必填，這些都跟 qTitle 一樣，靠 formControlName 這個字串跟 TypeScript 的欄位名稱對起來。
 
-⚠️ 特別提醒剛剛畫面上那個提示：formControlName 的值一定要跟 fb.group() 裡定義的 key 完全一致，包含大小寫，這個是同學做練習時最常見的 typo 錯誤來源，抓 bug 的時候可以優先檢查這裡。
+⚠️ 特別提醒剛剛畫面上那個提示：formControlName 的值一定要跟 fb.group() 裡定義的 key 完全一致，包含大小寫，這個是同學做練習時最常見的 typo 錯誤來源，抓 bug 的時候可以優先檢查這裡。「新增題目」按鈕前面 formArrayName（三）那一頁已經示範過，這裡不重複放。
 -->
 
 ---
