@@ -63,6 +63,7 @@ layout: default
 - **以 Observable 實作狀態共享（回顧）**
 - **改寫為 Signals 寫法**
 - **在 Template 中使用 Signal**
+- **延伸：Signal 與 ch46 的 Interceptor**
 - **computed() 計算 Signal**
 - **偵測 Signal 值變化（effect）**
 - **注意事項**
@@ -139,29 +140,29 @@ class: flex flex-col justify-center items-center text-center
 
 # Observable 寫法回顧：loading.service.ts
 
-原先以 `Subject` + `asObservable()` 實作跨元件狀態共享。
+上一章（ch46）以 `BehaviorSubject` + `asObservable()` 實作跨元件狀態共享。
 
 ```typescript
 export class LoadingService {
-  private loading$ = new Subject<boolean>();
-  _loading$ = this.loading$.asObservable();
-
-  constructor() { }
+  private _loading$ = new BehaviorSubject<boolean>(false);
+  loading$ = this._loading$.asObservable();
 
   show() {
-    this.loading$.next(true);
+    this._loading$.next(true);
   }
 
   hide() {
-    this.loading$.next(false);
+    this._loading$.next(false);
   }
 }
 ```
 
 <!--
-這段大家應該不陌生，我們在 Service 裡建立一個 Subject，再透過 asObservable() 包裝成外部可訂閱、但不能直接 next 的版本，show/hide 兩個方法負責推送新的值。
+這段就是上一章 Loading 完成的 Service：在裡面建立一個 BehaviorSubject，再透過 asObservable() 包裝成外部可訂閱、但不能直接 next 的版本，show/hide 兩個方法負責推送新的值。
 
-帶大家看一下重點：_loading$ 是暴露給外部訂閱用的，loading$ 本身是 private，這是為了避免外部元件亂呼叫 .next()，只能透過 show()/hide() 這種受控的方法去改變狀態。
+跟一般 Subject 不同，BehaviorSubject 建立時要給初始值（這裡是 false），而且新訂閱者會馬上拿到「目前」這個最新值，不用等下一次 next() 才有資料，這點跟等一下要介紹的 Signal 概念更接近。
+
+帶大家看一下重點：_loading$ 本身是 private，只有 Service 內部能呼叫 next()；公開的 loading$ 是給外部訂閱用的唯讀窗口，這是為了避免外部元件亂呼叫 .next()，只能透過 show()/hide() 這種受控的方法去改變狀態。
 
 等一下我們會看到，改成 Signal 之後，這整個「包一層 Observable」的動作就可以省略了。
 -->
@@ -170,25 +171,29 @@ export class LoadingService {
 
 # Observable 寫法回顧：app.component.ts
 
-訂閱 `_loading$`，等待其值變化以觸發對應邏輯。
+上一章的 `AppComponent` 取得 `loading$`，交由樣板的 `async` pipe 訂閱。
 
 ```typescript
 export class AppComponent {
+  loading$!: Observable<boolean>;
   constructor(private loadingService: LoadingService) {}
-
   ngOnInit(): void {
-    this.loadingService._loading$
-      .subscribe((res) => {
-        console.log(res);
-      });
+    this.loading$ = this.loadingService.loading$;
   }
 }
 ```
 
-<!--
-這裡的重點是 subscribe：元件要拿到 Service 的狀態，得先訂閱，訂閱之後每次值變化都會跑進這個 callback。
+```html
+@if (loading$ | async) {
+  <div class="overlay"></div>
+  <mat-spinner [diameter]="70"></mat-spinner>
+}
+```
 
-大家可以留意一下，這種寫法有個隱藏的責任——訂閱了就要記得取消訂閱（unsubscribe），不然元件銷毀後這個訂閱還留著，可能造成記憶體洩漏。這也是等一下我們要提到 Signal 的一個優勢：不需要手動管理訂閱生命週期。
+<!--
+這也是上一章的原始碼：元件本身沒有 subscribe，只是把 Service 公開的 loading$ 接到自己的屬性上，真正的訂閱交給樣板裡的 async pipe，它會自動訂閱，元件銷毀時也會自動取消訂閱。
+
+大家可以留意一下這條鏈路有多長：BehaviorSubject → asObservable() → 元件屬性 → async pipe → @if，光是「讓畫面知道一個布林值變了」就要串五層。等一下改成 Signal，大家會看到這條鏈路縮短成什麼樣子。
 -->
 
 ---
@@ -206,26 +211,24 @@ class: flex flex-col justify-center items-center text-center
 
 # 改寫 loading.service.ts（一）
 
-將原本的 `Subject` + `asObservable()` 替換為 `signal()`。
+將原本的 `BehaviorSubject` + `asObservable()` 替換為 `signal()`。
 
 - Signal 必須提供初始值，此處設為 `false`
 - 更新值改用 `.set()` 方法，取代 `.next()`
 
 ```typescript
+import { signal } from '@angular/core';
+
 export class LoadingService {
-  // private loading$ = new Subject<boolean>();
-  // _loading$ = this.loading$.asObservable();
+  // private _loading$ = new BehaviorSubject<boolean>(false);
+  // loading$ = this._loading$.asObservable();
   loading = signal<boolean>(false);
-
-  constructor() { }
-
   show() {
-    // this.loading$.next(true);
+    // this._loading$.next(true);
     this.loading.set(true);
   }
-
   hide() {
-    // this.loading$.next(false);
+    // this._loading$.next(false);
     this.loading.set(false);
   }
 }
@@ -243,32 +246,31 @@ export class LoadingService {
 
 # 改寫 app.component.ts（二）
 
-在元件中將 Signal 實例指派給本地屬性，取代 `.subscribe()` 訂閱寫法。
+在元件中將 Signal 實例指派給本地屬性，取代 `Observable` + `async` pipe 寫法。
 
 - Signal 是函式型別（`Signal<boolean>`），讀取值需呼叫 `this.loading()`
-- 不再需要 `subscribe`，Angular 會自動追蹤依賴
+- 不再需要 `Observable` 型別與 `async` pipe，Angular 會自動追蹤依賴
 
 ```typescript
+import { Signal } from '@angular/core';
+
 export class AppComponent {
+  // loading$!: Observable<boolean>;
   loading!: Signal<boolean>;
   constructor(private loadingService: LoadingService) {}
-
   ngOnInit(): void {
-    // this.loadingService._loading$
-    //   .subscribe((res) => {
-    //     console.log(res);
-    //   });
+    // this.loading$ = this.loadingService.loading$;
     this.loading = this.loadingService.loading;
   }
 }
 ```
 
 <!--
-這段最關鍵的地方是 ngOnInit 裡那一行：this.loading = this.loadingService.loading，我們不是「訂閱」，而是直接把 Signal 本身指派過來。
+這段最關鍵的地方是 ngOnInit 裡那一行：this.loading = this.loadingService.loading，寫法跟上一章接 loading$ 幾乎一模一樣，只是接過來的東西從 Observable 變成 Signal 本身。
 
 大家可以留意一下型別，loading 宣告成 Signal<boolean>，代表它是一個「函式型別」的物件，不是單純的布林值，等一下在 template 或程式碼中要讀值，都得用 this.loading() 這種函式呼叫的形式。
 
-跟 Observable 版本比較起來，這裡完全不需要 subscribe，也就不需要在 ngOnDestroy 手動取消訂閱，Angular 會自動幫我們追蹤依賴關係。
+跟 Observable 版本比較起來，這裡不需要 async pipe 幫忙訂閱，也沒有任何訂閱要取消，Angular 會自動幫我們追蹤依賴關係。
 -->
 
 ---
@@ -290,21 +292,97 @@ Service 跟元件的邏輯都改寫完了，接下來看看在畫面（template�
 當 Signal 值發生變更，Angular 會自動重新渲染相關區塊。
 
 ```html
+<!-- Observable 版本：需要 async pipe -->
+<!-- @if (loading$ | async) { -->
+
+<!-- Signal 版本：直接呼叫，不需要 pipe -->
 @if (loading()) {
-  <h5>loading的值：{{ loading() }}</h5>
+  <div class="overlay"></div>
+  <mat-spinner [diameter]="70"></mat-spinner>
 }
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 在 template 中使用 Signal 時，須以 <code>signal()</code>（含括號）的形式呼叫，而非直接寫屬性名稱。
+💡 <b>注意：</b> 在 template 中使用 Signal 時，須以 <code>loading()</code>（含括號）的形式呼叫，而非直接寫屬性名稱。
 </div>
 
 <!--
-帶大家看這段範例：@if (loading()) 這裡的 loading() 一定要加括號，這是同學最容易忘記的地方，因為我們平常寫 {{ 屬性名稱 }} 已經寫習慣了，Signal 卻要多加一組括號才能拿到裡面的值。
+帶大家對照這兩行：上一章的寫法是 loading$ | async，要靠 async pipe 幫忙訂閱；Signal 版本只要 loading() 直接呼叫就好，連 CommonModule 的 async pipe 都不用 import。
+
+@if (loading()) 這裡的 loading() 一定要加括號，這是同學最容易忘記的地方，因為我們平常寫 {{ 屬性名稱 }} 已經寫習慣了，Signal 卻要多加一組括號才能拿到裡面的值。
 
 ⚠️ 易錯點提醒：如果忘記加括號，寫成 loading（沒有括號），Angular 不會報錯，但你拿到的是一個函式物件而不是布林值，畫面邏輯就會整個跑掉，這個坑務必提醒同學小心。
 
 執行結果是：只要 Service 裡的 loading 值一變，這段 @if 區塊就會自動重新渲染，完全不用我們手動處理更新畫面的邏輯。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 延伸：Signal 與 ch46 的 Interceptor
+
+<!--
+既然 LoadingService 改成了 Signal 版本，我們回頭看一下上一章的 loadingInterceptor：那個為了 NG0100 加的 setTimeout，現在還需要嗎？Interceptor 本身又能不能直接拿掉？
+-->
+
+---
+
+# 改用 Signal 後，NG0100 還會發生嗎？
+
+**不會。** ch46 的 NG0100 是「樣板檢查完 `loading$ | async` 的值，同一輪變更偵測裡值又被 `next()` 改掉」造成的。
+
+Signal 的運作方式不同：
+
+- `loading.set(true)` 不會當場改掉「這一輪已檢查」的綁定結果
+- 而是把有讀取 `loading()` 的畫面**標記為 dirty**，由 Angular **安排下一輪**變更偵測再更新
+- 官方 NG0100 錯誤指南也建議：改用 Signal 是根治這類時序問題的方式之一
+
+因此 Interceptor 裡的 `setTimeout` 補丁可以移除：
+
+```typescript
+export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+  const loadingService = inject(LoadingService);
+  // Signal 版不需要 setTimeout 包裝
+  loadingService.show();
+  return next(req).pipe(
+    finalize(() => loadingService.hide())
+  );
+};
+```
+
+<!--
+上一章我們花了整整一頁解釋為什麼 show() 要包 setTimeout：因為 BehaviorSubject 的 next() 是「當下立刻」改值，如果根元件樣板這一輪已經檢查過 loading$ 的值，同一輪裡值又變了，開發模式的二次檢查就會抓到不一致，噴出 NG0100。
+
+Signal 的更新機制天生就避開了這個問題：set() 不是直接闖進正在進行的這一輪檢查，而是把讀取這個 Signal 的畫面標記為 dirty，等 Angular 安排下一輪變更偵測才重新渲染。用拍團體照的比喻來說，Signal 版的舉手的人會自動等這張拍完、下一張再舉手，不用攝影師（我們）另外喊「等一下再舉」（setTimeout）。
+
+所以改用 Signal 之後，攔截器裡那行 setTimeout 補丁可以拿掉，show() 直接呼叫就好，程式碼更乾淨、意圖也更清楚。
+-->
+
+---
+
+# 那 Interceptor 可以整個移除嗎？
+
+**不行。** Interceptor 解決的是**兩個**問題，Signal 只解掉其中一個：
+
+| ch46 的問題 | 解法 | 改用 Signal 後 |
+| --- | --- | --- |
+| NG0100 時序衝突 | `setTimeout` 延後 `show()` | ✅ Signal 天生避開，`setTimeout` 可移除 |
+| 每個元件手動 show()/hide()、容易忘記 hide() | Interceptor + `finalize()` | ❌ 問題仍在，Interceptor 必須保留 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>結論：</b> Signal 取代的是「狀態的儲存與通知」（BehaviorSubject + async pipe），不是「何時觸發 show()/hide()」的問題。集中觸發、保證 hide() 這件事，仍然是 Interceptor 的職責。
+</div>
+
+<!--
+這裡幫大家釐清一個容易混淆的點：Signal 跟 Interceptor 解決的是不同層面的問題，不是二選一的關係。
+
+Signal 負責的是「狀態怎麼存、畫面怎麼知道狀態變了」這一層，它取代的是 BehaviorSubject、asObservable()、async pipe 這一整串。
+
+Interceptor 負責的是「什麼時機呼叫 show()/hide()」這一層：如果拿掉它，就回到 ch46 前半段的手動模式——每個元件自己注入 Service、自己記得在成功跟失敗都呼叫 hide()，漏寫一個 error 分支，Loading 就卡住不消失。finalize() 保證收尾這個好處，跟狀態用什麼技術存完全無關。
+
+所以最終架構是：Signal 版 LoadingService + 拿掉 setTimeout 的 Interceptor，兩者搭配，各司其職。
 -->
 
 ---
@@ -528,6 +606,163 @@ class: flex flex-col justify-center items-center text-center
 
 <!--
 這張總結表把兩邊的使用情境並排列出來，大家可以拿它當作日後選擇要用 Signal 還是 Observable 的判斷依據：問自己「這個狀態需不需要等待、需不需要 RxJS 的操作子」，需要就用 Observable，不需要就優先考慮 Signal，程式碼會更簡潔。
+-->
+
+---
+layout: default
+---
+
+# 練習：購物車小計即時計算（Signal 版）
+### 情境說明
+
+商品詳情頁常見情境：使用者調整購買數量，畫面上的小計金額要**立即**跟著變化，而且如果金額超過門檻，還要在畫面下方顯示一則提醒。
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**需求**
+- 顯示目前數量、單價、小計
+- 按 `+` / `-` 調整數量（最少為 1）
+- 小計超過 `500` 時顯示優惠提醒文字
+
+</div>
+<div>
+
+**限制**
+- 數量、小計都必須用 Signal 管理
+- 小計不可手動計算後指派，須用 `computed()` 自動推導
+- 提醒文字的顯示邏輯用 `effect()` 處理
+
+</div>
+</div>
+
+這一題不需要 Service，單一元件內用 `signal()` + `computed()` + `effect()` 就能完成，練習三者如何搭配。
+
+<!--
+這一題刻意設計成單一元件就能完成，目的是讓大家把這一章學到的 signal、computed、effect 三個工具，在同一個情境裡串起來用一次，感受它們各自負責的角色：signal 存原始狀態、computed 算衍生值、effect 處理副作用。
+-->
+
+---
+layout: default
+---
+
+# 練習：購物車小計即時計算
+### 任務說明
+
+1. 建立 `quantity = signal<number>(1)`，代表目前數量
+2. 建立常數 `price = 100`，代表單價（不需要是 Signal）
+3. 建立 `subtotal = computed(() => this.quantity() * this.price)`，自動算出小計
+4. 撰寫 `increase()` / `decrease()` 方法，分別用 `.update()` 將 `quantity` `+1` / `-1`；`decrease()` 要確保數量不會小於 `1`
+5. 在 `constructor` 中用 `effect()` 監聽 `subtotal()`，當小計 `> 500` 時，在 console 印出提醒訊息
+6. Template 顯示 `quantity()`、`subtotal()`，並提供 `+` / `-` 按鈕分別綁定 `increase()` / `decrease()`
+
+<!--
+大家可以先自己動手寫寫看。重點是想清楚：哪個值是「原始狀態」該用 signal，哪個值是「算出來的」該用 computed，哪個邏輯是「順便做的副作用」該用 effect，不要三個工具混在一起用錯地方。卡住的地方沒關係，下一頁會有解題提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+### 提示說明
+
+1. `price` 是固定單價，不會被使用者更動，不需要包成 Signal，一般常數即可
+2. `decrease()` 呼叫 `.update()` 時，回呼函式裡要加判斷：`v => v > 1 ? v - 1 : v`，避免數量歸零或變負數
+3. `computed()` 裡只能讀 Signal（`this.quantity()`），不能呼叫 `.set()` 修改任何 Signal
+4. `effect()` 一定要寫在 `constructor` 內，且內部讀取 `this.subtotal()` 才能被自動追蹤到
+5. Template 綁定按鈕記得用 `(click)`，讀值記得加括號：`quantity()`、`subtotal()`
+
+<!--
+对照一下大家的答案，最容易搞混的地方是把 price 也包成 signal——其實不需要，它從頭到尾不會變，包成 signal 反而多一層不必要的複雜度。另一個常見疏漏是 decrease() 忘記做下限判斷，直接 v - 1，數量按幾次就會變成負數，畫面邏輯就不合理了。下一頁我們直接看完整解答。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — cart.component.ts（一）
+
+Signal 與 computed 宣告：
+
+```typescript
+import { Component, signal, computed, effect } from '@angular/core';
+
+@Component({
+  selector: 'app-cart',
+  standalone: true,
+  templateUrl: './cart.component.html',
+})
+export class CartComponent {
+
+  quantity = signal<number>(1);
+  price = 100;
+
+  subtotal = computed(() => this.quantity() * this.price);
+
+}
+```
+
+<!--
+先看狀態宣告部分：quantity 是唯一需要被追蹤變化的原始狀態，所以用 signal，初始值 1；price 是固定不變的單價，維持一般屬性即可；subtotal 用 computed() 包起來，內部讀取 this.quantity()，Angular 會自動追蹤這個依賴關係，quantity 一變，subtotal 就自動重新計算。constructor 跟方法下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — cart.component.ts（二）
+
+`constructor` 中的 `effect()` 與數量調整方法：
+
+```typescript
+  constructor() {
+    effect(() => {
+      if (this.subtotal() > 500) {
+        console.warn(`小計 ${this.subtotal()} 元，已符合優惠門檻！`);
+      }
+    });
+  }
+
+  increase(): void {
+    this.quantity.update(v => v + 1);
+  }
+
+  decrease(): void {
+    this.quantity.update(v => (v > 1 ? v - 1 : v));
+  }
+```
+
+<!--
+接續上一頁的 class：effect() 寫在 constructor 裡，內部讀取 this.subtotal()，只要小計超過 500 就在 console 印出提醒，這是典型的「值變了、順便做點事」的副作用邏輯，不需要也不應該用 computed() 來做，因為 computed() 是用來「算出一個新值」，不是用來「執行動作」。
+
+increase() 很單純，每次呼叫 quantity 就 +1；decrease() 則在 update() 的回呼裡加了三元判斷，數量大於 1 才減 1，否則維持原值，避免數量歸零或變負數。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — cart.component.html
+
+```html
+<!-- cart.component.html -->
+<div class="cart-box">
+  <p>數量：{{ quantity() }}</p>
+  <button (click)="decrease()">-</button>
+  <button (click)="increase()">+</button>
+  <p>小計：NT$ {{ subtotal() }}</p>
+</div>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>驗證方式：</b> 按 <code>+</code> 加到數量 6（小計 600），開啟瀏覽器 Console，應該會看到優惠提醒的 <code>console.warn</code> 訊息；按 <code>-</code> 減到數量 1 後繼續按，數量應維持在 1，不會變成 0 或負數。
+</div>
+
+<!--
+Template 部分沒有任何 subscribe、也沒有 async pipe，quantity() 跟 subtotal() 都是直接函式呼叫讀值，按鈕透過 (click) 綁定 increase()/decrease()。
+
+執行結果：每按一次 + 或 -，quantity 更新，Angular 自動重新計算 subtotal 並更新畫面；同時因為 effect() 有在監聽 subtotal()，只要跨過 500 這個門檻，console 就會自動印出提醒，完全不需要在 increase()/decrease() 裡額外寫判斷邏輯，這就是 signal、computed、effect 三者分工合作的完整範例。
 -->
 
 ---
