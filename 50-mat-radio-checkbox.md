@@ -368,6 +368,196 @@ layout: default
 -->
 
 ---
+layout: default
+---
+
+# 練習：手搖飲點餐單
+### 情境說明
+
+手搖飲店的點餐畫面很典型：甜度只能選一個（少糖／正常糖／無糖），加料可以複選（珍珠／椰果／布丁），選完畫面上要即時顯示目前選了什麼。這一題要把 `mat-radio-group` 跟 `mat-checkbox` 結合在同一個元件裡練習。
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**需求**
+- 甜度選項用 `mat-radio-group` 呈現，同一時間只能選一個
+- 加料選項用 `mat-checkbox` 呈現，可同時勾選多個
+- 畫面即時顯示目前選擇的甜度與加料文字
+
+</div>
+<div>
+
+**限制**
+- 甜度、加料選項都存成陣列，用 `@for` 產生選項，不能一條一條手刻
+- 綁定方式統一用 `[(ngModel)]`，不用 `(change)` 手動更新變數
+- 加料文字用 getter 動態組出來，不能在畫面上手動拼字串
+
+</div>
+</div>
+
+<!--
+這一題的動機是把這一章分開教的 mat-radio-group 跟 mat-checkbox，實際放進同一個表單情境裡串起來，同時也複習前面章節學過的 @for 迴圈，讓資料驅動畫面，而不是每個選項都手刻一行標籤。
+
+⚠️ 提醒同學，甜度只有一組 mat-radio-group，管理的是「單一個」選中的值；加料則是每個 mat-checkbox 各自獨立的布林值，這是這一章最核心的觀念，這一題會讓大家親手體會這個差異。
+-->
+
+---
+layout: default
+---
+
+# 練習：任務說明
+
+1. 在元件的 TypeScript 中，建立 `sweetnessOptions` 陣列，每筆含 `value`、`label`，並宣告 `selectedSweetness` 儲存目前選中的甜度
+2. 建立 `toppings` 陣列，每筆含 `label`、`checked`（布林值），代表每個加料的勾選狀態
+3. `imports` 陣列加入 `FormsModule`、`MatRadioModule`、`MatCheckboxModule`
+4. HTML 用 `mat-radio-group` 包裹 `@for` 產生的 `mat-radio-button`，並用 `[(ngModel)]="selectedSweetness"` 綁定
+5. 用 `@for` 迴圈跑過 `toppings`，每筆產生一個 `mat-checkbox`，用 `[(ngModel)]="topping.checked"` 綁定
+6. 撰寫 `selectedToppingsText` getter，回傳目前已勾選加料的名稱，以頓號 `、` 串接，若都沒勾選則回傳「無」
+7. 畫面顯示 `selectedSweetness` 與 `selectedToppingsText`
+
+<!--
+大家可以先自己動手寫寫看。重點是想清楚：甜度是「一組共用一個變數」的單選邏輯，加料是「每個各自獨立」的多選邏輯，兩者綁定的資料結構完全不一樣，不要搞混。卡住的地方沒關係，下一頁有提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. `mat-radio-button` 的 `value` 要用方括號綁定陣列裡的值：`[value]="opt.value"`，不能寫死成固定字串
+2. `mat-checkbox` 綁定的是 `topping.checked` 這個布林屬性，不是整個 `topping` 物件
+3. `selectedToppingsText` 用陣列的 `filter()` 先篩出 `checked` 為 `true` 的項目，再用 `map()` 取出 `label`，最後 `join('、')` 組成字串
+4. `filter().map()` 後如果陣列長度是 0，代表沒有勾選任何加料，要回傳「無」而不是空字串
+5. `FormsModule` 是 `[(ngModel)]` 能運作的前提，`MatRadioModule`、`MatCheckboxModule` 則分別對應 `mat-radio-*`、`mat-checkbox` 標籤
+
+<!--
+对照一下大家的答案，最容易搞混的地方是 mat-checkbox 的 [(ngModel)] 綁到整個 topping 物件而不是 topping.checked，這樣勾選狀態不會正確反映布林值。另一個常見疏漏是忘記處理「一個都沒勾選」的情況，畫面直接顯示空白，不如顯示「無」清楚。下一頁看完整解答。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — drink-order.component.ts（一）
+
+匯入模組與元件裝飾器：
+
+```typescript
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+@Component({
+  selector: 'app-drink-order',
+  standalone: true,
+  imports: [FormsModule, MatRadioModule, MatCheckboxModule],
+  templateUrl: './drink-order.component.html',
+})
+export class DrinkOrderComponent {
+  // 屬性見下一頁
+}
+```
+
+<!--
+imports 陣列裡的 FormsModule 是關鍵，沒有它 [(ngModel)] 完全無法運作；MatRadioModule、MatCheckboxModule 則分別讓 mat-radio-group/mat-radio-button 跟 mat-checkbox 這些標籤生效。屬性下一頁接著看。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — drink-order.component.ts（二）
+
+`sweetnessOptions`、`toppings` 陣列與 `selectedToppingsText` getter：
+
+```typescript
+export class DrinkOrderComponent {
+
+  sweetnessOptions = [
+    { value: 'less', label: '少糖' },
+    { value: 'normal', label: '正常糖' },
+    { value: 'no-sugar', label: '無糖' },
+  ];
+  selectedSweetness = 'normal';
+
+  toppings = [
+    { label: '珍珠', checked: false },
+    { label: '椰果', checked: false },
+    { label: '布丁', checked: false },
+  ];
+
+  get selectedToppingsText(): string {
+    const picked = this.toppings.filter(t => t.checked).map(t => t.label);
+    return picked.length ? picked.join('、') : '無';
+  }
+}
+```
+
+<!--
+sweetnessOptions 是單選題的選項清單，selectedSweetness 預設是 'normal'，代表畫面一開始就會選中「正常糖」。toppings 是多選題的選項清單，每一筆都有各自獨立的 checked 布林值，彼此互不影響，這就是上一頁提示強調的「radio 是一組一個變數、checkbox 是各自獨立」的具體實作。
+
+selectedToppingsText 用 filter 篩出勾選的項目、map 取出名稱、join('、') 組字串，長度為 0 就回傳「無」，這是一個 getter，畫面上可以直接當屬性讀取，不需要額外呼叫方法。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — drink-order.component.html（一）
+
+甜度單選：
+
+```html
+<div class="order-box">
+  <h3>甜度（單選）</h3>
+  <mat-radio-group [(ngModel)]="selectedSweetness">
+    @for (opt of sweetnessOptions; track opt.value) {
+      <mat-radio-button [value]="opt.value">
+        {{ opt.label }}
+      </mat-radio-button>
+    }
+  </mat-radio-group>
+```
+
+<!--
+mat-radio-group 上直接綁 [(ngModel)]="selectedSweetness"，代表整組單選的結果都會反映到這一個變數上。@for 迴圈跑過 sweetnessOptions，每筆資料產生一個 mat-radio-button，[value] 綁陣列裡的 value 屬性，不是寫死的字串，之後選項要增減，只要改陣列內容就好，不用碰 HTML。下一頁接著看加料多選跟結果顯示。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — drink-order.component.html（二）
+
+加料多選與結果顯示：
+
+```html
+  <h3>加料（可複選）</h3>
+  @for (topping of toppings; track topping.label) {
+    <mat-checkbox [(ngModel)]="topping.checked">
+      {{ topping.label }}
+    </mat-checkbox>
+  }
+
+  <p class="summary">
+    你選的甜度：{{ selectedSweetness }}，加料：{{ selectedToppingsText }}
+  </p>
+</div>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>驗證方式：</b> 切換甜度選項，畫面下方文字應立即更新；勾選/取消多個加料，加料文字應跟著增減，且未勾選任何加料時應顯示「無」，不是空白。
+</div>
+
+<!--
+@for 迴圈跑過 toppings，每筆資料產生一個 mat-checkbox，[(ngModel)] 綁的是 topping.checked 這個布林屬性，勾選就變 true，取消就變 false，彼此完全獨立，跟上一頁甜度那種「一組共用一個變數」的邏輯形成對比。
+
+最後的 p 標籤直接讀取 selectedSweetness 跟 selectedToppingsText 兩個值，因為都是綁定的資料或 getter，選項一變畫面就自動更新，不需要手動呼叫任何方法去刷新畫面，這就是 Angular 資料綁定的威力。
+-->
+
+---
 layout: end
 ---
 
