@@ -292,6 +292,7 @@ Media Query 寫在 Angular 元件對應的 `.scss` 檔案內，與一般 CSS 寫
 /* practise1.component.scss */
 .box {
   width: 100%;
+  height: 200px;
   background: lightblue;
 }
 ```
@@ -300,6 +301,8 @@ Media Query 寫在 Angular 元件對應的 `.scss` 檔案內，與一般 CSS 寫
 這段範例的目的是先建立一個「預設樣式」，也就是沒有套用任何 Media Query 時的畫面，等一下我們會在同一個 SCSS 檔案裡陸續加上手機版跟平板版的樣式。
 
 大家注意一下，Media Query 的寫法跟我們平常寫 CSS 完全一樣，並不需要在 Angular 裡學新的語法，只是剛好寫在元件對應的 `.scss` 檔案裡而已。這邊先設定的 `lightblue` 就是桌機版看到的顏色，等等縮小視窗後顏色就會改變。
+
+⚠️ 提醒同學，.box 這個 div 在 HTML 裡沒有放任何文字內容，如果只給 width 沒有給 height，元素會因為內容是空的而直接塌陷成 0 高度，畫面上會完全看不到這塊顏色區域，這是這個練習最容易忽略、也最常讓人以為「樣式沒套用成功」的地方。
 -->
 
 ---
