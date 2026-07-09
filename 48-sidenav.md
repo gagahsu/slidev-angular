@@ -339,6 +339,280 @@ export class AppComponent { }
 -->
 
 ---
+layout: default
+---
+
+# 練習：路由導覽側邊選單
+### 情境說明
+
+專案的 `app.routes.ts` 定義了一整批頁面路由，隨著頁面越加越多，使用者要在網址列手動輸入路徑才能切換，非常不方便。這一題要用 `mat-sidenav` 做一個導覽選單，把 `app.routes.ts` 裡的所有頁面路徑列出來，點擊就能切換頁面。
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**需求**
+- 側邊導覽列出 `app.routes.ts` 中幾個代表性頁面路徑
+- 每個項目點擊後導向對應頁面，目前所在頁面要有醒目樣式
+- 用 `mat-toolbar` 上的漢堡圖示按鈕控制側邊導覽開關
+
+</div>
+<div>
+
+**限制**
+- 路徑清單存成陣列，用 `@for` 迴圈產生選單項目，不能一條一條手刻
+- 導覽用 `routerLink` 指令，不用 `(click)` 手動呼叫 `router.navigate()`
+- `mode` 使用 `side`，選單需與主內容並排常駐顯示
+- 開關按鈕用 `mat-icon-button` + `mat-icon`，不要用一整顆文字大按鈕
+
+</div>
+</div>
+
+<!--
+這一題的動機很生活化：專案頁面一多，光靠網址列輸入路徑很痛苦，實務上幾乎每個多頁應用都會有一個側邊選單，把所有可以去的頁面列出來。這一題就是把前面學到的 mat-drawer 結構，加上路由清單陣列，兩者串起來變成一個真正可以用的導覽選單。
+
+⚠️ 提醒同學，這裡限制用 routerLink 而不是自己寫 (click) 呼叫 Router，是因為 routerLink 是 Angular 官方提供給模板導覽用的標準寫法，能直接在 a 標籤或任何元素上使用，比手動呼叫 router.navigate() 更簡潔。
+
+⚠️ 另外提醒，實務上很少看到側邊導覽用一整顆寫著文字的大按鈕來收合，通常是在頂部 `mat-toolbar` 放一個小小的漢堡圖示按鈕，這一題刻意要求用 `mat-icon-button`，練習更貼近業界常見的介面設計。
+-->
+
+---
+layout: default
+---
+
+# 練習：任務說明
+
+1. 在元件的 TypeScript 中，建立 `pages` 陣列，屬性含 `path`（路由路徑）與 `label`（顯示名稱），內容對應 `app.routes.ts` 中幾個代表性路徑
+2. `imports` 陣列加入 `MatSidenavModule`、`MatListModule`、`MatToolbarModule`、`MatIconModule`、`MatButtonModule`、`RouterLink`、`RouterLinkActive`
+3. HTML 用 `mat-drawer-container` 包裹版面，`mat-drawer` 設定 `mode="side"` 且預設展開（`opened`）
+4. `mat-drawer` 內用 `mat-nav-list` + `@for` 跑過 `pages`，每筆產生一個項目，用 `routerLink` 綁 `page.path`，並用 `routerLinkActive` 加上目前頁面的醒目樣式
+5. 主內容區最上方放 `mat-toolbar`，裡面放 `mat-icon-button`（含漢堡圖示 `menu`），綁定 `(click)="drawer.toggle()"`
+6. `mat-toolbar` 下方用 `<router-outlet>` 顯示目前頁面內容
+
+<!--
+大家可以先自己動手寫寫看。重點是想清楚兩件事：第一，選單資料要用陣列 + @for 產生；第二，開關按鈕不要用文字按鈕，改用 mat-toolbar 搭配 mat-icon-button，這是現代網頁最常見的側邊選單開關寫法。卡住的地方沒關係，下一頁有提示。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. `pages` 陣列每個元素長這樣：`{ path: '/home', label: '首頁' }`，`path` 要跟 `app.routes.ts` 裡的 `path` 屬性對得起來
+2. `@for (page of pages; track page.path)` — `track` 用 `path` 即可，因為每個路徑是唯一的
+3. `mat-icon` 內直接寫 Material 圖示名稱當文字內容即可，例如 `<mat-icon>menu</mat-icon>` 就是漢堡圖示
+4. `RouterLink`、`RouterLinkActive` 都要從 `@angular/router` 匯入，不包含在 Material 模組裡
+5. `mat-drawer` 要加上 `opened` 屬性，畫面載入時才會預設展開，不然要先按按鈕才看得到選單
+
+<!--
+对照一下大家的答案，最容易漏掉的地方是忘記匯入 RouterLinkActive，這時候 routerLinkActive 屬性會直接報錯找不到這個指令。另一個常見疏漏是 track 用了整個 page 物件而不是 page.path，物件參照每次都不一樣，@for 就會覺得每筆資料都變了，效能上不划算。下一頁看完整解答。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — sidenav-menu.component.ts（一）
+
+匯入模組與元件裝飾器（imports 陣列見下一頁）：
+
+```typescript
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+@Component({
+  selector: 'app-sidenav-menu',
+  standalone: true,
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    // ...接下一頁
+```
+
+<!--
+除了前面用過的 MatSidenavModule、MatListModule，這一版多匯入了三個模組：MatToolbarModule 提供頂部工具列、MatIconModule 讓 mat-icon 能顯示圖示、MatButtonModule 提供 mat-icon-button 這種只有圖示的按鈕。RouterLinkActive 則是用來偵測「目前路由是不是這個連結」，等一下要拿來加醒目樣式。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — sidenav-menu.component.ts（二）
+
+`imports` 陣列其餘部分、`pages` 陣列：
+
+```typescript
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
+  templateUrl: './sidenav-menu.component.html',
+  styleUrl: './sidenav-menu.component.scss',
+})
+export class SidenavMenuComponent {
+
+  // 對應 app.routes.ts 中幾個代表性頁面路徑
+  pages = [
+    { path: '/home', label: 'Home 首頁' },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/cart', label: 'Cart 購物車' },
+  ];
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+⚠️ <b>注意：</b>這裡只節錄 3 筆示範，實務上可依 <code>app.routes.ts</code> 需要展示的頁面自行增減 <code>pages</code> 陣列內容。
+</div>
+
+<!--
+pages 陣列這裡只節錄 home、dashboard、cart 三筆示範，每一筆對照 app.routes.ts 裡的 { path: ..., component: ... }，轉成 { path, label } 物件，label 只是給使用者看的顯示文字，跟實際路徑無關，可以自己取名字。實務上想列出多少頁面，就照這個格式繼續往陣列裡加就好。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — sidenav-menu.component.html（一）
+
+側邊導覽本體，用 `mat-nav-list` 呈現連結清單：
+
+```html
+<mat-drawer-container class="menu-container" autosize>
+
+  <mat-drawer #drawer class="menu-sidenav" mode="side" opened>
+    <div class="sidenav-header">
+      <mat-icon>apps</mat-icon>
+      <span>頁面導覽</span>
+    </div>
+    <mat-nav-list>
+      @for (page of pages; track page.path) {
+        <a mat-list-item
+           [routerLink]="page.path"
+           routerLinkActive="active-link">
+          {{ page.label }}
+        </a>
+      }
+    </mat-nav-list>
+  </mat-drawer>
+  <!-- 主內容區見下一頁 -->
+```
+
+<!--
+mat-nav-list 是 Material 專門給「導覽用清單」的元件，語意上比純 mat-list 更適合放連結。sidenav-header 是選單頂部的一小塊標題區，純粹裝飾用。重點看 @for 迴圈裡的 a 標籤：routerLink 綁路徑負責導覽，routerLinkActive="active-link" 則是只要目前網址符合這個連結，就自動幫這個 a 標籤加上 active-link 這個 class，等一下 CSS 會用這個 class 做醒目樣式。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — sidenav-menu.component.html（二）
+
+頂部工具列與主內容區：
+
+```html
+  <mat-drawer-content>
+    <mat-toolbar color="primary" class="menu-toolbar">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>我的應用程式</span>
+    </mat-toolbar>
+
+    <div class="menu-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+
+</mat-drawer-container>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>驗證方式：</b> 畫面載入時側邊選單應直接展開，點選單裡任一項目網址列應跟著切換、該項目要呈現醒目樣式，且主內容區顯示對應頁面；點工具列的漢堡圖示，側邊選單應可正常收合與再次展開。
+</div>
+
+<!--
+mat-drawer-content 是主內容的正式容器，跟 mat-drawer 是兄弟關係，兩個都包在 mat-drawer-container 裡。工具列裡放的不是文字按鈕，而是 mat-icon-button 搭配 mat-icon>menu</mat-icon>，這是現代網頁最常見的漢堡選單開關寫法，視覺上小巧不佔版面，(click) 一樣呼叫 drawer.toggle()，邏輯完全沒變，只是換了個更精緻的按鈕元件。
+
+執行結果：這一題做完，就等於幫整個專案做出一份「頁面地圖」，之後每次要看某個章節的範例，直接從側邊選單點過去，不用再手動改網址，目前所在頁面也會有清楚的視覺提示。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — sidenav-menu.component.scss（一）
+
+容器與側邊導覽的基本版面：
+
+```scss
+.menu-container {
+  height: 100vh;
+}
+
+.menu-sidenav {
+  width: 220px;
+  border-right: none;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  font-weight: 600;
+  color: #1a5c5c;
+}
+```
+
+<!--
+mat-drawer-container 預設高度是 0，一定要自己給高度選單才會撐開，這裡用 height: 100vh 撐滿視窗。menu-sidenav 給固定寬度 220px，並拿掉預設邊框改用淡淡的陰影，視覺上更柔和、更接近現代後台系統的側邊欄。sidenav-header 用 flex 排版，把圖示跟文字放在同一行。下一頁補工具列跟目前頁面的醒目樣式。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — sidenav-menu.component.scss（二）
+
+工具列與目前頁面的醒目樣式：
+
+```scss
+.menu-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.menu-content {
+  padding: 24px;
+}
+
+::ng-deep .active-link {
+  background: rgba(94, 173, 160, 0.12) !important;
+  color: #5eada0 !important;
+  font-weight: 600;
+  border-radius: 8px;
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+⚠️ <b>易錯點：</b> <code>routerLinkActive</code> 加上去的 class 是套在元件外層產生的元素上，一般 <code>.active-link</code> 選擇器可能吃不到樣式，需要 <code>::ng-deep</code> 才能穿透 Angular 的樣式封裝。
+</div>
+
+<!--
+menu-toolbar 加上 position: sticky，往下捲動頁面時工具列會固定在頂部，這也是現代網頁常見的做法。menu-content 加一點 padding，讓內容不要貼邊。最後 .active-link 就是搭配上一頁 routerLinkActive="active-link" 的樣式：目前所在的頁面連結會有淡綠色底色跟文字色、字重加粗、圓角，一眼就能看出使用者現在在哪一頁，這比什麼提示都沒有的純文字清單更符合現代網頁的使用體驗。
+-->
+
+---
 layout: end
 ---
 
