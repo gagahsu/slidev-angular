@@ -164,6 +164,54 @@ firebase login
 -->
 
 ---
+
+# 登入失敗排解：檢查 Node 版本
+
+若執行 `firebase login` 後一直卡住或授權失敗，優先檢查 Node.js 版本：
+
+```bash
+node -v
+```
+
+- Firebase CLI 對 Node 版本較敏感，建議使用 **Node 20**
+- 若版本不是 20.x，登入流程可能卡住、逾時，或授權後無回應
+- 確認版本後，若非 20，接續下一頁改用 nvm 安裝並切換
+
+<!--
+如果大家在 firebase login 這邊一直失敗，畫面卡住不動，或是瀏覽器授權完之後終端機沒有反應，先別急著懷疑帳號密碼有問題，第一件事情先檢查 Node.js 的版本。
+
+執行 node -v 看一下目前用的版本號。Firebase CLI 對 Node 版本其實蠻敏感的，官方建議使用 Node 20，如果版本太舊或太新，都有可能造成登入卡住、逾時，或授權完全沒反應這類奇怪的狀況。
+
+如果檢查完發現版本不是 20.x，我們下一頁來看怎麼用 nvm 切換過去。
+-->
+
+---
+
+# 使用 nvm 安裝並切換至 Node 20.18.0
+
+透過 nvm 安裝指定版本的 Node，再重新嘗試登入：
+
+```bash
+nvm install 20.18.0
+nvm use 20.18.0
+```
+
+切換完成後，重新執行登入指令：
+
+```bash
+firebase login
+```
+
+- 安裝完成後，用 `node -v` 再次確認版本已切換為 `20.18.0`
+- 大多數登入失敗問題，切換至 Node 20.18.0 後即可正常完成授權
+
+<!--
+確認版本不對之後，我們用 nvm 這個工具來安裝並切換 Node 版本。nvm install 20.18.0 會幫我們下載安裝這個指定版本，裝完之後用 nvm use 20.18.0 切換過去。
+
+切換完成，可以再用 node -v 確認一下，畫面上顯示的版本號應該就是 20.18.0 了。這時候再重新執行一次 firebase login，大部分卡住登入不了的狀況，都是因為 Node 版本不合適，切換到 20.18.0 之後就能順利完成授權。
+-->
+
+---
 layout: section
 class: flex flex-col justify-center items-center text-center
 ---
@@ -186,19 +234,62 @@ Initializing Firebase Hosting
 firebase init hosting
 ```
 
-初始化過程中，CLI 會逐步詢問幾個設定問題。第一個問題為選擇要連結的 Firebase 專案：
+執行後 CLI 會先確認是否要在目前目錄初始化 Firebase 專案：
+
+```
+? Are you ready to proceed? (Y/n)
+```
+
+- 確認目前所在路徑為要初始化的 Angular 專案根目錄後，輸入 **Y** 繼續
+- 選擇 Y 後，CLI 才會接著詢問要連結哪一個 Firebase 專案
+
+<!--
+大家帶著一起在專案根目錄執行 firebase init hosting，執行之後 CLI 會先印出一個 FIREBASE 的字樣 Logo，接著問一句 Are you ready to proceed?，這是在跟我們確認目前所在的資料夾路徑沒有錯，因為它接下來要在這個目錄底下產生設定檔。
+
+大家看一下畫面上顯示的路徑，確認是自己 Angular 專案的根目錄之後，輸入 Y 繼續就可以了。選 Y 之後，CLI 才會開始像做問卷一樣，一題一題問我們設定選項。
+-->
+
+---
+
+# 選擇要連結的 Firebase 專案
+
+選擇 Y 繼續後，CLI 詢問要連結哪一個 Firebase 專案：
 
 <div class="flex justify-center"><img src="/images/55-angular-deploy/firebase-init-select-project-option.png" class="rounded shadow-md max-h-80" /></div>
 
 - **Use an existing project**：連結已在 Firebase Console 建立的現有專案
 - **Create a new project**：在 Firebase 中新建一個專案並連結
+- 第一次操作、尚未在 Firebase Console 建立過專案者，選擇 **Create a new project** 即可
 
 <!--
-大家帶著一起在專案根目錄執行 firebase init hosting，執行之後 CLI 不會馬上動作，而是會像做問卷一樣，一題一題問我們設定選項，我們要照著自己的需求一步步回答。
+確認路徑沒問題、選了 Y 之後，CLI 接著問的就是要連結哪一個 Firebase 專案。如果之前已經在 Firebase Console 網站上建立過專案，就選 Use an existing project，把它連結進來；如果是第一次做，就選 Create a new project，讓 CLI 直接幫我們在 Firebase 建一個新的。
 
-第一題就是問我們要連結哪一個 Firebase 專案。如果之前已經在 Firebase Console 網站上建立過專案，就選 Use an existing project，把它連結進來；如果是第一次做，就選 Create a new project，讓 CLI 直接幫我們在 Firebase 建一個新的。
+大家都是第一次操作，所以這邊統一選 Create a new project 就可以了，用鍵盤的上下鍵選擇，Enter 確認就可以了。
+-->
 
-這邊帶大家看一下畫面上的選項，用鍵盤的上下鍵選擇，Enter 確認就可以了。
+---
+
+# 備援：CLI 建立專案失敗時的處理方式
+
+選擇 Create a new project 後，若出現以下錯誤：
+
+```
+✖ Adding Firebase resources to Google Cloud Platform project
+Error: Failed to add Firebase to Google Cloud Platform project.
+```
+
+- 此錯誤代表 Google 帳號權限被擋（`403 PERMISSION_DENIED`），CLI 端無法自動建立
+- 解法：改用 Firebase Console **網頁介面**手動建立專案，再回 CLI 連結既有專案
+  1. 開啟 [console.firebase.google.com](https://console.firebase.google.com)，用同一組帳號登入，點選「新增專案」完成建立
+  2. 回到終端機，重新執行 `firebase init hosting`
+  3. 這次選擇 **Use an existing project**，選取剛剛在網頁建好的專案
+
+<!--
+有些同學在選 Create a new project 之後，會遇到一個錯誤：Adding Firebase resources to Google Cloud Platform project 失敗，訊息顯示 Failed to add Firebase to Google Cloud Platform project。
+
+這個狀況通常是因為 Google 帳號權限被擋下來，錯誤代碼是 403 PERMISSION DENIED，CLI 這條自動建立的路線走不通，但不代表帳號完全不能用 Firebase。
+
+解法是換一條路：改成用瀏覽器打開 Firebase Console 網站，用同一個帳號登入，直接在網頁上手動建立專案，網頁這邊的權限檢查機制不太一樣，通常都能順利建立成功。建立完成之後，回到終端機重新執行 firebase init hosting，這次第一題就不要選 Create a new project 了，改選 Use an existing project，把剛剛在網頁上建好的專案選進來就可以了。
 -->
 
 ---
@@ -290,19 +381,53 @@ CLI 詢問是否將網站設定為單頁應用程式：
 
 # 設定 GitHub 自動化部署
 
-最後一個問題詢問是否透過 GitHub 設定自動建置與部署：
+接著詢問是否透過 GitHub 設定自動建置與部署：
 
 <div class="flex justify-center"><img src="/images/55-angular-deploy/firebase-init-github-autodeploy-prompt.png" class="rounded shadow-md max-h-80" /></div>
 
 - 初次設定建議選擇 **N**（否），跳過此步驟
 - 日後有自動化 CI/CD 需求時，可修改 `firebase.json` 或重新執行 `firebase init` 進行設定
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">💡 <b>注意：</b> 完成所有設定後，專案根目錄會自動產生 <code>.firebaserc</code> 與 <code>firebase.json</code> 兩個設定檔，這兩個檔案記錄專案與 Firebase 的連結資訊，請勿刪除。</div>
+<!--
+這一題是問我們要不要設定 GitHub 自動化部署，也就是每次 push 到 GitHub 就自動幫我們建置部署。初次設定的時候，建議大家先選 N，跳過這個步驟，先把手動部署的流程搞熟，之後真的有 CI/CD 的需求，隨時可以回來重新設定，或直接修改 firebase.json 這個檔案。
+-->
+
+---
+
+# 設定 Agent Skills（新版 CLI）
+
+新版 Firebase CLI 會詢問是否安裝 AI 開發助理（agent）用的技能套件：
+
+```
+? Would you like to install agent skills for Firebase? (Y/n)
+```
+
+- 這是給 AI coding agent（如 Claude Code）使用的整合功能，與部署流程無關
+- 選擇 **N**（否）即可，不影響後續 `firebase deploy`
 
 <!--
-最後一題是問我們要不要設定 GitHub 自動化部署，也就是每次 push 到 GitHub 就自動幫我們建置部署。初次設定的時候，建議大家先選 N，跳過這個步驟，先把手動部署的流程搞熟，之後真的有 CI/CD 的需求，隨時可以回來重新設定，或直接修改 firebase.json 這個檔案。
+比較新版的 Firebase CLI，在設定的最後會多問一題，問要不要幫像 Claude Code 這種 AI coding agent 安裝 Firebase 的技能套件。這個功能跟我們的部署流程完全無關，是給 AI 工具用的整合功能，這裡選 N 跳過就可以了，不會影響到後面的部署。
+-->
 
-回答完所有問題之後，大家可以留意一下，專案根目錄會多出兩個檔案：.firebaserc 跟 firebase.json，這兩個檔案就是記錄我們專案跟 Firebase 之間的連結關係，裡面存了專案 ID、托管目錄這些設定。
+---
+
+# 初始化完成
+
+回答完所有問題後，終端機顯示初始化完成訊息：
+
+```
++  Wrote configuration info to firebase.json
++  Wrote project information to .firebaserc
+
++  Firebase initialization complete!
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">💡 <b>注意：</b> 專案根目錄會自動產生 <code>.firebaserc</code> 與 <code>firebase.json</code> 兩個設定檔，這兩個檔案記錄專案與 Firebase 的連結資訊，請勿刪除。</div>
+
+<!--
+回答完所有問題之後，終端機會印出初始化完成的訊息，告訴我們 firebase.json 跟 .firebaserc 這兩個檔案都寫好了，最後顯示 Firebase initialization complete，代表整個初始化流程順利結束。
+
+大家可以留意一下，專案根目錄這時候會多出這兩個檔案，裡面記錄了專案 ID、托管目錄這些設定，之後每次 deploy 都會讀取這裡的設定。
 
 ⚠️ 提醒大家，這兩個檔案不要手滑刪掉，不然下次部署的時候 CLI 就不知道要連去哪個 Firebase 專案了。
 -->
