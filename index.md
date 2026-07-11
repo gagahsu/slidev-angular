@@ -371,6 +371,11 @@ style: |
       <div>綜合練習 Ch33–40</div>
       <div class="chapter-subtitle" style="color: #b05a20;">員工管理系統實作</div>
     </Link>
+    <Link to="ch58" class="chapter-card" style="border-color: #7c5cbf; background: #f7f4fc;">
+      <div class="chapter-num" style="color: #7c5cbf;">總複習</div>
+      <div>全課程總複習 Ch1–56</div>
+      <div class="chapter-subtitle" style="color: #5d44a0;">九站速記・快問快答・易錯 Top 10</div>
+    </Link>
     <!-- 更多章節將在此處新增 -->
   </div>
 </div>
@@ -609,4 +614,8 @@ src: ./56-angular-deploy.md
 
 ---
 src: ./57-comprehensive-exercise.md
+---
+
+---
+src: ./58-final-review.md
 ---
