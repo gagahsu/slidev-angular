@@ -81,7 +81,7 @@ layout: default
 layout: default
 ---
 
-# 課程地圖 — 九大階段
+# 課程地圖 — 九大階段（一）
 
 | 階段 | 章節 | 主題 | 你獲得的能力 |
 | --- | --- | --- | --- |
@@ -90,13 +90,26 @@ layout: default
 | 三 | Ch13–18 | TypeScript 語法 | 寫得出程式邏輯 |
 | 四 | Ch19–25 | Angular 核心觀念 | 元件、繫結、路由、資料傳遞 |
 | 五 | Ch26–31 | 模板語法與資料處理 | 控制流程、串 API、整理資料 |
+
+<!--
+先看這張全課程地圖，這是前五個階段。這九個階段不是隨便切的，它其實就是「一個前端工程師從零到上線」的完整工作流程：先有環境跟工具，才刻得出畫面；有畫面之後需要邏輯，所以學 TypeScript；邏輯要組織起來，就進入 Angular 的元件世界；畫面要有資料，所以學模板語法跟串 API。
+-->
+
+---
+layout: default
+---
+
+# 課程地圖 — 九大階段（二）
+
+| 階段 | 章節 | 主題 | 你獲得的能力 |
+| --- | --- | --- | --- |
 | 六 | Ch32–43 | Angular Material | 用元件庫組出專業 UI |
 | 七 | Ch44–47 | 非同步與狀態管理 | 訂閱、Loading、Signals |
 | 八 | Ch48–53 | 版面與表單 | 後台版型、動態表單、RWD |
 | 九 | Ch54–56 | RxJS 與部署 | 打包上線，作品見天日 |
 
 <!--
-先看這張全課程地圖。這九個階段不是隨便切的，它其實就是「一個前端工程師從零到上線」的完整工作流程：先有環境跟工具，才刻得出畫面；有畫面之後需要邏輯，所以學 TypeScript；邏輯要組織起來，就進入 Angular 的元件世界；畫面要有資料，所以學模板語法跟串 API；要好看省工，用 Material；要處理等待跟共享狀態，學非同步；要做出完整產品，補上版面表單跟 RWD；最後打包部署，作品正式上線。
+全課程地圖的後四個階段：要好看省工，用 Material；要處理等待跟共享狀態，學非同步；要做出完整產品，補上版面表單跟 RWD；最後打包部署，作品正式上線。
 
 大家複習的時候可以問自己：這九格裡面，哪一格我最心虛？那一格對應的章節就是你優先要回去重讀的。
 -->
@@ -200,10 +213,7 @@ HTML 標籤複習一張表就夠。大家要能不查資料就寫出：標題段
 layout: default
 ---
 
-# 第二站速記 — CSS 核心觀念（Ch10–12）
-
-<div class="grid grid-cols-2 gap-4">
-<div>
+# 第二站速記 — CSS 核心觀念（一）（Ch10, Ch12）
 
 **選擇器與優先權**（Ch10, Ch12）
 ```css
@@ -216,8 +226,17 @@ p { color: gray; }        /* 元素選擇器 */
 **Box Model（由內而外）**
 `content → padding → border → margin`
 
-</div>
-<div>
+<!--
+CSS 濃縮成四塊，這是前兩塊。第一，選擇器：元素選擇器選標籤、class 選擇器用點開頭，優先權記「後蓋前」——這個觀念在 ch12 特別強調過，很多「我的樣式怎麼沒生效」都是被後面的規則蓋掉了。
+
+第二，Box Model 由內而外四層：content、padding、border、margin，調間距時先想清楚要調「內距」還是「外距」。
+-->
+
+---
+layout: default
+---
+
+# 第二站速記 — CSS 核心觀念（二）（Ch11–12）
 
 **Flex 排版**（Ch11）
 ```css
@@ -234,15 +253,8 @@ p { color: gray; }        /* 元素選擇器 */
 - `fixed` 釘在視窗、`relative`＋`absolute` 父子定錨
 - `z-index` 決定堆疊順序（大的在上）
 
-</div>
-</div>
-
 <!--
-CSS 濃縮成四塊。第一，選擇器：元素選擇器選標籤、class 選擇器用點開頭，優先權記「後蓋前」——這個觀念在 ch12 特別強調過，很多「我的樣式怎麼沒生效」都是被後面的規則蓋掉了。
-
-第二，Box Model 由內而外四層：content、padding、border、margin，調間距時先想清楚要調「內距」還是「外距」。
-
-第三，flex 三件套：direction 決定主軸方向，justify-content 管主軸對齊，align-items 管次軸對齊，這組在 ch49 toolbar 的 spacer 技巧、ch53 RWD 都會再用到。
+CSS 濃縮成四塊，這是後兩塊。第三，flex 三件套：direction 決定主軸方向，justify-content 管主軸對齊，align-items 管次軸對齊，這組在 ch49 toolbar 的 spacer 技巧、ch53 RWD 都會再用到。
 
 第四，position：fixed 是釘在視窗上不動，absolute 要搭配 relative 的父層當定錨，z-index 管誰蓋誰。
 -->
@@ -333,10 +345,7 @@ let anything: any = '不檢查型別';  // any：盡量避免
 layout: default
 ---
 
-# 第三站速記 — 方法與流程控制（Ch16–17）
-
-<div class="grid grid-cols-2 gap-4">
-<div>
+# 第三站速記 — 方法與流程控制（一）（Ch16–17）
 
 **方法宣告與呼叫**（Ch16）
 ```typescript
@@ -354,8 +363,15 @@ else if (score >= 60) { grade = 'B'; }
 else { grade = 'C'; }
 ```
 
-</div>
-<div>
+<!--
+方法與流程控制，這是前半段。方法的組成四件事：名稱、參數（可帶型別跟預設值）、回傳型別、return。在元件裡呼叫自己的方法記得加 this。
+-->
+
+---
+layout: default
+---
+
+# 第三站速記 — 方法與流程控制（二）（Ch17）
 
 **for 迴圈兩種寫法**（Ch17）
 ```typescript
@@ -373,15 +389,10 @@ JSON.stringify(obj);       // 物件 → JSON 字串
 JSON.parse(jsonStr);       // JSON 字串 → 物件
 ```
 
-</div>
-</div>
-
 <!--
-方法與流程控制。方法的組成四件事：名稱、參數（可帶型別跟預設值）、回傳型別、return。在元件裡呼叫自己的方法記得加 this。
+方法與流程控制，這是後半段。迴圈兩種寫法都要看得懂：傳統 for 用索引，for...of 直接拿元素，日常開發推薦 for...of。
 
-迴圈兩種寫法都要看得懂：傳統 for 用索引，for...of 直接拿元素，日常開發推薦 for...of。
-
-右下角這六個方法是全課程出場率最高的工具：filter 在 ch31 排序、ch38 即時搜尋、ch57 封存功能全部用到；indexOf 是即時搜尋的核心判斷；JSON 兩兄弟在 ch25 網頁儲存必用——因為 localStorage 只能存字串，物件進出都要靠 stringify 跟 parse 轉換。
+這六個方法是全課程出場率最高的工具：filter 在 ch31 排序、ch38 即時搜尋、ch57 封存功能全部用到；indexOf 是即時搜尋的核心判斷；JSON 兩兄弟在 ch25 網頁儲存必用——因為 localStorage 只能存字串，物件進出都要靠 stringify 跟 parse 轉換。
 -->
 
 ---
@@ -503,10 +514,7 @@ layout: default
 layout: default
 ---
 
-# 第四站速記 — 路由（Ch23）
-
-<div class="grid grid-cols-2 gap-4">
-<div>
+# 第四站速記 — 路由（一）（Ch23）
 
 **設定路由**（app.routes.ts）
 ```typescript
@@ -523,8 +531,15 @@ export const routes: Routes = [
 <router-outlet />
 ```
 
-</div>
-<div>
+<!--
+路由複習分四塊，這是前兩塊。第一，路由表定義在 app.routes.ts，path 對應到 component，冒號 id 是路由參數的佔位符。第二，HTML 導航用 routerLink，搭配 routerLinkActive 給當前頁面加樣式，router-outlet 是頁面元件實際渲染的位置。
+-->
+
+---
+layout: default
+---
+
+# 第四站速記 — 路由（二）（Ch23）
 
 **TS 導航**
 ```typescript
@@ -543,11 +558,8 @@ const id = this.route.snapshot.paramMap.get('id');
 const tab = this.route.snapshot.queryParamMap.get('tab');
 ```
 
-</div>
-</div>
-
 <!--
-路由複習分四塊。第一，路由表定義在 app.routes.ts，path 對應到 component，冒號 id 是路由參數的佔位符。第二，HTML 導航用 routerLink，搭配 routerLinkActive 給當前頁面加樣式，router-outlet 是頁面元件實際渲染的位置。第三，TS 導航注入 Router 之後用 navigate，適合「按下按鈕、判斷完邏輯再跳頁」的場景。第四，取參數注入 ActivatedRoute：路徑裡的 /user/5 用 paramMap 拿，問號後面的 ?tab=info 用 queryParamMap 拿，這兩個很容易搞混，記「路徑內 param、問號後 query」。
+路由複習分四塊，這是後兩塊。第三，TS 導航注入 Router 之後用 navigate，適合「按下按鈕、判斷完邏輯再跳頁」的場景。第四，取參數注入 ActivatedRoute：路徑裡的 /user/5 用 paramMap 拿，問號後面的 ?tab=info 用 queryParamMap 拿，這兩個很容易搞混，記「路徑內 param、問號後 query」。
 -->
 
 ---
@@ -655,10 +667,7 @@ class: flex flex-col justify-center items-center text-center
 layout: default
 ---
 
-# 第五站速記 — 控制流程語法（Ch26–28）
-
-<div class="grid grid-cols-2 gap-4">
-<div>
+# 第五站速記 — 控制流程語法（一）（Ch26–27）
 
 **@for 陣列顯示**（Ch26）
 ```html
@@ -676,8 +685,19 @@ layout: default
 @else { <p>不及格</p> }
 ```
 
-</div>
-<div>
+- `track` 為**必填**，幫 Angular 辨識每筆資料
+
+<!--
+控制流程語法前半段先看 @for 跟 @if。@for 取代舊版的 *ngFor，track 是必填的，通常綁唯一的 id，讓 Angular 知道哪筆資料變了、只重繪那一筆；@empty 是空陣列時的預設顯示，ch57 的已封存清單就用了這個。
+
+@if / @else if / @else 的結構跟 TypeScript 的 if 完全對應，只是搬到 template 而已。
+-->
+
+---
+layout: default
+---
+
+# 第五站速記 — 控制流程語法（二）（Ch28）
 
 **@switch 條件切換**（Ch28）
 ```html
@@ -688,16 +708,10 @@ layout: default
 }
 ```
 
-- `track` 為**必填**，幫 Angular 辨識每筆資料
 - 條件 2–3 個用 `@if`，多分支等值判斷用 `@switch`
 
-</div>
-</div>
-
 <!--
-三個控制流程語法一次看。@for 取代舊版的 *ngFor，track 是必填的，通常綁唯一的 id，讓 Angular 知道哪筆資料變了、只重繪那一筆；@empty 是空陣列時的預設顯示，ch57 的已封存清單就用了這個。
-
-@if / @else if / @else 的結構跟 TypeScript 的 if 完全對應，只是搬到 template 而已。@switch 適合「同一個值有很多種可能」的場景，例如訂單狀態、HTTP 狀態碼分類。
+控制流程語法後半段是 @switch。@switch 適合「同一個值有很多種可能」的場景，例如訂單狀態、HTTP 狀態碼分類。
 
 選擇原則：兩三個條件用 @if 就好，四種以上的等值分支換 @switch 比較乾淨。
 -->
@@ -738,10 +752,7 @@ this.userService.getUsers().subscribe(data => {
 layout: default
 ---
 
-# 第五站速記 — Interface 與排序（Ch30–31）
-
-<div class="grid grid-cols-2 gap-4">
-<div>
+# 第五站速記 — Interface（一）（Ch30）
 
 **Interface 定義資料形狀**（Ch30）
 ```typescript
@@ -753,11 +764,17 @@ export interface Product {
 }
 ```
 - `ng g i interfaces/product` 產生獨立檔案
-- API 回傳資料都應該定義 interface，
-  取代 `any`
+- API 回傳資料都應該定義 interface，取代 `any`
 
-</div>
-<div>
+<!--
+Interface 是 TypeScript 型別能力的精華：先定義資料長什麼形狀，API 回傳的資料、表格的每一列都套上型別，打錯屬性名稱編譯器立刻告訴你。問號代表可選屬性，有沒有這個欄位都合法。課程慣例是用 ng g i 產生獨立檔案放在 interfaces 資料夾。
+-->
+
+---
+layout: default
+---
+
+# 第五站速記 — 排序（二）（Ch31）
 
 **sort() 排序**（Ch31）
 ```typescript
@@ -771,12 +788,7 @@ sortBy(key: 'price' | 'id') {
 ```
 - 回傳負數 → a 在前；正數 → b 在前
 
-</div>
-</div>
-
 <!--
-Interface 跟排序。Interface 是 TypeScript 型別能力的精華：先定義資料長什麼形狀，API 回傳的資料、表格的每一列都套上型別，打錯屬性名稱編譯器立刻告訴你。問號代表可選屬性，有沒有這個欄位都合法。課程慣例是用 ng g i 產生獨立檔案放在 interfaces 資料夾。
-
 sort() 的核心是比較函式的回傳值：負數表示 a 排前面、正數表示 b 排前面，所以數字升冪寫 a 減 b、降冪寫 b 減 a，這個公式直接背起來。ch33 的 mat-table 資料、ch57 的員工列表排序都是同一套邏輯。
 -->
 
@@ -826,6 +838,19 @@ layout: default
 | Sidenav | `MatSidenavModule` | 三種模式：`over`（覆蓋）／`push`（推擠）／`side`（並排） | Ch48 |
 | Toolbar | `MatToolbarModule` | Spacer 技巧：`flex: 1 1 auto` 把按鈕推到右邊 | Ch49 |
 | Menu／Badge | `MatMenuModule`、`MatBadgeModule` | 下拉選單與角標提示 | Ch49 |
+
+<!--
+第二張總表。Dialog 的資料流要熟：呼叫端用 dialog.open 開啟並透過 data 傳資料進去，Dialog 元件內部注入 MAT_DIALOG_DATA 接收、注入 MatDialogRef 控制關閉。Sidenav 三種模式的差別：over 蓋在內容上、push 把內容推開、side 跟內容並排，後台版型最常用 side。
+-->
+
+---
+layout: default
+---
+
+# 第六站速記 — Material 元件總表（三）
+
+| 元件 | 關鍵模組 | 一句話重點 | 章節 |
+| --- | --- | --- | --- |
 | Radio | `MatRadioModule` | `mat-radio-group` 綁 `ngModel`，單選 | Ch50 |
 | Checkbox | `MatCheckboxModule` | 每個選項各綁一個 boolean，複選 | Ch50 |
 | Spinner | `MatProgressSpinnerModule` | `mat-spinner` 搭配 Loading 狀態顯示 | Ch46 |
@@ -835,8 +860,6 @@ layout: default
 </div>
 
 <!--
-第二張總表。Dialog 的資料流要熟：呼叫端用 dialog.open 開啟並透過 data 傳資料進去，Dialog 元件內部注入 MAT_DIALOG_DATA 接收、注入 MatDialogRef 控制關閉。Sidenav 三種模式的差別：over 蓋在內容上、push 把內容推開、side 跟內容並排，後台版型最常用 side。
-
 radio 跟 checkbox 的本質差異：radio 是一組裡選一個，整組綁同一個變數；checkbox 每個選項獨立，各綁各的 boolean。
 
 最下面的通用模式是這一站最重要的帶得走的能力：所有 Material 元件都是同一套流程，報錯的第一反應永遠是「模組匯入了沒」。
@@ -846,10 +869,7 @@ radio 跟 checkbox 的本質差異：radio 是一組裡選一個，整組綁同�
 layout: default
 ---
 
-# 第六站速記 — Pipe 與畫面技巧（Ch36–39, 42）
-
-<div class="grid grid-cols-2 gap-4">
-<div>
+# 第六站速記 — Pipe 與 ngClass（Ch36–37, 39）
 
 **兩個常用 Pipe**（需 `CommonModule`）
 ```html
@@ -867,13 +887,21 @@ layout: default
 <div [ngClass]="getClass(item)">
 ```
 
-</div>
-<div>
+<!--
+Material 站的畫面技巧先看 pipe 跟 ngClass。DatePipe 把 Date 物件排版成想要的格式，格式字串 yyyy/MM/dd 注意大小寫——MM 是月份、mm 是分鐘，寫錯不會報錯但顯示會很奇怪。JsonPipe 是開發時的偵錯神器，搭配 pre 標籤才有縮排。兩個 pipe 都要匯入 CommonModule。
+
+ngClass 三種用法：物件語法適合條件高亮（ch57 的薪水高亮就是這個）、變數語法適合狀態切換、方法回傳適合複雜邏輯。
+-->
+
+---
+layout: default
+---
+
+# 第六站速記 — 即時搜尋與圓餅圖（Ch38, 42）
 
 **即時搜尋套路**（Ch38）
 ```html
-<input [(ngModel)]="keyword"
-       (keyup)="applyFilter()">
+<input [(ngModel)]="keyword" (keyup)="applyFilter()">
 ```
 ```typescript
 applyFilter() {
@@ -883,18 +911,12 @@ applyFilter() {
 }
 ```
 
-**圓餅圖**（Ch42）：`npm install chart.js`，
-`new Chart(canvas, { type: 'pie', data, options })`
-
-</div>
-</div>
+**圓餅圖**（Ch42）：`npm install chart.js`，`new Chart(canvas, { type: 'pie', data, options })`
 
 <!--
-這一頁是 Material 站的畫面技巧集。DatePipe 把 Date 物件排版成想要的格式，格式字串 yyyy/MM/dd 注意大小寫——MM 是月份、mm 是分鐘，寫錯不會報錯但顯示會很奇怪。JsonPipe 是開發時的偵錯神器，搭配 pre 標籤才有縮排。兩個 pipe 都要匯入 CommonModule。
-
-ngClass 三種用法：物件語法適合條件高亮（ch57 的薪水高亮就是這個）、變數語法適合狀態切換、方法回傳適合複雜邏輯。
-
 即時搜尋的套路要背熟：keyup 觸發、ngModel 存關鍵字、filter 加 indexOf 過濾，然後把結果指回 dataSource.data——注意是「從完整資料重新算」，不是在已過濾的結果上再過濾。
+
+圓餅圖用的是 chart.js 套件：npm install 安裝後，拿 canvas 元素 new 一個 Chart，type 指定 pie，把資料跟選項傳進去就能畫出來。
 -->
 
 ---
@@ -1043,12 +1065,10 @@ layout: default
 ```typescript
 count = signal(0);                          // 建立：必須給初始值
 double = computed(() => this.count() * 2);  // 衍生值：相依變了自動重算
-
 increment() {
   this.count.set(5);                 // 直接設值
   this.count.update(v => v + 1);     // 由舊值算新值
 }
-
 constructor() {
   effect(() => console.log('count 變成', this.count()));  // 監聽變化
 }
@@ -1229,40 +1249,39 @@ RxJS 五個概念一張表收攏。Observable 是生產者而且是惰性的—�
 layout: default
 ---
 
-# 第九站速記 — 打包與部署（Ch55–56）
+# 第九站速記 — ng build 打包（Ch55）
 
-<div class="grid grid-cols-2 gap-4">
-<div>
-
-**ng build 打包**（Ch55）
 ```bash
 ng build
 ```
+
 - 產出 `dist/` 資料夾：壓縮過的 HTML／JS／CSS 靜態檔案
 - 部署的就是 `dist/專案名/browser` 的內容
 - **Bundle Budget 超標**：在 `angular.json` 調整 `budgets` 上限
 
-</div>
-<div>
+<!--
+最後一哩路的第一步是打包。ng build 把整個專案壓縮打包成純靜態檔案放進 dist，這包東西丟到任何靜態主機都能跑。build 時如果跳 Bundle Budget 錯誤，代表打包後的檔案超過 angular.json 設定的大小預算，去調 budgets 上限即可。
+-->
 
-**Firebase Hosting 部署**（Ch56）
+---
+layout: default
+---
+
+# 第九站速記 — Firebase Hosting 部署（Ch56）
+
 ```bash
 npm install -g firebase-tools
 firebase login
 firebase init hosting
 firebase deploy
 ```
+
 - Public directory 指向 build 產出目錄
 - **SPA 模式選 Yes**：所有路徑都導回 `index.html`，路由才不會 404
-
-</div>
-</div>
 
 **上線流程**：`ng build` → `firebase init hosting` → `firebase deploy` → 取得正式網址 🎉
 
 <!--
-最後一哩路。ng build 把整個專案壓縮打包成純靜態檔案放進 dist，這包東西丟到任何靜態主機都能跑。build 時如果跳 Bundle Budget 錯誤，代表打包後的檔案超過 angular.json 設定的大小預算，去調 budgets 上限即可。
-
 Firebase 部署四個指令：裝 CLI、登入、init、deploy。init 的設定裡最關鍵的是 SPA 模式要選 Yes——Angular 是單頁應用，所有路由都由前端接管，如果不把所有路徑導回 index.html，使用者直接輸入子路由網址或重新整理就會 404，這是 ch56 特別強調的坑。
 
 deploy 成功後拿到正式網址，你的作品就真的在網路上活著了。
