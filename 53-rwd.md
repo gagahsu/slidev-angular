@@ -399,6 +399,42 @@ Visual Result
 -->
 
 ---
+
+# 回頭看 Tailwind 的斷點前綴
+
+還記得 ch11 裝的 Tailwind 嗎？它的 `md:` `lg:` 前綴，底層就是 `@media`：
+
+| Tailwind 前綴 | 等同的 Media Query | 對應裝置 |
+| --- | --- | --- |
+| （無前綴） | 預設，永遠套用 | 手機（Mobile First） |
+| `sm:` | `@media (min-width: 640px)` | 大手機 |
+| `md:` | `@media (min-width: 768px)` | 平板 |
+| `lg:` | `@media (min-width: 1024px)` | 桌機 |
+
+```html
+<!-- 手機單欄 → 平板二欄 → 桌機四欄 -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+```
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ Tailwind 的斷點一律是 <code>min-width</code>，也就是<b>先寫手機、再往上加大螢幕的例外</b>（Mobile First），跟本章前面示範的 <code>max-width</code> 寫法方向相反
+</div>
+
+<!--
+講完 `@media` 之後，我們回頭看一個各位早就見過、但當時沒細講的東西。
+還記得 ch11 我們裝了 Tailwind，我提過可以在 class 前面加 `hover:` 來做互動效果嗎？
+斷點也是一模一樣的機制，只是前綴換成 `md:`、`lg:`。
+你寫 `md:grid-cols-2`，Tailwind 就會幫你生出一段 `@media (min-width: 768px) { grid-template-columns: repeat(2, ...) }`。
+所以請大家記住：**Tailwind 沒有發明任何新東西**，它只是把你這一章學的 `@media` 包成一個短前綴。
+你今天把 `@media` 學懂了，那些前綴對你來說就只是縮寫。
+不過有一個方向要特別注意：Tailwind 的斷點**全部都是 `min-width`**。
+意思是「沒有前綴的那個」是手機版，然後螢幕越大、你才越往上加例外。這叫 Mobile First（手機優先）。
+而我們這章前面示範的是 `max-width`，方向相反——先寫桌機，再往下縮。
+兩種寫法都對，但同一個專案裡千萬不要混用，不然你會被自己搞死。
+業界現在的主流是 Mobile First，因為大多數使用者是用手機看你的網站的。
+-->
+
+---
 layout: end
 ---
 

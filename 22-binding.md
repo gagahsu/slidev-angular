@@ -821,12 +821,12 @@ layout: two-cols
 # 練習 2：等級計算機加強版
 ### 任務說明
 
-1. **UI 美化**：排版成較美觀的版面（可使用 Bootstrap 或自訂 CSS）
+1. **UI 美化**：排版成較美觀的版面（可使用 Tailwind CSS 或自訂 CSS）
 2. **新增降級功能**：點擊降級按鈕，等級 -1
 3. **等級下限判斷**：等級不可小於 1（降級時需判斷）
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 Bootstrap 安裝方式請參考 <b>ch11「CSS 樣式編輯」</b> 的「安裝 Bootstrap」章節
+💡 Tailwind CSS 安裝方式請參考 <b>ch11「CSS 樣式編輯」</b> 的「安裝 Tailwind CSS」章節
 </div>
 
 ::right::
@@ -855,8 +855,8 @@ layout: default
 2. 降級前判斷：`if (this.level > 1) { this.level--; ... }`
 3. 攻擊與防禦計算邏輯不變
 4. UI 美化建議：
-   - 使用 Bootstrap `card` 包覆整體內容
-   - 用 `btn-success` / `btn-danger` 區分升降按鈕顏色
+   - 用 `border rounded-lg p-6 shadow-lg` 做出一張卡片包覆整體內容
+   - 用 `bg-green-500` / `bg-red-500` 區分升降按鈕顏色
    - 數值統計用 `<table>` 呈現
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -948,20 +948,23 @@ layout: default
 ### HTML（1／2）
 
 ```html
-<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
-  <div class="rounded-4 p-4 shadow" style="width: 480px;">
-    <div class="border border-2 border-dark rounded p-4 position-relative">
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="rounded-2xl p-6 shadow-lg w-[480px]">
+    <div class="border-2 border-gray-800 rounded-lg p-6 relative">
 
-      <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 m-2"
+      <button class="absolute top-0 right-0 m-2 border border-gray-400 text-gray-600
+                     rounded px-2 py-1 text-sm hover:bg-gray-200"
               (click)="reset()">重置</button>
 
-      <h2 class="text-center text-danger mb-3">角色等級計算機</h2>
+      <h2 class="text-center text-red-600 font-bold text-2xl mb-4">角色等級計算機</h2>
 
-      <p class="fw-bold fs-5">等級：{{ level }}</p>
+      <p class="font-bold text-xl">等級：{{ level }}</p>
 
-      <div class="d-flex gap-2 mb-3">
-        <button class="btn btn-outline-dark flex-fill" (click)="levelUp()">升級</button>
-        <button class="btn btn-outline-dark flex-fill"
+      <div class="flex gap-2 mb-4">
+        <button class="flex-1 border-2 border-gray-800 rounded px-4 py-2
+                       hover:bg-gray-800 hover:text-white" (click)="levelUp()">升級</button>
+        <button class="flex-1 border-2 border-gray-800 rounded px-4 py-2
+                       hover:bg-gray-800 hover:text-white disabled:opacity-40"
                 [disabled]="level <= 1" (click)="levelDown()">降級</button>
       </div>
 ```
@@ -978,15 +981,18 @@ layout: default
 ### HTML（2／2）
 
 ```html
-      <p class="fw-bold fs-5">攻擊力：{{ attack }}</p>
-      <p class="fw-bold fs-5">防禦力：{{ defense }}</p>
+      <p class="font-bold text-xl">攻擊力：{{ attack }}</p>
+      <p class="font-bold text-xl">防禦力：{{ defense }}</p>
 
-      <div class="d-flex align-items-center gap-2 mb-2">
-        <label class="text-nowrap mb-0">自行輸入等級：</label>
-        <input type="number" class="form-control" [(ngModel)]="inputLevel" />
+      <div class="flex items-center gap-2 mb-2">
+        <label class="whitespace-nowrap">自行輸入等級：</label>
+        <input type="number" class="flex-1 border border-gray-300 rounded px-3 py-2"
+               [(ngModel)]="inputLevel" />
       </div>
 
-      <button class="btn btn-outline-dark w-100" (click)="modifyLevel()">修改等級</button>
+      <button class="w-full border-2 border-gray-800 rounded px-4 py-2
+                     hover:bg-gray-800 hover:text-white"
+              (click)="modifyLevel()">修改等級</button>
 
     </div>
   </div>
@@ -1005,61 +1011,85 @@ layout: default
 layout: default
 ---
 
-# 練習 2：Bootstrap Class 說明（1／3）
+# 練習 2：Tailwind Class 說明（1／3）
 ### 外層容器
 
 | Class | 說明 |
 | --- | --- |
-| `d-flex` | 啟用 Flexbox 排版 |
-| `justify-content-center` | 水平置中（主軸） |
-| `align-items-center` | 垂直置中（交叉軸） |
-| `min-vh-100` | 最小高度為 100% 視窗高度 |
-| `bg-light` | 淺灰背景色 |
-| `rounded-4` / `rounded` | 大圓角（外框）/ 小圓角（內框） |
-| `p-4` / `shadow` | 四周 padding（1.5rem）/ 預設陰影效果 |
+| `flex` | 啟用 Flexbox 排版 |
+| `justify-center` | 水平置中（主軸） |
+| `items-center` | 垂直置中（次軸） |
+| `min-h-screen` | 最小高度為 100% 視窗高度 |
+| `bg-gray-100` | 淺灰背景色 |
+| `rounded-2xl` / `rounded-lg` | 大圓角（外框）/ 小圓角（內框） |
+| `p-6` / `shadow-lg` | 四周 padding（6 × 4 = 24px）/ 較明顯的陰影 |
+| `w-[480px]` | 自訂寬度（中括號寫法可塞任意數值） |
 
 <!--
 這些 class 套在最外層兩個 div，負責置中整體版面與外框視覺。
+特別看一下 `w-[480px]` 這個寫法：Tailwind 預設的寬度階梯裡沒有剛好 480px 的選項，
+這時候用中括號把你要的值包起來，它就會幫你生一個。這叫「任意值（arbitrary value）」語法，
+任何 class 都能這樣用，例如 `text-[13px]`、`bg-[#5eada0]`。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：Bootstrap Class 說明（2／3）
+# 練習 2：Tailwind Class 說明（2／3）
 ### 框線、定位與按鈕
 
 | Class | 說明 |
 | --- | --- |
-| `border` / `border-2` / `border-dark` | 顯示邊框 / 粗細 2px / 深色 |
-| `position-relative` / `position-absolute` | 設為相對 / 絕對定位 |
-| `top-0` / `end-0` / `m-2` | 定位右上角並留邊距 |
-| `btn` / `btn-outline-secondary` / `btn-outline-dark` / `btn-sm` | 按鈕基礎 / 灰色外框 / 深色外框 / 小尺寸 |
-| `flex-fill` | 按鈕等寬填滿空間 |
-| `gap-2` | Flex 子元素間距（0.5rem） |
-| `mb-3` / `mb-2` / `mb-0` | 下方 margin（1rem / 0.5rem / 0） |
+| `border` / `border-2` / `border-gray-800` | 顯示邊框 / 粗細 2px / 深灰色邊框 |
+| `relative` / `absolute` | 設為相對 / 絕對定位 |
+| `top-0` / `right-0` / `m-2` | 定位右上角並留 8px 邊距 |
+| `px-4 py-2` / `px-2 py-1 text-sm` | 一般按鈕內距 / 小按鈕內距與字級 |
+| `flex-1` | 按鈕等寬填滿剩餘空間 |
+| `gap-2` | Flex 子元素間距（2 × 4 = 8px） |
+| `mb-4` / `mb-2` | 下方 margin（16px / 8px） |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 Tailwind <b>沒有</b> <code>btn</code> 這種現成按鈕 class——按鈕的外觀是由 <code>border</code> + <code>rounded</code> + <code>px/py</code> + <code>hover:</code> 這幾個原子 class 組合出來的
+</div>
 
 <!--
-position-relative 套在內框，讓重置按鈕的 position-absolute 以內框為基準定位。
-mb-3 用於標題與按鈕列，mb-2 用於輸入框列，mb-0 移除 label 預設下方間距。
+`relative` 套在內框，讓重置按鈕的 `absolute` 以內框為基準定位——這就是我們在 CSS 進階工具那章講過的「父子關係定錨」。
+這裡要特別提醒一件事：Tailwind 沒有「按鈕」這個東西。
+你在別的框架寫 `class="btn"` 就有一顆完整的按鈕，Tailwind 不給你這個。
+你得自己組：邊框、圓角、內距、hover 效果，一個一個貼上去。
+聽起來很麻煩對不對？但好處是這顆按鈕完全是你的，你想改成什麼樣子都可以，不用去跟框架的預設樣式打架。
+實務上遇到重複使用的按鈕，我們會把它包成一個 Angular 元件，而不是複製一長串 class——這個我們在元件那章已經學過了。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：Bootstrap Class 說明（3／3）
-### 文字與輸入框
+# 練習 2：Tailwind Class 說明（3／3）
+### 文字、輸入框與狀態
 
 | Class | 說明 |
 | --- | --- |
-| `fw-bold` / `fs-5` | 粗體 / 字級大小（約 1.25rem） |
-| `text-danger` / `text-center` / `text-nowrap` | 紅色 / 置中 / 禁止換行 |
-| `form-control` | 輸入框標準樣式（邊框、padding、focus 效果） |
-| `w-100` | 寬度 100%，按鈕撐滿父容器 |
+| `font-bold` / `text-xl` / `text-2xl` | 粗體 / 字級 1.25rem / 字級 1.5rem |
+| `text-red-600` / `text-center` / `whitespace-nowrap` | 紅色 / 置中 / 禁止換行 |
+| `border border-gray-300 rounded px-3 py-2` | 輸入框樣式（Tailwind 需自行組合） |
+| `w-full` | 寬度 100%，按鈕撐滿父容器 |
+| `hover:bg-gray-800 hover:text-white` | 滑鼠移上去時反白 |
+| `disabled:opacity-40` | 按鈕被 `[disabled]` 停用時變半透明 |
+
+<div class="mt-3 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <code>disabled:</code> 前綴會自動偵測 <code>[disabled]="level &lt;= 1"</code> 的結果——**屬性繫結**與 **Tailwind 狀態前綴**在這裡剛好接上
+</div>
 
 <!--
-form-control 是 Bootstrap 對 input 的標準美化；w-100 讓修改等級按鈕跨滿整列。
+最後這張特別看兩個地方。
+第一，Tailwind 沒有 `form-control` 這種「一行搞定輸入框」的 class，你要自己組邊框、圓角、內距。同樣的道理：麻煩一點，但完全可控。
+第二，也是這一章最漂亮的地方——`disabled:opacity-40`。
+我們在 TS 裡寫了 `[disabled]="level <= 1"`，這是 Angular 的屬性繫結，等級降到 1 時它會把 disabled 屬性掛上去。
+而 Tailwind 的 `disabled:` 前綴會自動偵測到這件事，把按鈕變成半透明。
+所以：Angular 負責「什麼時候該停用」，Tailwind 負責「停用時長什麼樣」，兩邊各司其職，你一行 CSS 都不用寫。
+這就是為什麼我們要先學繫結、再回頭看樣式——它們是同一件事的兩面。
 -->
 
 ---
