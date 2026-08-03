@@ -62,12 +62,14 @@ layout: default
 - **1. 安裝前置工具** — NVM、Node.js、Angular CLI
 - **2. 建立與執行專案** — ng new、ng serve
 - **3. 認識專案結構** — 根目錄、src 資料夾、元件組成
+- **4. 版本對應觀念** — package.json、語意化版本號
 
 <!--
 今天的行程非常紮實：
 首先，我們會先在電腦安裝三個前置小助手。
 接著，我們會用指令親手召喚出一個全新的 Angular 專案。
-最後，我們會像拆解樂高一樣，看看這個專案目錄裡到底藏了些什麼寶貝。
+再來，我們會像拆解樂高一樣，看看這個專案目錄裡到底藏了些什麼寶貝。
+最後，我們會花一點時間搞懂「版本號」這件事——這是所有初學者的共同惡夢，但只要今天弄懂，你未來安裝任何套件都不會再卡住。
 我們會採用業界標準流程，使用 NVM 這個版本管理大師，這能保證你以後手頭上有不同年代的案子時，電腦環境不會互相打架！
 -->
 
@@ -365,6 +367,113 @@ class: flex flex-col justify-center items-center text-center
 比如：把頂部導覽列做成一塊積木，把側邊欄做成另一塊積木，最後把它們疊拼在一起。
 大家可以試著在 VS Code 打開 `app.component.html`，把裡面的字隨便改成「Hello 阿嬤！」，然後存檔。
 你會發現瀏覽器根本不用重新整理，畫面就自動改變了！這就是 Angular 自動同步的魔法！
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 4. 版本對應觀念
+# Version Compatibility
+
+<!--
+最後一段，我們來聊一個看起來很無聊、但會困擾你一整個職業生涯的東西——版本號。
+為什麼要現在講？因為從下一章開始，我們會不斷地安裝各種套件。
+如果你看不懂版本號，安裝時噴出來的紅字錯誤你會完全不知道怎麼辦。
+-->
+
+---
+
+# Angular 是一組「聯名套裝」
+
+Angular 不是單一套件，而是一整組必須**互相對應**的零件：
+
+| 零件 | 說明 |
+| --- | --- |
+| `@angular/cli` | 全域安裝，決定 `ng` 指令的行為 |
+| `@angular/core` | 專案實際使用的 Angular 版本 |
+| `typescript` | 每個 Angular 版本只支援特定的 TS 版本範圍 |
+| `rxjs` | 同樣有對應的版本需求 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>關鍵：</b>全域 CLI 與專案版本是<b>獨立</b>的。全域 CLI 只是「蓋房子的工人」，專案的 <code>package.json</code> 才是「房子的合約書」。
+</div>
+
+<!--
+Angular 的版本管理，不是只有一個數字那麼簡單，它其實是一整組「聯名套裝」。
+這就像是拼樂高積木，你得搭配對應規格的卡榫。
+每一個 Angular 版本，都只吃特定範圍的 TypeScript 和 RxJS。如果你的核心是某一版，卻硬裝了完全不搭的 TypeScript，這兩個零件根本合不起來，一跑就爆。
+新手最容易犯的錯是：以為只要把「全域的 ng 指令」換版本，專案就會跟著換。
+大錯特錯！全域的工具只是「蓋房子的工人」，專案裡的 `package.json` 才是「房子的合約書」。
+真正決定你專案跑哪一版的，永遠是那份合約書。
+-->
+
+---
+
+# 讀懂 package.json 的版本號
+
+打開 `package.json`，你會看到版本號前面有些奇怪的符號：
+
+```json
+"dependencies": {
+  "@angular/core": "^21.2.0",
+  "rxjs": "~7.8.0",
+  "tslib": "2.3.0"
+}
+```
+
+| 符號 | 名稱 | 允許自動更新到 | 範例（以 `21.2.0` 為例） |
+| --- | --- | --- | --- |
+| `^` | caret | 同一個**大版**內的最新版 | `21.2.0` ~ `21.9.9`，但不會到 `22` |
+| `~` | tilde | 同一個**次版**內的最新版 | `21.2.0` ~ `21.2.9`，但不會到 `21.3` |
+| 無符號 | 精確鎖定 | 不更新 | 只裝 `21.2.0` |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 版本號格式是 <code>主版本.次版本.修訂號</code>（Semantic Versioning，語意化版本）：<br/>
+<b>主版本</b>變動代表有破壞性改動；<b>次版本</b>是新增功能；<b>修訂號</b>只是修 bug
+</div>
+
+<!--
+這三個符號是所有初學者的共同惡夢，但其實超簡單。
+`^`（插入符號）是預設值，也是最常見的。它的意思是「大版本不要跳，但小版本你隨便更新」。
+所以 `^21.2.0` 會自動吃到 21.9.9，但絕對不會偷偷升到 22。
+為什麼？因為大版本跳號代表「有東西被改掉了、舊寫法可能不能用了」，這種風險不能自動承擔。
+`~`（波浪號）更保守，連次版本都不讓你動，只准更新最後一碼的修 bug 版本。
+完全不加符號就是「我就要這一版，一個字都不准改」，通常用在特別容易出事的套件上。
+記住這個原則就好：**數字愈前面，改動愈危險。**
+-->
+
+---
+
+# 確認目前版本 — `ng version`
+
+隨時可以在專案目錄下確認整組版本是否對得上：
+
+```bash
+ng version
+```
+
+會列出全域 CLI 版本、Angular 各套件版本、Node.js 版本、TypeScript 版本。
+
+<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ <b>常見錯誤：</b>安裝套件時看到 <code>ERESOLVE unable to resolve dependency tree</code>，代表你要裝的套件<b>不支援你目前的 Angular 版本</b>。<br/>
+先看該套件的 <code>peerDependencies</code> 要求哪一版，不要急著加 <code>--force</code> 硬裝。
+</div>
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 官方版本對應表：<code>angular.dev/reference/versions</code>
+</div>
+
+<!--
+`ng version` 是你未來最常用的健康檢查指令。
+它會噴出一大張表，把你電腦裡跟 Angular 有關的所有零件版本一次列出來。
+什麼時候要用它？當你安裝套件失敗、或是專案突然跑不起來的時候，第一件事就是先跑 `ng version` 看看現況。
+另外，各位一定會遇到那個叫做 `ERESOLVE` 的紅字錯誤。
+它的意思是：「你想裝的這個套件，說它不支援你現在這版 Angular。」
+這時候網路上很多文章會叫你加 `--force` 或 `--legacy-peer-deps` 硬裝下去。
+拜託不要！那就像是螺絲鎖不進去你就拿榔頭敲——當下看起來裝好了，但之後會在你最忙的時候爆給你看。
+正確做法是：去查那個套件支援哪一版，找對應版本裝。
 -->
 
 ---

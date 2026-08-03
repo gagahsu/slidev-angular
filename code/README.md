@@ -11,7 +11,6 @@
 | [`ch03/`](./ch03/) | Angular 介紹 | Markdown / Shell |
 | [`ch04/`](./ch04/) | 終端機指令 | Markdown / Shell |
 | [`ch05/`](./ch05/) | Angular 安裝與專案建立 | Markdown |
-| [`ch06/`](./ch06/) | Angular 降版 | Markdown |
 | [`ch07/`](./ch07/) | VS Code 安裝 | Markdown |
 | [`ch08/`](./ch08/) | HTML 標籤 | HTML |
 | [`ch09/`](./ch09/) | CSS 基礎語法 | HTML / CSS |
@@ -76,7 +75,7 @@ npx ts-node 1-naming.ts
 ```
 或直接在 VS Code 裡閱讀程式碼，理解邏輯即可。
 
-### Markdown 檔案（ch03、ch04、ch05、ch06、ch07）
+### Markdown 檔案（ch03、ch04、ch05、ch07）
 用 VS Code 開啟後，按 `Ctrl + Shift + V` 預覽渲染後的效果。
 
 ---
@@ -110,9 +109,6 @@ code/
 ├── ch05/               ← 第05章：Angular 安裝
 │   ├── setup-guide.md
 │   └── project-structure.md
-│
-├── ch06/               ← 第06章：Angular 降版
-│   └── downgrade-guide.md
 │
 ├── ch07/               ← 第07章：VS Code 安裝
 │   └── vscode-extensions.md

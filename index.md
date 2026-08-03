@@ -102,11 +102,6 @@ style: |
       <div>安裝 Angular</div>
       <div class="chapter-subtitle">Setup & New Project</div>
     </Link>
-    <Link to="ch06" class="chapter-card">
-      <div class="chapter-num">Ch 6</div>
-      <div>Angular 降版</div>
-      <div class="chapter-subtitle">Version Downgrade</div>
-    </Link>
     <Link to="ch07" class="chapter-card">
       <div class="chapter-num">Ch 7</div>
       <div>安裝 VS Code</div>
@@ -398,10 +393,6 @@ src: ./04-terminal.md
 
 ---
 src: ./05-angular-setup.md
----
-
----
-src: ./06-angular-downgrade.md
 ---
 
 ---
