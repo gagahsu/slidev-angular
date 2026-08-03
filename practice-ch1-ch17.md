@@ -6,8 +6,8 @@ lineNumbers: true
 drawings:
   persist: false
 transition: slide-left
-title: 綜合實作練習 Ch1–Ch31
-routeAlias: practice-ch31
+title: 綜合實作練習 Ch1–Ch30
+routeAlias: practice-ch30
 style: |
   .slidev-layout p,
   .slidev-layout li,
@@ -49,7 +49,7 @@ style: |
 <!--
 這四個專案題是真正的整頁實作，不是填空練習。
 每一題都用「業界需求規格書」的形式給題：畫面規格（UI Spec）描述外觀，功能規格（FR）描述行為與驗收條件，同學要自己從規格推導出 HTML 結構、CSS 樣式和 TypeScript 邏輯。
-技術範圍涵蓋 CH9–CH31：HTML、CSS、Flexbox、Position、TypeScript、@if/@for/@switch、元件與 @Input/@Output、Service、路由導航、Web Storage、HttpClient API、Interface、sort() 排序。
+技術範圍涵蓋 CH8–CH30：HTML、CSS、Flexbox、Position、TypeScript、@if/@for/@switch、元件與 @Input/@Output、Service、路由導航、Web Storage、HttpClient API、Interface、sort() 排序。
 -->
 
 ---
@@ -68,7 +68,7 @@ layout: default
 <div class="mt-6 p-4 bg-amber-50 border-l-4 border-amber-400 text-gray-700 text-sm text-left">
 ⚠️ 每一題請用 <code>ng g c &lt;名稱&gt;</code> 建立新 component，不要直接複製解答。<br>
 建議順序：讀規格 → <code>ng g c</code> 建立 → 在 <code>app.routes.ts</code> 加 route → 依 UI Spec 刻畫面 → 依 FR 寫功能 → 對照驗收條件自我檢查 → 最後看解答<br>
-技術範圍為 CH9–CH31（不含 CH19）；部分延伸 CSS 技術見 <Link to="practice-supplement" style="color: #1a5c5c; text-decoration: underline;">綜合實作補充教材</Link>
+技術範圍為 CH8–CH30（不含 CH18）；部分延伸 CSS 技術見 <Link to="practice-supplement" style="color: #1a5c5c; text-decoration: underline;">綜合實作補充教材</Link>
 </div>
 
 <!--

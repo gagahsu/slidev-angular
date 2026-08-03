@@ -40,14 +40,14 @@ style: |
   </h1>
   <div style="height: 4px; width: 380px; background: linear-gradient(90deg, #5eada0, #a7d9d0); border-radius: 2px; margin-bottom: 1.5rem;"></div>
   <p style="color: #4a7c7c; font-size: 1.1rem; font-style: italic; margin-bottom: 0.5rem;">
-    「四大實作專案（Ch1–17 綜合練習）用到的技術補充」
+    「四大實作專案（Ch1–16 綜合練習）用到的技術補充」
   </p>
   <p style="color: #9dc4c4; font-size: 0.95rem;">CSS 8 個技術點・TypeScript 4 個技術點</p>
   <Link to="home" style="color: #9dc4c4; font-size: 0.85rem; margin-top: 1.5rem; text-decoration: none; letter-spacing: 0.05em;">← 返回目錄</Link>
 </div>
 
 <!--
-本份補充教材原本內嵌在「綜合實作練習 Ch1–17」投影片中，現已獨立成冊，方便同學單獨查閱或複習。內容涵蓋四大實作專案（P1 個人履歷頁、P2 電商展示頁、P3 學習儀表板、P4 餐廳點餐頁）會用到、但 CH9–CH17 尚未教過的 CSS 與 TypeScript 技術，包含 CSS 變數、@keyframes、Grid、transition、transform、::before、calc()、linear-gradient()，以及 TypeScript 的 find、sort、Math.round、spread。建議在開始實作前先過一遍本教材，卡關時也可以隨時回來查閱。
+本份補充教材原本內嵌在「綜合實作練習 Ch1–16」投影片中，現已獨立成冊，方便同學單獨查閱或複習。內容涵蓋四大實作專案（P1 個人履歷頁、P2 電商展示頁、P3 學習儀表板、P4 餐廳點餐頁）會用到、但 CH8–CH16 尚未教過的 CSS 與 TypeScript 技術，包含 CSS 變數、@keyframes、Grid、transition、transform、::before、calc()、linear-gradient()，以及 TypeScript 的 find、sort、Math.round、spread。建議在開始實作前先過一遍本教材，卡關時也可以隨時回來查閱。
 -->
 
 ---
@@ -82,7 +82,7 @@ layout: default
 </div>
 
 <!--
-補充教材依 CSS → TypeScript 的順序排列，和「綜合實作練習 Ch1–17」原本的順序一致。每個技術點都會標註是哪個實作專案（P1–P4）會用到，方便同學對照練習內容查找。
+補充教材依 CSS → TypeScript 的順序排列，和「綜合實作練習 Ch1–16」原本的順序一致。每個技術點都會標註是哪個實作專案（P1–P4）會用到，方便同學對照練習內容查找。
 -->
 
 ---
@@ -549,6 +549,6 @@ layout: end
 
 # 補充教材結束
 
-回到「綜合實作練習 Ch1–17」開始動手實作四大專案，卡關時隨時可以回來查閱本教材。
+回到「綜合實作練習 Ch1–16」開始動手實作四大專案，卡關時隨時可以回來查閱本教材。
 
-<Link to="practice-ch17" style="color: #9dc4c4; font-size: 0.95rem; margin-top: 1rem; text-decoration: none; letter-spacing: 0.05em;">→ 前往綜合實作練習</Link>
+<Link to="practice-ch30" style="color: #9dc4c4; font-size: 0.95rem; margin-top: 1rem; text-decoration: none; letter-spacing: 0.05em;">→ 前往綜合實作練習</Link>
