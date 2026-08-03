@@ -125,7 +125,7 @@ style: |
     <Link to="ch11" class="chapter-card">
       <div class="chapter-num">Ch 11</div>
       <div>CSS 樣式編輯</div>
-      <div class="chapter-subtitle">Flex & Bootstrap</div>
+      <div class="chapter-subtitle">Flex & Tailwind</div>
     </Link>
     <Link to="ch12" class="chapter-card">
       <div class="chapter-num">Ch 12</div>

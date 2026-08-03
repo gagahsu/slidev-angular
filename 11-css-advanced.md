@@ -48,9 +48,9 @@ style: |
 <!--
 大家好啊！上堂課學完基礎的 Box Model 盒子模型後，今天我們要來學點「真正的高級貨」！
 現在的現代網頁，可不能只是死氣沉沉的靜態文字跟粗糙色塊。
-它不但需要會跟滑鼠互動、需要能彈性地自動排整齊（這就要請出我們的 Flexbox 彈性盒），甚至在很多工作實務上，我們會去借用別人的力量（比如安裝 Bootstrap 框架）來進行超光速開發。
+它不但需要會跟滑鼠互動、需要能彈性地自動排整齊（這就要請出我們的 Flexbox 彈性盒），甚至在很多工作實務上，我們會去借用別人的力量（比如安裝 Tailwind CSS 框架）來進行超光速開發。
 今天這堂課搞懂之後，你的網頁就會從「學生手作毛胚屋」，直接升級成「專業商業級產品」！
-我們今天將會一口氣收割 Flexbox 排版神器，並且學會幫你的 Angular 專案穿上 Bootstrap 這套業界萬用的名牌西裝！
+我們今天將會一口氣收割 Flexbox 排版神器，並且學會幫你的 Angular 專案裝上 Tailwind CSS，讓你以後寫樣式再也不用在 HTML 跟 SCSS 之間跳來跳去！
 -->
 
 ---
@@ -62,15 +62,15 @@ layout: default
 - **CSS 互動 — :hover 與 :active**
 - **display: flex — 排列、方向與彈性佔比**
 - **Flexbox 對齊 — justify-content、align-items 與 align-self**
-- **安裝 Bootstrap**
+- **安裝 Tailwind CSS**
 - **練習**
 
 <!--
 今天的學習路線可以分為三大戰役：
 第一，是讓網頁元件產生滑鼠互動的魔法；
 第二，是 Flexbox 排版神功；
-第三，是我們業界最愛用的懶人包套件——Bootstrap 框架。
-這感覺就像是：我們先給家具裝上感應器，接著讓它們學會自動排隊歸位，最後直接去 IKEA 買一整套設計好的北歐風家具懶人包回來直接裝，你的開發速度保證快到讓你懷疑人生！
+第三，是現在業界最紅的 CSS 框架——Tailwind CSS。
+這感覺就像是：我們先給家具裝上感應器，接著讓它們學會自動排隊歸位，最後再去搬一整套標準規格的模組化零件回來，讓你以後想組什麼家具都能秒組，開發速度快到讓你懷疑人生！
 -->
 
 ---
@@ -309,7 +309,7 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 參考文件：bootstrap5.hexschool.com/docs/5.1/utilities/flex/
+💡 參考文件：developer.mozilla.org/zh-TW/docs/Web/CSS/CSS_flexible_box_layout
 </div>
 
 <!--
@@ -843,270 +843,290 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 安裝 Bootstrap
-# Bootstrap Integration
+# 安裝 Tailwind CSS
+# Tailwind CSS Integration
 
 <!--
-大功告成！學完了 Flex 神功，今天最後一戰，我們要去借用前端巨人的肩膀——來安裝 Bootstrap 框架！
+大功告成！學完了 Flex 神功，今天最後一戰，我們要去借用前端巨人的肩膀——來安裝 Tailwind CSS 框架！
+先講一件有趣的事：各位現在看的這份投影片，本身就是用 Tailwind 寫的。
+等一下你學會怎麼看 Tailwind 的 class 之後，回頭再看這些頁面，你就會知道每一個排版是怎麼來的。
 -->
 
 ---
 
-# 什麼是 Bootstrap？
+# 什麼是 Tailwind CSS？
 
-Bootstrap 是全球最多人使用的**開源 CSS 框架**，由 Twitter 工程師於 2011 年開發並開源：
+Tailwind CSS 是目前最流行的 **Utility-First（原子式）CSS 框架**：
 
-- 內建幾萬行已寫好的 CSS，涵蓋按鈕、卡片、表單、導覽列、格線系統等常用元件
-- 只需在 HTML 標籤上加 class，就能直接套用專業樣式
-- 內建**響應式設計（RWD）**：自動依螢幕寬度調整排版
+- 提供數千個**單一用途**的小 class，例如 `p-4`（padding）、`flex`（display: flex）
+- 直接在 HTML 標籤上組合這些 class，就能拼出完整樣式
+- **不需要**自己想 class 名稱、不需要在 `.scss` 檔和 HTML 之間來回跳
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>核心觀念：</b> Bootstrap = 一組別人幫你寫好的 CSS class，你只要「貼 class」就能套用樣式，不需要每次從零手刻<br/>
-💡 <b>官方網站：</b> <code>getbootstrap.com</code> — CDN 連結、元件文件、範例一次找齊
+💡 <b>核心觀念：</b> Tailwind 不給你「做好的按鈕」，而是給你「一盒標準規格的樂高」，讓你自己拼出任何按鈕<br/>
+💡 <b>官方網站：</b> <code>tailwindcss.com</code> — 所有 class 都可以在官網搜尋查到
 </div>
 
 <!--
-Bootstrap 就像是一套「前端廚師的調理包」。你知道廚師自己從頭炒一盤番茄炒蛋，跟直接開一包半成品調理包比起來，哪個速度比較快？
-當然是調理包！Bootstrap 就是前端開發的調理包，裡面幫你備好了按鈕、卡片、表格、排版格線...所有你可能需要的元件。
-你只要在 HTML 標籤上寫幾個 class 名稱，Bootstrap 就會自動幫你呈現出精緻的樣式，大幅降低你的開發時間。
+Tailwind 跟你在網路上看過的其他 CSS 框架，思路完全不一樣。
+別的框架是給你「調理包」——一包現成的番茄炒蛋，倒出來就能吃，但味道就是那個味道，你改不了。
+Tailwind 給你的是「已經洗好切好、分裝成小盒的食材」——蔥花一盒、蒜末一盒、鹽一小包。
+你還是要自己炒，但你不用洗菜切菜，而且你想炒成什麼口味都可以。
+這就是「Utility-First（原子式）」的意思：每一個 class 只做一件事，小到不能再小，所以叫「原子」。
+`p-4` 就只負責 padding，`flex` 就只負責 display: flex，`bg-blue-500` 就只負責背景色。
+你把這些原子組合起來，就能拼出任何你想要的樣式。
 -->
 
 ---
 
-# 為什麼要用 Bootstrap？
+# 為什麼要用 Tailwind？
 
-從零手寫 vs. 使用 Bootstrap 的差距：
+從零手寫 vs. 使用 Tailwind 的差距：
 
 <div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
   <div style="flex: 1; padding: 1rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
     <div style="font-weight: bold; margin-bottom: 0.6rem; color: #dc2626;">❌ 從零手寫按鈕</div>
-    <pre style="font-size: 0.72rem; margin: 0; line-height: 1.5; color: #374151;">background-color: #0d6efd;
-color: white;
-padding: 6px 12px;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-font-size: 1rem;
-transition: 0.15s;
-/* + hover 狀態... */</pre>
+    <pre style="font-size: 0.7rem; margin: 0; line-height: 1.5; color: #374151;">&lt;!-- HTML --&gt;
+&lt;button class="my-btn"&gt;送出&lt;/button&gt;
+/* 還要跳到 .scss 檔寫 */
+.my-btn {
+  background-color: #3b82f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  &amp;:hover { background-color: #2563eb; }
+}</pre>
   </div>
   <div style="flex: 1; padding: 1rem; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
-    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #16a34a;">✅ 用 Bootstrap</div>
-    <pre style="font-size: 0.8rem; margin: 0; line-height: 1.5; color: #374151;">&lt;button class="btn btn-primary"&gt;
+    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #16a34a;">✅ 用 Tailwind</div>
+    <pre style="font-size: 0.78rem; margin: 0; line-height: 1.5; color: #374151;">&lt;button class="bg-blue-500 text-white
+  px-4 py-2 rounded-md
+  hover:bg-blue-600"&gt;
   送出
-&lt;/button&gt;
-</pre>
-    <div style="margin-top: 0.8rem; font-size: 0.85rem; color: #374151;">結果完全相同，hover 效果也內建</div>
+&lt;/button&gt;</pre>
+    <div style="margin-top: 0.8rem; font-size: 0.85rem; color: #374151;">結果完全相同，而且不用開第二個檔案</div>
   </div>
 </div>
 
 <!--
-大家看這個比較，左邊你要寫一大堆 CSS 才能做出一顆像樣的按鈕，右邊你只要在 HTML 標籤上寫 `class="btn btn-primary"` 三個字，Bootstrap 就幫你搞定一切！
-在業界，特別是在 sprint（衝刺開發週期）裡，我們的時間非常緊迫，不可能每次都從零手刻每個按鈕和表單。
-這時候 Bootstrap 就是你的最強後盾，讓你可以在一小時內做出一個視覺完整、RWD 也沒問題的網頁原型！
+大家看這個對比，重點不是「右邊字比較少」，而是**右邊你只需要看一個檔案**。
+左邊那種寫法，你寫 HTML 的時候要想一個 class 名字，然後跳到 SCSS 檔去寫樣式，改一次樣式就要在兩個檔案之間跳來跳去。
+更痛苦的是：三個月後你回來看這個專案，看到 `.my-btn` 這個 class，你完全不知道它長什麼樣，一定要去翻 SCSS 檔才知道。
+而 Tailwind 的寫法，你看 HTML 就知道它是藍底、白字、圓角、滑鼠移上去會變深藍。所見即所得。
+還有一個隱形好處：你再也不用替 class 取名字了。
+不要笑，「幫 class 取名字」是前端工程師公認最花時間的事情之一，`.card`、`.card-inner`、`.card-inner-wrapper`⋯⋯取到最後自己都亂掉。
 -->
 
 ---
 
-# Bootstrap vs. 自己寫 CSS — 什麼時候用？
+# 兩種 CSS 框架流派
 
-| 場景 | 建議 |
-| --- | --- |
-| 快速做原型、內部工具、Demo | ✅ 直接用 Bootstrap |
-| 需要高度客製化設計（品牌風格） | ⚠️ 自己寫 + 局部借用 Bootstrap |
-| 練習 CSS 基礎能力 | ✅ 先自己寫，再學框架 |
-| 正式產品開發 | ✅ Bootstrap / PrimeNG / TailwindCSS 擇一 |
+市面上的 CSS 框架分成兩大流派，思路完全不同：
 
-<div class="mt-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
-⚠️ <b>業界現狀：</b> Angular 生態圈更常用 <b>PrimeNG</b> 或 <b>Angular Material</b>；Bootstrap 是最普遍的入門框架，學會後學其他框架會更快上手
-</div>
-
-<!--
-Bootstrap 不是萬靈丹，也不是每個專案都適合。
-有些有強烈品牌識別的網站，他們的按鈕就是不能長成 Bootstrap 那個樣子，這時候你就需要自己動手。
-但業界的現實是：大多數 B2B 後台系統、內部工具、快速原型，用 Bootstrap 或類似框架搭建起來完全沒問題，而且效率極高！
-把今天學到的 Bootstrap 基礎打好，以後換到 PrimeNG 或 Angular Material，觸類旁通，學習曲線會平很多。
--->
-
----
-
-# 一般 HTML 使用方式 — CDN
-
-不需安裝，直接在 HTML 加入兩行標籤即可使用 Bootstrap：
-
-| 位置 | 標籤 | 用途 |
+| | 元件式（Component-First） | 原子式（Utility-First） |
 | --- | --- | --- |
-| `<head>` 內 | `<link>` | 載入 Bootstrap CSS 樣式 |
-| `</body>` 前 | `<script>` | 載入 Bootstrap JS（互動元件用） |
+| 代表 | Bootstrap、Angular Material | **Tailwind CSS** |
+| 給你什麼 | 做好的元件 | 標準規格的小工具 |
+| 寫法 | `class="btn btn-primary"` | `class="bg-blue-500 px-4 py-2 rounded"` |
+| 優點 | 上手最快，一行就有完整按鈕 | 完全自由，做得出任何設計 |
+| 缺點 | 想客製化就要跟框架打架 | class 較長，要記一些命名規則 |
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 CDN 連結從 <code>getbootstrap.com</code> 首頁複製，確保版本最新
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ <b>兩者可以並存：</b>本課程後半段會使用 <b>Angular Material</b>（元件式）處理表格、對話框等複雜元件，同時用 Tailwind 處理排版與間距——這也是業界常見的組合
 </div>
 
 <!--
-對一般的純 HTML 專案來說，最快速的方式就是使用 CDN——也就是直接連到 Bootstrap 官方的雲端伺服器，不需要下載任何東西到自己電腦。
-只要在 head 裡貼上 link 標籤，在 body 結尾前貼上 script 標籤，你的 HTML 就立刻擁有 Bootstrap 的全部樣式和互動功能！
-這就像是不用自己買咖啡機，直接插管子到星巴克的咖啡桶喝——超省事，但你要連得到網路才能喝到。
+這兩個流派沒有誰對誰錯，它們解決的是不同的問題。
+元件式框架適合「我要的東西跟大家都一樣」——後台管理系統的按鈕、表格，長什麼樣其實不重要，能用就好，這時候元件式框架快得驚人。
+原子式框架適合「我要的東西有自己的樣子」——公司有品牌識別、設計師給了設計稿，你必須做得跟設計稿一模一樣，這時候元件式框架反而變成阻礙，你會花大量時間在「覆蓋」框架原本的樣式。
+業界現在最常見的組合，其實是兩個一起用：
+複雜的元件（日曆、表格、對話框）用 Angular Material，因為自己刻要刻到天荒地老；
+版面排版、間距、顏色用 Tailwind，因為這些本來就該跟著設計稿走。
+我們這門課後面就會這樣做，各位到時候會親身體會。
 -->
 
 ---
 
-# 一般 HTML 使用方式 — CDN 範例
+# Tailwind class 命名規則
+
+Tailwind 的 class 命名非常有規律，記住規則就不用一個一個背：
+
+| 類別 | 格式 | 範例 |
+| --- | --- | --- |
+| 間距 | `{屬性}-{數字}` | `p-4`（padding: 1rem）、`mt-2`（margin-top: 0.5rem） |
+| 顏色 | `{屬性}-{色名}-{深淺}` | `bg-blue-500`、`text-red-600`、`border-gray-300` |
+| 尺寸 | `w-` / `h-` | `w-full`（100%）、`h-screen`（100vh）、`w-64` |
+| 字級 | `text-{尺寸}` | `text-sm`、`text-lg`、`text-3xl` |
+| 圓角 / 陰影 | `rounded-` / `shadow-` | `rounded-md`、`shadow-lg` |
+| 互動狀態 | `{狀態}:{class}` | `hover:bg-blue-600`、`active:scale-95` |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>間距數字換算：</b>數字 × <code>0.25rem</code>（= 4px）。所以 <code>p-4</code> 是 16px、<code>p-2</code> 是 8px
+</div>
+
+<!--
+很多人第一次看到 Tailwind 會嚇到：「這麼多 class 我要怎麼記？」
+放心，你不用記，因為它極度有規律。
+間距最好懂：數字乘以 4 就是 px。`p-4` 是 16px，`p-2` 是 8px，`mt-1` 是 4px。為什麼是 4 的倍數？因為業界的設計稿幾乎都用 4 或 8 的倍數在排間距，這樣視覺才會整齊。
+顏色是「屬性-色名-深淺」，深淺從 50（最淺）到 950（最深），500 是標準色。所以 `bg-blue-500` 就是標準藍底，`bg-blue-50` 是很淡的藍。
+最漂亮的是互動狀態：還記得我們今天前半段學的 `:hover` 嗎？在 Tailwind 裡就是把 `hover:` 貼在任何 class 前面。
+`hover:bg-blue-600` 就等於「滑鼠移上去時背景變深藍」。你不用再另外寫一段 SCSS。
+真的記不起來也沒關係，官網搜尋框打你想要的 CSS 屬性，它就會告訴你對應的 class。
+-->
+
+---
+
+# Tailwind 的 Flexbox class
+
+今天前半段學的 Flexbox，在 Tailwind 裡全部都有對應的 class：
+
+| CSS 寫法 | Tailwind class |
+| --- | --- |
+| `display: flex` | `flex` |
+| `flex-direction: column` | `flex-col` |
+| `justify-content: center` | `justify-center` |
+| `justify-content: space-between` | `justify-between` |
+| `align-items: center` | `items-center` |
+| `flex: 1` | `flex-1` |
+| `gap: 8px` | `gap-2` |
 
 ```html
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <!-- ① 在 head 加入 Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-  </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <button type="button" class="btn btn-primary">Primary Button</button>
-    <!-- ② 在 body 結尾前加入 Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+<!-- 水平置中 + 垂直置中 + 間距 8px -->
+<div class="flex justify-center items-center gap-2">
+  <div class="flex-1">左</div>
+  <div class="flex-1">右</div>
+</div>
 ```
 
 <!--
-這就是最簡單的 Bootstrap CDN 範例。
-兩個重點：第一，CSS 的 link 標籤要放在 head 裡面，這樣頁面一載入就先套用樣式；
-第二，JS 的 script 標籤要放在 body 結尾前，確保 HTML 元素都載入完畢後才執行互動邏輯。
-CDN 方式適合快速練習、小型靜態頁面；正式的 Angular 專案則有另一套安裝方式，我們下一張來看。
+看到這張表，大家應該就懂為什麼我把 Tailwind 排在 Flexbox 後面教了。
+Tailwind 的 class 幾乎就是 CSS 屬性的縮寫。你今天學會的每一個 Flexbox 屬性，在這裡都有一個對應的短名字。
+`justify-content: center` 變成 `justify-center`，`align-items: center` 變成 `items-center`。
+所以請大家一定要記住一件事：**Tailwind 不是一套新的東西，它只是 CSS 的縮寫**。
+如果你 CSS 底子不好，Tailwind 對你來說就是一堆看不懂的咒語；
+但你今天把 Flexbox 學紮實了，Tailwind 對你來說就只是「換個寫法」，五分鐘就上手。
+這也是為什麼我堅持先教三堂課的原生 CSS，才讓你們碰框架。
 -->
 
 ---
 
-# 一般 HTML 使用方式 — CDN 說明
-
-<div style="display: flex; gap: 2rem; margin-top: 0.8rem;">
-  <div style="flex: 1; padding: 1rem; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
-    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #16a34a;">✅ CDN 優點</div>
-    <ul style="font-size: 0.9rem; margin: 0; padding-left: 1.2rem; line-height: 2;">
-      <li>零安裝，貼兩行就能用</li>
-      <li>適合靜態 HTML 練習頁</li>
-      <li>瀏覽器可能已快取，載入更快</li>
-    </ul>
-  </div>
-  <div style="flex: 1; padding: 1rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
-    <div style="font-weight: bold; margin-bottom: 0.6rem; color: #dc2626;">⚠️ CDN 限制</div>
-    <ul style="font-size: 0.9rem; margin: 0; padding-left: 1.2rem; line-height: 2;">
-      <li>需要網路連線才能載入</li>
-      <li>Angular 專案不適用此方式</li>
-      <li>無法客製化 Bootstrap 變數</li>
-    </ul>
-  </div>
-</div>
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>選擇原則：</b>純 HTML 練習 → CDN；Angular / React / Vue 專案 → npm 安裝
-</div>
-
-<!--
-CDN 不是萬能的，有幾個限制要知道：
-第一，你的電腦或使用者裝置需要連上網路，才能從 CDN 伺服器下載 Bootstrap 檔案。
-第二，在 Angular 這類框架專案裡，我們有專屬的套件管理方式，直接貼 CDN 連結反而會造成管理混亂。
-所以記住這個選擇原則：純 HTML → CDN；框架專案 → npm。
--->
-
----
-
-# Angular 專案安裝 Bootstrap — 步驟
+# Angular 專案安裝 Tailwind — 步驟
 
 | 步驟 | 操作 |
 | --- | --- |
-| ① | 在終端機（專案根目錄）執行 `npm i bootstrap` |
-| ② | 安裝完成後開啟 `angular.json` |
-| ③ | 找到 `"styles": [...]`，在第一個位置加入 Bootstrap CSS 路徑 |
+| ① | 在終端機（專案根目錄）執行 `npm i tailwindcss @tailwindcss/postcss postcss` |
+| ② | 在專案根目錄新增 `.postcssrc.json` 檔 |
+| ③ | 在 `src/styles.scss` 最上方加入一行 `@use "tailwindcss";` |
 | ④ | 重啟專案 |
 
 ```json
-"styles": [
-  "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-  "src/styles.scss"
-],
+// .postcssrc.json（與 package.json 同一層）
+{
+  "plugins": {
+    "@tailwindcss/postcss": {}
+  }
+}
+```
+
+```scss
+// src/styles.scss — 加在檔案最上方
+@use "tailwindcss";
 ```
 
 <!--
-Angular 專案不能用 CDN，因為 Angular 有自己的建置系統（webpack / esbuild）統一管理所有資源。
-所以我們要走 npm 安裝這條路，分成四個標準步驟。
-第一步，執行 `npm i bootstrap`，把套件下載進 `node_modules` 倉庫。
-第二步三步，開啟 `angular.json`，在 styles 陣列裡登記 Bootstrap CSS 路徑，告訴 Angular 建置時要把它打包進去。
-第四步，**一定要重新啟動開發伺服器**！`angular.json` 只在專案啟動時讀取一次，不重啟就看不到效果。
+只有四個步驟，我們一個一個看。
+第一步，`npm i` 一次裝三個套件：Tailwind 本體、它的 PostCSS 外掛、還有 PostCSS 本身。
+第二步，在專案根目錄——注意是跟 `package.json` 同一層，不是在 src 裡面——新增一個叫 `.postcssrc.json` 的檔案。
+這個檔名前面有一個點，不要漏掉。它的作用是告訴 Angular 的建置系統：「你在打包 CSS 的時候，記得先讓 Tailwind 處理一遍。」
+第三步，打開 `src/styles.scss`，在最上面加一行 `@use "tailwindcss";`。這行的意思是「把 Tailwind 的所有樣式引進來」。
+第四步，**一定要重新啟動開發伺服器**！設定檔只在專案啟動時讀取一次，不重啟就看不到效果。
+裝好之後，你在任何 HTML 標籤上寫 `class="text-3xl font-bold"`，字就會立刻變大變粗。
 -->
 
 ---
 
-# Angular 專案安裝 Bootstrap — 原理（為什麼不用 CDN？）
+# 安裝時的三個常見錯誤
 
-`npm i bootstrap` 的用途是將 Bootstrap 套件**安裝進專案**，就像 HTML 的 `<link>` import 一樣（差別在於 `npm i` 是安裝套件進專案中）。
-
-在 `angular.json` 的 `styles` 加入套件路徑，等同於告訴專案「我要匯入這個 CSS，並告訴它 CSS 的位置」。
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 安裝後的套件都存放在 <code>node_modules/</code> 資料夾，路徑以 <code>./node_modules/</code> 開頭
+<div style="display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.6rem;">
+  <div style="padding: 0.8rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
+    <div style="font-weight: bold; color: #dc2626; margin-bottom: 0.3rem;">❌ 在 <code>.scss</code> 檔裡寫 <code>@import "tailwindcss";</code></div>
+    <div style="font-size: 0.86rem; color: #374151;">官方文件寫的是 <code>@import</code>，但那是給 <code>.css</code> 檔用的。我們的專案是 SCSS，要用 <code>@use</code>，否則會出現 <code>Sass @import rules are deprecated</code> 警告</div>
+  </div>
+  <div style="padding: 0.8rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
+    <div style="font-weight: bold; color: #dc2626; margin-bottom: 0.3rem;">❌ 執行 <code>npx tailwindcss init</code> 產生 <code>tailwind.config.js</code></div>
+    <div style="font-size: 0.86rem; color: #374151;">那是 <b>Tailwind v3</b> 的做法。網路上大部分教學還停在 v3。<b>v4 不需要設定檔</b>，做了反而多餘</div>
+  </div>
+  <div style="padding: 0.8rem; background: #fef3f2; border-radius: 8px; border: 1px solid #fca5a5;">
+    <div style="font-weight: bold; color: #dc2626; margin-bottom: 0.3rem;">❌ 跑去改 <code>angular.json</code> 的 <code>styles</code> 陣列</div>
+    <div style="font-size: 0.86rem; color: #374151;">Tailwind 是透過 PostCSS 掛進建置流程，不是當成一個 CSS 檔載入，<code>angular.json</code> 完全不用動</div>
+  </div>
 </div>
 
 <!--
-我們來理順一下這個搬運跟安裝的邏輯。
-這就像是你去 IKEA 買了一個大型組合櫃。
-`npm i bootstrap` 就是貨運司機把箱子搬進你家地下室倉庫（`node_modules` 資料夾）。
-此時箱子還封著，你在客廳是看不到櫃子的。
-而我們去 `angular.json` 裡面寫路徑，就是把說明書拿出來，在客廳把它們拼裝擺好。
-一旦擺好之後，Bootstrap 裡成千上萬的現成樣式你就可以隨便調用。
-原本你想做一個深藍色按鈕，要寫寬度、高度、邊框、文字顏色、背景色...。
-現在，你只要在 HTML 的 button 標籤上貼個 `class="btn btn-primary"`。
-Bootstrap 就會一秒幫你變出一個圓角、無邊框、自帶 hover 漸變動畫的精品深藍按鈕！
-在業界的快速迭代開發中，我們很少會像藝術家一樣從零去捏每一個按鈕，幾乎都是借助像 Bootstrap 或是 PrimeNG 這樣的框架，來高速搭建出漂亮的介面！
+這三個坑，我保證各位至少會踩到一個，所以先講在前面。
+第一個坑最容易中：你去 Tailwind 官網照抄，官網寫 `@import "tailwindcss";`，但官網的範例專案用的是純 CSS。
+我們的 Angular 專案在建立時選了 SCSS，所以檔案是 `styles.scss`。在 SCSS 裡面，`@import` 是一個即將被淘汰的舊語法，要改用 `@use`。
+第二個坑更常見：你 Google「Tailwind Angular 安裝」，跳出來的文章有九成還是 v3 的教學，會叫你跑 `npx tailwindcss init` 產生一個設定檔。
+v4 版本已經把設定搬進 CSS 裡了，不需要那個檔案。如果你照做，會發現指令根本跑不起來，然後開始懷疑人生。
+第三個坑是我們自己造成的心理慣性：因為安裝其他 CSS 套件時，我們習慣去 `angular.json` 的 styles 陣列登記路徑。
+Tailwind 走的是完全不同的機制——它是掛在 PostCSS 這個「CSS 加工廠」上面，在打包過程中自動處理，所以 `angular.json` 一個字都不用改。
 -->
 
 ---
 
-# 小節練習 — Bootstrap 安裝與使用
+# 小節練習 — Tailwind class
 
-安裝好 Bootstrap 後，請用 Bootstrap class 做出以下元件（不需自己寫 CSS）：
+安裝好 Tailwind 後，請只用 Tailwind class 做出以下元件（不需寫任何 CSS）：
 
-1. 一個**藍色主要按鈕**（`btn btn-primary`）
-2. 一個**紅色危險按鈕**（`btn btn-danger`）
-3. 一個**成功提示框**（`alert alert-success`），內容為「操作成功！」
+1. 一個**藍色主要按鈕**：藍底、白字、左右 padding 16px、上下 8px、圓角，滑鼠移上去變深藍
+2. 一個**紅色危險按鈕**：同上，但底色是紅的
+3. 一個**成功提示框**：淺綠底、深綠字、內距 16px、圓角，內容為「操作成功！」
 
 ```html
-<!-- 試著只用 HTML class 完成，不需要自己寫任何 CSS -->
-<div>
+<!-- 試著只用 class 完成，不需要自己寫任何 CSS -->
+<div class="flex gap-2">
   <button class="???">主要按鈕</button>
   <button class="???">危險按鈕</button>
-  <div class="??? mt-2">操作成功！</div>
 </div>
+<div class="???">操作成功！</div>
 ```
 
 <!--
-Bootstrap 的 class 名稱有固定格式，試著猜猜看！下一頁揭曉。
+提示：回去看前面那張「命名規則」的表。
+間距記得除以 4：16px 就是 4，8px 就是 2。
+顏色的標準深度是 500，淺色用 100，深色用 700。
+下一頁揭曉。
 -->
 
 ---
 
-# 小節練習 — Bootstrap 安裝與使用 — 參考答案
+# 小節練習 — Tailwind class — 參考答案
 
 ```html
-<div>
-  <button class="btn btn-primary">主要按鈕</button>
-  <button class="btn btn-danger">危險按鈕</button>
-  <div class="alert alert-success mt-2">操作成功！</div>
+<div class="flex gap-2">
+  <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+    主要按鈕
+  </button>
+  <button class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+    危險按鈕
+  </button>
 </div>
+
+<div class="bg-green-100 text-green-800 p-4 rounded mt-2">操作成功！</div>
 ```
 
 <div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
-✅ Bootstrap 常用 class 格式：<code>btn btn-{顏色}</code> / <code>alert alert-{類型}</code> / <code>mt-{1~5}</code>（margin-top）<br/>
-✅ 顏色關鍵字：<code>primary</code>（藍）、<code>success</code>（綠）、<code>danger</code>（紅）、<code>warning</code>（黃）、<code>secondary</code>（灰）
+✅ <code>px-4</code> = 左右 padding 16px、<code>py-2</code> = 上下 padding 8px（4 × 4 = 16、2 × 4 = 8）<br/>
+✅ <code>hover:</code> 前綴取代了整段 SCSS 的 <code>&amp;:hover { }</code><br/>
+✅ 顏色深淺：<code>100</code> 很淺（適合背景）、<code>500</code> 標準、<code>800</code> 很深（適合文字）
 </div>
 
 <!--
-Bootstrap 的 class 命名系統非常有規律，記住幾個關鍵字就能推導出大部分的 class 名稱！
+大家有沒有發現一件事：這三個元件從頭到尾，我們**一行 CSS 都沒有寫**，也**沒有取任何一個 class 名字**。
+特別注意 `hover:bg-blue-600` 這個寫法。
+今天課程一開始，我們寫 hover 要先取一個 class 名、跳到 SCSS 檔、寫 `&:hover { background-color: ... }`——總共三個動作。
+現在只要在 HTML 上加一個前綴，一個動作解決。
+最後提醒：`bg-green-100` 配 `text-green-800` 這種「淺底深字」的搭配，是做提示框的萬用公式，同一個色系、一淺一深，對比度剛好，看起來也很專業。
 -->
 
 ---
@@ -1156,5 +1176,6 @@ layout: end
 大家在做練習的過程中，是不是發現 Flexbox 的「輸送帶」思維，比我們在那邊算 Margin 算半天要直覺、省力太多了？
 如果你現在覺得那些 `justify-content`、`align-items` 的英文單字還是有點繞口，完全不用慌！
 在未來的工程師生涯裡，你還會寫它個一萬遍，寫到最後你光憑肌肉記憶閉著眼睛都能打出來。
+另外，今天裝好的 Tailwind 不是裝好看的——從下一章開始的每一個練習，我都會請大家直接用 Tailwind 的 class 來排版，用個幾次你就順了。
 下一堂課，我們要依依不捨地告別美麗的視覺化妝秀，準備踏入更燒腦、但也更好玩的「網頁大腦邏輯世界」——JavaScript！大家回去記得把腦力補充好，下堂課我們見！
 -->
