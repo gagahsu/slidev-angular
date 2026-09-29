@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
-  <a routerLink="/" class="brand">動態問卷</a>
-  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">問卷列表</a>
+  <a routerLink="/surveys" class="brand">動態問卷</a>
+  <a mat-button routerLink="/surveys" routerLinkActive="active">問卷列表</a>
   @if (auth.isLoggedIn()) {
     <a mat-button routerLink="/my-records" routerLinkActive="active">我的填寫紀錄</a>
     <a mat-button routerLink="/profile" routerLinkActive="active">會員資料</a>

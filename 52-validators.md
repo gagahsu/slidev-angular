@@ -394,268 +394,495 @@ errors 屬性比較特別，它會回傳一個物件，裡面列出這個欄位�
 layout: default
 ---
 
-# 練習：會員註冊表單
+# 練習 1：作答者資料驗證
 ### 情境說明
 
-會員註冊是最典型會用到多種驗證規則的表單：帳號要有長度限制、Email 要符合格式、年齡要在合理範圍、手機號碼要符合台灣格式、還要強制勾選會員條款才能送出。這一題要把這一章學到的 Validators 跟驗證狀態屬性全部串在一起練習一次。
+問卷作答頁最上面有一組固定欄位：姓名、手機、Email、年齡。需求文件對它們的規定是：**姓名、手機、Email 必填，年齡選填**；格式不對時，按「送出」要用**提醒視窗**告知（第 43 章的 `Dialogs`）。這一題把 Validators 與驗證狀態串在一起練習。
 
 <div class="grid grid-cols-2 gap-4 my-3">
 <div>
 
 **需求**
-- 帳號、Email、年齡、手機、同意條款共 5 個欄位，各自套用對應的驗證規則
-- 欄位未通過驗證且使用者已經點過（`touched`）時，顯示對應的錯誤訊息
-- 表單整體無效時（`form.invalid`），送出按鈕要被停用
+- 四個欄位各自套用對應的驗證規則
+- 欄位未通過驗證且已經點過（`touched`）時，欄位下方顯示錯誤訊息
+- 按「送出」時，若表單無效：把**所有**問題一次列在提醒視窗，不繼續往下
 
 </div>
 <div>
 
-**限制**
-- 帳號：必填 + 至少 3 個字元
-- Email：必填 + Email 格式；年齡：必填 + 介於 18～99；手機：必填 + `pattern` 符合 `09` 開頭共 10 碼數字；同意條款：`requiredTrue`
-- 錯誤訊息用 `@if` 搭配 `invalid && touched` 顯示，不能只判斷 `invalid`
+**規則**
+- 姓名：必填
+- 手機：必填 + `pattern`：`09` 開頭共 10 碼數字
+- Email：必填 + Email 格式
+- 年齡：**選填**，有填的話要介於 1～120
+- 錯誤訊息用 `@if` 搭配 `invalid && touched`，不能只判斷 `invalid`
 
 </div>
 </div>
 
-<!--
-這一題把前面分開介紹的 required、minLength、email、min/max、pattern、requiredTrue 六種驗證器全部用上，同時也練習 invalid、touched 這兩個驗證狀態屬性怎麼合併判斷、怎麼拿來控制送出按鈕的啟用/停用。
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
-⚠️ 提醒同學，這一題延續 ch51 的 Reactive Forms 架構，用 fb.group() 定義表單，用 [formGroup]、formControlName 繫結畫面，如果對這套語法還不熟，可以回頭複習 ch51。
+<!--
+這一題把 required、pattern、email、min/max 四種驗證器都用上。跟一般的註冊表單不一樣的地方有兩個：年齡是選填，所以不能加 required，但有填的時候還是要檢查範圍；還有錯誤的呈現方式，是需求文件指定的提醒視窗，而不是只在欄位旁邊顯示紅字。
+
+兩者可以並存：欄位旁邊的紅字，是使用者離開欄位時給的即時回饋；按送出時的提醒視窗，則是最終的確認，把所有問題一次告訴使用者，不用一個一個試。
+
+⚠️ 這一題延續第 51 章的 Reactive Forms，和第 43 章的 Dialogs，如果不熟可以回頭複習。
 -->
 
 ---
 layout: default
 ---
 
-# 練習：任務說明
+# 練習 1：解題提示
 
-1. 建立 `RegisterForm`，`imports` 陣列加入 `ReactiveFormsModule`
-2. 用 `fb.group()` 定義 `form`，包含 `username`、`email`、`age`、`phone`、`agree` 五個欄位，各自套上情境說明限制裡指定的驗證器
-3. HTML 用 `<form [formGroup]="form" (ngSubmit)="onSubmit()">` 包裹整個表單
-4. 每個欄位下方用 `@if` 搭配 `invalid && touched` 顯示對應的錯誤訊息文字
-5. 撰寫 `onSubmit()`：若 `form.invalid` 則印出提示並 `return`，否則印出 `form.value`
-6. 送出按鈕用 `[disabled]="form.invalid"` 控制，表單無效時無法點擊
+1. 年齡的初始值給 `null`，而且**不要**加 `Validators.required`；`Validators.min(1)`、`Validators.max(120)` 遇到空值會直接通過
+2. 手機：`Validators.pattern(/^09\d{8}$/)`，代表 `09` 開頭，後面 8 碼數字，總長度剛好 10
+3. 用 `fb.nonNullable.group(...)`，欄位的型別就不會是 `string | null`
+4. 蒐集所有問題：逐一檢查 `controls.xxx.invalid`，把訊息放進陣列，再交給 `dialogs.alert(problems)`
+5. 讓欄位都顯示紅字：`form.markAllAsTouched()`
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>Validators.min/max</code> 遇到「空值」會視為通過，所以「選填但有範圍」的欄位只要不加 <code>required</code>，就不需要另外處理。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-大家可以先自己動手寫寫看。重點是想清楚每個欄位分別要疊加哪些驗證器，以及畫面上錯誤訊息的顯示條件要同時看 invalid 跟 touched，缺一不可。卡住的地方沒關係，下一頁有提示。
+提示 1 是這題的重點：選填的欄位，就是不要加 required。而 min 和 max 有一個貼心的設計：如果欄位是空的，它們不會報錯，所以「沒填就算了，填了就要合法」這個需求，只要不加 required 就自然成立。
+
+提示 3 是 Angular 的一個型別技巧：fb.nonNullable.group 建立的表單，reset 之後會回到初始值，而不是 null，型別也是 string 而不是 string | null，之後取值時不用一直判斷 null。
+
+提示 5 的 markAllAsTouched 很實用：按送出時，還沒點過的欄位不會顯示錯誤，呼叫它之後，所有欄位都變成「已經點過」，紅字就會一次全部出現。
 -->
 
 ---
 layout: default
 ---
 
-# 練習：解題提示
-
-1. `age` 的初始值要給 `null` 而不是空字串，數字欄位習慣上用 `null` 代表「尚未填寫」
-2. 手機驗證用 `Validators.pattern(/^09\d{8}$/)`，代表以 `09` 開頭，後面接 8 碼數字，總長度剛好 10 碼
-3. `agree` 用 `Validators.requiredTrue`，不是 `Validators.required`，因為它綁定的是 checkbox 的布林值，一定要是 `true` 才算通過
-4. `[disabled]="form.invalid"` 直接綁在根 `form`，不需要个别檢查每個欄位
-5. `(ngSubmit)="onSubmit()"` 綁在 `<form>` 標籤上，觸發時機是使用者按下送出按鈕或在欄位中按 Enter
-
-<!--
-对照一下大家的答案，最容易搞混的地方是 age 給了空字串當初始值，這樣型別會被推斷成 string，跟 Validators.min/max 預期的數字比較會有落差。另一個常見疏漏是 agree 用了 required 而不是 requiredTrue，required 只檢查「不是 false」，勾不勾都會通過，達不到強制勾選的效果。下一頁看完整解答。
--->
-
----
-layout: default
----
-
-# 完整解答 — register-form.ts（一）
-
-匯入模組與元件裝飾器：
+# 練習 1：完整解答（TypeScript）
 
 ```typescript
+// respondent-form.ts
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Dialogs } from './dialogs';
 
 @Component({
-  selector: 'app-register-form',
+  selector: 'app-respondent-form',
   imports: [ReactiveFormsModule],
-  templateUrl: './register-form.html',
+  templateUrl: './respondent-form.html',
 })
-export class RegisterForm {
-  fb = inject(FormBuilder);
-  // form 定義見下一頁
-}
+export class RespondentForm {
+  private fb = inject(FormBuilder);
+  private dialogs = inject(Dialogs);
+
+// ... 見下一頁
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-imports 陣列裡的 ReactiveFormsModule 是使用 [formGroup]、formControlName 這些指令的前提，跟 ch51 學過的一樣。fb 透過 inject(FormBuilder) 取得，之後用來建立表單結構。form 的完整定義下一頁接著看。
+next 方法的流程是：先 markAllAsTouched 讓所有欄位顯示紅字；再逐一檢查，把每個問題的訊息放進 problems 陣列；最後如果有問題，用 alert 一次列出，並且 return，不往下走。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — register-form.ts（二）
-
-`form` 定義與 `onSubmit()`：
+# 練習 1：完整解答（TypeScript）（續）
 
 ```typescript
-export class RegisterForm {
-  fb = inject(FormBuilder);
+  // ... 接上一頁
 
-  form = this.fb.group({
-    username: ['', [Validators.required, Validators.minLength(3)]],
-    email: ['', [Validators.required, Validators.email]],
-    age: [null as number | null, [Validators.required, Validators.min(18), Validators.max(99)]],
+  form = this.fb.nonNullable.group({
+    name: ['', Validators.required],
     phone: ['', [Validators.required, Validators.pattern(/^09\d{8}$/)]],
-    agree: [false, Validators.requiredTrue],
+    email: ['', [Validators.required, Validators.email]],
+    age: [null as number | null, [Validators.min(1), Validators.max(120)]],
   });
 
-  onSubmit(): void {
-    if (this.form.invalid) {
-      console.log('表單尚有欄位未通過驗證');
-      return;
-    }
-    console.log('註冊成功', this.form.value);
+  // ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+沒問題的話，才會繼續：目前只是 console.log，第 59 章會把它送到後端暫存。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（TypeScript）（續）
+
+```typescript
+// ... 接上一頁
+
+  async submit() {
+    this.form.markAllAsTouched();
+    const c = this.form.controls;
+    const problems: string[] = [];
+    if (c.name.invalid) problems.push('請輸入姓名');
+    if (c.phone.invalid) problems.push('手機格式錯誤（09 開頭，共 10 碼）');
+    if (c.email.invalid) problems.push('Email 格式錯誤');
+    if (c.age.invalid) problems.push('年齡需介於 1 到 120');
+    if (problems.length) { await this.dialogs.alert(problems); return; }
+    console.log('通過驗證：', this.form.getRawValue());
   }
 }
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-五個欄位各自疊加需要的驗證器：username 必填加最短長度，email 必填加格式，age 必填加範圍限制，phone 必填加 pattern 格式，agree 用 requiredTrue 強制勾選。onSubmit() 裡先擋一次 form.invalid，通過才印出真正的表單資料，這是實務上表單送出前的標準防線，即使畫面上按鈕已經用 disabled 擋過一次，TypeScript 這邊還是要再檢查一次，避免使用者用其他方式（例如直接按 Enter）繞過畫面限制。
+這裡的 alert 是 await，因為它回傳 Promise，等使用者按下「知道了」才繼續。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — register-form.html（一）
-
-帳號、Email 欄位：
+# 練習 1：完整解答（HTML）
 
 ```html
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <div class="form-field">
-    <label>帳號：</label>
-    <input formControlName="username">
-    <div class="field-error">
-      @if (form.get('username')?.invalid && form.get('username')?.touched) {
-        <p>帳號為必填，且至少 3 個字元。</p>
-      }
-    </div>
-  </div>
+<!-- respondent-form.html -->
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>姓名 <input formControlName="name" /></label>
+  @if (form.controls.name.invalid && form.controls.name.touched) {
+    <small class="error">請輸入姓名</small>
+  }
 
-  <div class="form-field">
-    <label>Email：</label>
-    <input formControlName="email">
-    <div class="field-error">
-      @if (form.get('email')?.invalid && form.get('email')?.touched) {
-        <p>請輸入正確的 Email 格式。</p>
-      }
-    </div>
-  </div>
+  <label>手機 <input formControlName="phone" /></label>
+  @if (form.controls.phone.invalid && form.controls.phone.touched) {
+    <small class="error">手機格式錯誤（09 開頭，共 10 碼）</small>
+  }
 ```
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 錯誤訊息外面多包一層 <code>.field-error</code>，並用 CSS 給它固定的最小高度，這樣訊息出現/消失時，下面的欄位才不會跟著跳動，樣式見最後一頁。
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+HTML 的模式很固定：每個欄位一個 input，下面一個 @if 判斷 invalid 而且 touched，才顯示錯誤訊息。
+
+送出按鈕故意「不」加 disabled：需求文件要的是按下去之後，用提醒視窗告訴使用者所有問題，如果按鈕被停用，使用者反而不知道為什麼不能往下。這是把「防呆」與「友善」拿捏取捨的一個例子。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（HTML）（續）
+
+```html
+  <label>Email <input formControlName="email" /></label>
+  @if (form.controls.email.invalid && form.controls.email.touched) {
+    <small class="error">Email 格式錯誤</small>
+  }
+
+  <label>年齡（選填） <input type="number" formControlName="age" /></label>
+  @if (form.controls.age.invalid && form.controls.age.touched) {
+    <small class="error">年齡需介於 1 到 120</small>
+  }
+
+  <button type="submit">送出</button>
+</form>
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 全部空白按「送出」→ 提醒視窗列出 3 個問題（年齡不在其中）；手機輸入 <code>123</code>、Email 輸入 <code>abc</code> → 對應問題出現；年齡輸入 <code>200</code> → 多一個問題；四個欄位都合法 → 主控台印出表單值。
 </div>
 
-<!--
-每個欄位的錯誤訊息都是同一個套路：@if 判斷 invalid && touched，兩個條件都成立才顯示。這裡故意用 form.get('username')?.invalid 這種寫法而不是額外宣告一堆變數，是為了讓大家熟悉直接從 form 物件讀取欄位狀態的寫法，這在小型表單很常見。
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
-⚠️ 這一版跟前面單欄位範例不一樣的地方，是每個欄位外面多包了一層 .form-field，錯誤訊息外面也多包了一層 .field-error。原因是 @if 為 false 時，<p> 整個不會存在於 DOM 裡，如果沒有額外的容器撐住高度，訊息一出現畫面就會往下推、消失又縮回去，使用者會覺得版面一直在跳動。用一個永遠存在的 .field-error 容器搭配 CSS 最小高度，就能讓這塊區域的高度固定，不管有沒有顯示錯誤文字都一樣。下一頁接著看年齡跟手機欄位。
+<!--
+驗收時，特別確認年齡是空的時候不會報錯。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — register-form.html（二）
+# 練習 2：自訂驗證器 — 日期區間
+### 任務說明
 
-年齡、手機欄位：
+後台「新增問卷」的基本資料，有跨欄位的規則，內建驗證器做不到，需要**自訂驗證器**：
 
-```html
-  <div class="form-field">
-    <label>年齡：</label>
-    <input type="number" formControlName="age">
-    <div class="field-error">
-      @if (form.get('age')?.invalid && form.get('age')?.touched) {
-        <p>年齡需介於 18 到 99 之間。</p>
-      }
-    </div>
-  </div>
+1. 表單欄位：`title`（必填，最多 50 字）、`startDate`、`endDate`，預設 **今天 + 2**、**今天 + 7**
+2. 自訂驗證器 `startAfterToday`（欄位層級）：開始日期必須**晚於今天**
+3. 自訂驗證器 `endNotBeforeStart`（**表單層級**）：結束日期不能早於開始日期
+4. 兩個驗證器的錯誤都要在畫面上顯示對應的訊息
+5. 通過驗證後，把日期用 `yyyy-MM-dd` 字串印出（**不能**用 `toISOString()`）
 
-  <div class="form-field">
-    <label>手機：</label>
-    <input formControlName="phone" placeholder="09xxxxxxxx">
-    <div class="field-error">
-      @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
-        <p>請輸入正確格式的手機號碼（09 開頭共 10 碼）。</p>
-      }
-    </div>
-  </div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+第二個練習是自訂驗證器。需求文件對日期有兩條規則：開始日期必須晚於今天、結束日期不能早於開始日期。第一條只看一個欄位，可以寫成欄位層級的驗證器；第二條要同時比較兩個欄位，所以必須寫在整個表單（FormGroup）層級。
+
+自訂驗證器的本質很簡單：它就是一個函式，接收一個控制項，回傳 null 代表通過，回傳一個物件代表失敗，物件的 key 就是錯誤名稱，畫面上用這個名稱判斷要顯示哪個訊息。
+
+第 5 點是預告過的坑：toISOString 是 UTC 時間，台灣早上 8 點以前會差一天，所以要自己用年月日組字串。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：解題提示
+
+1. 驗證器的型別：`ValidatorFn = (control: AbstractControl) => ValidationErrors | null`
+2. 欄位層級：`control.value` 就是日期，通過回傳 `null`，失敗回傳 `{ startNotAfterToday: true }`
+3. 表單層級：`control` 是整個 `FormGroup`，用 `control.get('startDate')?.value` 取得兩個欄位；錯誤放在**表單**上（`form.errors`）
+4. 表單層級驗證器要放在 `fb.group(controls, { validators: [...] })` 的第二個參數
+5. 日期比較先把時間歸零（`setHours(0,0,0,0)`），避免「今天」比今天早
+6. `Date` 轉字串：`` `${y}-${pad(m)}-${pad(d)}` ``，月份 `getMonth()` 要 +1
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+欄位層級與表單層級的差別：欄位層級的驗證器掛在單一個 FormControl 上，錯誤也記錄在那個控制項；表單層級的驗證器掛在 FormGroup 上，可以看到所有子欄位，錯誤記錄在整個表單，所以畫面上要用 form.errors?.['endBeforeStart'] 來判斷。
+
+日期比較有一個容易忽略的細節：Date 物件含有時間，今天早上 10 點建立的 new Date()，比今天凌晨 0 點的日期物件晚。所以比較之前，一律先把時間歸零。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答
+
+```typescript
+// survey-validators.ts
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+const startOfDay = (d: Date) => { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; };
+
+/** 欄位層級：開始日期必須晚於今天 */
+export const startAfterToday: ValidatorFn = (c: AbstractControl): ValidationErrors | null => {
+  if (!c.value) return null;
+  return startOfDay(c.value) > startOfDay(new Date()) ? null : { startNotAfterToday: true };
+};
+
+/** 表單層級：結束日期不能早於開始日期 */
+export const endNotBeforeStart: ValidatorFn = (form: AbstractControl): ValidationErrors | null => {
+  const s = form.get('startDate')?.value, e = form.get('endDate')?.value;
+  if (!s || !e) return null;
+  return startOfDay(e) >= startOfDay(s) ? null : { endBeforeStart: true };
+};
+
+/** Date → 'yyyy-MM-dd'（用本地時間，避免 toISOString 造成差一天） */
+export function toDateString(d: Date): string {
+  const p = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-年齡欄位的 input 型別用 number，方便使用者用數字鍵盤輸入；驗證邏輯不變，一樣是 invalid && touched。手機欄位用 pattern 驗證格式，錯誤訊息直接把格式規則講清楚（09 開頭共 10 碼），比只寫「格式錯誤」對使用者更友善。每個欄位一樣包在 .form-field / .field-error 裡，維持版面穩定。下一頁補上同意條款跟送出按鈕，完成整份表單。
+兩個驗證器都是純函式，可以放在獨立的檔案，之後在前台與後台都能重複使用。
+
+startAfterToday 只看自己的值；endNotBeforeStart 從整個表單裡用 get 取出兩個欄位來比較。注意如果任何一個日期沒有值，直接回傳 null（通過）：「沒填」是 required 驗證器的責任，自訂驗證器只管「有值時對不對」，職責要分清楚。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — register-form.html（三）
+# 練習 2：完整解答（續）
 
-同意條款與送出按鈕：
+```typescript
+// survey-basic-form.ts（表單定義）
+const addDays = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n); return d; };
+
+form = this.fb.nonNullable.group({
+  title: ['', [Validators.required, Validators.maxLength(50)]],
+  startDate: [addDays(2), [Validators.required, startAfterToday]],
+  endDate: [addDays(7), Validators.required],
+}, { validators: [endNotBeforeStart] });
+
+// 驗證通過後
+console.log(toDateString(this.form.controls.startDate.value));
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+toDateString 用 getFullYear、getMonth、getDate 這些本地時間的方法組字串，就不會有 UTC 差一天的問題。padStart(2, '0') 把個位數月份、日期補成兩位。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（HTML 與驗收）
 
 ```html
-  <div class="form-field">
-    <label>
-      <input type="checkbox" formControlName="agree">
-      我同意會員條款
-    </label>
-    <div class="field-error">
-      @if (form.get('agree')?.invalid && form.get('agree')?.touched) {
-        <p>請勾選同意會員條款。</p>
-      }
-    </div>
-  </div>
+<!-- survey-basic-form.html（日期欄位用 mat-datepicker，值就是 Date 物件） -->
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>問卷名稱</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+```
 
-  <button type="submit" [disabled]="form.invalid">送出註冊</button>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+畫面上，欄位層級的錯誤用 form.controls.startDate.errors，表單層級的錯誤用 form.errors。errors 的 key 就是驗證器回傳物件的 key，這是自訂驗證器和畫面之間的約定。
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（HTML 與驗收）（續）
+
+```html
+  <mat-form-field>
+    <mat-label>開始日期</mat-label>
+    <input matInput [matDatepicker]="sp" formControlName="startDate" />
+    <mat-datepicker-toggle matIconSuffix [for]="sp" /><mat-datepicker #sp />
+  </mat-form-field>
+  @if (form.controls.startDate.errors?.['startNotAfterToday']) {
+    <small class="error">開始日期必須晚於今天</small>
+  }
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+（接續上一頁。）
+-->
+
+---
+layout: default
+---
+
+# 練習 2：完整解答（HTML 與驗收）（續）
+
+```html
+  <mat-form-field>
+    <mat-label>結束日期</mat-label>
+    <input matInput [matDatepicker]="ep" formControlName="endDate" />
+    <mat-datepicker-toggle matIconSuffix [for]="ep" /><mat-datepicker #ep />
+  </mat-form-field>
+  @if (form.errors?.['endBeforeStart']) {
+    <small class="error">結束日期不能早於開始日期</small>
+  }
 </form>
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>驗證方式：</b> 任一欄位空白或格式錯誤時，點過該欄位應顯示對應錯誤訊息，且顯示/消失時下方欄位不會跳動；五個欄位都填寫正確且勾選同意條款後，送出按鈕才會從停用變成可點擊，點擊後 Console 應印出「註冊成功」與完整表單資料。
+💡 元件的 <code>imports</code> 要有 <code>ReactiveFormsModule</code>、<code>MatFormFieldModule</code>、<code>MatInputModule</code>、<code>MatDatepickerModule</code>，<code>app.config.ts</code> 要有 <code>provideNativeDateAdapter()</code>（第 35 章）。
 </div>
 
-<!--
-最後這一段把 agree checkbox 的驗證訊息，跟整份表單的送出按鈕收尾。[disabled]="form.invalid" 直接看整個表單的整體狀態，只要五個欄位裡有任何一個不通過，form.invalid 就是 true，按鈕自動停用，不需要自己寫邏輯去組合五個欄位的狀態。
+<div class="mt-2 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 預設值（今天 + 2、+ 7）沒有錯誤；開始日期改成今天 → 出現「必須晚於今天」；結束日期改成比開始日期早 → 出現「不能早於開始日期」；<code>toDateString</code> 印出的日期在早上 8 點以前也是正確的那一天。
+</div>
 
-這一題做完，就是把這一章學到的 6 種驗證器（required、minLength、email、min、max、pattern、requiredTrue，共 7 種但概念上可歸類成 6 類），以及 invalid、touched 兩個驗證狀態屬性，全部實際應用在一份貼近業界真實情境的註冊表單裡。下一頁補上 CSS，讓錯誤訊息的出現與消失不會造成版面跳動。
--->
-
----
-layout: default
----
-
-# 完整解答 — register-form.scss
-
-固定 `.field-error` 的最小高度，避免錯誤訊息造成版面跳動：
-
-```scss
-.form-field {
-  margin-bottom: 12px;
-}
-
-.field-error {
-  min-height: 1.25rem;
-}
-
-.field-error p {
-  margin: 2px 0 0;
-  color: #d32f2f;
-  font-size: 0.85rem;
-}
-```
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-關鍵是 .field-error 這個容器：不管裡面的 <p> 有沒有被 @if 渲染出來，這個 div 本身永遠存在於 DOM 裡，min-height 保證它至少佔用一行文字的高度。這樣訊息出現時只是把預留的空間填上文字，訊息消失時空間依然保留，下面的欄位跟按鈕就不會因為某一則錯誤訊息忽然出現或消失而上下跳動。
-
-.form-field 則是統一每個欄位區塊之間的間距，讓整份表單排版整齊。這種「預留空間、只換內容」的做法，是業界處理表單錯誤訊息版面跳動問題最常見的技巧，值得記起來，之後遇到類似「內容忽有忽無造成版面晃動」的情境都可以用同樣的思路解決。
+這一章做的驗證，只是「前端的便利」，讓使用者盡早知道問題。後端一定還會再驗證一次，因為前端可以被繞過。這就是為什麼 Spring Boot 課也做了同樣的規則。
 -->
 
 ---

@@ -521,6 +521,218 @@ constructor() {
 -->
 
 ---
+layout: default
+---
+
+# 練習：新增問卷的日期防呆
+### 任務說明
+
+後台「新增問卷」的基本資料頁，日期欄位有以下規定（來自需求文件）：
+
+1. 「開始日期」「結束日期」都用 `mat-datepicker`
+2. 預設值：開始日期是**今天 + 2 天**，結束日期是**今天 + 7 天**
+3. 開始日期必須**晚於今天**（今天以前的日期不能選）
+4. 結束日期不能早於開始日期（`[min]` 要跟著開始日期變動）
+5. 使用者把開始日期改到比結束日期還晚時，自動把結束日期調整成同一天
+6. 在欄位下方顯示「問卷期間：共 N 天」（含開始與結束當天）
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這個練習是新增問卷的日期規則，直接來自需求文件：預設今天加 2、今天加 7，開始日期必須晚於今天。
+
+重點在第 4 點：結束日期的 min 不是固定值，而是綁定到「開始日期」這個變數。使用者改開始日期，結束日期的可選範圍就會跟著改變，這就是 datepicker 屬性綁定的威力。
+
+第 6 點是 Date 的運算：兩個日期相減得到毫秒數，除以一天的毫秒數就是天數，別忘了含頭含尾要加一天。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. 準備工具函式 `addDays(n)`：回傳「今天 + n 天」的**新** `Date`（第 35 章補充提過：每個變數要自己的物件）
+2. 開始日期的 `[min]` 是「明天」：`addDays(1)`，不是今天
+3. 結束日期的 `[min]` 綁定 `startDate`
+4. 監聽開始日期的變更：`(dateChange)="onStartChange($event.value)"`
+5. 天數：`Math.round((end.getTime() - start.getTime()) / 86400000) + 1`
+6. 使用 `mat-datepicker` 要在 `app.config.ts` 加 `provideNativeDateAdapter()`
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>toISOString()</code> 是 UTC 時間，台灣早上 8 點以前會差一天。之後要把日期送給後端時，請用「年-月-日」自己組字串（第 52 章的 <code>toDateString</code>）。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+提示 1：addDays 一定要回傳新的 Date 物件，因為 setDate 會直接修改物件本身。
+
+提示 2 是一個容易忽略的細節：需求是「必須晚於今天」，所以最早只能選明天，min 就是 addDays(1)，而不是今天。預設值是今天加 2，剛好落在合法範圍內。
+
+提示 6 是 datepicker 的必要設定：它需要一個「日期轉接器」，才知道怎麼處理 Date 物件，最簡單的是 provideNativeDateAdapter，用瀏覽器原生的 Date。
+
+最後的小框框是一個很經典的坑：toISOString 會轉成 UTC，台灣是 UTC+8，所以如果用 toISOString 取日期，早上 8 點以前得到的會是前一天。這個坑在串 API 時才會真正碰到，先預告一下。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答
+
+```typescript
+// survey-dates.ts
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+
+function addDays(n: number): Date {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+// ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+解答的核心有三個：一是 minStart 固定為明天；二是 endDate 輸入框的 min 直接綁 startDate；三是 onStartChange 處理「開始日期跳到結束日期之後」這個情況。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（續）
+
+```typescript
+// ... 接上一頁
+
+@Component({
+  selector: 'app-survey-dates',
+  imports: [FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule],
+  templateUrl: './survey-dates.html',
+})
+export class SurveyDates {
+  minStart = addDays(1);          // 必須晚於今天
+  startDate: Date = addDays(2);   // 預設：今天 + 2
+  endDate: Date = addDays(7);     // 預設：今天 + 7
+
+  onStartChange(d: Date | null) {
+    if (d && this.endDate < d) this.endDate = d;
+  }
+
+// ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+get days 是 getter，每次變更偵測都會重新計算，所以兩個日期任何一個改變，畫面上的天數就跟著更新。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（續）
+
+```typescript
+// ... 接上一頁
+
+  get days(): number {
+    return Math.round((this.endDate.getTime() - this.startDate.getTime()) / 86400000) + 1;
+  }
+}
+```
+
+```html
+<!-- survey-dates.html -->
+<mat-form-field>
+  <mat-label>開始日期</mat-label>
+  <input matInput [matDatepicker]="sp" [min]="minStart" [(ngModel)]="startDate"
+         (dateChange)="onStartChange($event.value)" />
+  <mat-datepicker-toggle matIconSuffix [for]="sp" /><mat-datepicker #sp />
+</mat-form-field>
+<mat-form-field>
+  <mat-label>結束日期</mat-label>
+  <input matInput [matDatepicker]="ep" [min]="startDate" [(ngModel)]="endDate" />
+  <mat-datepicker-toggle matIconSuffix [for]="ep" /><mat-datepicker #ep />
+</mat-form-field>
+<p>問卷期間：共 {{ days }} 天</p>
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+驗收時特別測試邊界：今天不能選（因為必須晚於今天）、明天可以選；結束日期不能選到開始日期之前。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（續）
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 開啟畫面時是「今天 + 2 ～ 今天 + 7」，共 6 天；今天與昨天灰色不能選；把開始日期改到 + 10 天，結束日期會自動變成 + 10 天，期間顯示 1 天。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這個練習只是前端的「輔助」：datepicker 的 min 只能擋住使用者用滑鼠選，如果使用者手動輸入日期，仍然可能輸入不合法的值，所以最終還是要有驗證，後端也一定會再檢查一次。表單驗證會在第 52 章做。
+-->
+
+---
 layout: end
 ---
 

@@ -559,29 +559,34 @@ export class First {
 -->
 
 ---
-layout: two-cols
+layout: default
 ---
 
-# 練習 1：@Input 練習
+# 練習 1：@Input — 問卷預覽卡片
 ### 任務說明
 
-1. 建立父頁面（A）與子元件（B）
-2. 父頁面有三個輸入欄位
-3. 子元件即時顯示父頁面輸入的內容
-4. 三個欄位同步更新
+後台「新增問卷」的畫面，在輸入基本資料的同時，右邊要即時預覽問卷的樣子：
 
-::right::
+1. 建立父元件 `survey-editor`（新增問卷的畫面）與子元件 `survey-preview`（預覽卡片）
+2. 父元件有三個輸入欄位：問卷名稱、開始日期、結束日期
+3. 子元件用 `@Input` 接收這三個值，即時顯示在卡片上
+4. 名稱是空的時候，卡片顯示「（尚未輸入名稱）」
 
-<div class="flex items-center justify-center h-full ml-10">
-  <img src="/images/22-data-passing/practice-1.png" class="rounded shadow-md max-h-80" />
-</div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-我們馬上來做第一個練習：
-請在父頁面放三個輸入框（姓名、年齡、職稱）。
-然後在父元件裡放上子元件的積木標籤。
-子元件要用三個天線 `@Input` 接收這三個值，並且在畫面上把這三個值即時排版印出來。
-這題主要是訓練大家對於多個 Input 傳參綁定的手感！
+第一個練習是後台新增問卷的預覽。左邊輸入資料，右邊的預覽卡片同步更新，這正是父傳子（@Input）最常見的使用情境。
+
+請大家注意：預覽卡片本身不需要知道資料從哪裡來，它只負責「把收到的三個值排版好」。這也是把它做成獨立元件的好處，之後在問卷列表也可以重複使用。
+
+題目 4 是一個小細節：用 @if 處理空字串的情況，練習 @if 與 @Input 搭配。
 -->
 
 ---
@@ -589,426 +594,370 @@ layout: default
 ---
 
 # 練習 1：解題提示
-### 提示說明
 
-1. 子元件宣告三個 `@Input` 變數：`userName`、`userEmail`、`userAddress`
-2. 父元件宣告三個變數，各用 `[(ngModel)]` 與輸入框（使用者名稱、使用者 Email、使用者地址）雙向繫結
-3. 父元件 HTML 中的子元件標籤：
-   ```html
-   <app-second [userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress">
-   </app-second>
-   ```
-4. 子元件 HTML 中用 `{{ userName }}`、`{{ userEmail }}`、`{{ userAddress }}` 顯示
+1. 子元件宣告三個 `@Input`：`title`、`startDate`、`endDate`
+2. 父元件宣告三個變數，各用 `[(ngModel)]` 與輸入框雙向繫結（要匯入 `FormsModule`）
+3. 父元件 HTML 中傳值給子元件：
+
+```html
+<app-survey-preview [title]="title" [startDate]="startDate" [endDate]="endDate" />
+```
+
+4. 日期欄位使用 `<input type="date">`，取得的值是 `yyyy-MM-dd` 字串，跟後端 API 的日期格式一樣
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 父元件需匯入 <code>FormsModule</code>（雙向繫結用）與 <code>Second</code>（子元件用）。
+💡 父元件需匯入 <code>FormsModule</code>（雙向繫結用）與 <code>SurveyPreview</code>（子元件用）。
 </div>
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-大叔給大家點出核心思路：
-子元件的 TS 要寫三個帶有 `@Input()` 裝飾器的變數：userName、userEmail、userAddress。
-父元件在 HTML 呼叫子元件時，要連寫三個中括號綁定，像是 `[userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress"`。
-還有，別忘了在父元件的 TS 匯入子元件的 class，並且在 HTML 輸入框加上 `[(ngModel)]` 雙向綁定。
-小括號、中括號要分清楚喔。
-只要這幾條線連上了，你在頁面A打字，頁面B（組件）就會即時亮起來！
+思路跟前面教的一樣：子元件開三個插孔，父元件用中括號把三個變數灌進去。
+
+日期輸入框 type="date" 的值是字串，格式是 yyyy-MM-dd，剛好就是後端 API 要的日期格式，所以先不需要做任何轉換。這個觀念很重要，後面串 API 的時候還會再用到。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 1：完整解答（子元件）
+# 練習 1：完整解答
 
 ```typescript
-// second.ts
+// survey-preview.ts（子元件）
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-second',
-  templateUrl: './second.html',
+  selector: 'app-survey-preview',
+  templateUrl: './survey-preview.html',
 })
-export class Second {
-  @Input() userName: string = '';
-  @Input() userEmail: string = '';
-  @Input() userAddress: string = '';
+export class SurveyPreview {
+  @Input() title = '';
+  @Input() startDate = '';
+  @Input() endDate = '';
 }
 ```
 
 ```html
-<!-- second.html -->
-<h3>頁面B(組件)</h3>
-<p>使用者名稱：{{ userName }}</p>
-<p>使用者Email：{{ userEmail }}</p>
-<p>使用者地址：{{ userAddress }}</p>
+<!-- survey-preview.html -->
+<div class="card">
+  @if (title) { <h3>{{ title }}</h3> } @else { <h3 class="muted">（尚未輸入名稱）</h3> }
+  <p>期間：{{ startDate || '?' }} ～ {{ endDate || '?' }}</p>
+</div>
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-子元件開三個接收天線：userName、userEmail、userAddress，並在 HTML 上用雙大括號直接顯示出來。
+子元件只有三個 @Input 和一個很簡單的樣板。@if 判斷 title 是不是空字串（空字串在 JavaScript 是 falsy），空的就顯示提示文字。
+
+日期部分用 || 給預設值：還沒選日期時顯示問號。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 1：完整解答（父元件 TS）
+# 練習 1：完整解答（父元件）
 
 ```typescript
-// first.ts
+// survey-editor.ts
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Second } from './second';
+import { SurveyPreview } from './survey-preview';
 
 @Component({
-  selector: 'app-first',
-  imports: [FormsModule, Second],
-  templateUrl: './first.html',
+  selector: 'app-survey-editor',
+  imports: [FormsModule, SurveyPreview],
+  templateUrl: './survey-editor.html',
 })
-export class First {
-  userName = '';
-  userEmail = '';
-  userAddress = '';
+export class SurveyEditor {
+  title = '';
+  startDate = '';
+  endDate = '';
 }
 ```
 
+```html
+<!-- survey-editor.html -->
+<label>問卷名稱 <input [(ngModel)]="title" /></label>
+<label>開始日期 <input type="date" [(ngModel)]="startDate" /></label>
+<label>結束日期 <input type="date" [(ngModel)]="endDate" /></label>
+
+<app-survey-preview [title]="title" [startDate]="startDate" [endDate]="endDate" />
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-父元件需匯入 FormsModule（供 ngModel 雙向繫結用）與 Second（子元件）。
-宣告 userName、userEmail、userAddress 三個變數，對應三個輸入欄位。
+父元件負責三件事：匯入 FormsModule 與子元件、宣告三個變數、把變數同時綁定到輸入框（雙向）和子元件（單向）。
+
+輸入框打一個字，title 就更新，子元件的 @Input 隨之更新，預覽卡片立刻改變。整條資料流是：輸入框 → 父元件變數 → 子元件插孔 → 畫面。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 1：完整解答（父元件 HTML）
-
-```html
-<!-- first.html -->
-<h3>頁面A</h3>
-使用者名稱：<input [(ngModel)]="userName">
-使用者Email：<input [(ngModel)]="userEmail">
-使用者地址：<input [(ngModel)]="userAddress">
-
-<app-second [userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress"></app-second>
-```
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 三個輸入框各自 <code>[(ngModel)]</code> 雙向繫結，再各自用 <code>[屬性]="變數"</code> 傳給子元件，缺一不可。
-</div>
-
-<!--
-父元件用 ngModel 雙向繫結三個輸入框的值，再逐一用中括號綁定傳給子元件的三個 @Input 插孔。
-只要輸入框字一變，userName/userEmail/userAddress 立刻更新，子元件的三個插孔也跟著同步顯示。
--->
-
----
-layout: section
-class: flex flex-col justify-center items-center text-center
----
-
-# @Output
-# Pass Data Out of Component
-
-<!--
-「大叔，那如果我想在子元件裡放個按鈕，點了之後通知父元件，該怎麼辦？」
-這就是反向傳遞的絕招——`@Output`！
--->
-
----
-
-# @Output — 子元件宣告
-
-在**子元件**中宣告 `output<T>()` 變數，當需要回傳資料或觸發父元件動作時使用。
-
-```typescript
-// second.ts（子元件）
-import { Component, output } from '@angular/core';
-
-@Component({
-  selector: 'app-second',
-  templateUrl: './second.html',
-})
-export class Second {
-  changeUserName = output<string>();
-}
-```
-
-<!--
-如果說 `@Input` 是接收天線，那麼 `@Output` 就是「發射電台（Emitter）」。
-在新版的 Angular 中，我們宣告一個輸出變數，寫成：
-`changeUserName = output<string>()`。
-這個 `output<string>()` 是一個泛型，括號裡的 string 代表這個發射台等一下要發射出去的資料型態是字串。
-準備好這個發射台之後，子元件就可以在需要的時候發送信號了。
--->
-
----
-
-# @Output — 子元件觸發
-
-在子元件的方法中，使用 `.emit()` 回傳值給父元件。
-
-```typescript
-// second.ts（子元件）
-export class Second {
-  changeUserName = output<string>();
-  inputName = '';
-
-  emitName() {
-    this.changeUserName.emit(this.inputName);
-  }
-}
-```
-
-```html
-<!-- second.html -->
-<input [(ngModel)]="inputName">
-<button (click)="emitName()">送出</button>
-```
-
-<!--
-怎麼發射呢？
-在子元件的 TS 方法裡，我們呼叫：
-`this.changeUserName.emit(this.inputName)`。
-那個 `.emit()` 就是「發送訊號」的意思。
-我們把子元件輸入框裡的 `inputName` 當作砲彈，用這個發射台轟炸出去。
-這時候子元件的任務就完成了，它只管發射，不管誰來接收。
--->
-
----
-
-# @Output — 父元件接收
-
-在父元件的子元件標籤上，用 `(output變數名稱)="父元件方法($event)"` 監聽並接收回傳值。
-
-```html
-<!-- first.html -->
-<app-second (changeUserName)="onNameChanged($event)"></app-second>
-<p>收到的名稱：{{ receivedName }}</p>
-```
-
-```typescript
-// first.ts（父元件）
-export class First {
-  receivedName = '';
-
-  onNameChanged(name: string) {
-    this.receivedName = name;
-  }
-}
-```
-
-<!--
-那父元件要怎麼攔截這枚砲彈呢？
-在父元件的 HTML 呼叫子元件標籤時，
-我們在小括號裡監聽這個發射台：`(changeUserName)="onNameChanged($event)"`。
-**特別注意！那個 `$event` 是 Angular 的保留字**，代表子元件剛剛用 `.emit()` 射出來的那顆砲彈（資料）！
-當訊號一進來，父元件就會執行 `onNameChanged` 方法，並把 `$event` 裡帶過來的字串塞給自己的變數。
-這樣就完成了精準的「子傳父」通訊！
--->
-
----
-layout: two-cols
----
-
-# 練習 2：@Output 練習
+# 練習 2：@Output — 新增題目
 ### 任務說明
 
-1. 子元件（B）有一個輸入框與一個按鈕
-2. 按下按鈕後，將值輸出給父頁面（A）
-3. 父頁面（A）接收到值後顯示
+新增問卷的第二步是「加入題目」。請把「輸入一題」做成子元件，父元件負責管理題目清單：
 
-::right::
+1. 建立子元件 `question-form`：一個題目名稱輸入框、題型下拉（單選／多選／文字）、「加入」按鈕
+2. 子元件用 `@Output() added` 在按下「加入」時，把 `{ title, type }` 傳給父元件
+3. 父元件（`survey-editor`）把收到的題目加到 `questions` 陣列，用 `@for` 列出來
+4. 每一題後面有「刪除」按鈕，可以從清單移除
+5. 題目名稱是空的時候，不要送出事件
 
-<div class="flex items-center justify-center h-full ml-10">
-  <img src="/images/22-data-passing/practice-2.png" class="rounded shadow-md max-h-80" />
-</div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-好，馬上進行 Output 的實戰：
-請在子元件裡放一個輸入框跟送出按鈕。
-點按鈕時，用 `output` 把字串射出去。
-父頁面監聽這個事件，並在收到資料後，把收到的字印在根畫面上。
-這題考驗的是你對事件監聽與 `$event` 保留字取值的能力！
+第二個練習換成子傳父（@Output）。子元件只負責「輸入一題」這件事，按下加入之後，用事件把資料送給父元件；父元件保管整份題目清單。
+
+這樣分工的好處是：子元件不知道也不用知道題目最後被放到哪裡，之後要把這份清單存到 Session、送到後端，都只需要改父元件。
+
+第 5 點是防呆：在子元件裡檢查，空白的題目不送出。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：解題提示（子元件）
+# 練習 2：解題提示
 
-頁面B(組件) 有三個輸入框（使用者名稱、使用者Email、使用者地址）與一個按鈕。用物件 `{ key1: value1, key2: value2 }` 打包三個欄位，而不是分開傳三次：
-
-1. 宣告一個物件變數存放三個欄位的值：
-   ```typescript
-   userData = { userName: '', userEmail: '', userAddress: '' };
-   ```
-2. 宣告 output，型別也寫成物件：
-   ```typescript
-   myOutput = output<{ userName: string; userEmail: string; userAddress: string }>();
-   ```
-3. 按鈕 `(click)` 觸發方法，把整個物件 `emit` 出去：
-   ```typescript
-   sendData() {
-     this.myOutput.emit(this.userData);
-   }
-   ```
+1. 定義型別：`interface Question { title: string; type: 'SINGLE' | 'MULTI' | 'TEXT' }`，放在 `question.ts`
+2. 子元件：`@Output() added = new EventEmitter<Question>();`，按下按鈕時 `this.added.emit({ ... })`
+3. 父元件 HTML：`<app-question-form (added)="add($event)" />`
+4. `$event` 就是子元件 `emit` 出來的物件
+5. 刪除用陣列的 `filter`，或 `splice(index, 1)`
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 三個欄位用一個物件包起來，一次 emit 就能把三筆資料一起傳給父元件，不用開三個 output。
+💡 子元件的表單輸入用 <code>[(ngModel)]</code>，記得匯入 <code>FormsModule</code>。
 </div>
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-大叔提醒：子元件不要對三個欄位各自開一個 output，而是先把三個欄位包成一個物件，比如 `userData = { userName: '', userEmail: '', userAddress: '' }`。
-宣告輸出時，型別也跟著寫成物件泛型：`myOutput = output<{ userName: string; userEmail: string; userAddress: string }>()`。
-按鈕點擊時，直接把整個 `userData` 物件 emit 出去，一次搞定三筆資料。
+事件從子元件流向父元件：子元件 emit，父元件在標籤上用小括號接住，名稱要跟 @Output 的屬性名稱一致。
+
+$event 這個特殊變數，就是 emit 的時候放進去的東西。這裡放的是一個 Question 物件。
+
+型別放在獨立檔案，是因為父子兩個元件都會用到它，之後串 API 時也會沿用同一份型別定義。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：解題提示（父元件）
-### 提示說明
-
-頁面A 沒有輸入框，只負責顯示從頁面B(組件) 收到的三個欄位。父元件用同形狀的物件 `{ key1: value1, key2: value2 }` 接收資料：
+# 練習 2：完整解答（子元件）
 
 ```typescript
-receivedData = { userName: '', userEmail: '', userAddress: '' };
-
-onReceive(event: { userName: string; userEmail: string; userAddress: string }) {
-  this.receivedData = event;  // $event 直接整包存起來
+// question.ts
+export interface Question {
+  title: string;
+  type: 'SINGLE' | 'MULTI' | 'TEXT';
 }
 ```
 
-```html
-<app-second (myOutput)="onReceive($event)"></app-second>
-```
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>$event</code> 是整包物件，直接存起來即可，不用逐欄位拆開賦值。父元件記得匯入子元件。
-</div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-父元件這邊，一樣準備一個同樣形狀的物件 `receivedData = { userName: '', userEmail: '', userAddress: '' }` 來裝收到的貨。
-在 HTML 監聽 `(myOutput)="onReceive($event)"`，這時候的 `$event` 就是那整包物件，包含三個欄位。
-在 `onReceive` 方法裡，直接把 `event` 整包塞進 `receivedData` 即可，不需要拆開一個一個賦值。
-這樣做的好處是，物件是「傳址」的容器，以後想多傳幾個欄位，只要往物件裡加屬性，不需要改 output 的參數個數，擴充性更好！
+子元件的重點是 @Output 加 EventEmitter：宣告一個會送出 Question 的事件，按下按鈕時 emit。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：完整解答（子元件 TS）
+# 練習 2：完整解答（子元件）（續）
 
 ```typescript
-// second.ts
-import { Component, output } from '@angular/core';
+// question-form.ts
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Question } from './question';
 
 @Component({
-  selector: 'app-second',
+  selector: 'app-question-form',
   imports: [FormsModule],
-  templateUrl: './second.html',
+  templateUrl: './question-form.html',
 })
-export class Second {
-  userData = { userName: '', userEmail: '', userAddress: '' };
-  myOutput = output<{ userName: string; userEmail: string; userAddress: string }>();
+export class QuestionForm {
+  @Output() added = new EventEmitter<Question>();
 
-  sendData() {
-    this.myOutput.emit(this.userData);
+  title = '';
+  type: Question['type'] = 'SINGLE';
+
+  add() {
+    if (!this.title.trim()) return;
+    this.added.emit({ title: this.title.trim(), type: this.type });
+    this.title = '';
   }
 }
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-子元件宣告 userData 物件裝三個欄位，並開一個 output 型別同樣是三個欄位的物件。
-按鈕點擊時呼叫 sendData()，把整包 userData 一次 emit 出去。
+送出之後把 title 清成空字串，輸入框就自動清空，可以連續輸入下一題。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：完整解答（子元件 HTML）
+# 練習 2：完整解答（子元件）（續）
 
 ```html
-<!-- second.html -->
-<h3>頁面B(組件)</h3>
-使用者名稱：<input [(ngModel)]="userData.userName"><br>
-使用者Email：<input [(ngModel)]="userData.userEmail"><br>
-使用者地址：<input [(ngModel)]="userData.userAddress"><br>
-<button (click)="sendData()">output輸出</button>
+<!-- question-form.html -->
+<input [(ngModel)]="title" placeholder="題目名稱" />
+<select [(ngModel)]="type">
+  <option value="SINGLE">單選</option>
+  <option value="MULTI">多選</option>
+  <option value="TEXT">文字</option>
+</select>
+<button (click)="add()">加入</button>
 ```
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 三個輸入框都用 <code>[(ngModel)]</code> 直接綁定物件的屬性（如 <code>userData.userName</code>），不用額外宣告三個獨立變數。
-</div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-三個輸入框直接雙向繫結 userData 物件裡的三個屬性，這樣打字時物件內容會即時更新，按鈕按下去 emit 出去的就是最新資料。
+Question['type'] 是 TypeScript 的索引存取型別，意思是「Question 的 type 屬性的型別」，這樣就不用重寫一次聯合型別。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：完整解答（父元件 TS）
+# 練習 2：完整解答（父元件）
 
 ```typescript
-// first.ts
-import { Component } from '@angular/core';
-import { Second } from './second';
+// survey-editor.ts（在練習 1 的基礎上新增）
+import { QuestionForm } from './question-form';
+import { Question } from './question';
 
 @Component({
-  selector: 'app-first',
-  imports: [Second],
-  templateUrl: './first.html',
+  selector: 'app-survey-editor',
+  imports: [FormsModule, SurveyPreview, QuestionForm],
+  templateUrl: './survey-editor.html',
 })
-export class First {
-  receivedData = { userName: '', userEmail: '', userAddress: '' };
+export class SurveyEditor {
+  title = '';
+  startDate = '';
+  endDate = '';
+  questions: Question[] = [];
 
-  onReceive(event: { userName: string; userEmail: string; userAddress: string }) {
-    this.receivedData = event;
-  }
+  add(q: Question) { this.questions = [...this.questions, q]; }
+  remove(i: number) { this.questions = this.questions.filter((_, k) => k !== i); }
 }
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-父元件宣告 receivedData 物件，形狀跟子元件傳來的一致。onReceive 方法直接把收到的整包 event 存進 receivedData。
+父元件用 (added)="add($event)" 接住子元件的事件。add 方法用展開運算子建立新陣列，而不是直接 push，這是 Angular 常見的習慣：換一個新的陣列參考，變更偵測才一定看得到變化。
+
+@empty 是 @for 的附屬區塊，清單是空的時候顯示，不需要另外寫 @if 判斷。
 -->
 
 ---
 layout: default
 ---
 
-# 練習 2：完整解答（父元件 HTML）
+# 練習 2：完整解答（父元件）（續）
 
 ```html
-<!-- first.html -->
-<h3>頁面A</h3>
-使用者名稱：{{ receivedData.userName }}<br>
-使用者Email：{{ receivedData.userEmail }}<br>
-使用者地址：{{ receivedData.userAddress }}
+<!-- survey-editor.html（接在預覽卡片後面） -->
+<app-question-form (added)="add($event)" />
 
-<app-second (myOutput)="onReceive($event)"></app-second>
+<ol>
+  @for (q of questions; track $index) {
+    <li>{{ q.title }}（{{ q.type }}）<button (click)="remove($index)">刪除</button></li>
+  } @empty {
+    <li class="muted">還沒有題目</li>
+  }
+</ol>
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 頁面A 只顯示資料、沒有輸入框；按下頁面B的「output輸出」按鈕後，頁面A 上方三個欄位才會即時顯示收到的值。
+💡 這一份「題目清單」，就是之後要送到後端 <code>POST /api/admin/survey-draft</code> 的 <code>questions</code>。
 </div>
 
-<!--
-頁面A 沒有輸入框，只用雙大括號顯示 receivedData 的三個屬性。
-子元件按下按鈕 emit 後，(myOutput) 監聽器觸發 onReceive，畫面上的三個欄位就會立刻更新顯示。
--->
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 父元件不需要知道子元件內部怎麼組裝資料，只要照物件形狀宣告 <code>receivedData</code> 接住 <code>$event</code> 即可。
-</div>
-
 <!--
-父元件監聽子元件的 myOutput 事件，收到的 $event 就是子元件那包 { value, time } 物件，直接整包存進 receivedData，畫面上就能各自取出 value 跟 time 顯示。
+這個練習做完，新增問卷的畫面已經有了預覽和題目清單。之後會接上 API，把這些資料真正存進資料庫。
 -->
 
 ---

@@ -12,6 +12,7 @@ import { SurveyService } from '../../core/survey-service';
 import { Dialogs } from '../../shared/dialogs';
 import { Question, QuestionType, Survey } from '../../models/models';
 import { addDays, parseDate, toDateString } from '../../shared/date-util';
+import { HasUnsavedChanges } from '../../core/unsaved-guard';
 
 const TYPE_LABEL: Record<QuestionType, string> = { SINGLE: '單選', MULTI: '多選', TEXT: '文字' };
 
@@ -21,7 +22,7 @@ const TYPE_LABEL: Record<QuestionType, string> = { SINGLE: '單選', MULTI: '多
     MatDatepickerModule, MatCheckboxModule, MatButtonModule],
   templateUrl: './admin-editor.html',
 })
-export class AdminEditor {
+export class AdminEditor implements HasUnsavedChanges {
   private api = inject(SurveyService);
   private fb = inject(FormBuilder);
   private dialogs = inject(Dialogs);
@@ -73,6 +74,10 @@ export class AdminEditor {
     this.questions.set(s.questions ?? []);
   }
 
+  // 離開前確認（unsavedGuard 會呼叫）：基本資料改過，或題目有增刪改
+  private changed = false;
+  hasUnsavedChanges() { return !this.readonly && (this.basic.dirty || this.changed); }
+
   // ---- 題目 CRUD ----
   newQuestion() { this.q.reset({ title: '', type: 'SINGLE', required: false, optionsText: '' }); this.editing.set(-1); }
   editQuestion(i: number) {
@@ -88,10 +93,11 @@ export class AdminEditor {
     if (v.type !== 'TEXT' && options.length < 2) { await this.dialogs.alert('單選 / 多選題至少要有 2 個選項'); return; }
     const item: Question = { title: v.title.trim(), type: v.type!, required: !!v.required, options };
     const i = this.editing()!;
+    this.changed = true;
     this.questions.update(list => i < 0 ? [...list, item] : list.map((x, k) => k === i ? { ...item, id: x.id } : x));
     this.editing.set(null);
   }
-  removeQuestion(i: number) { this.questions.update(list => list.filter((_, k) => k !== i)); }
+  removeQuestion(i: number) { this.changed = true; this.questions.update(list => list.filter((_, k) => k !== i)); }
 
   // ---- 步驟切換時，先暫存到 Session ----
   private toSurvey(): Survey {
@@ -135,7 +141,10 @@ export class AdminEditor {
   // ---- 第 3 步：儲存 ----
   commit(publish: boolean) {
     this.api.commit(publish).subscribe({
-      next: () => this.dialogs.alert(publish ? '已儲存並發佈' : '已儲存').then(() => this.router.navigate(['/admin'])),
+      next: () => {
+        this.basic.markAsPristine(); this.changed = false;          // 已儲存：離開時不必再確認
+        this.dialogs.alert(publish ? '已儲存並發佈' : '已儲存').then(() => this.router.navigate(['/admin']));
+      },
       error: e => this.dialogs.alert(e.error?.message ?? '儲存失敗'),
     });
   }

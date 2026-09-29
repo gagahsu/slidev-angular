@@ -218,14 +218,14 @@ class: flex flex-col justify-center items-center text-center
 
 **範例情境：**
 
-- 問卷固定欄位：`surveyTitle`（標題，必填）
+- 問卷固定欄位：`title`（標題，必填）
 - 動態欄位：`questions`（題目，可新增／刪除）
-- 每道題目包含：題目名稱（`qTitle`）、題目類型（`qType`）、是否必填（`need`）
+- 每道題目包含：題目名稱（`title`）、題目類型（`type`）、是否必填（`required`）
 
 <!--
 想像我們要做一個問卷系統，問卷標題是固定的一欄，但題目數量完全不知道——使用者可能加兩題，也可能加二十題。如果用一般的 JavaScript Array 存這些題目，雖然也能新增刪除，但拿不到 Reactive Forms 幫我們處理好的驗證跟狀態管理，等於少了很多好處。
 
-所以這裡我們選用 FormArray。等一下的範例會有一個固定欄位 surveyTitle，跟一個動態欄位 questions，每道題目底下又有題目名稱、類型、是否必填三個小欄位，這正好是 FormGroup 包在 FormArray 裡的典型情境。
+所以這裡我們選用 FormArray。等一下的範例會有一個固定欄位 title，跟一個動態欄位 questions，每道題目底下又有題目名稱、類型、是否必填三個小欄位，這正好是 FormGroup 包在 FormArray 裡的典型情境。
 -->
 
 ---
@@ -237,13 +237,13 @@ class: flex flex-col justify-center items-center text-center
 **步驟二：** 以 `inject(FormBuilder)` 取得 `fb` 實例。
 
 **步驟三：** 以 `fb.group()` 定義根 `FormGroup`：
-- `surveyTitle`：`['', Validators.required]` — 初始值為空字串，加必填驗證
+- `title`：`['', Validators.required]` — 初始值為空字串，加必填驗證
 - `questions`：`fb.array([])` — 初始化空的 `FormArray`
 
 <!--
 我們一步一步來建立這個問卷表單。第一步別忘記把 ReactiveFormsModule 加進 imports，這是很多同學第一次用 Reactive Forms 時會漏掉的地方，沒加的話畫面上的 formGroup、formControlName 這些指令都會抓不到。
 
-第二步用 inject(FormBuilder) 拿到 fb，這是 Angular 官方建議的建構方式，比自己手動 new FormGroup 更簡潔。第三步就是用 fb.group() 定義整份表單的根結構，這邊 surveyTitle 是固定欄位，questions 先給一個空陣列，之後再動態塞資料進去。
+第二步用 inject(FormBuilder) 拿到 fb，這是 Angular 官方建議的建構方式，比自己手動 new FormGroup 更簡潔。第三步就是用 fb.group() 定義整份表單的根結構，這邊 title 是固定欄位，questions 先給一個空陣列，之後再動態塞資料進去。
 -->
 
 ---
@@ -267,7 +267,7 @@ export class App {
 
   // 步驟三：以 fb.group() 定義根 FormGroup
   form = this.fb.group({
-    surveyTitle: ['', Validators.required], // 問卷標題
+    title: ['', Validators.required], // 問卷標題
     questions: this.fb.array([])            // 題目空陣列
   });
 }
@@ -276,7 +276,7 @@ export class App {
 <!--
 我們帶大家看一下這段程式碼的重點。imports 裡加了 ReactiveFormsModule，這是必要條件。fb 這個屬性透過 inject(FormBuilder) 拿到，之後所有 group、array、control 的建立都靠它。
 
-最重要的是 form 這個屬性，它就是我們整份表單的根 FormGroup，裡面 surveyTitle 給了初始值跟必填驗證，questions 先建立一個空的 FormArray，等一下我們會用程式把題目一筆一筆推進去。
+最重要的是 form 這個屬性，它就是我們整份表單的根 FormGroup，裡面 title 給了初始值跟必填驗證，questions 先建立一個空的 FormArray，等一下我們會用程式把題目一筆一筆推進去。
 
 ⚠️ 提醒大家，這邊的 fb.group() 只是「宣告結構」，實際資料還要等後面 addQuestion() 執行才會出現。
 -->
@@ -285,7 +285,7 @@ export class App {
 
 # 動態增減欄位 — 初始化（二）
 
-**`surveyTitle` 陣列語法：**
+**`title` 陣列語法：**
 - 第一個元素：欄位初始值（空字串）
 - 第二個元素：驗證規則（`Validators.required`）
 
@@ -294,7 +294,7 @@ export class App {
 建立 getter `questionsArray`，方便 TypeScript 與 HTML 存取該 `FormArray`，需將 `form.get('questions')` 強型轉換為 `FormArray`。
 
 <!--
-先講一下 surveyTitle 這個陣列語法：第一個位置放初始值，第二個位置放驗證規則，這個結構我們之後在 Validators 那一章還會再深入講。
+先講一下 title 這個陣列語法：第一個位置放初始值，第二個位置放驗證規則，這個結構我們之後在 Validators 那一章還會再深入講。
 
 fb.array([]) 就是建立一個空的 FormArray，這時候裡面還沒有任何題目。因為 form.get('questions') 回傳的型別預設是比較通用的型別，所以我們額外寫一個 questionsArray 的 getter，把它強制轉型成 FormArray，這樣不管是 TypeScript 還是 HTML 樣板要存取題目陣列，都可以直接呼叫這個 getter，程式碼會乾淨很多。
 
@@ -313,7 +313,7 @@ export class App {
   fb = inject(FormBuilder);
 
   form = this.fb.group({
-    surveyTitle: ['', Validators.required], // 第一個元素：初始值；第二個：驗證規則
+    title: ['', Validators.required], // 第一個元素：初始值；第二個：驗證規則
     questions: this.fb.array([])            // fb.array([])：建立空的 FormArray
   });
 
@@ -327,7 +327,7 @@ export class App {
 <!--
 帶大家看一下這段程式碼，重點是最下面的 getter：questionsArray 回傳的是把 form.get('questions') 轉型成 FormArray 之後的結果。之後不管是要 push 新題目、還是要在 HTML 用 @for 迭代題目，都直接呼叫 this.questionsArray，不用每次都重複寫轉型的程式碼。
 
-執行這段之後，表單裡就有 surveyTitle 跟一個空的 questions 陣列，接下來我們就要學怎麼把題目動態加進 questions 裡。
+執行這段之後，表單裡就有 title 跟一個空的 questions 陣列，接下來我們就要學怎麼把題目動態加進 questions 裡。
 -->
 
 ---
@@ -336,7 +336,7 @@ export class App {
 
 呼叫 `addQuestion()` 時：
 
-1. 以 `fb.group()` 建立新的題目 `FormGroup`，包含三個欄位：`qTitle`（必填）、`qType`（預設 `'M'`）、`need`（預設 `false`）
+1. 以 `fb.group()` 建立新的題目 `FormGroup`，包含三個欄位：`title`（必填）、`type`（預設 `'SINGLE'`）、`required`（預設 `false`）
 2. 以 `questionsArray.push()` 將新 `FormGroup` 推入陣列
 3. `console.log(this.form.value)` 可查看目前表單完整資料
 
@@ -344,9 +344,9 @@ export class App {
 // app.ts
 addQuestion() {
   const questionGroup = this.fb.group({
-    qTitle: ['', Validators.required], // 題目名稱
-    qType: ['M'],                      // 題目類型（單選/多選/簡答）
-    need: [false]                      // 是否必填
+    title: ['', Validators.required], // 題目名稱
+    type: ['SINGLE'],                 // 題目類型（單選/多選/文字）
+    required: [false]                 // 是否必填
   });
 
   this.questionsArray.push(questionGroup);
@@ -357,7 +357,7 @@ addQuestion() {
 ```
 
 <!--
-這段就是動態新增題目的核心邏輯，我們一步一步帶大家看。第一步用 fb.group() 建立一個新的題目 FormGroup，裡面有三個欄位：qTitle 必填、qType 預設是 'M'、need 預設是 false。
+這段就是動態新增題目的核心邏輯，我們一步一步帶大家看。第一步用 fb.group() 建立一個新的題目 FormGroup，裡面有三個欄位：title 必填、type 預設是 'SINGLE'、required 預設是 false。
 
 第二步是關鍵：用 questionsArray.push() 把這個新的 FormGroup 推進題目陣列裡，這就是「動態新增欄位」真正發生的地方。第三步是個小技巧，執行完之後可以用 console.log(this.form.value) 印出整份表單的資料，方便我們在開發時確認結構有沒有跑對。
 
@@ -446,14 +446,14 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 <form [formGroup]="form">
   <label>問卷名稱：</label>
   <!-- formControlName 後面接的就是 form 中的欄位名稱 -->
-  <input type="text" formControlName="surveyTitle">
+  <input type="text" formControlName="title">
 </form>
 ```
 
 <!--
 這裡跟大家強調一個很重要的觀念轉換：Reactive Forms 不用 [(ngModel)] 做雙向繫結，而是改用 formControlName。
 
-大家可以這樣記：formControlName 後面接的字串，一定要跟 TypeScript 那邊 fb.group() 裡定義的欄位名稱一模一樣，這邊就是 surveyTitle。這個屬性就像是一條線，把畫面上的這個 input 跟 TypeScript 裡對應的那個 FormControl 綁在一起。
+大家可以這樣記：formControlName 後面接的字串，一定要跟 TypeScript 那邊 fb.group() 裡定義的欄位名稱一模一樣，這邊就是 title。這個屬性就像是一條線，把畫面上的這個 input 跟 TypeScript 裡對應的那個 FormControl 綁在一起。
 
 ⚠️ 如果 formControlName 打錯字或大小寫不一致，Angular 不會幫你自動對應，欄位就會抓不到值，這是初學者最容易犯的錯誤之一。
 -->
@@ -484,7 +484,7 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 <!-- app.html -->
 <form [formGroup]="form">
   <label>問卷名稱：</label>
-  <input type="text" formControlName="surveyTitle">
+  <input type="text" formControlName="title">
 
   <div formArrayName="questions">
     <!-- track control：用 FormGroup 本身的身分追蹤，不要用 $index -->
@@ -492,7 +492,7 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
       <!-- formGroupName 對應 questionsArray 的索引位置 -->
       <div [formGroupName]="$index">
         <label>題目：</label>
-        <input type="text" formControlName="qTitle"
+        <input type="text" formControlName="title"
                placeholder="請輸入問題...">
       </div>
     }
@@ -505,7 +505,7 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 <!--
 帶大家逐段看一下這段 HTML。formArrayName="questions" 鎖定了題目陣列的範圍，@for 迴圈裡用 track control，這樣 Angular 才知道怎麼追蹤每個項目的變化。
 
-最關鍵的是 [formGroupName]="$index"，因為 questionsArray 裡面裝的每一個元素都是一個 FormGroup，所以要用「第幾組」這個索引來對應，而不是像 formControlName 那樣用固定的名字。裡面的 input 再用平常熟悉的 formControlName="qTitle" 對應到題目裡的欄位。
+最關鍵的是 [formGroupName]="$index"，因為 questionsArray 裡面裝的每一個元素都是一個 FormGroup，所以要用「第幾組」這個索引來對應，而不是像 formControlName 那樣用固定的名字。裡面的 input 再用平常熟悉的 formControlName="title" 對應到題目裡的欄位。
 
 ⚠️ 提醒同學，畫面上要真的看得到題目輸入欄位，一定要有個按鈕呼叫 addQuestion()，不然 questionsArray 一開始是空陣列，@for 沒有資料可以跑，畫面上除了問卷名稱欄位之外會完全是空的，這是很多人做這個練習卡住的地方。這裡把 button 放在 formArrayName 的 div 外面、form 裡面即可，type="button" 是為了避免它被瀏覽器當成表單送出按鈕。
 
@@ -523,17 +523,17 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 ```html
 <div [formGroupName]="$index">
   <label>題目：</label>
-  <input type="text" formControlName="qTitle" placeholder="請輸入問題...">
+  <input type="text" formControlName="title" placeholder="請輸入問題...">
 
   <label>類型：</label>
-  <select formControlName="qType">
-    <option value="text">簡答題</option>
-    <option value="radio">單選題</option>
-    <option value="check">多選題</option>
+  <select formControlName="type">
+    <option value="SINGLE">單選題</option>
+    <option value="MULTI">多選題</option>
+    <option value="TEXT">文字題</option>
   </select>
 
   <label>
-    <input type="checkbox" formControlName="need"> 設定為必填
+    <input type="checkbox" formControlName="required"> 設定為必填
   </label>
 
   <button (click)="removeQuestion($index)">刪除題目</button>
@@ -545,11 +545,332 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 </div>
 
 <!--
-這張是完整的題目區塊，我們把 qTitle、qType、need 三個欄位都用 formControlName 綁上去，另外還加了一個刪除按鈕，按下去呼叫我們前面寫好的 removeQuestion($index)。
+這張是完整的題目區塊，我們把 title、type、required 三個欄位都用 formControlName 綁上去，另外還加了一個刪除按鈕，按下去呼叫我們前面寫好的 removeQuestion($index)。
 
-大家可以看到 select 裡的 qType 對應題目類型，checkbox 的 need 對應是否必填，這些都跟 qTitle 一樣，靠 formControlName 這個字串跟 TypeScript 的欄位名稱對起來。
+大家可以看到 select 裡的 type 對應題目類型，checkbox 的 required 對應是否必填，這些都跟 title 一樣，靠 formControlName 這個字串跟 TypeScript 的欄位名稱對起來。
 
 ⚠️ 特別提醒剛剛畫面上那個提示：formControlName 的值一定要跟 fb.group() 裡定義的 key 完全一致，包含大小寫，這個是同學做練習時最常見的 typo 錯誤來源，抓 bug 的時候可以優先檢查這裡。「新增題目」按鈕前面 formArrayName（三）那一頁已經示範過，這裡不重複放。
+-->
+
+---
+layout: default
+---
+
+# 練習：後台題目編輯（選項也是 FormArray）
+### 任務說明
+
+上面的範例，每題只有「名稱、類型、必填」。真正的問卷單選／多選題，還要有**選項**，而且選項的數量也不固定：`FormArray` 裡面還有 `FormArray`。請做出後台新增問卷的題目編輯表單：
+
+1. 表單有固定欄位 `title`（問卷名稱），以及動態欄位 `questions`（題目陣列）
+2. 每題有 `title`、`type`（單選 / 多選 / 文字）、`required`，以及 `options`（選項，字串的 `FormArray`）
+3. 新增題目時，預設有 **2 個空白選項**；每題可以「新增選項」、「刪除選項」
+4. 題型是「文字」時，隱藏選項區塊
+5. 按「送出」，把表單值轉成後端 API 的格式，印在畫面上：選項要變成 `[{ "label": "便當" }, ...]`，並且**過濾掉空白選項**
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這個練習延伸剛剛的動態題目表單。真正的單選、多選題，需要一組選項，而且選項的數量也不固定，所以是 FormArray 裡面再放 FormArray：題目陣列的每一個元素是一個 FormGroup，這個 FormGroup 裡有一個 options 欄位，又是一個 FormArray。
+
+這是需求文件的規定：預設兩個選項、可以增刪；文字題沒有選項。
+
+最後一步很重要：表單裡的資料形狀，通常跟後端 API 要的形狀不一樣。表單裡選項是字串陣列，但後端要的是物件陣列，每個物件有 label。所以送出前要做一次轉換，同時把空白的選項濾掉。這種「表單值 → API 格式」的轉換，是實務上每個表單都會做的事。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. `questions` 的每個元素是一個 `FormGroup`，裡面的 `options` 用 `fb.array(['', ''])` 建立（兩個空白字串）；把「一題的結構」寫成函式，型別才會完整
+2. 要操作某一題的選項，先取出那題的 `options`：
+
+```typescript
+optionsOf(i: number) { return this.questions.at(i).controls.options; }
+```
+
+3. 樣板巢狀綁定：外層 `formArrayName="questions"` + `[formGroupName]="i"`，內層 `formArrayName="options"` + 每個選項用 `[formControlName]="k"`（**索引當作名稱**）
+4. 隱藏選項區塊：`@if (!isText(i)) { ... }`
+5. 轉換：`options: q.options.filter(o => o.trim()).map(label => ({ label }))`
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>FormArray</code> 裡是「純文字」的欄位，沒有名稱，所以 <code>formControlName</code> 直接寫索引：<code>[formControlName]="k"</code>。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+巢狀 FormArray 的重點是「一層一層取出來」：先 questions.at(i) 拿到第 i 題的 FormGroup，再用 controls.options 拿到它的選項 FormArray，型別是完整的，TypeScript 才知道能呼叫 push、removeAt。
+
+樣板綁定的層次跟資料結構要一模一樣：最外層 formGroup，第二層 formArrayName 是 questions，第三層 formGroupName 是第 i 題，第四層 formArrayName 是 options，最後每個選項是 formControlName 用索引。
+
+初學者最常見的錯誤是把這幾層的名稱寫錯，Angular 會噴出 Cannot find control with name 的錯誤，一層一層對照就能找到。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（TypeScript）
+
+```typescript
+// survey-form.ts
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+
+// 一題的表單結構（抽成函式，才拿得到完整的型別）
+function questionGroup(fb: FormBuilder) {
+  return fb.group({
+    title: ['', Validators.required],
+    type: ['SINGLE'],
+    required: [false],
+    options: fb.array(['', '']),               // 預設 2 個空白選項
+  });
+}
+type QuestionGroup = ReturnType<typeof questionGroup>;
+
+// ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+TypeScript 這邊，addQuestion 建立一個題目 FormGroup，其中 options 用 fb.array 建立兩個空字串，這就是「預設兩個選項」。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（TypeScript）（續）
+
+```typescript
+// ... 接上一頁
+
+@Component({
+  selector: 'app-survey-form',
+  imports: [ReactiveFormsModule],
+  templateUrl: './survey-form.html',
+})
+export class SurveyForm {
+  private fb = inject(FormBuilder);
+
+  form = this.fb.group({
+    title: ['', Validators.required],
+    questions: this.fb.array<QuestionGroup>([]),
+  });
+  output = '';
+
+  get questions() { return this.form.controls.questions; }
+  optionsOf(i: number) { return this.questions.at(i).controls.options; }
+  isText(i: number) { return this.questions.at(i).controls.type.value === 'TEXT'; }
+
+// ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+addOption 用 new FormControl 加一個新的空白欄位，nonNullable 讓它的型別是 string，不會出現 null。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（TypeScript）（續）
+
+```typescript
+  // ... 接上一頁
+
+  addQuestion() { this.questions.push(questionGroup(this.fb)); }
+  removeQuestion(i: number) { this.questions.removeAt(i); }
+
+  addOption(i: number) { this.optionsOf(i).push(new FormControl('')); }
+  removeOption(i: number, k: number) { this.optionsOf(i).removeAt(k); }
+
+  // ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+submit 是這個練習的重點：getRawValue 取出整份表單的值，再轉成後端要的格式。文字題的 options 直接給空陣列；選擇題的 options 先 filter 掉空白，再用 map 把每個字串轉成 { label } 物件。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（TypeScript）（續）
+
+```typescript
+// ... 接上一頁
+
+  submit() {
+    const v = this.form.getRawValue();
+    const body = {
+      title: v.title,
+      questions: v.questions.map(q => ({
+        title: q.title, type: q.type, required: q.required,
+        options: q.type === 'TEXT' ? [] : q.options.filter(o => o?.trim()).map(label => ({ label })),
+      })),
+    };
+    this.output = JSON.stringify(body, null, 2);
+  }
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+output 是普通字串，因為它是在按鈕的點擊事件裡被設定的，事件處理完後 Angular 一定會更新畫面。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（HTML）
+
+```html
+<!-- survey-form.html -->
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <label>問卷名稱 <input formControlName="title" /></label>
+
+  <div formArrayName="questions">
+    @for (q of questions.controls; track $index; let i = $index) {
+      <fieldset [formGroupName]="i">
+        <input formControlName="title" placeholder="題目名稱" />
+        <select formControlName="type">
+          <option value="SINGLE">單選題</option>
+          <option value="MULTI">多選題</option>
+          <option value="TEXT">文字題</option>
+        </select>
+        <label><input type="checkbox" formControlName="required" /> 必填</label>
+        <button type="button" (click)="removeQuestion(i)">刪除題目</button>
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+HTML 的階層要跟資料結構完全一致，大家對照一下：form 對應根 FormGroup；formArrayName questions 對應題目陣列；fieldset 的 formGroupName 用索引 i，對應第 i 題；裡面的 formArrayName options，對應這題的選項陣列；最後每個 input 用索引 k 當作 formControlName。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（HTML）（續）
+
+```html
+        @if (!isText(i)) {
+          <div formArrayName="options">
+            @for (o of optionsOf(i).controls; track $index; let k = $index) {
+              <div>
+                <input [formControlName]="k" placeholder="選項 {{ k + 1 }}" />
+                <button type="button" (click)="removeOption(i, k)">刪除</button>
+              </div>
+            }
+            <button type="button" (click)="addOption(i)">＋ 新增選項</button>
+          </div>
+        }
+      </fieldset>
+    }
+  </div>
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+按鈕都要加 type="button"，否則在 form 裡面，按鈕預設是 submit，按「新增選項」會直接送出整張表單。這是初學者非常常見的錯誤。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（HTML）（續）
+
+```html
+  <button type="button" (click)="addQuestion()">＋ 新增題目</button>
+  <button type="submit">送出</button>
+</form>
+<pre>{{ output }}</pre>
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 新增一題單選題、填兩個選項、第三個選項留空後按「送出」，畫面上 JSON 的 <code>options</code> 只有 2 個 <code>{ "label": ... }</code>；把題型改成「文字」，選項區塊消失，JSON 的 <code>options</code> 是 <code>[]</code>。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這個表單的輸出格式，正是後端 POST /api/admin/survey-draft 要的內容，第 59 章的後台編輯頁會用同樣的轉換。
 -->
 
 ---

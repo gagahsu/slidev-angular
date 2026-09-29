@@ -52,7 +52,7 @@ export class Login {
     this.auth.login(email, password).subscribe({
       next: user => {
         const redirect = this.route.snapshot.queryParamMap.get('redirect');
-        this.router.navigateByUrl(redirect ?? (user.role === 'ADMIN' ? '/admin' : '/'));
+        this.router.navigateByUrl(redirect ?? (user.role === 'ADMIN' ? '/admin' : '/surveys'));
       },
       error: e => { this.loading.set(false); this.dialogs.alert(e.error?.message ?? '登入失敗'); },
     });

@@ -479,21 +479,34 @@ const dialogRef = this.dialog.open(Dialog, {
 layout: default
 ---
 
-# 練習：建立 Dialog 對話框
+# 練習：提醒與確認對話框
 ### 任務說明
 
-建立一個包含輸入框的 Dialog，從主元件開啟後，使用者填入資料並按確認，主元件印出回傳值。
+問卷系統有兩種對話框，用的地方很多（填寫頁、後台刪除、儲存成功⋯⋯），請做成可以重複使用的元件與服務：
 
-1. 建立 `dialog-form` 元件作為 Dialog 內容
-2. Dialog HTML 使用 `mat-dialog-title`、`<mat-dialog-content>`、`<mat-dialog-actions>`
-3. Dialog TS 注入 `MatDialogRef` 與 `MAT_DIALOG_DATA`
-4. 主元件注入 `MatDialog`，呼叫 `dialog.open()` 傳入資料
-5. 訂閱 `afterClosed()`，將回傳值印至 console
+1. 建立 `message-dialog` 元件當作 Dialog 內容：標題、多行文字（`lines`）、選擇性的「取消」按鈕
+2. 建立 `Dialogs` 服務，提供兩個方法：
+   - `alert(lines)`：只有「知道了」按鈕，用在驗證失敗時，一次列出所有問題
+   - `confirm(message)`：有「取消」與「確定」，回傳 `Promise<boolean>`
+3. 用在問卷填寫頁：
+   - 按「取消」→ `confirm('確定要離開嗎？已填寫的內容不會儲存')`，按「確定」才導回列表
+   - 按「送出」但姓名沒填 → `alert(['請輸入姓名', '手機格式錯誤'])`
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-好，我們把這一章學到的東西整合起來動手做一次。大家想想看：Dialog 元件要顯示哪三個區塊？呼叫端要注入什麼服務？資料要怎麼從呼叫端傳到 Dialog、又要怎麼從 Dialog 傳回呼叫端？
+好，這一章的練習，我們不做單一用途的輸入對話框，而是做問卷系統會用到的兩種對話框：提醒（alert）和確認（confirm）。
 
-先自己動手試試看，卡住的地方沒關係，等一下我們會看解題提示，大家可以先按照今天教的五個步驟，一步一步對照著做。
+在真實的專案裡，這種對話框到處都會用到：表單驗證失敗要提醒、刪除要確認、儲存成功要通知。如果每次都要注入 MatDialog、寫 open、訂閱 afterClosed，程式會很重複，所以我們把它包成一個 Dialogs 服務，用起來就像瀏覽器內建的 alert 和 confirm 一樣簡單。
+
+這裡有一個設計重點：confirm 回傳的是 Promise<boolean>，這樣呼叫端可以用 await 寫成非常直覺的流程：if (await confirm(...)) { 做事 }。
 -->
 
 ---
@@ -501,187 +514,162 @@ layout: default
 ---
 
 # 練習：解題提示
-### 提示說明
 
-1. Dialog 元件的 `imports` 陣列需加入 `MatDialogTitle`、`MatDialogContent`、`MatDialogActions`
-2. 使用 `inject(MAT_DIALOG_DATA)` 取得外部傳入資料，使用 `inject(MatDialogRef)` 取得對話框參考
-3. 確認按鈕呼叫 `this.dialogRef.close(returnValue)` 回傳資料
-4. 呼叫端以 `this.dialog.open(DialogForm, { data: { ... } })` 開啟
-5. `dialogRef.afterClosed().subscribe(result => { ... })` 接收回傳值
+1. Dialog 的資料型別：`{ title: string; lines: string[]; confirm?: boolean }`，用 `inject(MAT_DIALOG_DATA)` 取得
+2. 按鈕用 `[mat-dialog-close]="true"` / `="false"`，不用自己寫 `dialogRef.close()`
+3. 服務裡用 `dialog.open(MessageDialog, { data })` 開啟，`afterClosed()` 回傳 Observable
+4. Observable 轉 Promise：`firstValueFrom(dialogRef.afterClosed())`
+5. 使用者按 Esc 或點背景關閉時，`afterClosed()` 會給 `undefined`，用 `!!` 轉成 `false`
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 Angular 21 的 Dialog 內容元件同樣要把用到的指令放進自己的 <code>imports</code>：<code>MatDialogModule</code>、<code>MatButtonModule</code>。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-如果剛剛卡住了沒關係，我們一起對照這五個提示看看差在哪裡。特別容易漏掉的地方是 imports 陣列忘記加 Dialog 相關的指令，或是 MAT_DIALOG_DATA 忘記用 inject 而是用了錯誤的注入方式。
+第 2 點是一個好用的技巧：mat-dialog-close 指令，只要放在按鈕上，按下去就會關閉對話框，並且把指令的值當作回傳值。這比自己注入 MatDialogRef 再呼叫 close 簡潔很多。
 
-大家可以先自己核對一下自己寫的程式碼，跟提示比對看看哪裡不一樣，這樣印象會更深刻。
+第 4、5 點是把 RxJS 轉成 async/await 的做法。firstValueFrom 取 Observable 的第一個值並包成 Promise。要注意：如果使用者按 Esc 或點對話框外面的背景，關閉時沒有回傳值，afterClosed 的結果是 undefined，用兩個驚嘆號把它轉成 false，就等於「取消」。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — Dialog HTML
-
-`dialog-form.html` 完整內容：
-
-```html
-<h2 mat-dialog-title>{{ data.animal }}</h2>
-
-<mat-dialog-content>
-  <p>請輸入 {{ data.name }}</p>
-  <mat-form-field>
-    <mat-label>{{ data.name }}</mat-label>
-    <input matInput [(ngModel)]="inputValue" />
-  </mat-form-field>
-</mat-dialog-content>
-
-<mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">取消</button>
-  <button mat-button (click)="onSubmit()">確定</button>
-</mat-dialog-actions>
-```
-
-<!--
-這是 Dialog 元件完整的 HTML。標題直接顯示呼叫端傳進來的 data.animal；內容區放一個輸入框，用 [(ngModel)] 雙向綁定到 inputValue；底部兩個按鈕分別對應取消跟確定，各自呼叫 TypeScript 裡的方法。
--->
-
----
-layout: default
----
-
-# 完整解答 — Dialog TypeScript（一）
-
-`dialog-form.ts` 完整內容：
+# 練習：完整解答（對話框元件）
 
 ```typescript
+// message-dialog.ts
 import { Component, inject } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogActions,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
-```
 
-<!--
-先看檔案開頭的匯入：FormsModule、MatFormFieldModule、MatInputModule、MatButtonModule 這幾個是畫面上輸入框跟按鈕需要的模組，再匯入 MatDialogTitle、MatDialogContent、MatDialogActions、MatDialogRef、MAT_DIALOG_DATA 這五個 Dialog 相關的 API。
+export interface MessageData { title: string; lines: string[]; confirm?: boolean; }
 
-匯入都準備好之後，下一頁接著看 @Component 裝飾器要怎麼設定。
--->
-
----
-layout: default
----
-
-# 完整解答 — Dialog TypeScript（二）
-
-```typescript
 @Component({
-  selector: 'dialog-form',
-  templateUrl: './dialog-form.html',
-  imports: [
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-  ],
+  selector: 'app-message-dialog',
+  imports: [MatDialogModule, MatButtonModule],
+  template: `
+    <h2 mat-dialog-title>{{ data.title }}</h2>
+    <mat-dialog-content>
+      @for (l of data.lines; track $index) { <p>{{ l }}</p> }
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      @if (data.confirm) { <button mat-button [mat-dialog-close]="false">取消</button> }
+      <button mat-flat-button [mat-dialog-close]="true">{{ data.confirm ? '確定' : '知道了' }}</button>
+    </mat-dialog-actions>`,
 })
-export class DialogForm {
-```
-
-<!--
-接續上一頁的匯入，@Component 裝飾器的 imports 陣列要把剛剛匯入的模組全部宣告一次，這是 standalone 元件的規則。class 開頭先開起來，內容下一頁接著看。
--->
-
----
-layout: default
----
-
-# 完整解答 — Dialog TypeScript（三）
-
-```typescript
-  readonly dialogRef = inject(MatDialogRef<DialogForm>);
-  readonly data = inject<{ name: string; animal: string }>(MAT_DIALOG_DATA);
-
-  inputValue = '';
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  onSubmit(): void {
-    this.dialogRef.close(this.inputValue);
-  }
+export class MessageDialog {
+  data = inject<MessageData>(MAT_DIALOG_DATA);
 }
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-接續上一頁的 class，這裡注入 MatDialogRef 跟 MAT_DIALOG_DATA，data 就是呼叫端傳進來的 { name, animal }。inputValue 綁定畫面上的輸入框；按下取消呼叫 close() 不帶值，按下確定則呼叫 close(this.inputValue)，把使用者輸入的內容回傳給呼叫端。
+Dialog 元件很小：標題、內容、按鈕三個區塊，正好是這一章教的三個指令。
+
+lines 是陣列，所以可以一次顯示多行，驗證失敗要列出所有問題就靠它。
+
+confirm 這個旗標決定要不要顯示「取消」按鈕：alert 用途只有一個按鈕，confirm 用途有兩個。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — 呼叫端 TypeScript（一）
-
-`app.ts` 完整內容：
+# 練習：完整解答（Dialogs 服務與用法）
 
 ```typescript
-import { Component, inject } from '@angular/core';
+// dialogs.ts
+import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
-import { DialogForm } from './dialog-form';
+import { firstValueFrom } from 'rxjs';
+import { MessageDialog } from './message-dialog';
 
-@Component({
-  selector: 'app-root',
-  imports: [MatButtonModule],
-  templateUrl: './app.html',
-})
-export class App {
-  readonly dialog = inject(MatDialog);
+@Injectable({ providedIn: 'root' })
+export class Dialogs {
+  private dialog = inject(MatDialog);
+
+  alert(lines: string | string[], title = '提醒') {
+    return firstValueFrom(
+      this.dialog.open(MessageDialog, { data: { title, lines: [lines].flat() } }).afterClosed());
+  }
+
+  async confirm(message: string, title = '請確認'): Promise<boolean> {
+    const result = await firstValueFrom(
+      this.dialog.open(MessageDialog, { data: { title, lines: [message], confirm: true } }).afterClosed());
+    return !!result;
+  }
+}
 ```
 
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
 <!--
-呼叫端匯入 MatDialog 服務跟剛剛寫好的 DialogForm，@Component 裝飾器裡只需要 MatButtonModule，因為這個元件的 HTML 只用到按鈕。class 裡先注入 MatDialog，方法本體下一頁接著看。
+Dialogs 服務把「開啟、等待關閉、取得結果」三個步驟包起來，使用端只要一行 await。
+
+alert 的參數用 lines: string | string[]，並用 [lines].flat() 統一成陣列，這樣呼叫端傳單一字串或字串陣列都可以。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — 呼叫端 TypeScript（二）
+# 練習：完整解答（Dialogs 服務與用法）（續）
 
 ```typescript
-  showDialog() {
-    const dialogRef = this.dialog.open(DialogForm, {
-      width: '400px',
-      data: { name: '姓名', animal: '請輸入資料' },
-    });
+// survey-fill.ts（使用端）
+private dialogs = inject(Dialogs);
+private router = inject(Router);
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('使用者輸入：', result);
-    });
-  }
+async cancel() {
+  if (await this.dialogs.confirm('確定要離開嗎？已填寫的內容不會儲存')) this.router.navigate(['/surveys']);
+}
+
+async submit() {
+  const problems = ['請輸入姓名', '手機格式錯誤'];   // 之後由表單驗證產生
+  if (problems.length) { await this.dialogs.alert(problems); return; }
 }
 ```
 
-```html
-<!-- app.html -->
-<button mat-raised-button (click)="showDialog()">開啟 Dialog</button>
-```
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 按「取消」跳出確認框，按「取消」留在原頁、按「確定」回列表；按「送出」跳出兩行提醒；按 Esc 等於取消。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-接續上一頁，showDialog() 呼叫 open() 帶入 DialogForm 跟設定物件，data 裡的 name、animal 會傳到 Dialog 裡顯示；訂閱 afterClosed() 之後，只要使用者按下確定，console 就會印出剛剛在 Dialog 裡輸入的值；按取消的話 result 會是 undefined。
-
-大家可以拿這份完整程式碼跟自己寫的對照，確認每個匯入、注入、跟回傳的資料流是不是都一致。
+使用端的 cancel 方法示範了 confirm 的典型用法：if (await confirm(...)) 才做事。這個流程在後台刪除問卷、離開編輯頁都會用到。next 方法的 problems 現在是寫死的，第 52 章做表單驗證時，會換成真正的驗證結果。
 -->
 
 ---

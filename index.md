@@ -361,14 +361,24 @@ style: |
       <div>Angular 部署</div>
       <div class="chapter-subtitle">Firebase Hosting</div>
     </Link>
-    <Link to="ch57" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
-      <div class="chapter-num" style="color: #e07b39;">綜合</div>
-      <div>綜合練習 Ch33–40</div>
-      <div class="chapter-subtitle" style="color: #b05a20;">員工管理系統實作</div>
+    <Link to="ch57" class="chapter-card">
+      <div class="chapter-num">Ch 57</div>
+      <div>HTTP 攔截器</div>
+      <div class="chapter-subtitle">Interceptor：Token、錯誤處理</div>
     </Link>
-    <Link to="ch58" class="chapter-card" style="border-color: #7c5cbf; background: #f7f4fc;">
+    <Link to="ch58" class="chapter-card">
+      <div class="chapter-num">Ch 58</div>
+      <div>路由守衛</div>
+      <div class="chapter-subtitle">Route Guard：登入與權限</div>
+    </Link>
+    <Link to="ch59" class="chapter-card" style="border-color: #e07b39; background: #fff7f2;">
+      <div class="chapter-num" style="color: #e07b39;">綜合</div>
+      <div>綜合練習：動態問卷系統</div>
+      <div class="chapter-subtitle" style="color: #b05a20;">前台填寫 + 後台管理</div>
+    </Link>
+    <Link to="ch60" class="chapter-card" style="border-color: #7c5cbf; background: #f7f4fc;">
       <div class="chapter-num" style="color: #7c5cbf;">總複習</div>
-      <div>全課程總複習 Ch1–56</div>
+      <div>全課程總複習 Ch1–58</div>
       <div class="chapter-subtitle" style="color: #5d44a0;">九站速記・快問快答・易錯 Top 10</div>
     </Link>
     <!-- 更多章節將在此處新增 -->
@@ -604,9 +614,17 @@ src: ./56-angular-deploy.md
 ---
 
 ---
-src: ./57-comprehensive-exercise.md
+src: ./57-http-interceptor.md
 ---
 
 ---
-src: ./58-final-review.md
+src: ./58-route-guard.md
+---
+
+---
+src: ./59-comprehensive-exercise.md
+---
+
+---
+src: ./60-final-review.md
 ---

@@ -484,6 +484,174 @@ export class App implements AfterViewInit {
 -->
 
 ---
+layout: default
+---
+
+# 練習：問卷標題即時搜尋
+### 任務說明
+
+在第 33 章的問卷列表上方，加入「標題搜尋」：
+
+1. 加一個搜尋輸入框，使用者打字時**即時**更新列表（不需要按按鈕）
+2. 搜尋是「標題模糊搜尋」，由**後端**處理：呼叫 `GET /api/surveys?title=關鍵字`
+3. 使用者連續打字時，不要每打一個字就送一次請求：**停止打字 300 毫秒後**才搜尋
+4. 每次搜尋都回到第 1 頁（`page = 0`），再顯示結果
+5. 加一個「清除」按鈕，清空關鍵字並顯示全部
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這個練習把即時搜尋接上真正的後端。跟範例最大的不同是：範例的資料全部在前端，可以直接用 forEach 過濾；但我們的問卷列表是分頁的，前端每次只有一頁的資料，不能只在這一頁裡面找，所以搜尋一定要交給後端，由資料庫用 LIKE 去查。
+
+第 3 點是實務上非常重要的技巧，叫做「防抖動」（debounce）：如果使用者打「午餐偏好」四個字就送四次請求，既浪費又可能讓結果亂序。做法是每次打字都重新計時，等使用者停下來 300 毫秒，才真的送出。
+
+第 4 點也是需求：搜尋條件一變，頁碼一定要回到第一頁，否則你在第 3 頁搜尋，可能根本沒有第 3 頁的資料。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. `SurveyService.list` 多一個 `title` 參數，有值才放進 `params`
+2. 輸入框用 `[(ngModel)]="keyword"`，事件用 `(keyup)="onKeyup()"`
+3. 防抖動：用 `setTimeout` 延後送出，每次打字先 `clearTimeout` 上一次的計時器
+4. 搜尋時 `load(0, ...)`，頁碼固定傳 0
+5. 換頁的時候也要帶著目前的 `keyword`，所以 `keyword` 要存在元件裡
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 防抖動更漂亮的寫法是 RxJS 的 <code>debounceTime</code>（第 54 章），這裡先用 <code>setTimeout</code> 體會原理。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+防抖動的原理用一句話講：每次事件發生，先把上一次的計時器取消，再重新開一個新的。只有「最後一次」事件之後，安靜超過 300 毫秒，計時器才會真的跑完。
+
+timer 的型別寫 ReturnType<typeof setTimeout>，是因為瀏覽器和 Node 的 setTimeout 回傳型別不一樣，這樣寫兩邊都適用。
+
+換頁的時候，paginator 的事件只帶頁碼和每頁筆數，不會帶關鍵字，所以關鍵字要存在元件的屬性裡，換頁時一起送給後端，否則你換到第二頁，搜尋條件就消失了。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（Service 與元件）
+
+```typescript
+// survey-service.ts（list 新增 title 參數）
+list(page = 0, size = 10, title = '') {
+  const params: Record<string, string | number> = { page, size };
+  if (title) params['title'] = title;
+  return this.http
+    .get<AppResponse<PageResult<Survey>>>(`${this.api}/surveys`, { params })
+    .pipe(map(res => res.data));
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+Service 的改動很小：title 是選擇性參數，有值才放進 params，沒有值就完全不送這個參數，後端看到沒有 title，就不會篩選。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（Service 與元件）（續）
+
+```typescript
+// survey-list.ts（新增的部分）
+keyword = '';
+private timer?: ReturnType<typeof setTimeout>;
+
+load(page: number, size: number) {
+  this.api.list(page, size, this.keyword.trim()).subscribe(res => this.page.set(res));
+}
+
+onKeyup() {
+  clearTimeout(this.timer);                                      // 取消上一次的計時
+  this.timer = setTimeout(() => this.load(0, this.page().size), 300);  // 停 300ms 才搜尋
+}
+
+clear() {
+  this.keyword = '';
+  this.load(0, this.page().size);
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+元件的重點是 onKeyup：先 clearTimeout 取消上次計時，再 setTimeout 重新計時。因為 setTimeout 的回呼裡面是呼叫 API，資料回來是放進 signal，所以在 Angular 21 的 zoneless 模式也能正常更新畫面。
+
+記得元件要匯入 FormsModule、MatFormFieldModule、MatInputModule、MatButtonModule。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（Service 與元件）（續）
+
+```html
+<!-- survey-list.html（表格上方） -->
+<mat-form-field>
+  <mat-label>問卷名稱</mat-label>
+  <input matInput [(ngModel)]="keyword" (keyup)="onKeyup()" placeholder="標題模糊搜尋" />
+</mat-form-field>
+<button mat-button (click)="clear()">清除</button>
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 輸入「午餐」只剩一份；快速輸入「午餐偏好」時，Network 面板只出現一次 <code>?title=午餐偏好</code> 的請求；搜尋後停在第 1 頁；點「清除」回到全部。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+驗收時打開 Network 面板，快速輸入一串字，只有最後一個請求會發出。這就是防抖動的效果。
+-->
+
+---
 layout: end
 ---
 

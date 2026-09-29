@@ -6,8 +6,8 @@ lineNumbers: true
 drawings:
   persist: false
 transition: slide-left
-title: 全課程總複習 Ch1–56
-routeAlias: ch58
+title: 全課程總複習 Ch1–58
+routeAlias: ch60
 style: |
   .slidev-layout p,
   .slidev-layout li,
@@ -40,7 +40,7 @@ style: |
   </h1>
   <div style="height: 4px; width: 320px; background: linear-gradient(90deg, #5eada0, #a7d9d0); border-radius: 2px; margin-bottom: 1.5rem;"></div>
   <p style="color: #4a7c7c; font-size: 1.15rem; font-style: italic;">
-    「從 HTML 第一行到 Firebase 上線：56 章精華一次回顧」
+    「從 HTML 第一行到登入權限與完整系統：58 章精華一次回顧」
   </p>
   <Link to="home" style="color: #9dc4c4; font-size: 0.85rem; margin-top: 2rem; text-decoration: none; letter-spacing: 0.05em;">← 返回目錄</Link>
 </div>
@@ -48,7 +48,7 @@ style: |
 <!--
 大家好，恭喜大家走到這裡。這一章是整套課程的總複習，我們會把 ch1 到 ch56 學過的所有東西，濃縮成一趟九站的回顧旅程。
 
-這一章的目的不是重新教一遍，而是幫大家把散落在 56 章裡的知識「串成一張地圖」：哪些觀念屬於同一組、彼此怎麼銜接、實務上會在哪裡一起出現。每一站都會有重點速記表跟關鍵程式碼，站與站之間穿插快問快答，最後整理一份全課程最容易踩雷的易錯重點清單。
+這一章的目的不是重新教一遍，而是幫大家把散落在 58 章裡的知識「串成一張地圖」：哪些觀念屬於同一組、彼此怎麼銜接、實務上會在哪裡一起出現。每一站都會有重點速記表跟關鍵程式碼，站與站之間穿插快問快答，最後整理一份全課程最容易踩雷的易錯重點清單。
 
 建議大家用這一章做兩件事：第一，考前或面試前快速掃一遍，找出自己不熟的站，回去重讀該章；第二，把快問快答當自我檢測，答不出來的題目就是你的複習清單。
 -->
@@ -59,7 +59,7 @@ layout: default
 
 # Outline
 
-- **課程地圖** — 56 章如何組成九大階段
+- **課程地圖** — 58 章如何組成九大階段與補充站
 - **第一站：開發環境與工具**（Ch1–8）
 - **第二站：HTML 與 CSS**（Ch9–12）
 - **第三站：TypeScript 語法**（Ch13–18）
@@ -72,7 +72,7 @@ layout: default
 - **全課程易錯重點 Top 10**
 
 <!--
-這張投影片是今天的路線圖。我們把 56 章分成九大階段，每一站都會先看「這一站在學什麼、為什麼放在這個位置」，再用速記表把該站的關鍵語法整理出來，並穿插快問快答讓大家自我檢測。
+這張投影片是今天的路線圖。我們把 58 章分成九大階段加一個補充站，每一站都會先看「這一站在學什麼、為什麼放在這個位置」，再用速記表把該站的關鍵語法整理出來，並穿插快問快答讓大家自我檢測。
 
 最後的易錯重點 Top 10 是全課程各章「注意」提醒的總整理，實務上大家寫專案最常卡住的地方幾乎都在這十點裡面。
 -->
@@ -107,6 +107,7 @@ layout: default
 | 七 | Ch44–47 | 非同步與狀態管理 | 訂閱、Loading、Signals |
 | 八 | Ch48–53 | 版面與表單 | 後台版型、動態表單、RWD |
 | 九 | Ch54–56 | RxJS 與部署 | 打包上線，作品見天日 |
+| 補 | Ch57–59 | 登入、權限與綜合實作 | 攔截器、路由守衛、前後台整合 |
 
 <!--
 全課程地圖的後四個階段：要好看省工，用 Material；要處理等待跟共享狀態，學非同步；要做出完整產品，補上版面表單跟 RWD；最後打包部署，作品正式上線。
@@ -391,7 +392,7 @@ JSON.parse(jsonStr);       // JSON 字串 → 物件
 <!--
 方法與流程控制，這是後半段。迴圈兩種寫法都要看得懂：傳統 for 用索引，for...of 直接拿元素，日常開發推薦 for...of。
 
-這六個方法是全課程出場率最高的工具：filter 在 ch31 排序、ch38 即時搜尋、ch57 封存功能全部用到；indexOf 是即時搜尋的核心判斷；JSON 兩兄弟在 ch25 網頁儲存必用——因為 localStorage 只能存字串，物件進出都要靠 stringify 跟 parse 轉換。
+這六個方法是全課程出場率最高的工具：filter 在 ch31 排序、ch38 即時搜尋、ch59 後台批次刪除全部用到；indexOf 是即時搜尋的核心判斷；JSON 兩兄弟在 ch25 網頁儲存必用——因為 localStorage 只能存字串，物件進出都要靠 stringify 跟 parse 轉換。
 -->
 
 ---
@@ -417,7 +418,7 @@ if (dateA.getTime() > dateB.getTime()) { /* A 比較晚 */ }
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b>Date 物件在 ch35 日期選擇器、ch36 DatePipe、ch57 綜合練習反覆出現，getMonth() 從 0 開始是全課程最經典的陷阱之一。
+💡 <b>注意：</b>Date 物件在 ch35 日期選擇器、ch36 DatePipe、ch59 綜合練習反覆出現，getMonth() 從 0 開始是全課程最經典的陷阱之一。
 </div>
 
 <!--
@@ -788,7 +789,7 @@ sortBy(key: 'price' | 'id') {
 - 回傳負數 → a 在前；正數 → b 在前
 
 <!--
-sort() 的核心是比較函式的回傳值：負數表示 a 排前面、正數表示 b 排前面，所以數字升冪寫 a 減 b、降冪寫 b 減 a，這個公式直接背起來。ch33 的 mat-table 資料、ch57 的員工列表排序都是同一套邏輯。
+sort() 的核心是比較函式的回傳值：負數表示 a 排前面、正數表示 b 排前面，所以數字升冪寫 a 減 b、降冪寫 b 減 a，這個公式直接背起來。ch33 的 mat-table 資料、ch59 的後台列表排序都是同一套邏輯。
 -->
 
 ---
@@ -889,7 +890,7 @@ layout: default
 <!--
 Material 站的畫面技巧先看 pipe 跟 ngClass。DatePipe 把 Date 物件排版成想要的格式，格式字串 yyyy/MM/dd 注意大小寫——MM 是月份、mm 是分鐘，寫錯不會報錯但顯示會很奇怪。JsonPipe 是開發時的偵錯神器，搭配 pre 標籤才有縮排。兩個 pipe 都要匯入 CommonModule。
 
-ngClass 三種用法：物件語法適合條件高亮（ch57 的薪水高亮就是這個）、變數語法適合狀態切換、方法回傳適合複雜邏輯。
+ngClass 三種用法：物件語法適合條件高亮（例如問卷狀態依「進行中／已結束」套不同顏色）、變數語法適合狀態切換、方法回傳適合複雜邏輯。
 -->
 
 ---
@@ -931,7 +932,7 @@ layout: default
 5. 搜尋框先過濾出 3 筆結果，接著在**這 3 筆**上再輸入新關鍵字過濾，會有什麼 bug？正確作法是？
 
 <!--
-第三次快問快答，都是實作時真的會遇到的狀況題。第五題是即時搜尋最經典的邏輯錯誤，ch38 跟 ch57 都強調過，大家想清楚「過濾的來源」應該是誰。
+第三次快問快答，都是實作時真的會遇到的狀況題。第五題是即時搜尋最經典的邏輯錯誤，ch38 跟 ch59 都強調過，大家想清楚「過濾的來源」應該是誰。
 -->
 
 ---
@@ -947,7 +948,7 @@ layout: default
 5. 越搜越少、刪字也回不來——因為資料來源被覆寫了。正確作法：**每次都從完整的原始陣列**（如 `this.items`）重新 `filter`，把結果指定給 `dataSource.data`（Ch38）
 
 <!--
-對答案。第二題的觀念會在第九站 RxJS 再出現一次：Observable 是惰性的，沒人訂閱就不執行，這跟 Promise 建立就執行的行為是關鍵差異。第三題跟第四題是 Material 兩大定番錯誤，建議大家在自己的筆記裡把這兩條列成 checklist。第五題的原則叫「原始資料不可變、顯示資料用算的」，ch57 綜合練習的 applyFilters 就是這個原則的完整示範。
+對答案。第二題的觀念會在第九站 RxJS 再出現一次：Observable 是惰性的，沒人訂閱就不執行，這跟 Promise 建立就執行的行為是關鍵差異。第三題跟第四題是 Material 兩大定番錯誤，建議大家在自己的筆記裡把這兩條列成 checklist。第五題的原則叫「原始資料不可變、顯示資料用算的」，ch59 綜合練習裡搜尋後重新載入列表就是這個原則（來源資料不改，顯示結果重算）的完整示範。
 -->
 
 ---
@@ -1323,11 +1324,92 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
+# 補充站：登入與權限
+# Ch57–59
+
+<!--
+九站之後，還有一個補充站：對應 ch57 到 ch59。這三章是這門課的「登入與權限」：攔截器讓每個請求自動帶 Token，路由守衛替頁面把關，最後的綜合練習把整個動態問卷系統串起來。它們用到前面幾乎所有的觀念，所以放在最後。
+-->
+
+---
+layout: default
+---
+
+# 補充站速記 — HTTP 攔截器（Ch57）
+
+| 主題 | 重點 |
+| --- | --- |
+| 寫法 | `HttpInterceptorFn = (req, next) => next(req)`；用 `inject()` 取用 Service |
+| 修改請求 | `req.clone({ setHeaders, withCredentials })`，`HttpRequest` **不可變** |
+| 註冊 | `provideHttpClient(withInterceptors([a, b]))`：請求 a→b，回應 b→a |
+| Token | 每個請求帶 `Authorization: Bearer`；`/api/auth/` 不帶 |
+| 401 | `catchError` → `refresh()` → `switchMap` 重送；`/api/auth/` 要排除，避免無限迴圈 |
+| 錯誤 | 系統層級（0、5xx、403）統一提示；業務錯誤留給畫面；最後 `throwError` 丟回去 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 跨來源要帶 Cookie（Session）：前端 <code>withCredentials: true</code>，後端 <code>allowCredentials(true)</code> 且 <code>allowedOrigins</code> 不能是 <code>*</code>。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+攔截器的核心是「橫切關注點」：每個請求都要做的事，寫一次就好。
+
+最容易錯的兩點：一是忘記 req 不可變，改了 req 卻傳 next(req)，等於白改；二是 401 更新 Token 沒有排除登入與更新的 API，造成無限迴圈。
+-->
+
+---
+layout: default
+---
+
+# 補充站速記 — 路由守衛（Ch58）
+
+| 守衛 | 時機 | 用途 |
+| --- | --- | --- |
+| `canActivate` | 進入路由前 | 登入、權限檢查 |
+| `canDeactivate` | 離開路由前 | 編輯到一半離開的確認 |
+
+| 回傳值 | 意義 |
+| --- | --- |
+| `true` / `false` | 放行 / 拒絕（停在原地） |
+| `UrlTree` | 拒絕**並導向**：`router.createUrlTree(['/login'], { queryParams: { redirect: state.url } })` |
+
+- `adminGuard` 加在**父路由**（`admin`），底下所有子路由一併受保護
+- 判斷順序：先「有沒有登入」再「是不是管理員」，才分得出要去登入頁還是首頁
+- 前端守衛只是使用者體驗；**真正的權限在後端**（Spring Security，403）
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+守衛的名字都是 can 開頭，回傳 UrlTree 是最好的體驗：拒絕的同時告訴使用者該去哪裡。
+
+最重要的一句話：前端守衛不是安全機制，使用者可以改 localStorage、改程式碼。真正擋人的是後端的授權檢查。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
 # 全課程易錯重點
 # Top 10
 
 <!--
-最後我們把 56 章裡所有「注意」、「警告」的提醒，濃縮成十條最高頻的易錯重點。這十條就是大家寫專案時的除錯 checklist，建議直接抄進自己的筆記。
+最後我們把 58 章裡所有「注意」、「警告」的提醒，濃縮成十條最高頻的易錯重點。這十條就是大家寫專案時的除錯 checklist，建議直接抄進自己的筆記。
 -->
 
 ---
@@ -1369,7 +1451,7 @@ layout: default
 </div>
 
 <!--
-後五條偏邏輯與觀念。第六條是資源管理的鐵律,訂閱與退訂成對出現,template 裡能用 async pipe 就用,它自動處理退訂。第七條的原則是「原始資料不可變,顯示資料用算的」,ch57 綜合練習整個 applyFilters 設計就是在示範這件事。第八條跟第九條是 JavaScript 語言層面的歷史包袱,記下來就好。第十條回到 CSS 最初的觀念——後蓋前,樣式沒生效時打開 DevTools 看是誰蓋了誰。
+後五條偏邏輯與觀念。第六條是資源管理的鐵律,訂閱與退訂成對出現,template 裡能用 async pipe 就用,它自動處理退訂。第七條的原則是「原始資料不可變,顯示資料用算的」,ch59 綜合練習的列表搜尋設計就是在示範這件事。第八條跟第九條是 JavaScript 語言層面的歷史包袱,記下來就好。第十條回到 CSS 最初的觀念——後蓋前,樣式沒生效時打開 DevTools 看是誰蓋了誰。
 
 這十條清單的價值在於:它們都不是「不會寫」的問題,而是「忘記了」的問題,考前掃一遍,實作時卡住掃一遍,就能省下大量除錯時間。
 -->
@@ -1397,7 +1479,7 @@ layout: default
 
 **接下來的建議**
 
-1. 回頭把 **綜合練習 Ch1–31**（四張規格書）與 **綜合練習 Ch33–40**（員工管理系統）不看解答再做一次
+1. 回頭把 **綜合練習 Ch1–31**（四張規格書）與 **綜合練習 Ch59**（動態問卷系統）不看解答再做一次
 2. 快問快答有答錯的站，回到對應章節重讀
 3. 用學過的技術做一個**自己的題目**，部署到 Firebase，放進履歷
 
@@ -1414,8 +1496,8 @@ layout: end
 ---
 
 # 課程結束
-### 56 章、九大階段、一條從零到上線的完整路徑 — 總複習完成！
+### 58 章、九大階段加補充站、一條從零到上線的完整路徑 — 總複習完成！
 
 <!--
-總複習到這裡結束。這一章沒有教新東西,但它幫大家把 56 章的知識收攏成一張可以隨時翻閱的地圖:九站速記、四輪快問快答、十條易錯清單。之後不管是考試、面試還是開發卡關,都可以回到這一章找到對應的章節線索。辛苦大家了!
+總複習到這裡結束。這一章沒有教新東西,但它幫大家把 58 章的知識收攏成一張可以隨時翻閱的地圖:九站速記、四輪快問快答、十條易錯清單。之後不管是考試、面試還是開發卡關,都可以回到這一章找到對應的章節線索。辛苦大家了!
 -->

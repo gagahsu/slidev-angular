@@ -458,150 +458,312 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+layout: default
+---
 
-# 練習：繪製支出圓餅圖
+# 練習：問卷統計圓餅圖
 ### 任務說明
 
-建立一個 Angular 元件，使用 Chart.js 繪製個人月支出圓餅圖，包含以下三個分類：
+問卷結束後，前台要能看「觀看統計」：每一題單選／多選題畫一張圓餅圖，文字題列出所有回答。
 
-- 餐費：2,000 元
-- 交通費：3,000 元
-- 租金：9,000 元
+呼叫 `GET /api/surveys/{id}/statistics`，回傳（放在 `data` 裡）：
+
+```json
+{ "surveyId": 2, "title": "午餐偏好調查", "totalResponses": 4,
+  "questions": [
+    { "questionId": 1, "title": "你平常午餐吃什麼？", "type": "SINGLE",
+      "options": [ { "label": "便當", "count": 2, "percent": 50 }, ... ], "texts": [] },
+    { "questionId": 3, "title": "想給餐廳的建議", "type": "TEXT", "options": [], "texts": ["希望有更多素食"] } ] }
+```
 
 **要求：**
-1. 安裝 Chart.js 套件
-2. 在 HTML 中加入 `<canvas id="chart"></canvas>`
-3. 在 TypeScript 中定義資料並建立圓餅圖（type: `'pie'`）
-4. 自訂三個區塊的 `backgroundColor`
+1. 建立 `pie-chart` 子元件（用 `@Input` 接收 `labels`、`values`，在 `ngAfterViewInit` 畫圖）
+2. 建立 `survey-stats` 頁面（路由 `/surveys/:id/stats`）：顯示標題、作答人數
+3. 單選／多選題：每一題畫一張圓餅圖，圖表下方列出「選項：票數（百分比）」
+4. 文字題：列出所有回答；沒有回答時顯示「沒有回答」
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-好，接下來輪到大家自己動手了。我們剛剛已經一起做過一次幾乎一模一樣的範例，這次請大家先不要看提示，自己把步驟走一遍，看看能不能獨立做出一個圓餅圖。
+這個練習把 Chart.js 接上真的統計 API。跟範例最大的差別有兩個：
 
-大家可以先想想：我需要幾個 labels？每個 label 對應的數值是多少？資料準備好之後，剩下的步驟其實跟我們剛剛示範的流程一模一樣。如果卡住了，別擔心，等一下我們會分兩頁給大家解題提示。
+第一，資料是非同步回來的，而且有很多題，每一題一張圖。前面範例用 document.getElementById 抓 canvas，只適用「頁面上只有一張圖」的情況；現在圖表數量是動態的，所以我們把「畫一張圓餅圖」包成一個子元件，每個子元件有自己的 canvas，用 ViewChild 抓自己的 canvas，就不會互相干擾。
+
+第二，資料要等 API 回來才有。所以父元件用 @if 判斷資料到了才建立子元件，這樣子元件的 ngAfterViewInit 執行的時候，labels 跟 values 一定已經有值。
+
+統計的百分比是後端算好的，前端只負責顯示，不要自己再算一次。
 -->
 
 ---
-
-# 練習：繪製支出圓餅圖
-### 解題提示（一）
-
-1. 終端機執行 `npm install chart.js`
-2. HTML 中加入 `<canvas id="chart"></canvas>`
-3. TypeScript 中匯入 Chart.js 並取得 canvas 元素：
-
-```typescript
-import Chart from 'chart.js/auto';
-
-ngAfterViewInit() {
-  const ctx = document.getElementById('chart') as HTMLCanvasElement;
-```
-
-<!--
-這是第一部分的提示：先確認套件裝好、canvas 標籤加上去，接著在元件裡匯入 Chart.js，並且記得把取得 canvas 元素的程式碼放在 ngAfterViewInit 裡面，這一點呼應我們前面特別提醒過的地方。
-
-大家做到這邊，先確認 ctx 有正確抓到 canvas 元素，沒問題的話我們再往下看資料要怎麼定義。
--->
-
+layout: default
 ---
 
-# 練習：繪製支出圓餅圖
-### 解題提示（二）
+# 練習：解題提示
 
-4. 建立圖表並傳入資料：
+1. 子元件的 canvas 用範本參考變數：`<canvas #canvas>`，TypeScript 用 `@ViewChild('canvas')` 取得
+2. `new Chart(this.canvas.nativeElement, { type: 'pie', data: { labels, datasets: [{ data: values }] } })`
+3. 元件銷毀時要 `chart.destroy()`，避免離開頁面後圖表殘留（`ngOnDestroy`）
+4. 父元件在 `subscribe` 裡，**一次**把每一題整理成 `{ title, labels, values }` 存進 signal，不要在樣板裡用方法每次產生新陣列
+5. 子元件要放在 `@if (stats(); as s)` 裡面，資料到了才建立
 
-```typescript
-  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ['餐費', '交通費', '租金'],
-      datasets: [{
-        data: [2000, 3000, 9000],
-        backgroundColor: ['rgb(255,99,132)', 'rgb(54,162,235)', 'rgb(255,205,86)'],
-        hoverOffset: 4,
-      }],
-    },
-  });
-}
-```
-
-<!--
-這是完整的解答：資料裡定義三個 labels、對應三個數值，加上自訂的 backgroundColor，最後呼叫 new Chart 並指定 type 為 'pie'，整個練習就完成了。
-
-大家可以對照一下自己寫的版本，如果數字或顏色不同也沒關係，重點是資料結構跟呼叫方式要正確。做完之後，大家應該能感覺到——只要準備好 labels 跟 data，Chart.js 剩下的比例計算跟畫圖工作都幫我們處理好了，這就是使用現成函式庫的好處。
--->
-
----
-
-# 完整解答 — HTML
-
-`expense-pie-chart.html` 完整內容：
-
-```html
-<div style="width: 300px; height: 300px;">
-  <canvas id="chart"></canvas>
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 如果在樣板裡寫 <code>[labels]="q.options.map(...)"</code>，每次變更偵測都會產生新陣列，開發模式會噴 <code>NG0100</code> 錯誤。整理好資料再存起來，是這類錯誤的標準解法。
 </div>
-```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-這三張投影片把完整的元件程式碼列出來，讓大家可以對照自己寫的內容逐行檢查，不省略任何一段。HTML 這邊很單純，canvas 外面包一層限制寬高的 div，避免 Chart.js 的 responsive 特性把圖表撐得過大。
+提示 1 到 3 是圖表元件本身：canvas 用 #canvas 這種範本參考變數標記，ViewChild 才抓得到；用 nativeElement 取得真正的 canvas 元素；離開頁面要 destroy，否則舊圖表的資源沒釋放。
+
+提示 4 是這個練習最容易踩的坑。Angular 開發模式會在每次變更偵測後，再檢查一次「綁定的值有沒有變」。如果在樣板裡直接呼叫 map，每次都會回傳一個新的陣列，內容雖然一樣，但是參考不同，Angular 就認為值變了，報 NG0100 ExpressionChangedAfterItHasBeenChecked。解法是在 subscribe 裡先整理好、存起來，樣板只讀取現成的資料。
 -->
 
 ---
+layout: default
+---
 
-# 完整解答 — TypeScript（一）
-
-`expense-pie-chart.ts` 完整內容：
+# 練習：完整解答（圓餅圖子元件）
 
 ```typescript
-import { Component, AfterViewInit } from '@angular/core';
+// pie-chart.ts
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 
 @Component({
-  selector: 'app-expense-pie-chart',
-  templateUrl: './expense-pie-chart.html',
+  selector: 'app-pie-chart',
+  template: `<div style="max-width: 320px"><canvas #canvas></canvas></div>`,
 })
-export class ExpensePieChart implements AfterViewInit {
+export class PieChart implements AfterViewInit, OnDestroy {
+  @Input() labels: string[] = [];
+  @Input() values: number[] = [];
+  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
+  private chart?: Chart;
+
   ngAfterViewInit() {
-    const ctx = document.getElementById('chart') as HTMLCanvasElement;
+    this.chart = new Chart(this.canvas.nativeElement, {
+      type: 'pie',
+      data: { labels: this.labels, datasets: [{ data: this.values }] },
+      options: { plugins: { legend: { position: 'bottom' } } },
+    });
+  }
+
+  ngOnDestroy() { this.chart?.destroy(); }
+}
 ```
 
-<!--
-先看 import 跟 @Component 設定：Chart 從 chart.js/auto 匯入，元件實作 AfterViewInit 這個介面，把畫圖邏輯放進 ngAfterViewInit 裡，這是前面特別強調過的重點，canvas 一定要等畫面渲染完才抓得到。
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
-這裡故意留著 ngAfterViewInit 的左大括號沒收尾，下一張投影片接著看資料跟 new Chart 呼叫。
+<!--
+子元件只做一件事：拿到 labels 跟 values，畫一張圓餅圖。
+
+ViewChild 的 canvas 在 ngAfterViewInit 之後才有值，所以畫圖一定要放在這個生命週期，這是第 20 章教的，也是本章前面反覆提醒的重點。
+
+legend 的 position 設成 bottom，讓圖例放在圖表下方，版面比較整齊。
 -->
 
 ---
+layout: default
+---
 
-# 完整解答 — TypeScript（二）
+# 練習：完整解答（統計頁）
 
 ```typescript
-    new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: ['餐費', '交通費', '租金'],
-        datasets: [
-          {
-            label: '月支出',
-            data: [2000, 3000, 9000],
-            backgroundColor: [
-              'rgb(255, 99, 132)',
-              'rgb(54, 162, 235)',
-              'rgb(255, 205, 86)',
-            ],
-            hoverOffset: 4,
-          },
-        ],
-      },
+// survey-stats.ts
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { SurveyService } from './survey-service';
+import { OptionStat, Statistics } from './models';
+import { PieChart } from './pie-chart';
+
+interface QuestionChart {
+  title: string; type: string; labels: string[]; values: number[];
+  options: OptionStat[]; texts: string[];
+}
+
+// ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+父元件在 subscribe 裡一次整理好每一題要畫的資料：labels、values 是給圓餅圖用的；options 是給下面「選項：票數」文字用的。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（統計頁）（續）
+
+```typescript
+// ... 接上一頁
+
+@Component({
+  selector: 'app-survey-stats',
+  imports: [PieChart],
+  templateUrl: './survey-stats.html',
+})
+export class SurveyStats implements OnInit {
+  private api = inject(SurveyService);
+  private route = inject(ActivatedRoute);
+
+  stats = signal<Statistics | null>(null);
+  charts = signal<QuestionChart[]>([]);
+
+// ... 見下一頁
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+（接續上一頁。）
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（統計頁）（續）
+
+```typescript
+// ... 接上一頁
+
+  ngOnInit(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.api.statistics(id).subscribe(s => {
+      this.stats.set(s);
+      this.charts.set(s.questions.map(q => ({
+        title: q.title, type: q.type, options: q.options, texts: q.texts,
+        labels: q.options.map(o => o.label), values: q.options.map(o => o.count),
+      })));
     });
   }
 }
 ```
 
-<!--
-接續上一張還沒收尾的 ngAfterViewInit，這裡呼叫 new Chart，傳入剛剛抓到的 ctx，type 指定為 'pie'。data 裡三個 labels 對應三個支出分類，data 陣列是對應的金額，backgroundColor 是自訂的三種顏色，hoverOffset 讓滑鼠移過去時區塊往外彈開。
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
-最後兩個右大括號，一個收尾 ngAfterViewInit 方法，一個收尾整個元件類別。大家可以拿這份完整程式碼對照自己專案裡的檔案，看看有沒有漏掉 import、忘記加 AfterViewInit 介面，或是把 new Chart 誤放到 ngOnInit 裡。
+<!--
+stats 和 charts 都存在 signal 裡，因為它們是 API 回來才有的資料。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（統計頁 HTML 與 Service）
+
+```html
+<!-- survey-stats.html -->
+@if (stats(); as s) {
+  <h2>{{ s.title }}：統計</h2>
+  <p>共 {{ s.totalResponses }} 份作答</p>
+  @for (q of charts(); track $index; let i = $index) {
+    <h3>{{ i + 1 }}. {{ q.title }}</h3>
+    @if (q.type === 'TEXT') {
+      @for (t of q.texts; track $index) { <div>• {{ t }}</div> } @empty { <span>沒有回答</span> }
+    } @else {
+      <app-pie-chart [labels]="q.labels" [values]="q.values" />
+      @for (o of q.options; track o.label) { <div>{{ o.label }}：{{ o.count }} 票（{{ o.percent }}%）</div> }
+    }
+  }
+}
+```
+
+```typescript
+// survey-service.ts（新增）
+statistics(id: number) {
+  return this.http.get<AppResponse<Statistics>>(`${this.api}/surveys/${id}/statistics`)
+    .pipe(map(res => res.data));
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+樣板的邏輯：文字題用 @for 列出所有回答，沒有回答用 @empty；選擇題就畫一張圓餅圖，下面再用文字列出票數與百分比，這是需求文件的要求。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（統計頁 HTML 與 Service）（續）
+
+```typescript
+// models.ts（新增）
+export interface OptionStat { label: string; count: number; percent: number; }
+export interface QuestionStat {
+  questionId: number; title: string; type: 'SINGLE' | 'MULTI' | 'TEXT';
+  options: OptionStat[]; texts: string[];
+}
+export interface Statistics { surveyId: number; title: string; totalResponses: number; questions: QuestionStat[]; }
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 開啟 <code>/surveys/2/stats</code>，第 1 題是三個選項的圓餅圖，第 3 題（文字題）列出文字回答；尚未開始的問卷（例如 4 號）後端會回傳錯誤，畫面不應該出現空白圖表。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+最後一個驗收條件是一個真實情況：後端規定「尚未開始」的問卷不能看統計，會回傳錯誤。前端此時 stats 一直是 null，@if 不成立，所以整頁什麼都不畫。更完整的做法，是在 subscribe 的 error 回呼跳出提示，第 43 章的對話框就是為這個準備的。
 -->
 
 ---
@@ -611,7 +773,7 @@ layout: end
 # 結束
 
 <!--
-今天我們從認識 Chart.js 開始，一路學到安裝套件、準備資料、畫出圓餅圖，也自己動手完成了一個記帳圓餅圖的練習。大家現在應該對圖表資料結構跟 Chart.js 的基本用法有清楚的概念了。
+今天我們從認識 Chart.js 開始，一路學到安裝套件、準備資料、畫出圓餅圖，也自己動手把問卷統計畫成圓餅圖。大家現在應該對圖表資料結構跟 Chart.js 的基本用法有清楚的概念了。
 
 之後大家在做報表或儀表板功能時，都可以用今天學到的方式，把數字轉換成一眼就能看懂的視覺化圖表。
 -->

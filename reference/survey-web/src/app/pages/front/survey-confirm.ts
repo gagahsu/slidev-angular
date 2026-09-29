@@ -54,7 +54,7 @@ export class SurveyConfirm {
   async submit() {
     if (!(await this.dialogs.confirm('確定要送出嗎？送出後無法修改'))) return;
     this.api.submit(this.id).subscribe({
-      next: async () => { await this.dialogs.alert('已送出，謝謝您的填寫', '完成'); this.router.navigate(['/']); },
+      next: async () => { await this.dialogs.alert('已送出，謝謝您的填寫', '完成'); this.router.navigate(['/surveys']); },
       error: e => this.dialogs.alert(e.error?.message ?? '送出失敗'),
     });
   }

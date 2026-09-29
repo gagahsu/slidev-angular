@@ -625,35 +625,281 @@ layout: two-cols
 -->
 
 ---
+layout: default
+---
 
-# 練習
+# 練習：串接問卷 API — 任務說明
 
-使用以下中央氣象署開放資料 API，將資料呈現在畫面上，並且做出畫面（非單純顯示資料）與樣式設計。
+Spring Boot 課做出的問卷 API 已經在 `http://localhost:8080` 跑起來了（`reference/dynamic-survey`，或你自己完成的專案）。請在 `survey-web` 串接它：
 
+1. 建立 `models.ts`，定義 `Survey`、`PageResult<T>`、`AppResponse<T>` 三個型別
+2. 建立 `SurveyService`，用 `HttpClient` 呼叫 `GET /api/surveys?page=0&size=10`
+3. 在 `survey-list` 元件的 `ngOnInit` 訂閱結果，把問卷用**表格**顯示：名稱、狀態、開始日期、結束日期
+4. 後端沒有資料或連不上時，畫面顯示提示，不要一片空白
+
+**API 回傳格式**（所有 API 都是這個外層，`data` 才是內容）：
+
+```json
+{ "code": "SUCCESS", "message": "成功",
+  "data": { "content": [ { "id": 2, "title": "午餐偏好調查", "statusLabel": "進行中", ... } ],
+            "page": 0, "size": 10, "totalElements": 4, "totalPages": 1 } }
 ```
-https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-065?Authorization=CWA-69B5A9F7-1D8D-495E-A1F2-C160E39B4D44&limit=10&format=JSON
-```
 
-**任務要求：**
-
-1. 使用 `HttpClientService` 的 `getApi` 方法呼叫上方 API
-2. 在 `ngOnInit` 中發送請求並 `subscribe` 取得資料
-3. 將回傳的氣象資料呈現在畫面上
-4. 設計適合的 UI 版面與 CSS 樣式（非單純文字列表）
-
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>提示：</b> 可以用 card 卡片、表格或其他有設計感的排版方式呈現氣象資料，避免單純顯示 JSON。
-</div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-好了，大道理都講完了。
-現在我們來進行今天的終極大作戰——「串接中央氣象署的實時天氣 API」！
-這是一個真實的、會因為台北現在有沒有下雨而隨時變動的政府公開數據。
-請大家使用 `HttpClientService` 呼叫黃色框框裡的氣象 API 網址。
-把台北市的天氣資料拉下來。
-最關鍵的是：**不准只給我用 console.log 印出來，也不准在 HTML 裡只塞一行 JSON**！
-請各位發揮你們高尚的工程師美學，用我們之前學過的 CSS 或者卡片版面，把台北市的氣溫、濕度、降雨機率，設計成一張漂亮的天氣卡片！
-這題我們會給大家 20 分鐘時間，開始這場跟真實世界數據的連線對話吧！
+好，這一章的終極練習，我們不再打氣象署的 API，而是接上自己人做的後端：動態問卷系統的 API。這是整個課程的重點，也是後面所有練習的基礎。
+
+請大家先確認 Spring Boot 有跑起來，用瀏覽器打開 http://localhost:8080/api/surveys，應該看得到 JSON。
+
+看回傳格式：所有 API 都包了一層 AppResponse，有 code、message 和 data；分頁的結果放在 data 裡面，content 才是問卷陣列，還有 page、size、totalElements、totalPages 這些分頁資訊。這個格式是 Spring Boot 課設計的，前後端要對得起來。
+
+第 4 點的提示：有時候後端還沒啟動，或是網路錯誤，這時候 subscribe 的 error 回呼會被觸發，要處理這種情況。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. 型別對應後端的 JSON，日期在 JSON 裡是 `'yyyy-MM-dd'` 字串，型別用 `string`
+2. `Service` 用 `inject(HttpClient)`，`get<AppResponse<PageResult<Survey>>>(url, { params })`
+3. 用 RxJS 的 `map` 把外層 `AppResponse` 拆掉，只回傳 `data`
+4. 非同步回來的資料要放進 `signal`，畫面才會更新（Angular 21 預設沒有 zone.js，第 47 章會詳細說明）
+5. **CORS**：瀏覽器（`localhost:4200`）呼叫另一個網址（`localhost:8080`）會被擋，後端要允許
+
+```java
+// Spring Boot 端（自己的專案才需要；reference/dynamic-survey 已設定好）
+@Bean
+public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+        @Override
+        public void addCorsMappings(CorsRegistry registry) {
+            registry.addMapping("/api/**").allowedOrigins("http://localhost:4200");
+        }
+    };
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+第一個提示：JSON 裡沒有日期型別，日期都是字串，前端就用 string。
+
+第二、三個提示：Service 的職責是呼叫 API 並回傳資料，外層 AppResponse 是「前後端的約定格式」，不是畫面要用的資料，所以在 Service 裡面用 map 拆掉，元件拿到的就是乾淨的 PageResult。
+
+第四點很重要：Angular 21 預設不再使用 zone.js，subscribe 回呼裡改一般變數，畫面不會更新。所以要用 signal 存資料。
+
+第五點是 CORS：跨來源資源共用。瀏覽器基於安全，預設不允許網頁去呼叫「另一個來源」（協定、網域、埠號只要有一個不一樣就算不同來源）。前端 4200、後端 8080，埠號不同，所以後端要明確表示「我允許 4200 來呼叫」。這是後端的設定，不是前端能解決的。如果在瀏覽器的 Console 看到 blocked by CORS policy，就是這個原因。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（型別與 Service）
+
+```typescript
+// models.ts
+export interface AppResponse<T> { code: string; message: string; data: T; }
+export interface PageResult<T> {
+  content: T[]; page: number; size: number; totalElements: number; totalPages: number;
+}
+export interface Survey {
+  id: number; title: string; description: string;
+  startDate: string; endDate: string; published: boolean; statusLabel: string;
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+型別檔案是前後端的契約。AppResponse 和 PageResult 是泛型，T 代表 data 或 content 裡面裝的東西，這樣所有 API 都可以重複使用同一組型別。
+
+Service 用 providedIn: 'root' 讓它成為全域單例，任何元件都可以 inject 它。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（型別與 Service）（續）
+
+```typescript
+// survey-service.ts
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs';
+import { AppResponse, PageResult, Survey } from './models';
+
+@Injectable({ providedIn: 'root' })
+export class SurveyService {
+  private http = inject(HttpClient);
+  private api = 'http://localhost:8080/api';
+
+  list(page = 0, size = 10) {
+    return this.http
+      .get<AppResponse<PageResult<Survey>>>(`${this.api}/surveys`, { params: { page, size } })
+      .pipe(map(res => res.data));
+  }
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+params 直接傳物件，HttpClient 會自動組成 ?page=0&size=10 的查詢字串。pipe(map(...)) 拆掉外層，呼叫端拿到的就是 PageResult<Survey>。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（元件）
+
+```typescript
+// survey-list.ts
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { SurveyService } from './survey-service';
+import { Survey } from './models';
+
+@Component({
+  selector: 'app-survey-list',
+  templateUrl: './survey-list.html',
+})
+export class SurveyList implements OnInit {
+  private api = inject(SurveyService);
+
+  surveys = signal<Survey[]>([]);
+  error = signal('');
+
+  ngOnInit(): void {
+    this.api.list().subscribe({
+      next: page => this.surveys.set(page.content),
+      error: () => this.error.set('無法連線到後端，請確認 Spring Boot 已啟動'),
+    });
+  }
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+元件的流程跟前面教的一樣：注入 Service、在 ngOnInit 訂閱、把結果放進 signal。
+
+surveys 和 error 都是 signal，讀取的時候記得加括號：surveys()、error()。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（元件）（續）
+
+```html
+<!-- survey-list.html -->
+@if (error()) { <p class="error">{{ error() }}</p> }
+<table>
+  <tr><th>名稱</th><th>狀態</th><th>開始</th><th>結束</th></tr>
+  @for (s of surveys(); track s.id) {
+    <tr><td>{{ s.title }}</td><td>{{ s.statusLabel }}</td><td>{{ s.startDate }}</td><td>{{ s.endDate }}</td></tr>
+  } @empty {
+    <tr><td colspan="4">沒有問卷</td></tr>
+  }
+</table>
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 打開 <code>http://localhost:4200/surveys</code>，看到後端 <code>seed.sql</code> 的問卷（午餐偏好調查⋯⋯）；把 Spring Boot 關掉再重新整理，畫面顯示錯誤提示。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+@empty 區塊處理「沒有資料」的情況，前面的 @if 處理連線錯誤。
+
+驗收方式：先看到資料，再把後端關掉重新整理，確認錯誤提示有出現。這種「壞掉的時候畫面也不能亂」，是做前端很實際的習慣。這份表格下一個章節（Mat-table）會升級成漂亮的表格，還會加上分頁。
+-->
+
+---
+layout: default
+---
+
+# 補充：跟後端交換 Cookie（withCredentials）
+
+問卷的「作答暫存」與「後台編輯暫存」是放在後端的 **Session**，靠瀏覽器的 Cookie（`JSESSIONID`）辨識同一個使用者。跨來源呼叫時，瀏覽器預設**不會**帶 Cookie，要明確打開：
+
+```typescript
+// 每一個需要 Session 的請求都要加
+this.http.post(`${this.api}/surveys/${id}/draft`, body, { withCredentials: true });
+```
+
+後端也要配合：`allowCredentials(true)`，而且 `allowedOrigins` **不能是 `*`**，必須指定 `http://localhost:4200`。
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 每個請求都寫 <code>withCredentials</code> 很麻煩，第 57 章的<b>攔截器</b>會一次替所有請求加上。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這一頁是預告。問卷系統的填寫流程是：填完按「送出」，並不是直接寫進資料庫，而是先暫存在後端的 Session，讓使用者在確認頁檢查，按下確認才真正寫入。
+
+後端怎麼知道是同一個人？靠 Cookie 裡的 JSESSIONID。但瀏覽器在跨來源請求時，預設不會附上 Cookie，這是安全機制。所以前端要在請求選項加 withCredentials: true，後端也要設定 allowCredentials。
+
+有一個常見的坑：當允許帶 Cookie 時，後端的 allowedOrigins 不能寫星號，一定要指定明確的網址，否則瀏覽器會拒絕。
+
+每個請求都要寫一次很煩，這也是第 57 章攔截器的主要用途之一。
 -->
 
 ---

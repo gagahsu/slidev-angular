@@ -1059,115 +1059,313 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
-layout: two-cols
+layout: default
 ---
 
-# 練習：基本路由
-### 任務說明
+# 練習準備：建立問卷系統的前端專案
+### 從這章開始，練習題都圍繞「動態問卷系統」
 
-1. 新增 `first`、`second` 兩個元件
-2. 在 `app.routes.ts` 定義兩條路線
-3. 在根元件 HTML 加入導航按鈕
-4. 加入 `<router-outlet>` 顯示內容
-5. 設定根路徑重新導向至 `/first`
+課程的最後，我們會做出一個完整的「動態問卷系統」（前台填寫、後台管理，規格見 `SURVEY-SPEC.md`）。先建立專案：
 
-::right::
+```bash
+ng new survey-web        # 樣式選 SCSS，SSR 選 N
+cd survey-web
+ng serve
+```
 
-<div class="flex items-center justify-center h-full ml-10">
-  <img src="/images/21-routing/practice-basic.png" class="rounded shadow-md max-h-80" />
-</div>
+之後每一章的練習，都是在這個專案上「多做一塊」：
+
+| 章節 | 這一塊 |
+| --- | --- |
+| Ch23 | 導覽列與路由（前台頁面、後台子路由） |
+| Ch24 | 元件之間傳資料（問卷預覽、題目編輯） |
+| Ch29 | 用 `HttpClient` 呼叫 Spring Boot 的問卷 API |
+| Ch33–43 | 列表分頁、日期、搜尋、統計圖、對話框 |
+| Ch50–52 | 作答表單與驗證 |
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-第一個是基本路由任務：
-請新增 `first` 與 `second` 元件。
-在 `app.routes.ts` 設定這兩條路線。
-在根元件放上導航按鈕，並加上 `<router-outlet>` 天窗。
-最後，利用重新導向，讓使用者一打開網頁，就自動瞬移到 `/first` 頁面！
-動手寫寫看，體驗一下 SPA 不換頁跳轉的快感！
+從這一章開始，Angular 的練習題不再是各章零散的小題目，而是全部圍繞同一個專案：動態問卷系統。這個系統在 MySQL 課設計了資料庫，在 Spring Boot 課做出了 API，現在輪到 Angular 來做畫面。
+
+所以請大家現在就建立一個 survey-web 專案，後面每一章都往同一個專案裡加東西，最後一章會把它們接成完整的系統。
 -->
 
 ---
 layout: default
 ---
 
-# 練習：基本路由 解題提示
-### 提示說明
+# 練習準備：建立問卷系統的前端專案（續）
+### 從這章開始，練習題都圍繞「動態問卷系統」
 
-1. 匯入 `RouterOutlet`、`RouterLink`、`RouterLinkActive` 到根元件
-2. `app.routes.ts` 中加入：
-   - `{ path: 'first', component: First }`
-   - `{ path: 'second', component: Second }`
-   - `{ path: '', redirectTo: '/first', pathMatch: 'full' }`
-3. HTML 中按鈕加上 `routerLink="/first"` 和 `routerLink="/second"`
-4. HTML 中加入 `<router-outlet></router-outlet>`
+| 章節 | 這一塊 |
+| --- | --- |
+| Ch57–59 | 攔截器、路由守衛、整合前台 + 後台 |
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 記得在 <code>app.ts</code> 的 <code>imports</code> 加入這三個 Router 模組。
-</div>
-
-<!--
-如果有點小迷路，請看這裡：
-記得去 `app.ts` 的 `imports` 陣列補上三個金剛：`RouterOutlet, RouterLink, RouterLinkActive`。
-在 `routes` 陣列裡加好那三條路，包含 `pathMatch: 'full'` 的空路由重新導向。
-然後在 HTML 裡加上 `<router-outlet></router-outlet>`。
-儲存後，看看是不是一打開網頁，網址就自動跳去 `/first`，而且點按鈕畫面能秒切了？
--->
-
----
-layout: two-cols
----
-
-# 進階練習：子路由
-### 任務說明
-
-1. 在 `first` 下新增子元件 `child-a`
-2. 在 `app.routes.ts` 設定子路由
-3. 在 `first.html` 加入 `<router-outlet>`
-4. 加入導航按鈕切換到子路由頁面
-5. 子路由頁面顯示自訂內容
-
-::right::
-
-<div class="flex items-center justify-center h-full ml-10">
-  <img src="/images/21-routing/practice-advanced.png" class="rounded shadow-md max-h-80" />
-</div>
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-第二關是「子路由進階練習」：
-請在 first 底下，建一個子元件 `child-a`。
-並在 `app.routes.ts` 裡面用 `children: []` 來嵌套這條路線。
-最後，在 `first.html` 裡面加開一個「子天窗」，並寫好導航連結去觸發它！
-這題要特別注意「天窗開在哪裡」跟「路徑是拼接的」這兩個細節喔！
+建立專案的指令在第 5 章教過了：樣式選 SCSS，SSR 選 N。Angular 21 預設是 zoneless、測試用 Vitest，這些都不用管。
 -->
 
 ---
 layout: default
 ---
 
-# 進階練習：子路由 解題提示
-### 提示說明
+# 練習 1：導覽列與基本路由
+### 任務說明
 
-1. 建立子元件：`ng g c first/child-a`
-2. `app.routes.ts` 修改 first 路線：
-   ```typescript
-   { path: 'first', component: First,
-     children: [{ path: 'child-a', component: ChildA }] }
-   ```
-3. 在 `first.html` 中加入 `<router-outlet>`（顯示子路由）
-4. 導航用 `routerLink="/first/child-a"` 完整路徑
+在 `survey-web` 建立前台的三個頁面與導覽列：
 
-<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 子路由的 <code>&lt;router-outlet&gt;</code> 放在<b>父元件</b>的 HTML 中，不是根元件。
-</div>
+1. 建立三個元件：`survey-list`（問卷列表）、`login`（登入）、`not-found`（找不到頁面）
+2. 在 `app.routes.ts` 定義路線：`surveys`、`login`，並設定根路徑 `''` 重新導向到 `/surveys`
+3. 萬用路由 `**` 顯示 `not-found`
+4. 在 `app.html` 放導覽列：問卷列表、登入，目前所在的頁面要有高亮樣式（`routerLinkActive`）
+5. 加入 `<router-outlet>` 顯示頁面內容
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
 
 <!--
-大叔給大家指點迷津：
-首先，在 terminal 執行 `ng g c first/child-a` 產生子元件。
-接著，在路由表中，把 `child-a` 的 path 寫在 `First` 的 `children` 裡面。
-最關鍵的一步：**你必須去 `first.html`（也就是父元件的 HTML）裡放上 `<router-outlet>` 天窗**！
-如果你把天窗放錯地方放去根元件，子路由的內容就長不出來了。
-最後，導航連結要寫完整路徑 `/first/child-a`！
-這關能順利通過，你的路由基本功就通關了！
+第一個練習是問卷系統前台的骨架：一個導覽列加上三個頁面。
+
+請大家先用 ng g c 產生三個元件：survey-list、login、not-found。注意 Angular 21 的命名，元件檔案是 survey-list.ts，類別名稱是 SurveyList，沒有 Component 後綴。
+
+路由表裡有三個重點：根路徑要重新導向、要有 pathMatch: 'full'、最後要有一個 ** 萬用路由，處理網址打錯的情況。
+
+導覽列的高亮用 routerLinkActive，它會在目前路由符合時，自動幫連結加上 CSS class。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：解題提示
+
+1. `ng g c pages/survey-list`、`ng g c pages/login`、`ng g c pages/not-found`
+2. 萬用路由 `**` 一定要放在 `routes` 陣列的**最後一個**
+3. 根元件要 `imports: [RouterOutlet, RouterLink, RouterLinkActive]`
+4. `routerLinkActive="active"` 會在路由符合時加上 `active` 這個 class
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+import { SurveyList } from './pages/survey-list/survey-list';
+import { Login } from './pages/login/login';
+import { NotFound } from './pages/not-found/not-found';
+
+export const routes: Routes = [
+  { path: '', redirectTo: 'surveys', pathMatch: 'full' },
+  { path: 'surveys', component: SurveyList },
+  { path: 'login', component: Login },
+  { path: '**', component: NotFound },
+];
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+路由表最重要的是順序：Angular 由上往下比對，第一個符合的就用，所以 ** 一定要放最後，否則所有網址都會先被它攔走。
+
+重新導向那一行要加 pathMatch: 'full'，意思是「網址整個都是空的才算符合」。沒有加的話，每個網址的開頭都是空字串，會全部被導走。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（根元件）
+
+```typescript
+// app.ts
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
+})
+export class App {}
+```
+
+```html
+<!-- app.html -->
+<nav class="navbar">
+  <span class="brand">動態問卷</span>
+  <a routerLink="/surveys" routerLinkActive="active">問卷列表</a>
+  <a routerLink="/login" routerLinkActive="active">登入</a>
+</nav>
+<main><router-outlet /></main>
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+根元件只負責兩件事：畫出導覽列，並提供 router-outlet 這個天窗，讓路由決定的頁面顯示在這裡。
+-->
+
+---
+layout: default
+---
+
+# 練習 1：完整解答（根元件）（續）
+
+```scss
+/* app.scss */
+.navbar { display: flex; gap: 16px; padding: 12px 24px; background: #5eada0; }
+.navbar a { color: white; text-decoration: none; }
+.navbar a.active { font-weight: bold; border-bottom: 2px solid white; }
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+routerLink 取代了 a 標籤的 href，點擊時不會重新載入整個網頁，這就是單頁應用（SPA）的關鍵。
+-->
+
+---
+layout: default
+---
+
+# 進階練習：後台的子路由
+### 任務說明
+
+後台頁面要共用同一個「側邊選單」，適合用子路由：
+
+1. 建立 `admin`（後台版型）、`admin-list`（後台問卷列表）、`admin-editor`（新增問卷）三個元件
+2. `admin` 路由下設定兩條子路由：`''` → `admin-list`、`edit` → `admin-editor`
+3. 在 `admin.html` 放側邊選單與 `<router-outlet>`，選單連結：「問卷管理」`/admin`、「新增問卷」`/admin/edit`
+4. 使用者輸入 `/admin` 時，右邊要顯示 `admin-list`
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+第二個練習是子路由。後台的每一頁左邊都有同一份選單，如果每個頁面都重複寫一次會很麻煩；比較好的做法是做一個「後台版型」元件，裡面放選單和一個新的天窗，各個後台頁面就顯示在這個天窗裡。
+
+這就是子路由的用途：第二層的 router-outlet 放在父元件（admin）的 HTML 裡面，不是根元件。
+
+這個後台版型，後面的章節會再加上路由守衛，只有管理員才能進來。
+-->
+
+---
+layout: default
+---
+
+# 進階練習：解題提示與解答
+
+```typescript
+// app.routes.ts（新增 admin）
+import { Admin } from './pages/admin/admin';
+import { AdminList } from './pages/admin/admin-list/admin-list';
+import { AdminEditor } from './pages/admin/admin-editor/admin-editor';
+
+  {
+    path: 'admin',
+    component: Admin,
+    children: [
+      { path: '', component: AdminList },
+      { path: 'edit', component: AdminEditor },
+    ],
+  },
+```
+
+```html
+<!-- admin.html：子路由的天窗在「父元件」裡 -->
+<div class="admin-layout">
+  <aside>
+    <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">問卷管理</a>
+    <a routerLink="/admin/edit" routerLinkActive="active">新增問卷</a>
+  </aside>
+  <section><router-outlet /></section>
+</div>
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+子路由的網址是「拼接」的：父路徑 admin 加上子路徑 edit，就是 /admin/edit。
+
+高亮的細節：routerLinkActive 預設是「前綴比對」，/admin/edit 的開頭也符合 /admin，所以第一個連結要加上 routerLinkActiveOptions 的 exact: true，變成完全比對。
+-->
+
+---
+layout: default
+---
+
+# 進階練習：解題提示與解答（續）
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>/admin</code> 也是 <code>/admin/edit</code> 的開頭，所以「問卷管理」要加 <code>exact: true</code>，否則進到新增頁面時兩個連結都會高亮。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+別忘了 Admin 元件的 imports 也要放 RouterOutlet、RouterLink、RouterLinkActive。
 -->
 
 ---

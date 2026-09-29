@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { adminGuard, authGuard } from './core/auth-guard';
+import { unsavedGuard } from './core/unsaved-guard';
 import { SurveyList } from './pages/front/survey-list';
 import { SurveyFill } from './pages/front/survey-fill';
 import { SurveyConfirm } from './pages/front/survey-confirm';
@@ -15,7 +16,8 @@ import { AdminResponseDetail } from './pages/admin/admin-response-detail';
 
 export const routes: Routes = [
   // 前台
-  { path: '', component: SurveyList },
+  { path: '', redirectTo: 'surveys', pathMatch: 'full' },
+  { path: 'surveys', component: SurveyList },
   { path: 'surveys/:id/fill', component: SurveyFill },
   { path: 'surveys/:id/confirm', component: SurveyConfirm },
   { path: 'surveys/:id/stats', component: SurveyStats },
@@ -29,13 +31,13 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     children: [
       { path: '', component: AdminList },
-      { path: 'edit', component: AdminEditor },               // 新增
-      { path: 'edit/:id', component: AdminEditor },           // 編輯
+      { path: 'edit', component: AdminEditor, canDeactivate: [unsavedGuard] },               // 新增
+      { path: 'edit/:id', component: AdminEditor, canDeactivate: [unsavedGuard] },           // 編輯
       { path: 'view/:id', component: AdminEditor },           // 唯讀
       { path: ':id/responses', component: AdminResponses },
       { path: 'responses/:id', component: AdminResponseDetail },
       { path: ':id/stats', component: SurveyStats, data: { admin: true } },
     ],
   },
-  { path: '**', redirectTo: '' },
+  { path: '**', redirectTo: 'surveys' },
 ];

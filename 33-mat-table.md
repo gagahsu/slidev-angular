@@ -463,6 +463,227 @@ const ELEMENT_DATA = [
 -->
 
 ---
+layout: default
+---
+
+# 練習：問卷列表改用 Mat-table + 分頁
+### 任務說明
+
+把第 29 章做的簡單表格，升級成前台的「問卷列表」：
+
+1. 使用 `mat-table` 顯示：編號、名稱、狀態、開始時間、結束時間
+2. 加上 `mat-paginator`，每頁預設 10 筆，可選 5 / 10 / 20 筆
+3. 換頁時**重新呼叫後端 API**（分頁由後端 `Pageable` 完成，前端不切資料）
+4. 只有狀態是「進行中」的問卷，名稱才是連結（連到 `/surveys/:id/fill`），其他狀態只顯示文字
+5. 沒有資料時顯示「沒有符合條件的問卷」
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+這一章前面教的 mat-table，資料都是寫死在前端的。這個練習要接上真的後端：資料由 Spring Boot 的 Pageable 分頁，前端每次換頁，就重新呼叫一次 API。
+
+這跟前端自己切資料是兩件不同的事，關鍵差別在於：後端每次只回傳一頁的資料，還會告訴我們總共有幾筆（totalElements），paginator 需要這個數字才能算出有幾頁。
+
+第 4 點是需求文件裡的規定：只有進行中的問卷才能填寫，所以只有進行中的才做成連結。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示
+
+1. `MatPaginator` 的 `pageIndex` 從 **0** 開始，跟後端 `Pageable` 一致，直接傳給 API 就好
+2. 換頁事件：`(page)="onPage($event)"`，事件物件有 `pageIndex`、`pageSize`
+3. 頁面資訊來自後端：`[length]="page().totalElements"`
+4. 連結用 `[routerLink]="['/surveys', s.id, 'fill']"`，配合 `@if (s.statusLabel === '進行中')`
+5. `mat-table` 要匯入 `MatTableModule`，`mat-paginator` 要匯入 `MatPaginatorModule`
+6. `displayedColumns`、`matColumnDef`、資料屬性三者要對應（本章重點）
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>SurveyService.list(page, size)</code> 現在要回傳整個 <code>PageResult</code>（第 29 章已經是這樣），元件才拿得到 <code>totalElements</code>。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+分頁最容易搞混的是頁碼：Angular Material 的 paginator 和 Spring 的 Pageable 都是從 0 開始，所以兩邊直接對接，不用加一減一。只有畫面上顯示給使用者看的「第幾頁」才是從 1 開始，那是 paginator 自己處理的。
+
+paginator 是「受控元件」：它自己不會去拿資料，只是負責顯示與觸發事件。我們把 length、pageSize、pageIndex 三個值從 API 結果餵給它，它就會畫出正確的分頁按鈕。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（TypeScript）
+
+```typescript
+// survey-list.ts
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { SurveyService } from './survey-service';
+import { PageResult, Survey } from './models';
+
+@Component({
+  selector: 'app-survey-list',
+  imports: [RouterLink, MatTableModule, MatPaginatorModule],
+  templateUrl: './survey-list.html',
+})
+export class SurveyList implements OnInit {
+  private api = inject(SurveyService);
+
+  displayedColumns = ['id', 'title', 'statusLabel', 'startDate', 'endDate'];
+  page = signal<PageResult<Survey>>({ content: [], page: 0, size: 10, totalElements: 0, totalPages: 0 });
+
+  ngOnInit(): void { this.load(0, 10); }
+
+  load(page: number, size: number) {
+    this.api.list(page, size).subscribe(res => this.page.set(res));
+  }
+
+  onPage(e: PageEvent) { this.load(e.pageIndex, e.pageSize); }
+}
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+元件的狀態只有一個：page，裡面放整個 PageResult，包含目前這一頁的內容 content，以及分頁資訊。
+
+換頁的時候，paginator 觸發 page 事件，事件物件 PageEvent 有 pageIndex 和 pageSize，直接丟給 load，重新呼叫 API。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（HTML）
+
+```html
+<!-- survey-list.html -->
+<table mat-table [dataSource]="page().content">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef>編號</th>
+    <td mat-cell *matCellDef="let s">{{ s.id }}</td>
+  </ng-container>
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef>名稱</th>
+    <td mat-cell *matCellDef="let s">
+      @if (s.statusLabel === '進行中') {
+        <a [routerLink]="['/surveys', s.id, 'fill']">{{ s.title }}</a>
+      } @else {
+        <span>{{ s.title }}</span>
+      }
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+HTML 對照本章的重點：matColumnDef 的名稱、displayedColumns 陣列、資料的屬性，三個要一樣。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（HTML）（續）
+
+```html
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="statusLabel">
+    <th mat-header-cell *matHeaderCellDef>狀態</th>
+    <td mat-cell *matCellDef="let s">{{ s.statusLabel }}</td>
+  </ng-container>
+  <ng-container matColumnDef="startDate">
+    <th mat-header-cell *matHeaderCellDef>開始時間</th>
+    <td mat-cell *matCellDef="let s">{{ s.startDate }}</td>
+  </ng-container>
+  <ng-container matColumnDef="endDate">
+    <th mat-header-cell *matHeaderCellDef>結束時間</th>
+```
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+那個 @if (s.statusLabel === '進行中') 就是需求文件的規定：進行中才能填寫。狀態是後端算出來的（statusLabel），前端只負責顯示與判斷，不重新計算。
+-->
+
+---
+layout: default
+---
+
+# 練習：完整解答（HTML）（續）
+
+```html
+    <td mat-cell *matCellDef="let s">{{ s.endDate }}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+@if (page().totalElements === 0) { <p>沒有符合條件的問卷</p> }
+
+<mat-paginator [length]="page().totalElements" [pageSize]="page().size" [pageIndex]="page().page"
+  [pageSizeOptions]="[5, 10, 20]" (page)="onPage($event)" showFirstLastButtons />
+```
+
+<div class="mt-4 p-3 bg-green-50 border-l-4 border-green-400 text-gray-700 text-sm text-left">
+✅ <b>成功標準：</b> 每頁 2 筆時，共 2 頁（seed 資料有 4 筆已發佈問卷）；只有「進行中」的三份問卷名稱是連結；換頁時 Network 面板看得到新的 <code>?page=1&amp;size=2</code> 請求。
+</div>
+
+<style>
+.slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th { font-size: 15px !important; line-height: 1.45 !important; }
+.slidev-layout td, .slidev-layout th { padding: 4px 8px !important; }
+.slidev-layout .text-sm { font-size: 14px !important; line-height: 1.4 !important; }
+.slidev-layout .slidev-code-wrapper { max-width: none !important; }
+.slidev-layout pre, .slidev-layout .shiki, .slidev-layout .slidev-code { padding: 0.7rem 1.2rem !important; width: calc(100% + 3rem) !important; margin-right: -3rem !important; }
+.slidev-layout pre code, .slidev-layout .shiki code, .slidev-layout .line { font-size: 12.5px !important; line-height: 1.3 !important; }
+</style>
+
+<!--
+驗收的方法：打開瀏覽器開發者工具的 Network 面板，換頁之後會看到新的 API 請求，這就證明分頁真的是後端做的。
+-->
+
+---
 layout: end
 ---
 
@@ -470,5 +691,5 @@ layout: end
 ### 善用 Angular Material 提供的 mat-table，輕鬆打造具備分頁的資料表格
 
 <!--
-這一章我們學會了怎麼用 Angular Material 的 mat-table 快速做出一個含分頁功能的表格，也搞懂了 HTML、TypeScript、資料三者要怎麼對應。下一章我們會接著看 mat-icon，讓介面更完整。辛苦大家了！
+這一章我們學會了怎麼用 Angular Material 的 mat-table 快速做出一個含分頁功能的表格，也搞懂了 HTML、TypeScript、資料三者要怎麼對應。下一章我們會接著看 mat-icon，讓介面更完整。最後的練習，是把問卷系統的前台列表做出來，用的正是後端的分頁 API，辛苦大家了！
 -->

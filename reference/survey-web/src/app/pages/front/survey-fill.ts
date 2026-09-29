@@ -98,6 +98,6 @@ export class SurveyFill {
   }
 
   async cancel() {
-    if (await this.dialogs.confirm('確定要離開嗎？已填寫的內容不會儲存')) this.router.navigate(['/']);
+    if (await this.dialogs.confirm('確定要離開嗎？已填寫的內容不會儲存')) this.router.navigate(['/surveys']);
   }
 }
