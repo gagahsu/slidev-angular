@@ -1,0 +1,20 @@
+<mat-toolbar color="primary">
+  <a routerLink="/" class="brand">動態問卷</a>
+  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">問卷列表</a>
+  @if (auth.isLoggedIn()) {
+    <a mat-button routerLink="/my-records" routerLinkActive="active">我的填寫紀錄</a>
+    <a mat-button routerLink="/profile" routerLinkActive="active">會員資料</a>
+  }
+  @if (auth.isAdmin()) {
+    <a mat-button routerLink="/admin" routerLinkActive="active">後台管理</a>
+  }
+  <span class="spacer"></span>
+  @if (auth.isLoggedIn()) {
+    <span class="hello">{{ auth.user()?.name }}</span>
+    <button mat-button (click)="auth.logout()">登出</button>
+  } @else {
+    <a mat-button routerLink="/login">登入</a>
+    <a mat-button routerLink="/register">註冊</a>
+  }
+</mat-toolbar>
+<main class="page"><router-outlet /></main>

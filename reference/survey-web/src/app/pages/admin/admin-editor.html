@@ -1,0 +1,88 @@
+<div class="page">
+  <h2>{{ readonly ? '檢視問卷' : id ? '編輯問卷' : '新增問卷' }}</h2>
+
+  <mat-stepper linear="false" #stepper>
+    <mat-step label="基本資料">
+      <form [formGroup]="basic" class="form-col">
+        <mat-form-field><mat-label>問卷名稱</mat-label><input matInput formControlName="title" maxlength="50" /></mat-form-field>
+        <mat-form-field><mat-label>說明</mat-label><textarea matInput formControlName="description" rows="3"></textarea></mat-form-field>
+        <div class="row">
+          <mat-form-field>
+            <mat-label>開始日期</mat-label>
+            <input matInput [matDatepicker]="sp" formControlName="startDate" />
+            <mat-datepicker-toggle matIconSuffix [for]="sp" /><mat-datepicker #sp />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>結束日期</mat-label>
+            <input matInput [matDatepicker]="ep" formControlName="endDate" />
+            <mat-datepicker-toggle matIconSuffix [for]="ep" /><mat-datepicker #ep />
+          </mat-form-field>
+        </div>
+      </form>
+      <button mat-flat-button (click)="toQuestions(stepper)">下一步</button>
+    </mat-step>
+
+    <mat-step label="題目">
+      <ol class="q-list">
+        @for (x of questions(); track $index) {
+          <li>
+            <b>{{ x.title }}</b>（{{ typeLabel[x.type] }}{{ x.required ? '、必填' : '' }}）
+            @if (x.options.length) { <div class="opts">{{ x.options.map(o => o.label).join(' / ') }}</div> }
+            @if (!readonly) {
+              <button mat-button (click)="editQuestion($index)">編輯</button>
+              <button mat-button (click)="removeQuestion($index)">刪除</button>
+            }
+          </li>
+        } @empty { <li>尚無題目</li> }
+      </ol>
+
+      @if (editing() !== null) {
+        <form [formGroup]="q" class="form-col q-form">
+          <mat-form-field><mat-label>題目名稱</mat-label><input matInput formControlName="title" /></mat-form-field>
+          <mat-form-field>
+            <mat-label>題型</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="SINGLE">單選</mat-option>
+              <mat-option value="MULTI">多選</mat-option>
+              <mat-option value="TEXT">文字</mat-option>
+            </mat-select>
+          </mat-form-field>
+          @if (q.controls.type.value !== 'TEXT') {
+            <mat-form-field><mat-label>選項（一行一個）</mat-label><textarea matInput formControlName="optionsText" rows="4"></textarea></mat-form-field>
+          }
+          <mat-checkbox formControlName="required">必填</mat-checkbox>
+          <div>
+            <button mat-flat-button type="button" (click)="saveQuestion()">確定</button>
+            <button mat-button type="button" (click)="cancelQuestion()">取消</button>
+          </div>
+        </form>
+      } @else if (!readonly) {
+        <button mat-stroked-button (click)="newQuestion()">＋ 新增題目</button>
+      }
+      <div class="nav">
+        <button mat-button matStepperPrevious>上一步</button>
+        <button mat-flat-button (click)="toConfirm(stepper)">下一步</button>
+      </div>
+    </mat-step>
+
+    <mat-step label="確認">
+      <h3>{{ basic.controls.title.value }}</h3>
+      <p>{{ basic.controls.description.value }}</p>
+      <p>期間：{{ basic.controls.startDate.value?.toLocaleDateString() }} ～ {{ basic.controls.endDate.value?.toLocaleDateString() }}</p>
+      <ol>
+        @for (x of questions(); track $index) {
+          <li>{{ x.title }}（{{ typeLabel[x.type] }}{{ x.required ? '、必填' : '' }}）@if (x.options.length) { ：{{ x.options.map(o => o.label).join(' / ') }} }</li>
+        }
+      </ol>
+      <div class="nav">
+        <button mat-button matStepperPrevious>上一步</button>
+        @if (readonly) {
+          <button mat-flat-button (click)="back()">返回列表</button>
+        } @else {
+          <button mat-stroked-button (click)="commit(false)">僅儲存</button>
+          <button mat-flat-button (click)="commit(true)">儲存並發佈</button>
+        }
+      </div>
+    </mat-step>
+  </mat-stepper>
+</div>

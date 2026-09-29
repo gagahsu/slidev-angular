@@ -1,0 +1,38 @@
+@if (survey(); as s) {
+  <h2>{{ s.title }}</h2>
+  <p class="muted">{{ s.description }}</p>
+
+  <form class="card" [formGroup]="info">
+    <div class="row">
+      <mat-form-field appearance="outline"><mat-label>姓名 *</mat-label><input matInput formControlName="name" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>手機 *</mat-label><input matInput formControlName="phone" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Email *</mat-label><input matInput formControlName="email" type="email" /></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>年齡</mat-label><input matInput formControlName="age" type="number" /></mat-form-field>
+    </div>
+  </form>
+
+  @for (q of s.questions; track q.id; let i = $index) {
+    <div class="card">
+      <h3>{{ i + 1 }}. {{ q.title }} @if (q.required) { <span style="color:#d32f2f">*</span> }</h3>
+      @switch (q.type) {
+        @case ('SINGLE') {
+          <mat-radio-group [formControl]="$any(answers.at(i))" class="col">
+            @for (o of q.options; track o.id) { <mat-radio-button [value]="o.label">{{ o.label }}</mat-radio-button> }
+          </mat-radio-group>
+        }
+        @case ('MULTI') {
+          @for (o of q.options; track o.id) {
+            <div><mat-checkbox [checked]="isChecked(i, o.label)" (change)="toggle(i, o.label, $event.checked)">{{ o.label }}</mat-checkbox></div>
+          }
+        }
+        @default {
+          <mat-form-field appearance="outline" style="width:100%"><textarea matInput rows="3" [formControl]="$any(answers.at(i))"></textarea></mat-form-field>
+        }
+      }
+    </div>
+  }
+  <div class="row">
+    <button mat-button (click)="cancel()">取消</button>
+    <button mat-flat-button (click)="next()">送出</button>
+  </div>
+} @else { <p class="muted">載入中…</p> }
