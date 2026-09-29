@@ -24,16 +24,16 @@
   ⑤ 所有資料都傳完時，complete callback 被呼叫
 */
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
-  imports: []
+  templateUrl: './app.html',
+  imports: [JsonPipe]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   private http = inject(HttpClient);
 
@@ -41,12 +41,12 @@ export class AppComponent implements OnInit {
   syncLog: string[] = [];
 
   // 非同步示範的輸出
-  asyncLog: string[] = [];
+  asyncLog = signal<string[]>([]);
 
   // API 資料
-  apiData: any = null;
-  isLoading: boolean = false;
-  errorMsg: string = '';
+  apiData = signal<any>(null);
+  isLoading = signal(false);
+  errorMsg = signal('');
 
   ngOnInit(): void {
     this.demoSync();
@@ -77,18 +77,18 @@ export class AppComponent implements OnInit {
   // ② 非同步執行示範（setTimeout）
   // ==============================
   demoAsync(): void {
-    this.asyncLog = [];
+    this.asyncLog.set([]);
 
-    this.asyncLog.push('① 開始');
+    this.asyncLog.update(l => [...l, '① 開始']);
 
     // setTimeout 是非同步的：不等它完成，繼續往下執行
     setTimeout(() => {
       // 2 秒後才執行
-      this.asyncLog.push('③ setTimeout 執行（2秒後）');
+      this.asyncLog.update(l => [...l, '③ setTimeout 執行（2秒後）']);
     }, 2000);
 
     // 這行不等 setTimeout，立刻執行
-    this.asyncLog.push('② 結束（setTimeout 還沒到）');
+    this.asyncLog.update(l => [...l, '② 結束（setTimeout 還沒到）']);
 
     // 實際輸出順序：① 開始 → ② 結束 → ③ setTimeout 執行（2秒後）
   }
@@ -97,9 +97,9 @@ export class AppComponent implements OnInit {
   // ③ Observable + subscribe 示範
   // ==============================
   fetchData(): void {
-    this.isLoading = true;
-    this.apiData = null;
-    this.errorMsg = '';
+    this.isLoading.set(true);
+    this.apiData.set(null);
+    this.errorMsg.set('');
 
     // http.get() 回傳 Observable，不會立刻執行
     // .subscribe() 才是真正「訂閱」並開始等待資料
@@ -107,14 +107,14 @@ export class AppComponent implements OnInit {
       .subscribe({
         next: (data) => {
           // 資料回來時（非同步）才執行這裡
-          this.apiData = data;
-          this.isLoading = false;
+          this.apiData.set(data);
+          this.isLoading.set(false);
           console.log('資料回來了：', data);
         },
         error: (err) => {
           // 發生錯誤時執行這裡
-          this.errorMsg = '載入失敗：' + err.message;
-          this.isLoading = false;
+          this.errorMsg.set('載入失敗：' + err.message);
+          this.isLoading.set(false);
         },
         complete: () => {
           // 所有資料都傳完時執行（通常 http 請求完成後自動 complete）
@@ -123,6 +123,6 @@ export class AppComponent implements OnInit {
       });
 
     // 注意：這行在 subscribe 之後立刻執行，不等 API 回應
-    console.log('subscribe 後立刻執行，isLoading =', this.isLoading);
+    console.log('subscribe 後立刻執行，isLoading =', this.isLoading());
   }
 }

@@ -9,16 +9,15 @@
 */
 
 import { Component } from '@angular/core';
-import { HeaderComponent } from './header/header.component';
+import { Header } from './header/header';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
-    HeaderComponent   // 告訴 Angular：這個元件裡會用到 <app-header>
-    // 如果還有 FooterComponent，也要在這裡加入：
-    // FooterComponent
+    Header   // 告訴 Angular：這個元件裡會用到 <app-header>
+    // 如果還有 Footer，也要在這裡加入：
+    // Footer
   ]
 })
-export class AppComponent { }
+export class App { }

@@ -7,11 +7,11 @@
 
 <div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
 
-  <h1 style="color: #1a5c5c; text-align: center;">🔀 @if 條件顯示示範</h1>
+  <h1 style="color: #1a5c5c; text-align: center;">🔀 &#64;if 條件顯示示範</h1>
 
-  <!-- ① 基本 @if / @else：登入狀態 -->
+  <!-- ① 基本 &#64;if / &#64;else：登入狀態 -->
   <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
-    <h2 style="color: #1565c0; margin-top: 0;">① 基本 @if / @else — 登入狀態</h2>
+    <h2 style="color: #1565c0; margin-top: 0;">① 基本 &#64;if / &#64;else — 登入狀態</h2>
 
     <button
       (click)="toggleLogin()"
@@ -39,9 +39,9 @@
     </p>
   </div>
 
-  <!-- ② @else if：成績等級 -->
+  <!-- ② &#64;else if：成績等級 -->
   <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825; margin-bottom: 20px;">
-    <h2 style="color: #f57f17; margin-top: 0;">② @else if — 成績等級</h2>
+    <h2 style="color: #f57f17; margin-top: 0;">② &#64;else if — 成績等級</h2>
 
     <div style="margin-bottom: 16px;">
       <label style="font-weight: bold;">分數：{{ score }}</label><br>
@@ -109,13 +109,13 @@
       模擬 API 呼叫（等待 2 秒）
     </button>
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <div style="text-align: center; padding: 20px; color: #7b1fa2;">
         <p style="font-size: 1.5rem;">⏳ 載入中，請稍候...</p>
       </div>
-    } @else if (loadedData) {
+    } @else if (loadedData()) {
       <div style="background: #e1bee7; padding: 16px; border-radius: 8px;">
-        <strong>✅ {{ loadedData }}</strong>
+        <strong>✅ {{ loadedData() }}</strong>
       </div>
     } @else {
       <div style="color: #888;">

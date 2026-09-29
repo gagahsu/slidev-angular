@@ -284,7 +284,7 @@ interface testInterface {
   getName(): string;
 }
 
-export class AppComponent implements testInterface {
+export class App implements testInterface {
   name: string = '';
 
   getName(): string {
@@ -300,7 +300,7 @@ export class AppComponent implements testInterface {
 <!--
 前面我們用 interface 來規範「物件」的形狀，其實 interface 也可以拿來規範「class」。這就像簽一份合約，class 簽了這份合約（也就是 implements 這個 interface），就有義務把合約裡列的項目全部兌現。
 
-寫法是在 class 名稱後面加上 implements 加 interface 名稱，這裡 AppComponent implements testInterface，testInterface 裡定義了 name 屬性跟 getName() 方法，所以 AppComponent 裡兩個都要真的寫出來，一個都不能少。
+寫法是在 class 名稱後面加上 implements 加 interface 名稱，這裡 App implements testInterface，testInterface 裡定義了 name 屬性跟 getName() 方法，所以 App 裡兩個都要真的寫出來，一個都不能少。
 
 ⚠️ 提醒大家，implements 檢查的是「必須要有」，不是「只能有」，class 裡面可以有 interface 沒規定的其他屬性或方法，但 interface 裡要求的項目一項都不能漏掉，不然編輯器馬上會報錯。
 -->

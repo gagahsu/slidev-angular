@@ -299,16 +299,15 @@ import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
     RouterOutlet,
     MatSidenavModule,
     MatListModule,
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent { }
+export class App { }
 ```
 
 <!--
@@ -412,7 +411,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.ts（一）
+# 完整解答 — sidenav-menu.ts（一）
 
 匯入模組與元件裝飾器（imports 陣列見下一頁）：
 
@@ -427,7 +426,6 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-sidenav-menu',
-  standalone: true,
   imports: [
     RouterOutlet,
     RouterLink,
@@ -443,7 +441,7 @@ import { MatButtonModule } from '@angular/material/button';
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.ts（二）
+# 完整解答 — sidenav-menu.ts（二）
 
 `imports` 陣列其餘部分、`pages` 陣列：
 
@@ -454,10 +452,10 @@ layout: default
     MatIconModule,
     MatButtonModule,
   ],
-  templateUrl: './sidenav-menu.component.html',
-  styleUrl: './sidenav-menu.component.scss',
+  templateUrl: './sidenav-menu.html',
+  styleUrl: './sidenav-menu.scss',
 })
-export class SidenavMenuComponent {
+export class SidenavMenu {
 
   // 對應 app.routes.ts 中幾個代表性頁面路徑
   pages = [
@@ -480,7 +478,7 @@ pages 陣列這裡只節錄 home、dashboard、cart 三筆示範，每一筆對�
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.html（一）
+# 完整解答 — sidenav-menu.html（一）
 
 側邊導覽本體，用 `mat-nav-list` 呈現連結清單：
 
@@ -513,7 +511,7 @@ mat-nav-list 是 Material 專門給「導覽用清單」的元件，語意上比
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.html（二）
+# 完整解答 — sidenav-menu.html（二）
 
 頂部工具列與主內容區：
 
@@ -548,7 +546,7 @@ mat-drawer-content 是主內容的正式容器，跟 mat-drawer 是兄弟關係�
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.scss（一）
+# 完整解答 — sidenav-menu.scss（一）
 
 容器與側邊導覽的基本版面：
 
@@ -581,7 +579,7 @@ mat-drawer-container 預設高度是 0，一定要自己給高度選單才會撐
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.scss（二）
+# 完整解答 — sidenav-menu.scss（二）
 
 工具列與目前頁面的醒目樣式：
 

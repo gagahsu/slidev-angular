@@ -28,8 +28,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   providers: [
     provideNativeDateAdapter()   // 讓 mat-datepicker 能處理原生 JS Date 物件
   ],
@@ -40,7 +39,7 @@ import { provideNativeDateAdapter } from '@angular/material/core';
     MatDatepickerModule    // mat-datepicker + mat-datepicker-toggle
   ]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // 原生 input type="date" 的資料

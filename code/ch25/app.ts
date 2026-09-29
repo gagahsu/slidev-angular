@@ -19,16 +19,15 @@
   → 有敏感資料（如 VIP 內容）請用 @if，不要用 display:none
 */
 
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [FormsModule]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // 基本 @if / @else 示範
@@ -70,17 +69,17 @@ export class AppComponent {
   // 實際應用：載入中狀態
   // ==============================
 
-  isLoading: boolean = false;
-  loadedData: string = '';
+  isLoading = signal(false);
+  loadedData = signal('');
 
   simulateLoad(): void {
-    this.isLoading = true;
-    this.loadedData = '';
+    this.isLoading.set(true);
+    this.loadedData.set('');
 
     // 模擬 API 等待 2 秒
     setTimeout(() => {
-      this.isLoading = false;
-      this.loadedData = '資料載入成功！共 42 筆記錄。';
+      this.isLoading.set(false);
+      this.loadedData.set('資料載入成功！共 42 筆記錄。');
     }, 2000);
   }
 }

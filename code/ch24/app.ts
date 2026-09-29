@@ -36,11 +36,10 @@ interface Department {
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: []
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // 基本陣列示範

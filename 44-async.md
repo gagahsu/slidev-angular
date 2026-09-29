@@ -338,7 +338,7 @@ setTimeout(() => {
 import { HttpClient } from '@angular/common/http';
 
 @Component({ ... })
-export class AppComponent {
+export class App {
   constructor(private http: HttpClient) {}
 
   fetchData(): void {
@@ -427,31 +427,32 @@ setTimeout
 # 在 Angular 元件中使用非同步
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  template: `<p>{{ message }}</p>`,
+  template: `<p>{{ message() }}</p>`,
 })
-export class AppComponent implements OnInit {
-  message = '載入中...';
-
-  constructor(private http: HttpClient) {}
+export class App implements OnInit {
+  private http = inject(HttpClient);
+  message = signal('載入中...');
 
   ngOnInit(): void {
     this.http.get<{ text: string }>('/api/hello').subscribe({
-      next: (res) => (this.message = res.text),
-      error: () => (this.message = '載入失敗'),
+      next: (res) => this.message.set(res.text),
+      error: () => this.message.set('載入失敗'),
     });
   }
 }
 ```
 
-`ngOnInit` 中發出請求，取得回應後更新屬性，Angular 的變更偵測自動更新樣板。
+`ngOnInit` 中發出請求，取得回應後用 `signal.set()` 更新狀態，樣板就會自動更新。
 
 <!--
-最後我們把非同步觀念放進一個真實的 Angular 元件情境裡看看。ngOnInit 執行時，message 先被設成「載入中...」，接著呼叫 http.get() 發出請求；因為這是非同步的，畫面會先顯示「載入中...」，等 API 真的回應了，subscribe 裡的 next 才會把 message 換成回傳的文字，Angular 的變更偵測會自動幫我們把畫面更新成最新的內容。
+最後我們把非同步觀念放進一個真實的 Angular 元件情境裡看看。ngOnInit 執行時，message 先被設成「載入中...」，接著呼叫 http.get() 發出請求；因為這是非同步的，畫面會先顯示「載入中...」，等 API 真的回應了，subscribe 裡的 next 才會把 message 換成回傳的文字，因為 message 是 signal，`set()` 之後 Angular 會自動把畫面更新成最新的內容。
+
+⚠️ Angular 21 預設是 zoneless（不再使用 zone.js），非同步回呼裡如果只是改一般的屬性，畫面不會更新。所以「會隨非同步資料改變、又要顯示在畫面上」的狀態，一律放進 signal，後面第 47 章會完整介紹。
 
 這個「先顯示載入中，資料回來後才更新畫面」的寫法，就是我們在真實專案裡最常見的非同步應用場景，大家可以留意 error 回呼也順手處理了失敗的情況，這是比較完整的寫法，值得大家平常寫程式時參考。
 -->
@@ -490,7 +491,7 @@ layout: default
 
 實務上呼叫 API 幾乎都會遇到「載入中、成功、失敗」三種狀態，請實作一個會員列表元件，完整處理這三種情況。
 
-1. 建立 `UserListComponent`，屬性 `loading`、`errorMessage`、`users` 分別代表三種狀態
+1. 建立 `UserList`，屬性 `loading`、`errorMessage`、`users` 分別代表三種狀態
 2. `ngOnInit()` 一開始先將 `loading` 設為 `true`
 3. 呼叫 `HttpClient.get(...)` 打上一頁的 API，用 `subscribe()` 接收結果
 4. `next` 回呼中，將 `res.data.data`（使用者陣列）存入 `users`，並把 `loading` 設回 `false`
@@ -526,10 +527,10 @@ layout: default
 
 # 完整解答 — Component TypeScript（一）
 
-`user-list.component.ts` 匯入與型別定義：
+`user-list.ts` 匯入與型別定義：
 
 ```typescript
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface User {
@@ -555,24 +556,23 @@ layout: default
 
 # 完整解答 — Component TypeScript（二）
 
-`user-list.component.ts` 類別與屬性宣告：
+`user-list.ts` 類別與屬性宣告：
 
 ```typescript
 @Component({
   selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  standalone: true,
+  templateUrl: './user-list.html',
 })
-export class UserListComponent implements OnInit {
+export class UserList implements OnInit {
   private readonly http = inject(HttpClient);
 
-  loading = false;
-  errorMessage = '';
-  users: User[] = [];
+  loading = signal(false);
+  errorMessage = signal('');
+  users = signal<User[]>([]);
 ```
 
 <!--
-接續上一頁的兩個介面，@Component 裝飾器設定好 selector 跟 templateUrl 之後，class 裡先用 inject(HttpClient) 拿到服務，接著宣告 loading、errorMessage、users 三個屬性，分別對應載入中、錯誤訊息、成功資料三種狀態。ngOnInit() 的邏輯下一頁接著看。
+接續上一頁的兩個介面，@Component 裝飾器設定好 selector 跟 templateUrl 之後，class 裡先用 inject(HttpClient) 拿到服務，接著宣告 loading、errorMessage、users 三個 signal，分別對應載入中、錯誤訊息、成功資料三種狀態。ngOnInit() 的邏輯下一頁接著看。
 -->
 
 ---
@@ -585,18 +585,18 @@ layout: default
 
 ```typescript
   ngOnInit(): void {
-    this.loading = true;
+    this.loading.set(true);
 
     this.http
       .get<RandomUsersResponse>('https://api.freeapi.app/api/v1/public/randomusers')
       .subscribe({
         next: (res) => {
-          this.users = res.data.data;
-          this.loading = false;
+          this.users.set(res.data.data);
+          this.loading.set(false);
         },
         error: (err) => {
-          this.errorMessage = '會員資料載入失敗，請稍後再試';
-          this.loading = false;
+          this.errorMessage.set('會員資料載入失敗，請稍後再試');
+          this.loading.set(false);
         },
       });
   }
@@ -613,16 +613,16 @@ layout: default
 
 # 完整解答 — Component HTML
 
-`user-list.component.html` 完整內容：
+`user-list.html` 完整內容：
 
 ```html
-@if (loading) {
+@if (loading()) {
   <p>載入中...</p>
-} @else if (errorMessage) {
-  <p class="error">{{ errorMessage }}</p>
+} @else if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
 } @else {
   <ul>
-    @for (user of users; track user.id) {
+    @for (user of users(); track user.id) {
       <li>{{ user.name.first }} {{ user.name.last }}（{{ user.email }}）</li>
     }
   </ul>

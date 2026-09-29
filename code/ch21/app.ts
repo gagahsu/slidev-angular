@@ -12,12 +12,11 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     RouterOutlet,      // 提供 <router-outlet> 元件
     RouterLink,        // 提供 routerLink 指令
     RouterLinkActive   // 提供 routerLinkActive 指令
   ]
 })
-export class AppComponent { }
+export class App { }

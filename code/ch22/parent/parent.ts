@@ -14,17 +14,16 @@
 */
 
 import { Component } from '@angular/core';
-import { ChildComponent } from '../child/child.component';
+import { Child } from '../child/child';
 
 @Component({
   selector: 'app-parent',
-  templateUrl: './parent.component.html',
-  standalone: true,
+  templateUrl: './parent.html',
   imports: [
-    ChildComponent    // 必須在這裡 import 子元件，HTML 才認得 <app-child>
+    Child    // 必須在這裡 import 子元件，HTML 才認得 <app-child>
   ]
 })
-export class ParentComponent {
+export class Parent {
 
   // 父元件的資料
   parentMessage: string = "我是父元件的訊息";

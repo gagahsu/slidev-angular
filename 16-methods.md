@@ -142,7 +142,7 @@ class: flex flex-col justify-center items-center text-center
 # 方法的組成 — 範例
 
 ```typescript
-export class AppComponent {
+export class App {
 
   // 方法名稱: showMessage
   // 參數: 無
@@ -160,7 +160,7 @@ export class AppComponent {
 
 <!--
 我們直接來看 TypeScript 裡的寫法。
-在 `AppComponent` 這個 class 內部，我們宣告了一個 `showMessage()` 方法。
+在 `App` 這個 class 內部，我們宣告了一個 `showMessage()` 方法。
 請注意！因為是在 Angular class 裡面宣告方法，所以**不需要寫 JS 原本的 `function` 關鍵字**喔！
 這跟在普通的 JS 檔案裡寫法不一樣，初學者常常會順手寫出 `function showMessage()`，結果被編譯器當場退件。
 在大括號內部，我們寫了 `alert('Hello!');`。
@@ -188,7 +188,7 @@ class: flex flex-col justify-center items-center text-center
 語法：在 HTML 標籤上使用 `(click)` 事件綁定，填入要呼叫的方法名稱。
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <button (click)="showMessage()">點我</button>
 ```
 
@@ -211,8 +211,8 @@ class: flex flex-col justify-center items-center text-center
 HTML 用名稱呼叫方法後，TS 檔案中必須有一個**同名方法**來處理這個事件。
 
 ```typescript
-// app.component.ts
-export class AppComponent {
+// app.ts
+export class App {
 
   showMessage() {
     alert('你點了按鈕！');
@@ -241,7 +241,7 @@ export class AppComponent {
 在方法中呼叫同一個 class 的另一個方法，需要用 `this.方法名稱()` 來呼叫。
 
 ```typescript
-export class AppComponent {
+export class App {
 
   firstMethod() {
     alert('我是第一個方法');
@@ -413,11 +413,11 @@ layout: default
 # 練習：解題提示
 ### 完成步驟
 
-1. 在 `app.component.html` 加入兩個按鈕：
+1. 在 `app.html` 加入兩個按鈕：
    - `<button (click)="showMessage()">顯示訊息</button>`
    - `<button (click)="greet('你的名字')">打招呼</button>`
 
-2. 在 `app.component.ts` 的 class 內定義三個方法：
+2. 在 `app.ts` 的 class 內定義三個方法：
    - `showMessage()` → `alert('訊息！')` 然後呼叫 `this.logDone()`
    - `greet(name: string)` → `alert('Hello, ' + name)`
    - `logDone()` → `console.log('完成！')`

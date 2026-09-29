@@ -160,9 +160,9 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-root',
   imports: [CommonModule],
-  templateUrl: './app.component.html'
+  templateUrl: './app.html'
 })
-export class AppComponent {
+export class App {
   user = { name: 'John', age: 30, roles: ['admin', 'user'] };
 }
 ```

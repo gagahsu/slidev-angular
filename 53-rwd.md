@@ -282,14 +282,14 @@ Media Query 寫在 Angular 元件對應的 `.scss` 檔案內，與一般 CSS 寫
 **HTML 範本**
 
 ```html
-<!-- practise1.component.html -->
+<!-- practise1.html -->
 <div class="box"></div>
 ```
 
 **SCSS — 預設（桌機）樣式**
 
 ```css
-/* practise1.component.scss */
+/* practise1.scss */
 .box {
   width: 100%;
   height: 200px;

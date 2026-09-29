@@ -33,15 +33,14 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatButtonModule
   ]
 })
-export class AppComponent {
+export class App {
 
   fb = inject(FormBuilder);
 

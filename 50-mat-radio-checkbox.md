@@ -289,7 +289,7 @@ Checkbox 的選取狀態為布林值，在 TypeScript 中宣告布林變數後�
 **TypeScript**
 
 ```typescript
-export class AppComponent {
+export class App {
   checkBoxData1: boolean = false;
   checkBoxData2: boolean = false;
 }
@@ -324,16 +324,15 @@ layout: default
 <mat-checkbox [(ngModel)]="checkBoxData2">多選2</mat-checkbox>
 ```
 
-**模組匯入（app.module.ts）**
+**匯入（元件的 imports 陣列）**
 
 ```typescript
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
-@NgModule({
-  imports: [
-    MatCheckboxModule,
-    FormsModule
-  ]
+@Component({
+  selector: 'app-root',
+  imports: [MatCheckboxModule, FormsModule],
+  templateUrl: './app.html',
 })
 ```
 
@@ -439,7 +438,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — drink-order.component.ts（一）
+# 完整解答 — drink-order.ts（一）
 
 匯入模組與元件裝飾器：
 
@@ -451,11 +450,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-drink-order',
-  standalone: true,
   imports: [FormsModule, MatRadioModule, MatCheckboxModule],
-  templateUrl: './drink-order.component.html',
+  templateUrl: './drink-order.html',
 })
-export class DrinkOrderComponent {
+export class DrinkOrder {
   // 屬性見下一頁
 }
 ```
@@ -468,12 +466,12 @@ imports 陣列裡的 FormsModule 是關鍵，沒有它 [(ngModel)] 完全無法�
 layout: default
 ---
 
-# 完整解答 — drink-order.component.ts（二）
+# 完整解答 — drink-order.ts（二）
 
 `sweetnessOptions`、`toppings` 陣列與 `selectedToppingsText` getter：
 
 ```typescript
-export class DrinkOrderComponent {
+export class DrinkOrder {
 
   sweetnessOptions = [
     { value: 'less', label: '少糖' },
@@ -505,7 +503,7 @@ selectedToppingsText 用 filter 篩出勾選的項目、map 取出名稱、join(
 layout: default
 ---
 
-# 完整解答 — drink-order.component.html（一）
+# 完整解答 — drink-order.html（一）
 
 甜度單選：
 
@@ -529,7 +527,7 @@ mat-radio-group 上直接綁 [(ngModel)]="selectedSweetness"，代表整組單�
 layout: default
 ---
 
-# 完整解答 — drink-order.component.html（二）
+# 完整解答 — drink-order.html（二）
 
 加料多選與結果顯示：
 

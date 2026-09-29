@@ -348,8 +348,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ```typescript
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     FormsModule,
     MatTableModule,
@@ -370,7 +369,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ### 類別內容（一）— 屬性與 ngAfterViewInit
 
 ```typescript
-export class AppComponent implements AfterViewInit {
+export class App implements AfterViewInit {
   inputData: string = '';
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
@@ -415,7 +414,7 @@ export class AppComponent implements AfterViewInit {
 # 完整 HTML 範例（一）
 ### 搜尋框
 
-搭配上面的元件，`app.component.html` 完整內容如下：
+搭配上面的元件，`app.html` 完整內容如下：
 
 ```html
 <input
@@ -426,7 +425,7 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-這三張投影片補上完整的 `app.component.html`，讓大家可以跟前面幾張 TypeScript 對照著看，一樣不省略任何一段，避免同學照抄後編譯不過。
+這三張投影片補上完整的 `app.html`，讓大家可以跟前面幾張 TypeScript 對照著看，一樣不省略任何一段，避免同學照抄後編譯不過。
 
 這張是搜尋框本身：`matInput` 讓輸入框套用 Material 樣式，`(keyup)` 綁定我們寫好的 `changeData()`，`[(ngModel)]` 則雙向繫結 `inputData`，這兩個事件繫結是即時搜尋能運作的關鍵。
 -->

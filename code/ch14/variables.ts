@@ -15,7 +15,7 @@
 
 // 以下用「模擬 Angular 元件」的方式示範
 
-class AppComponent {
+class App {
   // === 全域變數（宣告在 class 最上層）===
 
   // 基本型別

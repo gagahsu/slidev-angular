@@ -163,8 +163,8 @@ ng g c second
 ```typescript
 // app.routes.ts
 import { Routes } from '@angular/router';
-import { FirstComponent } from './first/first.component';
-import { SecondComponent } from './second/second.component';
+import { First } from './first/first';
+import { Second } from './second/second';
 
 export const routes: Routes = [];
 ```
@@ -234,8 +234,8 @@ class: flex flex-col justify-center items-center text-center
 ```typescript
 // app.routes.ts
 export const routes: Routes = [
-  { path: 'first',  component: FirstComponent },
-  { path: 'second', component: SecondComponent },
+  { path: 'first',  component: First },
+  { path: 'second', component: Second },
 ];
 ```
 
@@ -256,12 +256,12 @@ export const routes: Routes = [
 
 ```typescript
 // app.routes.ts
-import { NotFoundComponent } from './not-found/not-found.component';
+import { NotFound } from './not-found/not-found';
 
 export const routes: Routes = [
-  { path: 'first',  component: FirstComponent },
-  { path: 'second', component: SecondComponent },
-  { path: '**',     component: NotFoundComponent }, // 必須放最後
+  { path: 'first',  component: First },
+  { path: 'second', component: Second },
+  { path: '**',     component: NotFound }, // 必須放最後
 ];
 ```
 
@@ -275,7 +275,7 @@ export const routes: Routes = [
 所以，我們必須做防呆！
 我們在路由表的最後一行，加上一個 `path: '**'`（雙星號）。
 這個雙星號在路由裡代表「萬用字元（任何路徑）」。
-只要前面沒有人匹配成功的，通通都會被這顆網民黑洞吸進來，送到 `NotFoundComponent`（錯誤頁）。
+只要前面沒有人匹配成功的，通通都會被這顆網民黑洞吸進來，送到 `NotFound`（錯誤頁）。
 大叔千叮嚀萬交代：**這個雙星號萬用路由，一定要寫在整個 routes 陣列的最尾巴**！
 如果你把它寫在最上面，因為它匹配任何路徑，後面的 `first`、`second` 就永遠都不會被匹配到，所有人一點進來都直接被送去 404 頁面，那就太悲劇了！
 -->
@@ -294,9 +294,9 @@ export const routes: Routes = [
 ```typescript
 export const routes: Routes = [
   { path: '',     redirectTo: '/first', pathMatch: 'full' },
-  { path: 'first',  component: FirstComponent },
-  { path: 'second', component: SecondComponent },
-  { path: '**',     component: NotFoundComponent },
+  { path: 'first',  component: First },
+  { path: 'second', component: Second },
+  { path: '**',     component: NotFound },
 ];
 ```
 
@@ -317,22 +317,22 @@ export const routes: Routes = [
 
 ```typescript
 // app.routes.ts
-import { ChildAComponent } from './first/child-a/child-a.component';
+import { ChildA } from './first/child-a/child-a';
 
 export const routes: Routes = [
   {
     path: 'first',
-    component: FirstComponent,
+    component: First,
     children: [
-      { path: 'child-a', component: ChildAComponent }
+      { path: 'child-a', component: ChildA }
     ]
   },
-  { path: 'second', component: SecondComponent },
+  { path: 'second', component: Second },
 ];
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 子路由的 <code>&lt;router-outlet&gt;</code> 要放在父元件（FirstComponent）的 HTML 中。
+💡 子路由的 <code>&lt;router-outlet&gt;</code> 要放在父元件（First）的 HTML 中。
 </div>
 
 <!--
@@ -350,10 +350,10 @@ layout: default
 
 # 嵌套路由 — 父子元件設計（一）HTML
 
-**父元件** `first.component.html` 要放自己的第二個 `<router-outlet>`，子路由才有地方渲染：
+**父元件** `first.html` 要放自己的第二個 `<router-outlet>`，子路由才有地方渲染：
 
 ```html
-<!-- first.component.html -->
+<!-- first.html -->
 <h2>第一頁</h2>
 
 <!-- 導航到子路由（必須寫完整路徑） -->
@@ -364,7 +364,7 @@ layout: default
 ```
 
 ```html
-<!-- child-a.component.html -->
+<!-- child-a.html -->
 <p>我是 Child-A 的內容</p>
 ```
 
@@ -374,7 +374,7 @@ layout: default
 
 <!--
 根元件有一個 router-outlet，負責渲染 first、second 這層。
-first.component.html 裡面必須再放一個 router-outlet，負責渲染 child-a 這層。
+first.html 裡面必須再放一個 router-outlet，負責渲染 child-a 這層。
 如果忘記在父元件放 router-outlet，子路由切換後什麼都不會出現，而且 console 也不會報錯，很難找到原因。
 導航連結要寫完整路徑 /first/child-a，不能只寫 /child-a。
 -->
@@ -388,20 +388,19 @@ layout: default
 Standalone component 的 `imports` 各自獨立。父元件 HTML 用了 `routerLink` 與 `<router-outlet>`，就必須在**父元件自己的** `imports` 加入對應模組：
 
 ```typescript
-// first.component.ts
+// first.ts
 import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-first',
-  standalone: true,
   imports: [RouterOutlet, RouterLink],  // 缺少這行 HTML 會報錯
-  templateUrl: './first.component.html',
+  templateUrl: './first.html',
 })
-export class FirstComponent {}
+export class First {}
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 根元件（AppComponent）有 import <code>RouterOutlet</code> 不代表子元件也有。每個 Standalone Component 需要用什麼就自己 import 什麼
+💡 根元件（App）有 import <code>RouterOutlet</code> 不代表子元件也有。每個 Standalone Component 需要用什麼就自己 import 什麼
 </div>
 
 <!--
@@ -415,12 +414,12 @@ layout: default
 
 # 定義路線 — 小節練習
 
-根據以下規格，補完 `app.routes.ts` 與 `home.component.html`（已 import 好所有元件）：
+根據以下規格，補完 `app.routes.ts` 與 `home.html`（已 import 好所有元件）：
 
 - 根路徑 `''` → 重新導向至 `/home`（`pathMatch: 'full'`）
-- `/home` → `HomeComponent`，下有子路由 `/home/news` → `NewsComponent`
-- `/about` → `AboutComponent`
-- 任何未定義路徑 → `NotFoundComponent`
+- `/home` → `Home`，下有子路由 `/home/news` → `News`
+- `/about` → `About`
+- 任何未定義路徑 → `NotFound`
 
 ```typescript
 export const routes: Routes = [
@@ -429,7 +428,7 @@ export const routes: Routes = [
 ```
 
 ```html
-<!-- home.component.html — 補完讓子路由能渲染 -->
+<!-- home.html — 補完讓子路由能渲染 -->
 <h2>首頁</h2>
 <a ___="/home/news">最新消息</a>
 <___></___>
@@ -450,18 +449,18 @@ export const routes: Routes = [
   { path: '',      redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
-    component: HomeComponent,
+    component: Home,
     children: [
-      { path: 'news', component: NewsComponent }
+      { path: 'news', component: News }
     ]
   },
-  { path: 'about', component: AboutComponent },
-  { path: '**',    component: NotFoundComponent },  // 必須放最後
+  { path: 'about', component: About },
+  { path: '**',    component: NotFound },  // 必須放最後
 ];
 ```
 
 ```html
-<!-- home.component.html -->
+<!-- home.html -->
 <h2>首頁</h2>
 <a routerLink="/home/news">最新消息</a>
 <router-outlet></router-outlet>
@@ -472,7 +471,7 @@ export const routes: Routes = [
 </div>
 
 <!--
-兩個常見錯誤：子路由 path 寫成 '/news' 加了斜線會找不到；忘記在 home.component.html 加 router-outlet 導致子頁面空白但 console 不報錯。
+兩個常見錯誤：子路由 path 寫成 '/news' 加了斜線會找不到；忘記在 home.html 加 router-outlet 導致子頁面空白但 console 不報錯。
 -->
 
 ---
@@ -500,14 +499,13 @@ class: flex flex-col justify-center items-center text-center
 | `RouterLinkActive` | 在 HTML 中使用 `routerLinkActive` 設定當前頁 CSS |
 
 ```typescript
-// app.component.ts
+// app.ts
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
-  standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive],
 })
-export class AppComponent {}
+export class App {}
 ```
 
 <!--
@@ -526,7 +524,7 @@ export class AppComponent {}
 `<router-outlet>` 是路由的**顯示容器**，切換頁面時，對應元件的內容會渲染在此標籤的位置。
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <nav>
   <a routerLink="/first">第一頁</a>
   <a routerLink="/second">第二頁</a>
@@ -539,8 +537,8 @@ export class AppComponent {}
 <!--
 第一個是 `<router-outlet>`。
 大叔把它生動地比喻成「天窗」。
-你在 `app.component.html` 裡擺了這行標籤。
-當使用者切換到 `/first` 時，`FirstComponent` 的內容就會從這個天窗降落、塞進這個位置。
+你在 `app.html` 裡擺了這行標籤。
+當使用者切換到 `/first` 時，`First` 的內容就會從這個天窗降落、塞進這個位置。
 切換到 `/second` 時，舊內容會飛走，新內容又會降落。
 所以，沒有這個天窗，你的元件是根本沒有地方顯示的喔！
 -->
@@ -614,7 +612,7 @@ layout: default
 
 # HTML 導航 — 小節練習
 
-在 `app.component.html` 補完導航列，讓 `/home` 與 `/about` 連結在選中時自動套用 `active` class，並在下方提供路由元件的顯示容器：
+在 `app.html` 補完導航列，讓 `/home` 與 `/about` 連結在選中時自動套用 `active` class，並在下方提供路由元件的顯示容器：
 
 ```html
 <nav>
@@ -660,11 +658,11 @@ layout: default
 當換頁需要依據邏輯判斷（例如登入後跳轉），使用 TypeScript 程式導航。在 `constructor` 注入 `Router` 服務：
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Router } from '@angular/router';
 
-@Component({ standalone: true, imports: [RouterOutlet] })
-export class AppComponent {
+@Component({ imports: [RouterOutlet] })
+export class App {
   constructor(private router: Router) {}
 
   goToFirst() {
@@ -693,12 +691,12 @@ export class AppComponent {
 
 ```typescript
 // app.routes.ts
-import { LoginComponent }     from './login/login.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { Login }     from './login/login';
+import { Dashboard } from './dashboard/dashboard';
 
 export const routes: Routes = [
-  { path: 'login',     component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'login',     component: Login },
+  { path: 'dashboard', component: Dashboard },
   { path: '',          redirectTo: '/login', pathMatch: 'full' },
 ];
 ```
@@ -715,17 +713,16 @@ login 是入口頁，dashboard 是登入成功後的目標頁，根路徑重新�
 以「登入驗證後跳轉」為例。先看元件的設定部分：
 
 ```typescript
-// login.component.ts
+// login.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  standalone: true,
   imports: [FormsModule],           // 雙向綁定 [(ngModel)] 需要
-  templateUrl: './login.component.html',
+  templateUrl: './login.html',
 })
-export class LoginComponent {
+export class Login {
   password = '';   // 綁定輸入框
   error = false;   // 控制錯誤訊息顯示
 
@@ -746,7 +743,7 @@ export class LoginComponent {
 接著是 `login()` 方法，包含判斷與跳轉邏輯：
 
 ```typescript
-export class LoginComponent {
+export class Login {
   // ... 承上頁屬性與 constructor
 
   login() {
@@ -773,7 +770,7 @@ export class LoginComponent {
 
 # TS 導航 — 完整範例（四）HTML
 
-`login.component.html`：
+`login.html`：
 
 ```html
 <input [(ngModel)]="password" placeholder="輸入密碼" />
@@ -878,9 +875,9 @@ class: flex flex-col justify-center items-center text-center
 ```typescript
 // app.routes.ts
 export const routes: Routes = [
-  { path: 'list',        component: ListComponent },      // 不帶值
-  { path: 'list/:name',  component: ListComponent },      // 帶一個值
-  { path: 'list/:name/:age', component: ListComponent },  // 帶多個值
+  { path: 'list',        component: List },      // 不帶值
+  { path: 'list/:name',  component: List },      // 帶一個值
+  { path: 'list/:name/:age', component: List },  // 帶多個值
 ];
 ```
 
@@ -907,10 +904,10 @@ Allen 這個字串就會自動塞進 `:name` 這個坑位，網址就會變成 `
 在目標元件中注入 `ActivatedRoute`，使用 `snapshot.paramMap.get()` 取出值。
 
 ```typescript
-// list.component.ts
+// list.ts
 import { ActivatedRoute } from '@angular/router';
 
-export class ListComponent {
+export class List {
   name: string | null = '';
 
   constructor(private route: ActivatedRoute) {
@@ -970,7 +967,7 @@ this.router.navigate(['/list'], {
 一樣注入 `ActivatedRoute`，但改用 `snapshot.queryParamMap.get()` 取值。
 
 ```typescript
-// list.component.ts
+// list.ts
 constructor(private route: ActivatedRoute) {
   const name = this.route.snapshot.queryParamMap.get('name');
   const age  = this.route.snapshot.queryParamMap.get('age');
@@ -1098,19 +1095,19 @@ layout: default
 
 1. 匯入 `RouterOutlet`、`RouterLink`、`RouterLinkActive` 到根元件
 2. `app.routes.ts` 中加入：
-   - `{ path: 'first', component: FirstComponent }`
-   - `{ path: 'second', component: SecondComponent }`
+   - `{ path: 'first', component: First }`
+   - `{ path: 'second', component: Second }`
    - `{ path: '', redirectTo: '/first', pathMatch: 'full' }`
 3. HTML 中按鈕加上 `routerLink="/first"` 和 `routerLink="/second"`
 4. HTML 中加入 `<router-outlet></router-outlet>`
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 記得在 <code>app.component.ts</code> 的 <code>imports</code> 加入這三個 Router 模組。
+💡 記得在 <code>app.ts</code> 的 <code>imports</code> 加入這三個 Router 模組。
 </div>
 
 <!--
 如果有點小迷路，請看這裡：
-記得去 `app.component.ts` 的 `imports` 陣列補上三個金剛：`RouterOutlet, RouterLink, RouterLinkActive`。
+記得去 `app.ts` 的 `imports` 陣列補上三個金剛：`RouterOutlet, RouterLink, RouterLinkActive`。
 在 `routes` 陣列裡加好那三條路，包含 `pathMatch: 'full'` 的空路由重新導向。
 然後在 HTML 裡加上 `<router-outlet></router-outlet>`。
 儲存後，看看是不是一打開網頁，網址就自動跳去 `/first`，而且點按鈕畫面能秒切了？
@@ -1125,7 +1122,7 @@ layout: two-cols
 
 1. 在 `first` 下新增子元件 `child-a`
 2. 在 `app.routes.ts` 設定子路由
-3. 在 `first.component.html` 加入 `<router-outlet>`
+3. 在 `first.html` 加入 `<router-outlet>`
 4. 加入導航按鈕切換到子路由頁面
 5. 子路由頁面顯示自訂內容
 
@@ -1139,7 +1136,7 @@ layout: two-cols
 第二關是「子路由進階練習」：
 請在 first 底下，建一個子元件 `child-a`。
 並在 `app.routes.ts` 裡面用 `children: []` 來嵌套這條路線。
-最後，在 `first.component.html` 裡面加開一個「子天窗」，並寫好導航連結去觸發它！
+最後，在 `first.html` 裡面加開一個「子天窗」，並寫好導航連結去觸發它！
 這題要特別注意「天窗開在哪裡」跟「路徑是拼接的」這兩個細節喔！
 -->
 
@@ -1153,10 +1150,10 @@ layout: default
 1. 建立子元件：`ng g c first/child-a`
 2. `app.routes.ts` 修改 first 路線：
    ```typescript
-   { path: 'first', component: FirstComponent,
-     children: [{ path: 'child-a', component: ChildAComponent }] }
+   { path: 'first', component: First,
+     children: [{ path: 'child-a', component: ChildA }] }
    ```
-3. 在 `first.component.html` 中加入 `<router-outlet>`（顯示子路由）
+3. 在 `first.html` 中加入 `<router-outlet>`（顯示子路由）
 4. 導航用 `routerLink="/first/child-a"` 完整路徑
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -1166,8 +1163,8 @@ layout: default
 <!--
 大叔給大家指點迷津：
 首先，在 terminal 執行 `ng g c first/child-a` 產生子元件。
-接著，在路由表中，把 `child-a` 的 path 寫在 `FirstComponent` 的 `children` 裡面。
-最關鍵的一步：**你必須去 `first.component.html`（也就是父元件的 HTML）裡放上 `<router-outlet>` 天窗**！
+接著，在路由表中，把 `child-a` 的 path 寫在 `First` 的 `children` 裡面。
+最關鍵的一步：**你必須去 `first.html`（也就是父元件的 HTML）裡放上 `<router-outlet>` 天窗**！
 如果你把天窗放錯地方放去根元件，子路由的內容就長不出來了。
 最後，導航連結要寫完整路徑 `/first/child-a`！
 這關能順利通過，你的路由基本功就通關了！

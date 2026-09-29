@@ -17,13 +17,12 @@ interface Product {
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,   // Angular 17+ 獨立元件
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],   // Angular 17+ 獨立元件
   imports: []
   // @for 和 @if 是 Angular 17+ 內建的控制流語法，不需要 import CommonModule
 })
-export class AppComponent {
+export class App {
 
   // 頁面標題
   pageTitle: string = "🛒 商品清單";

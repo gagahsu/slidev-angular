@@ -114,7 +114,7 @@ Signals 是 Angular v16 後推出的響應式狀態管理機制，用於監測�
 </div>
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 若需等待 API 回應等非同步操作，仍須使用 Observable（訂閱）寫法。
+💡 <b>注意：</b> 若需等待 API 回應等非同步操作，仍須使用 Observable（訂閱）寫法；但是 API 回來的<b>結果</b>要顯示在畫面上時，請用 <code>signal.set()</code> 存起來。Angular 21 預設不再使用 zone.js（zoneless），只有 Signal 變動、事件處理、<code>async</code> pipe 這幾種情況才會更新畫面。
 </div>
 
 <!--
@@ -123,6 +123,8 @@ Signals 是 Angular v16 後推出的響應式狀態管理機制，用於監測�
 大家可以想像成手機的電池百分比顯示：電量一變，狀態列就自動更新數字，不需要我們每次都去「訂閱」電量變化。這就是 Signal 的同步、即時特性。
 
 在業界實務上，Signal 很適合用在元件內部狀態或簡單的跨元件共享狀態，比如 loading 旗標、計數器。但如果是要等後端 API 回應這種非同步情境，Signal 目前還是不夠用，這時候還是要用 Observable，這點等一下會反覆提醒大家。
+
+另外還有一個 Angular 21 的重點：新專案預設是 zoneless，也就是不再靠 zone.js 自動偵測「哪個非同步回呼改了資料」。在 subscribe 或 setTimeout 的回呼裡改一般屬性，畫面不會更新；改 Signal 的值就會。這就是為什麼前面幾章的範例，凡是非同步進來、又要顯示在畫面上的資料，我們都用 signal 來存。
 -->
 
 ---
@@ -138,7 +140,7 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# Observable 寫法回顧：loading.service.ts
+# Observable 寫法回顧：loading-service.ts
 
 上一章（ch46）以 `BehaviorSubject` + `asObservable()` 實作跨元件狀態共享。
 
@@ -169,12 +171,12 @@ export class LoadingService {
 
 ---
 
-# Observable 寫法回顧：app.component.ts
+# Observable 寫法回顧：app.ts
 
-上一章的 `AppComponent` 取得 `loading$`，交由樣板的 `async` pipe 訂閱。
+上一章的 `App` 取得 `loading$`，交由樣板的 `async` pipe 訂閱。
 
 ```typescript
-export class AppComponent {
+export class App {
   loading$!: Observable<boolean>;
   constructor(private loadingService: LoadingService) {}
   ngOnInit(): void {
@@ -209,7 +211,7 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 改寫 loading.service.ts（一）
+# 改寫 loading-service.ts（一）
 
 將原本的 `BehaviorSubject` + `asObservable()` 替換為 `signal()`。
 
@@ -244,7 +246,7 @@ export class LoadingService {
 
 ---
 
-# 改寫 app.component.ts（二）
+# 改寫 app.ts（二）
 
 在元件中將 Signal 實例指派給本地屬性，取代 `Observable` + `async` pipe 寫法。
 
@@ -254,7 +256,7 @@ export class LoadingService {
 ```typescript
 import { Signal } from '@angular/core';
 
-export class AppComponent {
+export class App {
   // loading$!: Observable<boolean>;
   loading!: Signal<boolean>;
   constructor(private loadingService: LoadingService) {}
@@ -440,7 +442,7 @@ getter 是 TypeScript 語法，讓屬性變成「唯讀計算屬性」。
 ```typescript
 import { signal, computed } from '@angular/core';
 
-export class AppComponent {
+export class App {
   level = signal(1);
   attack = computed(() => this.level() * 3);
   defense = computed(() => this.level() * 2);
@@ -502,7 +504,7 @@ class: flex flex-col justify-center items-center text-center
 - Angular 會自動追蹤函式內所有被讀取的 Signal，並在其值變更時重新執行
 
 ```typescript
-export class AppComponent {
+export class App {
   loading!: Signal<boolean>;
   constructor(private loadingService: LoadingService) {
     effect(() => console.log(this.loading()));
@@ -681,7 +683,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — cart.component.ts（一）
+# 完整解答 — cart.ts（一）
 
 Signal 與 computed 宣告：
 
@@ -690,10 +692,9 @@ import { Component, signal, computed, effect } from '@angular/core';
 
 @Component({
   selector: 'app-cart',
-  standalone: true,
-  templateUrl: './cart.component.html',
+  templateUrl: './cart.html',
 })
-export class CartComponent {
+export class Cart {
 
   quantity = signal<number>(1);
   price = 100;
@@ -711,7 +712,7 @@ export class CartComponent {
 layout: default
 ---
 
-# 完整解答 — cart.component.ts（二）
+# 完整解答 — cart.ts（二）
 
 `constructor` 中的 `effect()` 與數量調整方法：
 
@@ -743,10 +744,10 @@ increase() 很單純，每次呼叫 quantity 就 +1；decrease() 則在 update()
 layout: default
 ---
 
-# 完整解答 — cart.component.html
+# 完整解答 — cart.html
 
 ```html
-<!-- cart.component.html -->
+<!-- cart.html -->
 <div class="cart-box">
   <p>數量：{{ quantity() }}</p>
   <button (click)="decrease()">-</button>

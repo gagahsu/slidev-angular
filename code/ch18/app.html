@@ -9,16 +9,16 @@
   <!-- 即時時鐘（由 ngOnInit 裡的計時器每秒更新） -->
   <div style="background: #1a5c5c; color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
     <div style="font-size: 0.9rem; opacity: 0.8;">目前時間（ngOnInit 設定的計時器）</div>
-    <div style="font-size: 2.5rem; font-weight: bold;">{{ currentTime }}</div>
+    <div style="font-size: 2.5rem; font-weight: bold;">{{ currentTime() }}</div>
   </div>
 
   <!-- API 資料（模擬 1 秒後載入） -->
   <div style="background: #f5f5f5; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
     <h3 style="margin-top: 0;">使用者清單（ngOnInit 載入資料）</h3>
-    @if (userData.length === 0) {
+    @if (userData().length === 0) {
       <p style="color: #999;">載入中...</p>
     } @else {
-      @for (user of userData; track user) {
+      @for (user of userData(); track user) {
         <div style="padding: 8px; border-bottom: 1px solid #ddd;">👤 {{ user }}</div>
       }
     }
@@ -27,7 +27,7 @@
   <!-- 生命週期執行記錄 -->
   <div style="background: #282c34; color: #abb2bf; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.85rem;">
     <div style="color: #e06c75; margin-bottom: 8px;">// 生命週期執行記錄</div>
-    @for (log of lifecycleLog; track log) {
+    @for (log of lifecycleLog(); track log) {
       <div>{{ log }}</div>
     }
   </div>

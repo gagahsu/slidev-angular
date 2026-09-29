@@ -19,11 +19,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [CommonModule]   // JsonPipe / DatePipe 都包含在 CommonModule
 })
-export class AppComponent {
+export class App {
 
   // 基本物件
   user = {

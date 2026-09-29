@@ -63,7 +63,7 @@ layout: default
 - **什麼是 API** — Application Programming Interface 的定義與概念
 - **如何使用 API** — 在 Angular 中呼叫 API 的三個步驟
 - **將 HttpClient 透過依賴注入** — 在 app.config.ts 加入 provideHttpClient()
-- **撰寫 HttpClient 文件** — 建立 http.service.ts 封裝四種 HTTP 方法
+- **撰寫 HttpClient 文件** — 建立 http-service.ts 封裝四種 HTTP 方法
 - **呼叫方法** — 注入 Service 並以 subscribe 接收回傳值
 - **呼叫方法 (post/put)** — 打包 JSON 資料後呼叫 postApi / putApi
 - **免費 API 網址** — 練習用的免費公開 API 資源
@@ -74,7 +74,7 @@ layout: default
 首先，用最接地氣的比喻搞懂什麼是 API。
 接著，拆解在 Angular 裡呼叫 API 的黃金三步驟。
 第一步，在 `app.config.ts` 裡接通 HttpClient 全域大動脈。
-第二步，親手撰寫 `http-client.service.ts` 文件，把四大 HTTP 方法封裝起來。
+第二步，親手撰寫 `http-client-service.ts` 文件，把四大 HTTP 方法封裝起來。
 第三步，在元件內部用 `subscribe` 訂閱法術把資料召喚出來。
 最後，介紹免費的 API 測試資源，並交給大家一項任務——串接「中央氣象署」的實時天氣 API，設計出一個氣象卡片網頁！
 -->
@@ -206,12 +206,13 @@ class: flex flex-col justify-center items-center text-center
 
 ```typescript
 import { provideHttpClient } from '@angular/common/http';
+import { provideBrowserGlobalErrorListeners } from '@angular/core';
 ```
 
 ```typescript
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient()
   ]
@@ -219,15 +220,15 @@ export const appConfig: ApplicationConfig = {
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> <code>provideHttpClient()</code> 必須加入 <code>providers</code> 陣列，否則注入 HttpClient 時會報錯。
+💡 <b>注意：</b> Angular 21 起，不加也能注入 <code>HttpClient</code>；但之後要用攔截器（<code>withInterceptors</code>）等設定就必須寫在 <code>provideHttpClient()</code> 裡，所以我們養成習慣，一開始就把它加進 <code>providers</code>。
 </div>
 
 <!--
-在新版的 Standalone Angular 專案中，網路通訊引擎預設是關閉的。
-所以我們第一步，必須打開全域設定檔 `app.config.ts`。
+在 Angular 21 裡，HttpClient 其實已經可以直接注入使用，但是想要調整網路通訊的設定（例如之後要學的攔截器）就要靠 `provideHttpClient()`。
+所以我們第一步，先打開全域設定檔 `app.config.ts`。
 在 providers 陣列中，塞入一行 `provideHttpClient()`。
 這就像是在專案的總配電盤上，合上「網路通訊」的無熔絲開關。
-如果不做這一步，你等一下在任何地方使用 HTTP，專案一啟動就會當場噴出 `No provider for HttpClient` 的世紀大紅字，請一定要記住這個起手式！
+舊版 Angular（19 以前）如果不做這一步，會噴出 `No provider for HttpClient` 的世紀大紅字，所以請記住這個起手式；到了後面的攔截器章節，更是一定要用它。
 -->
 
 ---
@@ -246,7 +247,7 @@ class: flex flex-col justify-center items-center text-center
 
 # 撰寫 HttpClient 文件（一）
 
-建立 `http-service/http-client.service.ts`，將所有 API 呼叫方法集中管理，避免重複程式碼分散各元件。
+建立 `http-service/http-client-service.ts`，將所有 API 呼叫方法集中管理，避免重複程式碼分散各元件。
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>資料夾結構：</b>
@@ -255,7 +256,7 @@ class: flex flex-col justify-center items-center text-center
 ```
 app/
 └── @http-services/
-    └── http.service.ts
+    └── http-service.ts
 ```
 
 <!--
@@ -271,7 +272,7 @@ app/
 
 # 撰寫 HttpClient 文件（二）
 
-在 `http-client.service.ts` 中加入以下程式。`@Injectable({ providedIn: 'root' })` 讓 Angular 在應用啟動時自動建立此 Service 的單例，無需手動 `new`。
+在 `http-client-service.ts` 中加入以下程式。`@Injectable({ providedIn: 'root' })` 讓 Angular 在應用啟動時自動建立此 Service 的單例，無需手動 `new`。
 
 ```typescript
 import { Injectable } from "@angular/core";
@@ -355,7 +356,7 @@ layout: default
 
 請根據前面投影片的內容，建立 `HttpClientService`：
 
-1. 建立 `http-service/http-client.service.ts`，加上 `@Injectable({ providedIn: 'root' })`
+1. 建立 `http-service/http-client-service.ts`，加上 `@Injectable({ providedIn: 'root' })`
 2. 透過 constructor 注入 `HttpClient`
 3. 撰寫 `getApi(url: string)`，回傳 GET 請求
 4. 撰寫 `postApi(url: string, postData: any)`，回傳 POST 請求
@@ -418,7 +419,7 @@ class: flex flex-col justify-center items-center text-center
 
 ```typescript
 import { RouterOutlet } from '@angular/router';
-import { HttpClientService } from '../http-service/http-client.service';
+import { HttpClientService } from '../http-service/http-client-service';
 ```
 
 ```typescript
@@ -426,7 +427,7 @@ constructor(private http: HttpClientService) {}
 ```
 
 <!--
-我們隨便打開一個要串資料的元件（比如 AppComponent）。
+我們隨便打開一個要串資料的元件（比如 App）。
 在建構子 constructor 括號裡，注入剛寫好的 `private http: HttpClientService`。
 拿到這台轉運車的鑰匙後，我們就能在元件的大腦裡隨時發號施令了。
 -->

@@ -27,15 +27,14 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     ReactiveFormsModule,   // formGroup / formControlName / formArrayName
     MatButtonModule,
     MatIconModule
   ]
 })
-export class AppComponent {
+export class App {
 
   fb = inject(FormBuilder);
 

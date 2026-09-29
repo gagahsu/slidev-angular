@@ -13,12 +13,11 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,   // Angular 17+ 獨立元件
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],   // Angular 17+ 獨立元件
   imports: []         // 只用事件綁定 (click)，不需要額外 import
 })
-export class AppComponent {
+export class App {
 
   // 屬性
   playerName: string = "勇者 Allen";

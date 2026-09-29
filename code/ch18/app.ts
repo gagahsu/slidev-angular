@@ -13,22 +13,21 @@
   使用前需要 implements 對應的 Interface
 */
 
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, signal } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,   // Angular 17+ 獨立元件
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],   // Angular 17+ 獨立元件
   imports: []         // @for / @if 是內建語法，不需要額外 import
 })
 // implements 表示「承諾實作這些介面的方法」
-export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
+export class App implements OnInit, OnDestroy, AfterViewInit {
 
   pageTitle: string = "生命週期示範";
-  currentTime: string = "";
-  userData: string[] = [];
-  lifecycleLog: string[] = [];  // 記錄生命週期執行順序
+  currentTime = signal("");
+  userData = signal<string[]>([]);
+  lifecycleLog = signal<string[]>([]);  // 記錄生命週期執行順序
 
   private timer: any;  // 計時器（銷毀時需要清除）
 
@@ -58,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // 模擬一個每秒更新的計時器
     this.timer = setInterval(() => {
-      this.currentTime = new Date().toLocaleTimeString('zh-TW');
+      this.currentTime.set(new Date().toLocaleTimeString('zh-TW'));
     }, 1000);
   }
 
@@ -92,14 +91,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   private loadData(): void {
     // 模擬 API 延遲回傳資料
     setTimeout(() => {
-      this.userData = ["Allen", "Grace", "小明", "小華"];
+      this.userData.set(["Allen", "Grace", "小明", "小華"]);
       this.log("資料載入完成！");
     }, 1000);
   }
 
   private log(message: string): void {
     const time = new Date().toLocaleTimeString();
-    this.lifecycleLog.push(`[${time}] ${message}`);
+    this.lifecycleLog.update(l => [...l, `[${time}] ${message}`]);
     console.log(`[生命週期] ${message}`);
   }
 }

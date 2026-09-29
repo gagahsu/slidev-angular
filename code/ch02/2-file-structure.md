@@ -15,15 +15,15 @@ my-angular-project/
 │   ├── app/                    ← Angular 主程式
 │   │   ├── components/         ← 「元件」統一放這個資料夾
 │   │   │   ├── header/         ← 每個元件有自己的子資料夾
-│   │   │   │   ├── header.component.ts
-│   │   │   │   ├── header.component.html
-│   │   │   │   └── header.component.css
+│   │   │   │   ├── header.ts
+│   │   │   │   ├── header.html
+│   │   │   │   └── header.css
 │   │   │   └── footer/
 │   │   ├── services/           ← 「服務」（處理 API、商業邏輯）
-│   │   │   └── user.service.ts
+│   │   │   └── user-service.ts
 │   │   ├── models/             ← 「資料型別」定義（interface）
 │   │   │   └── user.model.ts
-│   │   └── app.component.ts    ← 根元件
+│   │   └── app.ts    ← 根元件
 │   │
 │   ├── assets/                 ← 靜態資源（圖片、字型、圖示）
 │   │   └── images/

@@ -30,19 +30,19 @@
   </div>
 
   <!-- 目前狀態 -->
-  <div [style.background]="isLoading ? '#fff8e1' : '#e8f5e9'"
-       [style.borderColor]="isLoading ? '#f9a825' : '#2e7d32'"
+  <div [style.background]="isLoading() ? '#fff8e1' : '#e8f5e9'"
+       [style.borderColor]="isLoading() ? '#f9a825' : '#2e7d32'"
        style="padding: 20px; border-radius: 10px; border: 2px solid; margin-bottom: 20px; transition: all 0.3s;">
 
     <h2 style="margin-top: 0;">
-      @if (isLoading) {
+      @if (isLoading()) {
         ⏳ 載入中...
       } @else {
         ✅ 閒置中
       }
     </h2>
     <p style="margin: 0; color: #555;">
-      isLoading = <strong>{{ isLoading }}</strong>
+      isLoading = <strong>{{ isLoading() }}</strong>
       （從 LoadingService 訂閱而來）
     </p>
   </div>
@@ -76,10 +76,10 @@
       </button>
     </div>
     <div style="background: #1e1e1e; padding: 16px; border-radius: 8px; min-height: 100px; max-height: 200px; overflow-y: auto;">
-      @if (eventLog.length === 0) {
+      @if (eventLog().length === 0) {
         <p style="color: #666; margin: 0; font-family: monospace;">（尚無事件，點擊上方按鈕操作）</p>
       }
-      @for (log of eventLog; track $index) {
+      @for (log of eventLog(); track $index) {
         <p style="color: #a5d6a7; margin: 2px 0; font-family: monospace; font-size: 0.85rem;">{{ log }}</p>
       }
     </div>

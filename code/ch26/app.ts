@@ -30,11 +30,10 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [FormsModule]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // 基本 switch 示範（TypeScript）

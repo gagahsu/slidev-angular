@@ -142,7 +142,7 @@ ng g s @services/example
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 檔案名稱<b>不需要</b>加 <code>.service.ts</code>，Angular CLI 會自動加上後綴，產生 <code>example.service.ts</code>。
+💡 <b>注意：</b> 檔案名稱<b>不需要</b>加 <code>.service.ts</code>，Angular CLI 會自動加上後綴，產生 <code>example-service.ts</code>。
 </div>
 
 <!--
@@ -156,10 +156,10 @@ ng g s @services/example
 
 # Service 預設內容
 
-建立後，`example.service.ts` 的預設內容如下：
+建立後，`example-service.ts` 的預設內容如下：
 
 ```typescript
-// @services/example.service.ts
+// @services/example-service.ts
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -187,7 +187,7 @@ export class ExampleService {
 在 Service 中宣告需要傳遞的變數，建議命名與原頁面變數相同以方便識別。
 
 ```typescript
-// @services/example.service.ts
+// @services/example-service.ts
 import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
@@ -196,7 +196,7 @@ export class ExampleService {
 }
 ```
 
-以此例：A 頁面（`first.component.ts`）要將 `userName` 傳給 B 頁面（`second.component.ts`），就在 Service 中同樣宣告 `userName`。
+以此例：A 頁面（`first.ts`）要將 `userName` 傳給 B 頁面（`second.ts`），就在 Service 中同樣宣告 `userName`。
 
 <!--
 既然倉庫蓋好了，我們要怎麼用呢？
@@ -270,10 +270,10 @@ class: flex flex-col justify-center items-center text-center
 在 **A 頁面（發送方）** 注入 Service，並將資料塞入 Service 的變數。
 
 ```typescript
-// first.component.ts
-import { ExampleService } from '../@services/example.service';
+// first.ts
+import { ExampleService } from '../@services/example-service';
 
-export class FirstComponent {
+export class First {
   constructor(private exampleService: ExampleService) {}
 
   sendData() {
@@ -286,7 +286,7 @@ export class FirstComponent {
 
 <!--
 首先是 A 頁（寄貨方）。
-我們在 `first.component.ts` 的 constructor 括號裡，寫上 `private exampleService: ExampleService`。
+我們在 `first.ts` 的 constructor 括號裡，寫上 `private exampleService: ExampleService`。
 這代表我們把倉庫的鑰匙（注入服務）拿到手了。
 接著在送出方法裡，直接寫 `this.exampleService.userName = 'Allen'`。
 看！我們直接把貨物塞進了倉庫的置物櫃裡。
@@ -301,10 +301,10 @@ A 頁的任務到此圓滿完成！
 在 **B 頁面（接收方）** 同樣注入 Service，直接讀取其中的變數值。
 
 ```typescript
-// second.component.ts
-import { ExampleService } from '../@services/example.service';
+// second.ts
+import { ExampleService } from '../@services/example-service';
 
-export class SecondComponent {
+export class Second {
   userName: string = '';
 
   constructor(private exampleService: ExampleService) {
@@ -319,7 +319,7 @@ export class SecondComponent {
 
 <!--
 再來是 B 頁（收貨方）。
-同樣地，在 `second.component.ts` 的 constructor 注入同一個服務。
+同樣地，在 `second.ts` 的 constructor 注入同一個服務。
 接著，我們在大腦初始化時，直接寫 `this.userName = this.exampleService.userName`。
 這就是在從置物櫃裡把貨物拿出來，灌給自己的變數！
 這樣，使用者就能在第二頁看到剛剛在第一頁填的 'Allen' 了。
@@ -333,11 +333,11 @@ export class SecondComponent {
 Angular 14+ 提供 `inject()` 函式，可取代 constructor 參數注入，直接以類別屬性方式宣告。
 
 ```typescript
-// first.component.ts（發送方）
+// first.ts（發送方）
 import { inject } from '@angular/core';
-import { ExampleService } from '../@services/example.service';
+import { ExampleService } from '../@services/example-service';
 
-export class FirstComponent {
+export class First {
   private exampleService = inject(ExampleService);
 
   sendData() {
@@ -358,11 +358,11 @@ inject() 是 Angular 14 推出的函式式注入，適合 Standalone Component�
 接收方同樣用 `inject()` 取得 Service 實例，讀值邏輯放在 `constructor` 中。
 
 ```typescript
-// second.component.ts（接收方）
+// second.ts（接收方）
 import { inject } from '@angular/core';
-import { ExampleService } from '../@services/example.service';
+import { ExampleService } from '../@services/example-service';
 
-export class SecondComponent {
+export class Second {
   userName = '';
   private exampleService = inject(ExampleService);
 
@@ -403,7 +403,7 @@ layout: default
 
 # 頁面傳遞資料 — 小節練習
 
-A 頁面（`login.component.ts`）登入成功後，將 `token = 'abc123'` 存入 `AuthService`；B 頁面（`dashboard.component.ts`）在 `constructor` 中讀取並存入自己的 `token` 變數。補完兩頁面的程式碼：
+A 頁面（`login.ts`）登入成功後，將 `token = 'abc123'` 存入 `AuthService`；B 頁面（`dashboard.ts`）在 `constructor` 中讀取並存入自己的 `token` 變數。補完兩頁面的程式碼：
 
 ```typescript
 // A 頁面
@@ -504,27 +504,26 @@ class: flex flex-col justify-center items-center text-center
 在**子元件**中宣告接收用變數，並加上 `@Input` 裝飾器與匯入。
 
 ```typescript
-// second.component.ts（子元件）
+// second.ts（子元件）
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-second',
-  standalone: true,
-  templateUrl: './second.component.html',
+  templateUrl: './second.html',
 })
-export class SecondComponent {
+export class Second {
   @Input() value: string = '';
 }
 ```
 
 ```html
-<!-- second.component.html -->
+<!-- second.html -->
 <p>接收到的值：{{ value }}</p>
 ```
 
 <!--
 要讓子元件能夠收錢、收資料，它必須自己先安裝一個「接收天線」。
-我們在子元件（SecondComponent）的 TS 檔案中，
+我們在子元件（Second）的 TS 檔案中，
 匯入 `Input`，並在變數前方加上 `@Input()` 裝飾器。
 例如 `@Input() value: string = ''`。
 這樣就是在對外宣告：「大家聽好，我身上多了一個叫 value 的插孔，歡迎大家把資料插進來！」
@@ -538,14 +537,14 @@ export class SecondComponent {
 在**父元件**的 HTML 中，使用子元件標籤並加上 `[變數名稱]="父元件變數"` 綁定。
 
 ```typescript
-// first.component.ts（父元件）
-export class FirstComponent {
+// first.ts（父元件）
+export class First {
   parentName = 'Allen';
 }
 ```
 
 ```html
-<!-- first.component.html -->
+<!-- first.html -->
 <app-second [value]="parentName"></app-second>
 ```
 
@@ -602,7 +601,7 @@ layout: default
 4. 子元件 HTML 中用 `{{ userName }}`、`{{ userEmail }}`、`{{ userAddress }}` 顯示
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 父元件需匯入 <code>FormsModule</code>（雙向繫結用）與 <code>SecondComponent</code>（子元件用）。
+💡 父元件需匯入 <code>FormsModule</code>（雙向繫結用）與 <code>Second</code>（子元件用）。
 </div>
 
 <!--
@@ -621,15 +620,14 @@ layout: default
 # 練習 1：完整解答（子元件）
 
 ```typescript
-// second.component.ts
+// second.ts
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-second',
-  standalone: true,
-  templateUrl: './second.component.html',
+  templateUrl: './second.html',
 })
-export class SecondComponent {
+export class Second {
   @Input() userName: string = '';
   @Input() userEmail: string = '';
   @Input() userAddress: string = '';
@@ -637,7 +635,7 @@ export class SecondComponent {
 ```
 
 ```html
-<!-- second.component.html -->
+<!-- second.html -->
 <h3>頁面B(組件)</h3>
 <p>使用者名稱：{{ userName }}</p>
 <p>使用者Email：{{ userEmail }}</p>
@@ -655,18 +653,17 @@ layout: default
 # 練習 1：完整解答（父元件 TS）
 
 ```typescript
-// first.component.ts
+// first.ts
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SecondComponent } from './second.component';
+import { Second } from './second';
 
 @Component({
   selector: 'app-first',
-  standalone: true,
-  imports: [FormsModule, SecondComponent],
-  templateUrl: './first.component.html',
+  imports: [FormsModule, Second],
+  templateUrl: './first.html',
 })
-export class FirstComponent {
+export class First {
   userName = '';
   userEmail = '';
   userAddress = '';
@@ -674,7 +671,7 @@ export class FirstComponent {
 ```
 
 <!--
-父元件需匯入 FormsModule（供 ngModel 雙向繫結用）與 SecondComponent（子元件）。
+父元件需匯入 FormsModule（供 ngModel 雙向繫結用）與 Second（子元件）。
 宣告 userName、userEmail、userAddress 三個變數，對應三個輸入欄位。
 -->
 
@@ -685,7 +682,7 @@ layout: default
 # 練習 1：完整解答（父元件 HTML）
 
 ```html
-<!-- first.component.html -->
+<!-- first.html -->
 <h3>頁面A</h3>
 使用者名稱：<input [(ngModel)]="userName">
 使用者Email：<input [(ngModel)]="userEmail">
@@ -723,15 +720,14 @@ class: flex flex-col justify-center items-center text-center
 在**子元件**中宣告 `output<T>()` 變數，當需要回傳資料或觸發父元件動作時使用。
 
 ```typescript
-// second.component.ts（子元件）
+// second.ts（子元件）
 import { Component, output } from '@angular/core';
 
 @Component({
   selector: 'app-second',
-  standalone: true,
-  templateUrl: './second.component.html',
+  templateUrl: './second.html',
 })
-export class SecondComponent {
+export class Second {
   changeUserName = output<string>();
 }
 ```
@@ -751,8 +747,8 @@ export class SecondComponent {
 在子元件的方法中，使用 `.emit()` 回傳值給父元件。
 
 ```typescript
-// second.component.ts（子元件）
-export class SecondComponent {
+// second.ts（子元件）
+export class Second {
   changeUserName = output<string>();
   inputName = '';
 
@@ -763,7 +759,7 @@ export class SecondComponent {
 ```
 
 ```html
-<!-- second.component.html -->
+<!-- second.html -->
 <input [(ngModel)]="inputName">
 <button (click)="emitName()">送出</button>
 ```
@@ -784,14 +780,14 @@ export class SecondComponent {
 在父元件的子元件標籤上，用 `(output變數名稱)="父元件方法($event)"` 監聽並接收回傳值。
 
 ```html
-<!-- first.component.html -->
+<!-- first.html -->
 <app-second (changeUserName)="onNameChanged($event)"></app-second>
 <p>收到的名稱：{{ receivedName }}</p>
 ```
 
 ```typescript
-// first.component.ts（父元件）
-export class FirstComponent {
+// first.ts（父元件）
+export class First {
   receivedName = '';
 
   onNameChanged(name: string) {
@@ -906,17 +902,16 @@ layout: default
 # 練習 2：完整解答（子元件 TS）
 
 ```typescript
-// second.component.ts
+// second.ts
 import { Component, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-second',
-  standalone: true,
   imports: [FormsModule],
-  templateUrl: './second.component.html',
+  templateUrl: './second.html',
 })
-export class SecondComponent {
+export class Second {
   userData = { userName: '', userEmail: '', userAddress: '' };
   myOutput = output<{ userName: string; userEmail: string; userAddress: string }>();
 
@@ -938,7 +933,7 @@ layout: default
 # 練習 2：完整解答（子元件 HTML）
 
 ```html
-<!-- second.component.html -->
+<!-- second.html -->
 <h3>頁面B(組件)</h3>
 使用者名稱：<input [(ngModel)]="userData.userName"><br>
 使用者Email：<input [(ngModel)]="userData.userEmail"><br>
@@ -961,17 +956,16 @@ layout: default
 # 練習 2：完整解答（父元件 TS）
 
 ```typescript
-// first.component.ts
+// first.ts
 import { Component } from '@angular/core';
-import { SecondComponent } from './second.component';
+import { Second } from './second';
 
 @Component({
   selector: 'app-first',
-  standalone: true,
-  imports: [SecondComponent],
-  templateUrl: './first.component.html',
+  imports: [Second],
+  templateUrl: './first.html',
 })
-export class FirstComponent {
+export class First {
   receivedData = { userName: '', userEmail: '', userAddress: '' };
 
   onReceive(event: { userName: string; userEmail: string; userAddress: string }) {
@@ -991,7 +985,7 @@ layout: default
 # 練習 2：完整解答（父元件 HTML）
 
 ```html
-<!-- first.component.html -->
+<!-- first.html -->
 <h3>頁面A</h3>
 使用者名稱：{{ receivedData.userName }}<br>
 使用者Email：{{ receivedData.userEmail }}<br>

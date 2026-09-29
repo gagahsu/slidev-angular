@@ -51,14 +51,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     MatTableModule,      // mat-table 需要
     MatPaginatorModule   // mat-paginator 需要
   ]
 })
-export class AppComponent implements AfterViewInit {
+export class App implements AfterViewInit {
 
   // ① 控制表格顯示哪些欄位，以及順序
   //    要和 HTML 的 matColumnDef 名稱一致

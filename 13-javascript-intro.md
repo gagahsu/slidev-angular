@@ -326,30 +326,29 @@ class: flex flex-col justify-center items-center text-center
 
 # TypeScript 在 Angular — 元件結構
 
-Angular 的邏輯寫在 `.ts` 檔案裡。打開 `app.component.ts`，你會看到這樣的結構：
+Angular 的邏輯寫在 `.ts` 檔案裡。打開 `app.ts`，你會看到這樣的結構：
 
 ```typescript
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {
+export class App {
   // ← 在這裡宣告變數
   // ← 在這裡宣告方法
 }
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>export class AppComponent { }</code> 就是我們撰寫 TypeScript 的舞台，所有邏輯都寫在這對大括號裡
+💡 <code>export class App { }</code> 就是我們撰寫 TypeScript 的舞台，所有邏輯都寫在這對大括號裡
 </div>
 
 <!--
-打開 Angular 專案的 app.component.ts，你會看到這樣的結構。
+打開 Angular 專案的 app.ts，你會看到這樣的結構。
 上面的 @Component({}) 是「裝飾器」，告訴 Angular 這個 class 是一個元件。
-真正要寫的邏輯，包括變數和方法，全部寫在最下面 export class AppComponent { } 的大括號裡。
+真正要寫的邏輯，包括變數和方法，全部寫在最下面 export class App { } 的大括號裡。
 這個大括號，就是我們寫 TypeScript 的家！
 -->
 
@@ -363,22 +362,22 @@ export class AppComponent {
 | --- | --- | --- |
 | `selector` | 此元件在 HTML 中使用的自訂標籤名稱 | `'app-root'` |
 | `standalone` | 是否為獨立元件（Angular 14+ 推薦） | `true` |
-| `templateUrl` | 此元件對應的 HTML 模板檔案路徑 | `'./app.component.html'` |
+| `templateUrl` | 此元件對應的 HTML 模板檔案路徑 | `'./app.html'` |
 
 ```typescript
 @Component({
   selector: 'app-root',       // → 在 HTML 中以 <app-root> 使用
-  standalone: true,           // → 不需要 NgModule 包裝
-  templateUrl: './app.component.html',  // → 對應的 HTML 檔案
+  // → 不需要 NgModule 包裝
+  templateUrl: './app.html',  // → 對應的 HTML 檔案
 })
-export class AppComponent { }
+export class App { }
 ```
 
 <!--
 @Component 是 Angular 賦予這個 class「元件身份」的魔法標籤。
 selector 就是這個元件的「身份證名稱」，設定成 app-root 後，你就可以在其他 HTML 裡寫 <app-root> 來嵌入它。
-standalone: true 是 Angular 14 之後推薦的寫法，代表這個元件不需要傳統的 NgModule 來管理，可以獨立運作。
-templateUrl 則是告訴 Angular：「這個元件的畫面長什麼樣，請去 app.component.html 那個檔案裡找。」
+Angular 19 之後元件預設就是 standalone，不需要再寫 standalone: true，也不需要傳統的 NgModule 來管理，可以獨立運作。
+templateUrl 則是告訴 Angular：「這個元件的畫面長什麼樣，請去 app.html 那個檔案裡找。」
 這三行是 Angular 元件的標準配備，之後每個章節的程式碼範例都會看到它，記住這三個屬性的意義就對了！
 -->
 
@@ -389,7 +388,7 @@ templateUrl 則是告訴 Angular：「這個元件的畫面長什麼樣，請去
 在 class 的大括號內，用 `變數名稱: 型別 = 初始值` 格式宣告變數：
 
 ```typescript
-export class AppComponent {
+export class App {
   title: string = 'Hello Angular';
   count: number = 0;
   isLoading: boolean = false;
@@ -415,7 +414,7 @@ layout: default
 # TypeScript 練習：任務說明
 ### 在 Angular 中宣告帶型別的變數
 
-在 `app.component.ts` 的 `AppComponent` class 中，宣告以下三個帶型別的變數：
+在 `app.ts` 的 `App` class 中，宣告以下三個帶型別的變數：
 
 1. `myName`：字串型別，初始值為你的名字
 2. `myAge`：數字型別，初始值為你的年齡
@@ -435,10 +434,10 @@ layout: default
 
 # TypeScript 練習：解題提示
 
-在 `app.component.ts` 的 class 裡加入三行：
+在 `app.ts` 的 class 裡加入三行：
 
 ```typescript
-export class AppComponent {
+export class App {
   myName: string = '你的名字';
   myAge: number = 20;
   isStudent: boolean = true;

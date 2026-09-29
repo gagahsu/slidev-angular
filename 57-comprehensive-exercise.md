@@ -306,10 +306,10 @@ import { MatTabsModule } from '@angular/material/tabs';
   imports: [CommonModule, FormsModule, MatTableModule, MatPaginatorModule,
     MatIconModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatTabsModule],
   providers: [provideNativeDateAdapter()],
-  templateUrl: './employee-management.component.html',
-  styleUrl: './employee-management.component.scss',
+  templateUrl: './employee-management.html',
+  styleUrl: './employee-management.scss',
 })
-export class EmployeeManagementComponent implements AfterViewInit {
+export class EmployeeManagement implements AfterViewInit {
 ```
 
 <!--

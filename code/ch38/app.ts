@@ -23,12 +23,11 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
   imports: [CommonModule, FormsModule]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // 控制 class 的布林值

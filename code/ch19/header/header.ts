@@ -18,18 +18,17 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   // 這個元件在 HTML 裡的使用方式：<app-header></app-header>
   selector: 'app-header',
 
-  // 外部 HTML 模板（對應 header.component.html）
-  templateUrl: './header.component.html',
+  // 外部 HTML 模板（對應 header.html）
+  templateUrl: './header.html',
 
   // 外部 CSS（只對這個元件內的元素生效，不影響外部）
-  styleUrls: ['./header.component.css'],
-  standalone: true,   // Angular 17+ 獨立元件
+  styleUrls: ['./header.css'],   // Angular 17+ 獨立元件
   imports: [
     RouterLink,        // 讓 [routerLink] 屬性可以使用
     RouterLinkActive   // 讓 routerLinkActive 屬性可以使用
   ]
 })
-export class HeaderComponent {
+export class Header {
   // 導覽列的連結清單（資料）
   navLinks = [
     { label: '首頁', path: '/' },

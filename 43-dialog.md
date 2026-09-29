@@ -245,7 +245,7 @@ import { Component, inject } from '@angular/core';
 <!--
 我們先來看 Dialog 元件的 TypeScript 檔案開頭要匯入哪些東西。除了 FormsModule 用來處理輸入框的雙向綁定，重點是從 @angular/material/dialog 這個路徑匯入 MatDialogTitle、MatDialogContent、MatDialogActions 這三個對應 HTML 裡用到的指令，還有等一下會用到的 MatDialogRef 跟 MAT_DIALOG_DATA。
 
-⚠️ 提醒大家，因為現在 Dialog 元件是 standalone 元件，HTML 裡用到的每一個 Material 指令，都要記得在這裡匯入，不然畫面會顯示不出來或報錯。
+⚠️ 提醒大家，因為 Angular 的元件預設是 standalone，HTML 裡用到的每一個 Material 指令，都要記得在這裡匯入，不然畫面會顯示不出來或報錯。
 -->
 
 ---
@@ -258,7 +258,6 @@ import { Component, inject } from '@angular/core';
 @Component({
   selector: 'dialog-example',
   templateUrl: './dialog.html',
-  standalone: true,
   imports: [
     FormsModule,
     MatDialogTitle,
@@ -352,7 +351,7 @@ import { Component, inject } from '@angular/core';
 import { DialogExample } from './dialog-example';
 
 @Component({ ... })
-export class AppComponent {
+export class App {
   readonly dialog = inject(MatDialog);
 }
 ```
@@ -456,7 +455,7 @@ class: flex flex-col justify-center items-center text-center
 在 `open()` 的設定物件中，透過 `width` 與 `height` 屬性指定對話框的尺寸（字串格式）。
 
 ```typescript
-const dialogRef = this.dialog.open(DialogComponent, {
+const dialogRef = this.dialog.open(Dialog, {
   width: '500px',
   height: '300px',
 });
@@ -507,7 +506,7 @@ layout: default
 1. Dialog 元件的 `imports` 陣列需加入 `MatDialogTitle`、`MatDialogContent`、`MatDialogActions`
 2. 使用 `inject(MAT_DIALOG_DATA)` 取得外部傳入資料，使用 `inject(MatDialogRef)` 取得對話框參考
 3. 確認按鈕呼叫 `this.dialogRef.close(returnValue)` 回傳資料
-4. 呼叫端以 `this.dialog.open(DialogFormComponent, { data: { ... } })` 開啟
+4. 呼叫端以 `this.dialog.open(DialogForm, { data: { ... } })` 開啟
 5. `dialogRef.afterClosed().subscribe(result => { ... })` 接收回傳值
 
 <!--
@@ -584,7 +583,6 @@ layout: default
 @Component({
   selector: 'dialog-form',
   templateUrl: './dialog-form.html',
-  standalone: true,
   imports: [
     FormsModule,
     MatFormFieldModule,
@@ -595,7 +593,7 @@ layout: default
     MatDialogActions,
   ],
 })
-export class DialogFormComponent {
+export class DialogForm {
 ```
 
 <!--
@@ -609,7 +607,7 @@ layout: default
 # 完整解答 — Dialog TypeScript（三）
 
 ```typescript
-  readonly dialogRef = inject(MatDialogRef<DialogFormComponent>);
+  readonly dialogRef = inject(MatDialogRef<DialogForm>);
   readonly data = inject<{ name: string; animal: string }>(MAT_DIALOG_DATA);
 
   inputValue = '';
@@ -634,26 +632,25 @@ layout: default
 
 # 完整解答 — 呼叫端 TypeScript（一）
 
-`app.component.ts` 完整內容：
+`app.ts` 完整內容：
 
 ```typescript
 import { Component, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { DialogFormComponent } from './dialog-form';
+import { DialogForm } from './dialog-form';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [MatButtonModule],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {
+export class App {
   readonly dialog = inject(MatDialog);
 ```
 
 <!--
-呼叫端匯入 MatDialog 服務跟剛剛寫好的 DialogFormComponent，@Component 裝飾器裡只需要 MatButtonModule，因為這個元件的 HTML 只用到按鈕。class 裡先注入 MatDialog，方法本體下一頁接著看。
+呼叫端匯入 MatDialog 服務跟剛剛寫好的 DialogForm，@Component 裝飾器裡只需要 MatButtonModule，因為這個元件的 HTML 只用到按鈕。class 裡先注入 MatDialog，方法本體下一頁接著看。
 -->
 
 ---
@@ -664,7 +661,7 @@ layout: default
 
 ```typescript
   showDialog() {
-    const dialogRef = this.dialog.open(DialogFormComponent, {
+    const dialogRef = this.dialog.open(DialogForm, {
       width: '400px',
       data: { name: '姓名', animal: '請輸入資料' },
     });
@@ -677,12 +674,12 @@ layout: default
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <button mat-raised-button (click)="showDialog()">開啟 Dialog</button>
 ```
 
 <!--
-接續上一頁，showDialog() 呼叫 open() 帶入 DialogFormComponent 跟設定物件，data 裡的 name、animal 會傳到 Dialog 裡顯示；訂閱 afterClosed() 之後，只要使用者按下確定，console 就會印出剛剛在 Dialog 裡輸入的值；按取消的話 result 會是 undefined。
+接續上一頁，showDialog() 呼叫 open() 帶入 DialogForm 跟設定物件，data 裡的 name、animal 會傳到 Dialog 裡顯示；訂閱 afterClosed() 之後，只要使用者按下確定，console 就會印出剛剛在 Dialog 裡輸入的值；按取消的話 result 會是 undefined。
 
 大家可以拿這份完整程式碼跟自己寫的對照，確認每個匯入、注入、跟回傳的資料流是不是都一致。
 -->

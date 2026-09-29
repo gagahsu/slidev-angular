@@ -13,9 +13,9 @@
   → 有歷史對話則帶 system + [user, assistant, user, assistant, ...] + 最新 user
 */
 
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { OpenaiService, ChatMessage } from './openai.service';
+import { OpenaiService, ChatMessage } from './openai-service';
 
 interface DisplayMessage {
   role: 'user' | 'assistant';
@@ -25,11 +25,10 @@ interface DisplayMessage {
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [FormsModule]
 })
-export class AppComponent {
+export class App {
 
   constructor(private openaiService: OpenaiService) {}
 
@@ -40,7 +39,7 @@ export class AppComponent {
   userInput: string = '';
 
   // 顯示在畫面上的對話記錄
-  displayMessages: DisplayMessage[] = [];
+  displayMessages = signal<DisplayMessage[]>([]);
 
   // 傳給 OpenAI 的完整對話歷史（含 system）
   private chatHistory: ChatMessage[] = [
@@ -50,24 +49,24 @@ export class AppComponent {
     }
   ];
 
-  isLoading: boolean = false;
+  isLoading = signal(false);
 
   // 送出訊息
   sendMessage(): void {
-    if (!this.userInput.trim() || !this.apiKey.trim() || this.isLoading) return;
+    if (!this.userInput.trim() || !this.apiKey.trim() || this.isLoading()) return;
 
     const userText = this.userInput.trim();
     this.userInput = '';
 
     // 加入使用者訊息到畫面
-    this.displayMessages.push({ role: 'user', content: userText });
+    this.displayMessages.update(l => [...l, { role: 'user', content: userText }]);
 
     // 加入使用者訊息到對話歷史
     this.chatHistory.push({ role: 'user', content: userText });
 
     // 顯示載入中
-    this.isLoading = true;
-    this.displayMessages.push({ role: 'assistant', content: '...', isLoading: true });
+    this.isLoading.set(true);
+    this.displayMessages.update(l => [...l, { role: 'assistant', content: '...', isLoading: true }]);
 
     // 呼叫 OpenAI API
     this.openaiService.chat(this.chatHistory, this.apiKey).subscribe({
@@ -75,29 +74,27 @@ export class AppComponent {
         const reply = res.choices[0].message.content;
 
         // 移除載入中泡泡，換成真實回答
-        this.displayMessages.pop();
-        this.displayMessages.push({ role: 'assistant', content: reply });
+        this.displayMessages.update(l => [...l.slice(0, -1), { role: 'assistant', content: reply }]);
 
         // 把 AI 回答加入對話歷史（下次請求會帶上）
         this.chatHistory.push({ role: 'assistant', content: reply });
 
-        this.isLoading = false;
+        this.isLoading.set(false);
         console.log('Token 使用量：', res.usage);
       },
       error: (err) => {
-        this.displayMessages.pop();
-        this.displayMessages.push({
+        this.displayMessages.update(l => [...l.slice(0, -1), {
           role: 'assistant',
           content: `❌ 發生錯誤：${err.error?.error?.message ?? '請確認 API Key 是否正確'}`
-        });
-        this.isLoading = false;
+        }]);
+        this.isLoading.set(false);
       }
     });
   }
 
   // 清除對話
   clearChat(): void {
-    this.displayMessages = [];
+    this.displayMessages.set([]);
     // 保留 system message，清除其他對話歷史
     this.chatHistory = [this.chatHistory[0]];
   }

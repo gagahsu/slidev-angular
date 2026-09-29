@@ -48,7 +48,7 @@ style: |
 <!--
 各位學員，歡迎回來！
 在前面的學習中，我們的網頁功能越來越強大，但不知道大家有沒有發現一個隱憂：
-「如果我們把整張網頁的選單、內容、按鈕、側邊欄、頁尾，幾千行 HTML 通通塞在一個 app.component.html 裡面，那這個檔案會有多難看、多難維護？」
+「如果我們把整張網頁的選單、內容、按鈕、側邊欄、頁尾，幾千行 HTML 通通塞在一個 app.html 裡面，那這個檔案會有多難看、多難維護？」
 這就像是把整間公司的所有員工，通通擠在同一間辦公室裡大吵大鬧一樣，效率極低。
 今天，我們要來學習 Angular 最核心的「樂高積木哲學」——「元件拆解（Components）」。
 我們會學習怎麼把大畫面切成一個個獨立、好管理、而且可以重複利用的 UI 零件！
@@ -225,10 +225,10 @@ CLI 跑完之後，我們去目錄看看，到底生出了哪四個孿生兄弟�
 
 | 檔案 | 說明 |
 | --- | --- |
-| `組件名稱.component.html` | 放置 HTML 模板的地方 |
-| `組件名稱.component.scss` | 放置元件專屬樣式（CSS/SCSS）的地方 |
-| `組件名稱.component.spec.ts` | 放置測試程式碼的地方 |
-| `組件名稱.component.ts` | 放置 TypeScript 程式碼（元件邏輯）的地方 |
+| `組件名稱.html` | 放置 HTML 模板的地方 |
+| `組件名稱.scss` | 放置元件專屬樣式（CSS/SCSS）的地方 |
+| `組件名稱.spec.ts` | 放置測試程式碼的地方 |
+| `組件名稱.ts` | 放置 TypeScript 程式碼（元件邏輯）的地方；類別名稱不加 `Component`，例如 `header.ts` 裡是 `class Header` |
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>注意：</b> 每次執行 <code>ng g c</code> 前，建議先將已開啟的 <code>ng serve</code> 關閉，再新增元件，避免衝突。
@@ -262,7 +262,7 @@ class: flex flex-col justify-center items-center text-center
 
 # @Component 裝飾器
 
-開啟 `.component.ts` 檔，可以看到 Angular 的核心設定：
+開啟元件的 `.ts` 檔（例如 `header.ts`），可以看到 Angular 的核心設定：
 
 | 屬性 | 說明 |
 | --- | --- |
@@ -275,10 +275,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  templateUrl: './header.html',
+  styleUrl: './header.scss'
 })
-export class HeaderComponent {}
+export class Header {}
 ```
 
 <!--
@@ -304,7 +304,7 @@ export class HeaderComponent {}
 | `selector: 'app-footer'` | `<app-footer></app-footer>` |
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <app-header></app-header>
 <app-sidebar></app-sidebar>
 <app-footer></app-footer>
@@ -316,7 +316,7 @@ export class HeaderComponent {}
 這是在定義 HTML 中的標籤名稱。
 在別人的 HTML 裡，你可以直接打像 `<app-header></app-header>` 這樣的自訂標籤！
 瀏覽器在渲染時，一看到這個標籤，就會自動把 header 的 HTML 內容塞進這個位置。
-你看下面 app.component.html 的寫法，
+你看下面 app.html 的寫法，
 是不是就像是堆積木一樣，把 Header、Sidebar、Footer 排排站排好？
 這代碼的可讀性，簡直舒服得像在看童書！
 -->
@@ -327,11 +327,11 @@ layout: default
 
 # @Component 裝飾器 — 小節練習
 
-根據以下規格，補完 `@Component` 裝飾器的三個屬性，讓 `ProfileComponent` 能被正確識別與渲染：
+根據以下規格，補完 `@Component` 裝飾器的三個屬性，讓 `Profile` 能被正確識別與渲染：
 
 - HTML 標籤名稱：`app-profile`
-- HTML 模板路徑：`./profile.component.html`
-- 樣式路徑：`./profile.component.scss`
+- HTML 模板路徑：`./profile.html`
+- 樣式路徑：`./profile.scss`
 
 ```typescript
 import { Component } from '@angular/core';
@@ -341,7 +341,7 @@ import { Component } from '@angular/core';
   templateUrl: ___,
   styleUrl: ___,
 })
-export class ProfileComponent {}
+export class Profile {}
 ```
 
 <!--
@@ -359,10 +359,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.scss',
+  templateUrl: './profile.html',
+  styleUrl: './profile.scss',
 })
-export class ProfileComponent {}
+export class Profile {}
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -394,30 +394,29 @@ class: flex flex-col justify-center items-center text-center
 
 | 步驟 | 操作 | 位置 |
 | --- | --- | --- |
-| 1 | 在 `.ts` 檔中 `import` 元件類別 | `app.component.ts` |
-| 2 | 在 `.html` 中使用元件標籤 | `app.component.html` |
+| 1 | 在 `.ts` 檔中 `import` 元件類別 | `app.ts` |
+| 2 | 在 `.html` 中使用元件標籤 | `app.html` |
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component } from '@angular/core';
-import { HeaderComponent } from './components/header/header.component';
+import { Header } from './components/header/header';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [HeaderComponent],
-  templateUrl: './app.component.html',
+  imports: [Header],
+  templateUrl: './app.html',
 })
-export class AppComponent {}
+export class App {}
 ```
 
 <!--
-要讓 AppComponent 能夠認得 HeaderComponent。
-我們必須在 `app.component.ts` 檔裡做兩件事：
-第一，在最上面寫 `import { HeaderComponent } from ...` 把對方的 class 匯進來。
-第二，**在 `@Component` 裝飾器的 `imports: []` 陣列中，把 `HeaderComponent` 放進去**！
+要讓 App 能夠認得 Header。
+我們必須在 `app.ts` 檔裡做兩件事：
+第一，在最上面寫 `import { Header } from ...` 把對方的 class 匯進來。
+第二，**在 `@Component` 裝飾器的 `imports: []` 陣列中，把 `Header` 放進去**！
 這就像是你要帶新朋友回家，你得先跟警衛登記這個人的名字。
-登記完之後，你在 `app.component.html` 裡打的 `<app-header>` 標籤，Angular 才能順利解析它！
+登記完之後，你在 `app.html` 裡打的 `<app-header>` 標籤，Angular 才能順利解析它！
 這一步很多初學者常常會漏掉，導致卡關一下午，大家一定要小心！
 -->
 
@@ -428,7 +427,7 @@ export class AppComponent {}
 完成 import 後，即可在 HTML 模板中使用元件標籤：
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <app-header></app-header>
 <main>
   <p>主要內容區域</p>
@@ -441,7 +440,7 @@ export class AppComponent {}
 </div>
 
 <!--
-完成 import 之後，在 `app.component.html` 裡，我們就可以像使用普通 div 標籤一樣，把 `<app-header>` 和 `<app-footer>` 擺在頁面的最上方 and 最下方。
+完成 import 之後，在 `app.html` 裡，我們就可以像使用普通 div 標籤一樣，把 `<app-header>` 和 `<app-footer>` 擺在頁面的最上方 and 最下方。
 這時候，整個網頁就順利拼裝成功囉！
 -->
 
@@ -451,7 +450,7 @@ layout: default
 
 # 引用元件 — 小節練習
 
-假設已用 CLI 建立了 `sidebar` 元件，路徑為 `./components/sidebar/sidebar.component`，請補完 `app.component.ts` 的 import 語句與 `imports` 陣列，讓 HTML 中的 `<app-sidebar>` 能正確顯示：
+假設已用 CLI 建立了 `sidebar` 元件，路徑為 `./components/sidebar/sidebar`（類別名稱是 `Sidebar`），請補完 `app.ts` 的 import 語句與 `imports` 陣列，讓 HTML 中的 `<app-sidebar>` 能正確顯示：
 
 ```typescript
 import { Component } from '@angular/core';
@@ -459,11 +458,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [/* ② 在這裡加入元件 */],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {}
+export class App {}
 ```
 
 <!--
@@ -478,24 +476,23 @@ layout: default
 
 ```typescript
 import { Component } from '@angular/core';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { Sidebar } from './components/sidebar/sidebar';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [SidebarComponent],
-  templateUrl: './app.component.html',
+  imports: [Sidebar],
+  templateUrl: './app.html',
 })
-export class AppComponent {}
+export class App {}
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <app-sidebar></app-sidebar>
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 兩步缺一不可：① <code>import &#123; SidebarComponent &#125; from '...'</code> ② 加入 <code>imports: [SidebarComponent]</code>
+💡 兩步缺一不可：① <code>import &#123; Sidebar &#125; from '...'</code> ② 加入 <code>imports: [Sidebar]</code>
 </div>
 
 <!--
@@ -535,11 +532,11 @@ VS Code 其實有內建神級偷懶工具，我們來學學。
 </div>
 
 <!--
-如果你懶得手動寫 import，你可以直接去 `app.component.html` 裡輸入 `<app-header></app-header>`。
+如果你懶得手動寫 import，你可以直接去 `app.html` 裡輸入 `<app-header></app-header>`。
 這時候，因為還沒有登記，VS Code 會在它下面畫一條紅色波浪線。
 別慌！用滑鼠點擊 `app-header`，這時候左邊或右邊會出現一個「藍色的小燈泡」。
 按一下小燈泡，選擇「快速修正（Quick Fix）」。
-VS Code 就會發揮 AI 的超能力，自動去背景幫你把 `app.component.ts` 的 import 語句與 imports 陣列通通補齊！
+VS Code 就會發揮 AI 的超能力，自動去背景幫你把 `app.ts` 的 import 語句與 imports 陣列通通補齊！
 全程只需要滑鼠點兩下，一秒搞定。
 這個快捷鍵一定要學會，這能幫你省下大把寫無聊程式碼的時間！
 -->
@@ -566,8 +563,8 @@ layout: two-cols
 1. 使用 Angular CLI 在 `components` 資料夾下新增兩個元件
 2. 分別為 `header` 與 `footer`（或自訂名稱）
 3. 在各元件的 HTML 中加入一些辨識文字（例如「這是 Header」）
-4. 將兩個元件引入 `app.component.ts` 的 `imports` 中
-5. 在 `app.component.html` 中使用這兩個元件標籤，讓畫面同時顯示兩個元件
+4. 將兩個元件引入 `app.ts` 的 `imports` 中
+5. 在 `app.html` 中使用這兩個元件標籤，讓畫面同時顯示兩個元件
 
 ::right::
 
@@ -579,7 +576,7 @@ layout: two-cols
 這次的任務是「新增兩個組件並引用它」：
 第一步，用 CLI 產生 `header` 和 `footer` 元件。
 第二步，分別在他們的 HTML 裡加點簡單的文字（像是「這是 Header」）。
-第三步，在 `app.component.ts` 裡引用這兩個元件。
+第三步，在 `app.ts` 裡引用這兩個元件。
 第四步，在主畫面裡呈現出來。
 大家動手做做看，順便可以測試看看 VS Code 的藍色小燈泡好不好用喔！
 -->
@@ -593,23 +590,22 @@ layout: default
 
 1. 新增元件：`ng g c components/header` 與 `ng g c components/footer`
 2. 編輯各元件 HTML，加入識別文字
-3. 在 `app.component.ts` 加入 import：
+3. 在 `app.ts` 加入 import：
 
 ```typescript
 import { Component } from '@angular/core';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
+import { Header } from './components/header/header';
+import { Footer } from './components/footer/footer';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [HeaderComponent, FooterComponent],
-  templateUrl: './app.component.html',
+  imports: [Header, Footer],
+  templateUrl: './app.html',
 })
-export class AppComponent {}
+export class App {}
 ```
 
-4. 在 `app.component.html` 使用：`<app-header>` 與 `<app-footer>`
+4. 在 `app.html` 使用：`<app-header>` 與 `<app-footer>`
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>小技巧：</b> 也可以在 HTML 先打好標籤，再用 VS Code 藍色燈泡快速自動 import。
@@ -618,8 +614,8 @@ export class AppComponent {}
 <!--
 如果稍微卡住了，請看解題步驟：
 首先，在 terminal 執行 `ng g c components/header`，接著執行 `ng g c components/footer`。
-然後，打開 `app.component.ts`，在 `@Component` 的 `imports` 裡填入 `HeaderComponent` 和 `FooterComponent`。
-最後，去 `app.component.html` 裡，
+然後，打開 `app.ts`，在 `@Component` 的 `imports` 裡填入 `Header` 和 `Footer`。
+最後，去 `app.html` 裡，
 把 `<app-header></app-header>` 放最上面，
 把 `<app-footer></app-footer>` 放最下面。
 儲存後，看看瀏覽器是不是成功顯示出「這是 Header」與「這是 Footer」的文字？

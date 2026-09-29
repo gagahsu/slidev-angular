@@ -15,7 +15,7 @@
       <button mat-raised-button color="primary" (click)="demoObservable()">重新執行</button>
     </div>
     <div style="background: #1e1e1e; padding: 16px; border-radius: 8px; min-height: 100px;">
-      @for (log of observableLog; track $index) {
+      @for (log of observableLog(); track $index) {
         <p style="color: #90caf9; margin: 2px 0; font-family: monospace; font-size: 0.9rem;">{{ log }}</p>
       }
     </div>
@@ -31,7 +31,7 @@
       <button mat-raised-button color="primary" style="background: #2e7d32;" (click)="demoOperators()">重新執行</button>
     </div>
     <div style="background: #1e1e1e; padding: 16px; border-radius: 8px; min-height: 80px;">
-      @for (log of operatorLog; track $index) {
+      @for (log of operatorLog(); track $index) {
         <p style="color: #a5d6a7; margin: 2px 0; font-family: monospace; font-size: 0.9rem;">{{ log }}</p>
       }
     </div>
@@ -51,7 +51,7 @@
       <button mat-raised-button (click)="stopInterval()">停止</button>
     </div>
     <div style="background: #1e1e1e; padding: 16px; border-radius: 8px; min-height: 60px;">
-      @for (log of intervalLog; track $index) {
+      @for (log of intervalLog(); track $index) {
         <span style="color: #ffe082; font-family: monospace; font-size: 0.9rem; margin-right: 8px;">{{ log }}</span>
       }
     </div>
@@ -83,13 +83,13 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
       <div style="background: #1e1e1e; padding: 12px; border-radius: 8px;">
         <p style="color: #ce93d8; font-weight: bold; margin: 0 0 8px; font-size: 0.9rem;">Observer A：</p>
-        @for (log of observerALog; track $index) {
+        @for (log of observerALog(); track $index) {
           <p style="color: #e1bee7; margin: 2px 0; font-family: monospace; font-size: 0.85rem;">{{ log }}</p>
         }
       </div>
       <div style="background: #1e1e1e; padding: 12px; border-radius: 8px;">
         <p style="color: #b39ddb; font-weight: bold; margin: 0 0 8px; font-size: 0.9rem;">Observer B：</p>
-        @for (log of observerBLog; track $index) {
+        @for (log of observerBLog(); track $index) {
           <p style="color: #d1c4e9; margin: 2px 0; font-family: monospace; font-size: 0.85rem;">{{ log }}</p>
         }
       </div>

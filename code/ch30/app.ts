@@ -39,11 +39,10 @@ const SOURCE_DATA: PeriodicElement[] = [
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: []
 })
-export class AppComponent {
+export class App {
 
   // 排序用的資料（複製原始資料，不污染 SOURCE_DATA）
   tableData: PeriodicElement[] = [...SOURCE_DATA];

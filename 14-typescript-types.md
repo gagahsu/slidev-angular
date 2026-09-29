@@ -393,7 +393,7 @@ layout: default
 # 練習：任務說明
 ### 宣告各種型別的變數
 
-在 Angular 專案的 `app.component.ts` 的 `AppComponent` class 中，依正確型別宣告以下五個全域變數：
+在 Angular 專案的 `app.ts` 的 `App` class 中，依正確型別宣告以下五個全域變數：
 
 1. `isLoggedIn`：布林值，初始為 `false`
 2. `userId`：數字，初始為 `1001`
@@ -416,10 +416,10 @@ layout: default
 # 練習：解題提示
 ### 完成步驟
 
-在 `app.component.ts` 中宣告五個變數：
+在 `app.ts` 中宣告五個變數：
 
 ```typescript
-export class AppComponent {
+export class App {
   isLoggedIn: boolean = false;
   userId: number = 1001;
   userName: string = '你的名字';

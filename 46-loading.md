@@ -64,14 +64,14 @@ layout: default
 - **安裝與基本用法**
 - **CSS 定位：置中與全螢幕遮罩**
 - **LoadingService：以 RxJS 控制顯示狀態**
-- **AppComponent 整合：單一入口統一管理**
+- **App 整合：單一入口統一管理**
 - **async pipe 搭配 Observable**
 - **在各頁面觸發 show() / hide()**
 - **HttpInterceptor：自動觸發 Loading**
 - **客製化顏色與大小**
 
 <!--
-先帶大家看一下這一章的路線圖。我們會先講為什麼需要 Loading、認識 `mat-spinner` 這個元件，接著處理它的 CSS 定位問題，然後把顯示邏輯集中到 `LoadingService`，在 `AppComponent` 統一管理，搭配 `async` pipe 讓畫面自動反應狀態，接著看看怎麼在各個頁面手動觸發它，再進一步介紹改用 `HttpInterceptor` 讓 show()/hide() 全自動觸發、不用每個元件手動呼叫，最後看怎麼客製化外觀。整體架構其實就是把上一章學的訂閱機制，實際應用在一個真實的功能上。
+先帶大家看一下這一章的路線圖。我們會先講為什麼需要 Loading、認識 `mat-spinner` 這個元件，接著處理它的 CSS 定位問題，然後把顯示邏輯集中到 `LoadingService`，在 `App` 統一管理，搭配 `async` pipe 讓畫面自動反應狀態，接著看看怎麼在各個頁面手動觸發它，再進一步介紹改用 `HttpInterceptor` 讓 show()/hide() 全自動觸發、不用每個元件手動呼叫，最後看怎麼客製化外觀。整體架構其實就是把上一章學的訂閱機制，實際應用在一個真實的功能上。
 -->
 
 ---
@@ -157,7 +157,7 @@ HTML 中只需一行標籤即可顯示旋轉動畫：
 ```typescript
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-// @NgModule 或 standalone component imports:
+// 元件的 imports 陣列：
 imports: [MatProgressSpinnerModule],
 ```
 
@@ -268,7 +268,7 @@ CSS 的外觀問題解決了，接下來我們要處理更核心的問題：怎�
 ng g s loading
 ```
 
-產生 `loading.service.ts`，預設結構如下：
+產生 `loading-service.ts`，預設結構如下：
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -282,7 +282,7 @@ export class LoadingService {}
 <!--
 這段範例的目的是用 Angular CLI 快速產生一個乾淨的 Service 檔案，不用自己手動建立檔案再一行一行打樣板程式碼。
 
-執行 `ng g s loading` 之後，CLI 會自動幫我們建立 `loading.service.ts`，並且加上 `@Injectable({ providedIn: 'root' })`，代表這個 Service 在整個應用程式中只會有一份實例，所有元件注入的都是同一個。
+執行 `ng g s loading` 之後，CLI 會自動幫我們建立 `loading-service.ts`，並且加上 `@Injectable({ providedIn: 'root' })`，代表這個 Service 在整個應用程式中只會有一份實例，所有元件注入的都是同一個。
 
 這也是我們把 Loading 邏輯抽離出來的原因：如果每個頁面都各自寫一套顯示/隱藏的邏輯，之後要改行為（例如加個延遲效果）就要改很多地方，集中在一個 Service 裡維護起來輕鬆很多。
 -->
@@ -347,18 +347,18 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# AppComponent 整合
+# App 整合
 ## 將 Loading 放在應用程式根元件
 
 <!--
-Service 準備好了，接下來我們要決定：這個 Loading 動畫要放在畫面的哪裡？答案是放在整個應用程式的根元件，也就是 `AppComponent`。
+Service 準備好了，接下來我們要決定：這個 Loading 動畫要放在畫面的哪裡？答案是放在整個應用程式的根元件，也就是 `App`。
 -->
 
 ---
 
-# 將 Spinner 移至 AppComponent
+# 將 Spinner 移至 App
 
-把 `<mat-spinner>` 移至 `app.component.html`，使所有頁面共用同一個 Loading 動畫，不必在每個頁面重複撰寫：
+把 `<mat-spinner>` 移至 `app.html`，使所有頁面共用同一個 Loading 動畫，不必在每個頁面重複撰寫：
 
 ```html
 <router-outlet></router-outlet>
@@ -366,16 +366,16 @@ Service 準備好了，接下來我們要決定：這個 Loading 動畫要放在
 ```
 
 <!--
-這段範例的目的是說明「為什麼要放在 AppComponent」這個決定。大家可以想像 `AppComponent` 就像是一整棟大樓的大門口，`<router-outlet>` 則是根據不同樓層（路由）顯示不同的房間內容。我們把 Spinner 放在大門口這個位置，不管使用者現在在哪個樓層、瀏覽哪個頁面，Loading 動畫都能顯示在最上層，蓋住整個畫面。
+這段範例的目的是說明「為什麼要放在 App」這個決定。大家可以想像 `App` 就像是一整棟大樓的大門口，`<router-outlet>` 則是根據不同樓層（路由）顯示不同的房間內容。我們把 Spinner 放在大門口這個位置，不管使用者現在在哪個樓層、瀏覽哪個頁面，Loading 動畫都能顯示在最上層，蓋住整個畫面。
 
 如果每個頁面元件各自放一個 `<mat-spinner>`，不僅要重複寫很多次，畫面切換時動畫也可能對不齊、甚至同時出現兩個。放在根元件是最省事、也最一致的做法。
 -->
 
 ---
 
-# AppComponent：宣告 loading$ 並注入 Service
+# App：宣告 loading$ 並注入 Service
 
-在 `app.component.ts` 中注入 `LoadingService`，並在 `ngOnInit` 取得 `loading$` 參照：
+在 `app.ts` 中注入 `LoadingService`，並在 `ngOnInit` 取得 `loading$` 參照：
 
 ```typescript
 loading$!: any;
@@ -390,7 +390,7 @@ ngOnInit(): void {
 `loading$` 指向 Service 的公開 Observable，不可直接指向私有的 `_loading$`。
 
 <!--
-這段範例的目的是讓 `AppComponent` 拿到 `LoadingService` 公開的 Observable，準備在畫面上使用。我們先在 constructor 注入 `LoadingService`，再到 `ngOnInit` 裡把 `this.loadingService.loading$` 指派給元件自己的 `loading$` 屬性。
+這段範例的目的是讓 `App` 拿到 `LoadingService` 公開的 Observable，準備在畫面上使用。我們先在 constructor 注入 `LoadingService`，再到 `ngOnInit` 裡把 `this.loadingService.loading$` 指派給元件自己的 `loading$` 屬性。
 
 大家可以把這步想成「把 Service 的水管接到自己家裡」，接好之後我們才能在 Template 裡用 `async` pipe 去接這條水管流出來的資料，這是下一段要講的內容。
 
@@ -413,7 +413,7 @@ class: flex flex-col justify-center items-center text-center
 
 # async Pipe：搭配 @if 控制顯示
 
-在 `app.component.html` 以 `@if` 包裹 Spinner，使用 `async` pipe 自動訂閱 Observable：
+在 `app.html` 以 `@if` 包裹 Spinner，使用 `async` pipe 自動訂閱 Observable：
 
 ```html
 @if (loading$ | async) {
@@ -448,7 +448,7 @@ imports: [CommonModule],
 - 元件銷毀時，`async` 自動取消訂閱，無需手動 `unsubscribe()`
 
 <!--
-這張投影片把 `async` pipe 的運作流程完整串一遍給大家聽。整個鏈路是這樣的：某個頁面呼叫 `show()` → `LoadingService` 內部的 `_loading$` 推送 `true` → `AppComponent` 訂閱的 `loading$` 收到通知 → Template 裡的 `async` pipe 拿到新值 `true` → `@if` 條件成立 → Spinner 顯示。`hide()` 則是反過來，一路推送 `false`，讓 Spinner 收起來。
+這張投影片把 `async` pipe 的運作流程完整串一遍給大家聽。整個鏈路是這樣的：某個頁面呼叫 `show()` → `LoadingService` 內部的 `_loading$` 推送 `true` → `App` 訂閱的 `loading$` 收到通知 → Template 裡的 `async` pipe 拿到新值 `true` → `@if` 條件成立 → Spinner 顯示。`hide()` 則是反過來，一路推送 `false`，讓 Spinner 收起來。
 
 大家可以特別留意最後一點：手動 `subscribe()` 如果沒有搭配 `ngOnDestroy` 去 `unsubscribe()`，很容易造成記憶體洩漏；但用 `async` pipe 就不用擔心這個問題，Angular 會在元件銷毀時自動處理，這也是為什麼在 Template 裡我們通常優先選用 `async` pipe 而不是手動訂閱。
 -->
@@ -480,7 +480,7 @@ ngOnInit(): void {
 }
 ```
 
-呼叫 `show()` 後，`BehaviorSubject` 發出 `true`，`AppComponent` 的 `async` pipe 收到通知，Loading 動畫立即顯示。
+呼叫 `show()` 後，`BehaviorSubject` 發出 `true`，`App` 的 `async` pipe 收到通知，Loading 動畫立即顯示。
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 <b>注意：</b> 使用 Service 前必須在元件的 <code>constructor</code> 中注入，Angular 才能提供依賴注入的實例。
@@ -575,7 +575,7 @@ class: flex flex-col justify-center items-center text-center
 
 ---
 
-# 建立 loading.interceptor.ts（一）
+# 建立 loading-interceptor.ts（一）
 
 使用 Angular CLI 建立函式型攔截器，並指定放進 `@interceptors/` 資料夾（跟 `@service/` 集中管理 Service 是同樣的慣例）：
 
@@ -586,9 +586,9 @@ ng g interceptor @interceptors/loading
 ```
 app/
 ├── @service/
-│   └── loading.service.ts
+│   └── loading-service.ts
 └── @interceptors/
-    └── loading.interceptor.ts
+    └── loading-interceptor.ts
 ```
 
 <!--
@@ -599,13 +599,13 @@ app/
 layout: default
 ---
 
-# 建立 loading.interceptor.ts（二）
+# 建立 loading-interceptor.ts（二）
 
 ```typescript
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { finalize } from 'rxjs';
-import { LoadingService } from '../@service/loading.service';
+import { LoadingService } from '../@service/loading-service';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingService = inject(LoadingService);
@@ -631,7 +631,7 @@ finalize() 是 RxJS 的 operator，不管這個 Observable 最後是成功（com
 
 # 為什麼 show() 要包一層 setTimeout？
 
-**問題根源**：`AppComponent` 的樣板檢查完 `loading$` 之後，`Async` 元件的 `ngOnInit` 才在**同一輪**變更偵測裡呼叫 `show()`，導致值「檢查完又變了」。
+**問題根源**：`App` 的樣板檢查完 `loading$` 之後，`Async` 元件的 `ngOnInit` 才在**同一輪**變更偵測裡呼叫 `show()`，導致值「檢查完又變了」。
 
 ```
 NG0100: ExpressionChangedAfterItHasBeenCheckedError
@@ -663,7 +663,7 @@ setTimeout(() => loadingService.show());
 ```typescript
 import { ApplicationConfig } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { loadingInterceptor } from './@interceptors/loading.interceptor';
+import { loadingInterceptor } from './@interceptors/loading-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -719,22 +719,22 @@ class: flex flex-col justify-center items-center text-center
 # 客製化：顏色與大小
 
 <div class="mt-2 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>寫在哪個檔案？</b> 因為 <code>&lt;mat-spinner&gt;</code> 只存在於根元件的樣板（<code>app.component.html</code>），這兩段設定都要寫在 <b>AppComponent</b> 這一組檔案裡，不是隨便找個元件加。
+💡 <b>寫在哪個檔案？</b> 因為 <code>&lt;mat-spinner&gt;</code> 只存在於根元件的樣板（<code>app.html</code>），這兩段設定都要寫在 <b>App</b> 這一組檔案裡，不是隨便找個元件加。
 </div>
 
-**顏色**：寫在 `app.component.scss`，透過 CSS 自訂屬性覆寫 Material Design token：
+**顏色**：寫在 `app.scss`，透過 CSS 自訂屬性覆寫 Material Design token：
 
 ```css
-/* app.component.scss */
+/* app.scss */
 .mat-mdc-progress-spinner {
   --mdc-circular-progress-active-indicator-color: #3f51b5;
 }
 ```
 
-**大小**：寫在 `app.component.html`，在 `<mat-spinner>` 標籤上使用 `[diameter]` 屬性（單位：px）：
+**大小**：寫在 `app.html`，在 `<mat-spinner>` 標籤上使用 `[diameter]` 屬性（單位：px）：
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <mat-spinner [diameter]="70"></mat-spinner>
 ```
 
@@ -743,7 +743,7 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這段範例的目的是讓 Spinner 的外觀能配合我們專案的主題色，而不是永遠用預設的顏色和大小。特別提醒大家這兩段程式碼「要寫在哪」：因為整個專案只有一個 mat-spinner，就放在 app.component.html 裡，所以顏色的 CSS 要寫進 app.component.scss，大小的 [diameter] 屬性也是直接加在 app.component.html 那個 mat-spinner 標籤上，不是寫在打 API 的功能頁面元件裡。
+這段範例的目的是讓 Spinner 的外觀能配合我們專案的主題色，而不是永遠用預設的顏色和大小。特別提醒大家這兩段程式碼「要寫在哪」：因為整個專案只有一個 mat-spinner，就放在 app.html 裡，所以顏色的 CSS 要寫進 app.scss，大小的 [diameter] 屬性也是直接加在 app.html 那個 mat-spinner 標籤上，不是寫在打 API 的功能頁面元件裡。
 
 顏色的部分，因為 Angular Material 元件的樣式底層是用 CSS 自訂屬性（CSS variable）控制的，所以我們不需要去改元件內部的樣式檔案，只要在自己的 CSS 裡覆寫 `--mdc-circular-progress-active-indicator-color` 這個變數就好。
 
@@ -766,7 +766,7 @@ class: flex flex-col justify-center items-center text-center
 - `loading$`：公開 Observable
 - `show()` / `hide()`：狀態控制
 
-**AppComponent（根元件）**
+**App（根元件）**
 - 注入 `LoadingService`
 - 訂閱 `loading$`
 - Template 以 `async` + `@if` 控制顯示
@@ -792,7 +792,7 @@ class: flex flex-col justify-center items-center text-center
 <!--
 最後我們把整個架構完整複習一遍。核心是 `LoadingService`：私有的 `_loading$` 存狀態、公開的 `loading$` 讓外部訂閱、`show()` / `hide()` 負責更新狀態。
 
-`AppComponent` 作為根元件，注入 Service、訂閱 `loading$`，並在 Template 用 `async` 搭配 `@if` 自動控制 Spinner 的顯示與隱藏；Spinner 的顏色跟大小也都設定在 AppComponent 這組檔案（scss 跟 html），因為整個專案只有這一個 mat-spinner。
+`App` 作為根元件，注入 Service、訂閱 `loading$`，並在 Template 用 `async` 搭配 `@if` 自動控制 Spinner 的顯示與隱藏；Spinner 的顏色跟大小也都設定在 App 這組檔案（scss 跟 html），因為整個專案只有這一個 mat-spinner。
 
 顯示與隱藏的觸發方式，我們最後採用的是 `loadingInterceptor`：註冊在 `app.config.ts` 之後，所有 HttpClient 請求送出前自動 `show()`，用 `finalize()` 保證請求結束（不管成功失敗）自動 `hide()`。這代表各功能頁面元件完全不需要注入 `LoadingService`，也不用手動呼叫 `show()`/`hide()`，程式碼更乾淨，也不會有忘記 `hide()` 或 NG0100 時序衝突的問題。
 
@@ -803,7 +803,7 @@ CSS 的部分也再提醒一次層級關係：`mat-spinner` 用 `position: fixed
 layout: default
 ---
 
-# 完整程式碼統整 — loading.service.ts
+# 完整程式碼統整 — loading-service.ts
 
 前面分段介紹的 `LoadingService`，完整內容如下：
 
@@ -836,9 +836,9 @@ export class LoadingService {
 layout: default
 ---
 
-# 完整程式碼統整 — app.component.ts
+# 完整程式碼統整 — app.ts
 
-`AppComponent` 注入 `LoadingService`，取得 `loading$` 供樣板訂閱。先看匯入與裝飾器：
+`App` 注入 `LoadingService`，取得 `loading$` 供樣板訂閱。先看匯入與裝飾器：
 
 ```typescript
 import { Component, OnInit } from '@angular/core';
@@ -846,27 +846,26 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Observable } from 'rxjs';
-import { LoadingService } from './@service/loading.service';
+import { LoadingService } from './@service/loading-service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [CommonModule, RouterOutlet, MatProgressSpinnerModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  templateUrl: './app.html',
+  styleUrl: './app.scss',
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 ```
 
 <!--
-AppComponent 的 imports 陣列要記得放三個：CommonModule（提供 async pipe）、RouterOutlet（顯示路由內容）、MatProgressSpinnerModule（提供 mat-spinner）。class 本體的邏輯下一頁接著看。
+App 的 imports 陣列要記得放三個：CommonModule（提供 async pipe）、RouterOutlet（顯示路由內容）、MatProgressSpinnerModule（提供 mat-spinner）。class 本體的邏輯下一頁接著看。
 -->
 
 ---
 layout: default
 ---
 
-# 完整程式碼統整 — app.component.ts（二）
+# 完整程式碼統整 — app.ts（二）
 
 接續上一頁的 class，注入 `LoadingService` 並取得 `loading$`：
 
@@ -889,10 +888,10 @@ ngOnInit 裡把 LoadingService 公開的 loading$ 接到元件自己的屬性上
 layout: default
 ---
 
-# 完整程式碼統整 — app.component.html
+# 完整程式碼統整 — app.html
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <router-outlet></router-outlet>
 
 @if (loading$ | async) {
@@ -909,10 +908,10 @@ layout: default
 layout: default
 ---
 
-# 完整程式碼統整 — app.component.scss（一）
+# 完整程式碼統整 — app.scss（一）
 
 ```scss
-// app.component.scss
+// app.scss
 mat-spinner {
   position: fixed;
   top: 50%;
@@ -934,7 +933,7 @@ mat-spinner {
 layout: default
 ---
 
-# 完整程式碼統整 — app.component.scss（二）
+# 完整程式碼統整 — app.scss（二）
 
 ```scss
 .overlay {
@@ -960,7 +959,7 @@ layout: default
 layout: default
 ---
 
-# 完整程式碼統整 — loading.interceptor.ts
+# 完整程式碼統整 — loading-interceptor.ts
 
 前面「在各頁面觸發 Loading」示範的是手動呼叫 `show()`/`hide()` 的寫法；實務上建議改用 Interceptor 統一處理，以下是最終採用的完整程式碼：
 
@@ -968,7 +967,7 @@ layout: default
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { finalize } from 'rxjs';
-import { LoadingService } from '../@service/loading.service';
+import { LoadingService } from '../@service/loading-service';
 
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
   const loadingService = inject(LoadingService);
@@ -995,7 +994,7 @@ layout: default
 ```typescript
 import { ApplicationConfig } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { loadingInterceptor } from './@interceptors/loading.interceptor';
+import { loadingInterceptor } from './@interceptors/loading-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -1017,23 +1016,21 @@ layout: default
 註冊 Interceptor 後，頁面元件完全不需要注入 `LoadingService`：
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-list',
-  standalone: true,
-  templateUrl: './product-list.component.html',
+  templateUrl: './product-list.html',
 })
-export class ProductListComponent implements OnInit {
-  products: any[] = [];
-
-  constructor(private http: HttpClient) { }
+export class ProductList implements OnInit {
+  private http = inject(HttpClient);
+  products = signal<any[]>([]);
 
   ngOnInit(): void {
     this.http.get<any[]>('/api/products').subscribe({
       next: (res) => {
-        this.products = res;
+        this.products.set(res);
       },
     });
   }

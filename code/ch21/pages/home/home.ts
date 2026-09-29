@@ -10,11 +10,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  standalone: true,
+  templateUrl: './home.html',
   imports: []   // 模板只用 @for（內建語法），不需要額外 import
 })
-export class HomeComponent {
+export class Home {
   courses = [
     { id: 1, name: 'HTML 基礎' },
     { id: 2, name: 'CSS 進階' },

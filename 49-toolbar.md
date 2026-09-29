@@ -235,17 +235,16 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
     RouterOutlet,
     MatToolbarModule,
     MatIconModule,
     MatButtonModule
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent {}
+export class App {}
 ```
 
 <!--
@@ -342,11 +341,10 @@ import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [MatMenuModule],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {}
+export class App {}
 ```
 
 <!--
@@ -419,7 +417,7 @@ layout: default
 
 # 練習：任務說明
 
-1. 延續 ch48 的 `sidenav-menu.component.ts`，`imports` 陣列新增 `MatMenuModule`、`MatBadgeModule`
+1. 延續 ch48 的 `sidenav-menu.ts`，`imports` 陣列新增 `MatMenuModule`、`MatBadgeModule`
 2. `mat-toolbar` 內，標題 `<span>` 後面加一個空的 `<span class="toolbar-spacer"></span>`
 3. Spacer 後面加一個通知圖示按鈕，用 `matBadge="3" matBadgeColor="warn"` 顯示未讀角標
 4. 再加一個使用者頭像圖示按鈕，用 `[matMenuTriggerFor]="userMenu"` 綁定下拉選單
@@ -451,7 +449,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.ts（新增部分）
+# 完整解答 — sidenav-menu.ts（新增部分）
 
 延續 ch48 的元件，只列出這一題新增的部分：
 
@@ -461,7 +459,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 
 // imports 陣列新增：MatMenuModule、MatBadgeModule
 
-export class SidenavMenuComponent {
+export class SidenavMenu {
   // ...pages 陣列沿用 ch48，維持不變
 
   logout(): void {
@@ -478,7 +476,7 @@ export class SidenavMenuComponent {
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.html（整體結構）
+# 完整解答 — sidenav-menu.html（整體結構）
 
 先看整個檔案的骨架，確認 `mat-toolbar` 在哪個位置，內容下一頁再放大看：
 
@@ -510,7 +508,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.html（工具列內容）
+# 完整解答 — sidenav-menu.html（工具列內容）
 
 承接上一頁，`mat-toolbar` 內容從陽春版擴充成含 Spacer、通知、使用者選單：
 
@@ -541,7 +539,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.html（使用者選單）
+# 完整解答 — sidenav-menu.html（使用者選單）
 
 `mat-menu` 要寫在 `</mat-drawer-container>` 外面，是整份模板最外層的兄弟元素：
 
@@ -574,7 +572,7 @@ mat-menu 本身不是排版用的元素，而是一個浮動面板，所以不�
 layout: default
 ---
 
-# 完整解答 — sidenav-menu.component.scss（Spacer）
+# 完整解答 — sidenav-menu.scss（Spacer）
 
 ```scss
 .toolbar-spacer {

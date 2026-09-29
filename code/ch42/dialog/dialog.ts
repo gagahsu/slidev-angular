@@ -26,8 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dialog',
-  templateUrl: './dialog.component.html',
-  standalone: true,
+  templateUrl: './dialog.html',
   imports: [
     MatDialogTitle,    // mat-dialog-title 指令
     MatDialogContent,  // mat-dialog-content 指令
@@ -35,10 +34,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class DialogComponent {
+export class Dialog {
 
   // 取得這個 dialog 的控制器（用來關閉）
-  readonly dialogRef = inject(MatDialogRef<DialogComponent>);
+  readonly dialogRef = inject(MatDialogRef<Dialog>);
 
   // 取得父元件透過 data 傳進來的資料
   readonly data = inject<any>(MAT_DIALOG_DATA);

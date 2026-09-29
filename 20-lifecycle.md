@@ -200,14 +200,13 @@ class: flex flex-col justify-center items-center text-center
 
 ```typescript
 import { Component } from '@angular/core';
-import { MyService } from './my.service';
+import { MyService } from './my-service';
 
 @Component({
   selector: 'app-demo',
-  standalone: true,
-  templateUrl: './demo.component.html',
+  templateUrl: './demo.html',
 })
-export class DemoComponent {
+export class Demo {
   constructor(private myService: MyService) {
     // ✅ 適合：注入服務
     // ❌ 不適合：存取 DOM、呼叫 API
@@ -263,8 +262,8 @@ class: flex flex-col justify-center items-center text-center
 ```typescript
 import { Component, OnInit } from '@angular/core';
 
-@Component({ selector: 'app-demo', standalone: true })
-export class DemoComponent implements OnInit {
+@Component({ selector: 'app-demo' })
+export class Demo implements OnInit {
   data: string[] = [];
 
   ngOnInit() {
@@ -306,8 +305,8 @@ layout: default
 ```typescript
 import { Component, OnInit } from '@angular/core';
 
-@Component({ selector: 'app-demo', standalone: true, templateUrl: './demo.component.html' })
-export class DemoComponent implements OnInit {
+@Component({ selector: 'app-demo', templateUrl: './demo.html' })
+export class Demo implements OnInit {
   announcement = '';
   viewCount = 0;
 
@@ -360,8 +359,8 @@ export class DemoComponent implements OnInit {
 ```typescript
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
-@Component({ selector: 'app-demo', standalone: true })
-export class DemoComponent implements AfterViewInit {
+@Component({ selector: 'app-demo' })
+export class Demo implements AfterViewInit {
   @ViewChild('myInput') inputRef!: ElementRef;
 
   ngAfterViewInit() {
@@ -405,8 +404,8 @@ layout: default
 ```typescript
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
-@Component({ selector: 'app-demo', standalone: true, templateUrl: './demo.component.html' })
-export class DemoComponent implements AfterViewInit {
+@Component({ selector: 'app-demo', templateUrl: './demo.html' })
+export class Demo implements AfterViewInit {
   @ViewChild('searchBox') searchRef!: ElementRef;
 
   ngAfterViewInit() {
@@ -464,8 +463,8 @@ Content 系列（也就是透過 ng-content 投影進來的內容）的初始化
 ```typescript
 import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
 
-@Component({ selector: 'app-child', standalone: true })
-export class ChildComponent implements OnChanges {
+@Component({ selector: 'app-child' })
+export class Child implements OnChanges {
   @Input() message: string = '';
 
   ngOnChanges(changes: SimpleChanges) {
@@ -500,8 +499,8 @@ export class ChildComponent implements OnChanges {
 ```typescript
 import { Component, DoCheck } from '@angular/core';
 
-@Component({ selector: 'app-demo', standalone: true })
-export class DemoComponent implements DoCheck {
+@Component({ selector: 'app-demo' })
+export class Demo implements DoCheck {
   ngDoCheck() {
     // 手動偵測 Angular 檢測不到的變更
     console.log('DoCheck 執行');
@@ -546,10 +545,9 @@ import { Component, AfterContentInit, AfterContentChecked } from '@angular/core'
 
 @Component({
   selector: 'app-demo',
-  standalone: true,
   template: '<ng-content></ng-content>',
 })
-export class DemoComponent implements AfterContentInit, AfterContentChecked {
+export class Demo implements AfterContentInit, AfterContentChecked {
   ngAfterContentInit() {
     console.log('ng-content 初始化完成');
   }
@@ -591,8 +589,8 @@ export class DemoComponent implements AfterContentInit, AfterContentChecked {
 import { Component, AfterViewChecked, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-@Component({ selector: 'app-demo', standalone: true })
-export class DemoComponent implements AfterViewChecked, OnDestroy {
+@Component({ selector: 'app-demo' })
+export class Demo implements AfterViewChecked, OnDestroy {
   private sub!: Subscription;
 
   ngAfterViewChecked() {
@@ -647,8 +645,8 @@ layout: default
 ```typescript
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-@Component({ selector: 'app-demo', standalone: true })
-export class DemoComponent implements OnInit, OnDestroy {
+@Component({ selector: 'app-demo' })
+export class Demo implements OnInit, OnDestroy {
   private timer: any;
 
   ngOnInit() {
@@ -690,10 +688,9 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-demo',
-  standalone: true,
-  templateUrl: './demo.component.html',
+  templateUrl: './demo.html',
 })
-export class DemoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class Demo implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     console.log('元件初始化');
   }
@@ -725,8 +722,8 @@ import { Component, OnChanges, OnInit, DoCheck,
          AfterContentInit, AfterContentChecked,
          AfterViewInit, AfterViewChecked, OnDestroy } from '@angular/core';
 
-@Component({ selector: 'app-all-hooks', standalone: true })
-export class AllHooksComponent implements OnChanges, OnInit, DoCheck,
+@Component({ selector: 'app-all-hooks' })
+export class AllHooks implements OnChanges, OnInit, DoCheck,
     AfterContentInit, AfterContentChecked,
     AfterViewInit, AfterViewChecked, OnDestroy {
   ngOnChanges()           { console.log('1. ngOnChanges'); }
@@ -764,7 +761,7 @@ layout: default
 2. 在 `constructor()` 中加入 `console.log('1. constructor 執行')`
 3. 在 `ngOnInit()` 中加入 `console.log('2. ngOnInit 執行')`，並設定 `this.welcomeMessage = '歡迎來到 Angular！'`
 4. 在 `ngAfterViewInit()` 中加入 `console.log('3. ngAfterViewInit 執行')`
-5. 在 `app.component.html` 中用 `{{ welcomeMessage }}` 顯示訊息
+5. 在 `app.html` 中用 `{{ welcomeMessage }}` 顯示訊息
 
 **打開 F12 → Console，確認三個 log 依序出現；確認變數雖無初始值，畫面仍正確顯示訊息。**
 
@@ -781,13 +778,13 @@ layout: default
 # 練習：解題提示
 ### 完成步驟
 
-1. 在 `app.component.ts` 引入並 `implements OnInit, AfterViewInit`：
+1. 在 `app.ts` 引入並 `implements OnInit, AfterViewInit`：
 
 ```typescript
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 
-@Component({ selector: 'app-root', standalone: true, templateUrl: './app.component.html' })
-export class AppComponent implements OnInit, AfterViewInit {
+@Component({ selector: 'app-root', templateUrl: './app.html' })
+export class App implements OnInit, AfterViewInit {
   welcomeMessage!: string;
 
   constructor() {
@@ -805,7 +802,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 }
 ```
 
-2. 在 `app.component.html` 加入 `<p>{{ welcomeMessage }}</p>`
+2. 在 `app.html` 加入 `<p>{{ welcomeMessage }}</p>`
 
 3. 儲存後開啟 F12 → Console，確認順序：`1. constructor 執行` → `2. ngOnInit 執行` → `3. ngAfterViewInit 執行`
 

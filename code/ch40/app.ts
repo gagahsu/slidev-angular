@@ -21,8 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     FormsModule,          // [(ngModel)] 雙向綁定
     MatFormFieldModule,   // <mat-form-field>
@@ -30,7 +29,7 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule        // matNativeControl
   ]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // 原生 select 的資料

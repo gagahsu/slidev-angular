@@ -15,19 +15,18 @@
 import { Component, OnInit, Signal, effect, inject } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { LoadingService } from './loading.service';
+import { LoadingService } from './loading-service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
   imports: [
     MatProgressSpinnerModule,
     MatButtonModule
   ]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   private loadingService = inject(LoadingService);
 

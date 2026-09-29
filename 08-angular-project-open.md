@@ -175,10 +175,10 @@ ng g c home
 
 ```
 src/app/home/
-  ├── home.component.ts       ← 邏輯（TypeScript）
-  ├── home.component.html     ← 畫面（HTML 模板）
-  ├── home.component.css      ← 樣式（CSS）
-  └── home.component.spec.ts  ← 測試檔
+  ├── home.ts       ← 邏輯（TypeScript）
+  ├── home.html     ← 畫面（HTML 模板）
+  ├── home.css      ← 樣式（CSS）
+  └── home.spec.ts  ← 測試檔
 ```
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -238,15 +238,15 @@ Angular 的路由設定在 `src/app/app.routes.ts`：
 
 ```ts {all}
 import { Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { Home } from './home/home';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'home', component: HomeComponent },
+  { path: '', component: Home },
+  { path: 'home', component: Home },
 ];
 ```
 
-接著在 `app.component.html` 中加入路由出口：
+接著在 `app.html` 中加入路由出口：
 
 ```html
 <router-outlet />
@@ -260,7 +260,7 @@ export const routes: Routes = [
 <!--
 這是最基本的路由設定。
 你只需要把元件 import 進來，然後在 routes 陣列裡加一個物件：path 是網址、component 是要顯示的元件。
-app.component.html 裡的 router-outlet 就是「頁面切換的舞台」，Angular 會把對應的元件渲染在這裡。
+app.html 裡的 router-outlet 就是「頁面切換的舞台」，Angular 會把對應的元件渲染在這裡。
 更進階的路由功能——懶加載、路由守衛、巢狀路由——我們後面會有專門的章節來說明。
 -->
 

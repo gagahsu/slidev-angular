@@ -10,11 +10,10 @@ import { User, Player, Props, Student } from './user.interface';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: []
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   // ==============================
   // 基本 Interface 使用

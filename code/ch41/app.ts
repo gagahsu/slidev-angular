@@ -30,11 +30,10 @@ import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: []
 })
-export class AppComponent implements AfterViewInit {
+export class App implements AfterViewInit {
 
   // 圖表實例（存起來方便之後更新）
   private pieChart: Chart | null = null;

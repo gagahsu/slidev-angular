@@ -29,24 +29,23 @@
   → 可搭配 Angular CDK BreakpointObserver 在 TypeScript 裡偵測視窗大小
 */
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
   imports: [CommonModule]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   // BreakpointObserver：在 TypeScript 裡偵測視窗大小
   private breakpointObserver = inject(BreakpointObserver);
 
-  currentDevice: string = 'Desktop';
-  windowWidth: number = window.innerWidth;
+  currentDevice = signal('Desktop');
+  windowWidth = signal(window.innerWidth);
 
   ngOnInit(): void {
     // 監聽視窗大小變化
@@ -56,17 +55,17 @@ export class AppComponent implements OnInit {
       Breakpoints.Web        // 桌機
     ]).subscribe(result => {
       if (result.breakpoints[Breakpoints.Handset]) {
-        this.currentDevice = '📱 手機（Mobile）';
+        this.currentDevice.set('📱 手機（Mobile）');
       } else if (result.breakpoints[Breakpoints.Tablet]) {
-        this.currentDevice = '📟 平板（Tablet）';
+        this.currentDevice.set('📟 平板（Tablet）');
       } else {
-        this.currentDevice = '🖥️ 桌機（Desktop）';
+        this.currentDevice.set('🖥️ 桌機（Desktop）');
       }
     });
 
     // 監聽 resize 事件更新寬度顯示
     window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth;
+      this.windowWidth.set(window.innerWidth);
     });
   }
 }

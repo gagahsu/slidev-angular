@@ -24,9 +24,8 @@ import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
   imports: [
     MatToolbarModule,   // mat-toolbar
     MatIconModule,      // mat-icon
@@ -34,7 +33,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     MatBadgeModule      // [matBadge] — 顯示數字角標
   ]
 })
-export class AppComponent {
+export class App {
 
   cartCount: number = 3;
   notificationCount: number = 5;

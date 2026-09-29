@@ -317,12 +317,11 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [MatTabsModule, RouterOutlet, RouterLink],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  templateUrl: './app.html',
+  styleUrl: './app.css'
 })
-export class AppComponent {
+export class App {
   // 下一步定義 links 與 activeLink
 }
 ```
@@ -386,12 +385,12 @@ activeLink = this.links[0].name;
 export const routes: Routes = [
   {
     path: 'test',
-    component: TestParentComponent,   // 內含 mat-tab-nav-bar 的元件
+    component: TestParent,   // 內含 mat-tab-nav-bar 的元件
     children: [
       { path: '', redirectTo: 'test1', pathMatch: 'full' }, // 預設導向第一個頁籤
-      { path: 'test1', component: Test1Component },
-      { path: 'test2', component: Test2Component },
-      { path: 'test3', component: Test3Component }
+      { path: 'test1', component: Test1 },
+      { path: 'test2', component: Test2 },
+      { path: 'test3', component: Test3 }
     ]
   }
 ];

@@ -422,7 +422,7 @@ layout: default
 ```typescript
 // 日期字串排序（新 → 舊），不改動原始 records
 getSortedByDate(): CourseRecord[] {
-  return [...this.records].sort((a, b) =>
+  return [...this.records()].sort((a, b) =>
     b.date.localeCompare(a.date)
     // b 在前 → 較大（較新）的日期排前面
   );
@@ -460,10 +460,10 @@ Math.round(4.6)   // → 5
 
 // P3：計算課程完成率
 getCompletionRate(): number {
-  const completed = this.records
+  const completed = this.records()
     .filter(r => r.status === 'completed').length;
   return Math.round(
-    (completed / this.records.length) * 100
+    (completed / this.records().length) * 100
   );
   // completed=7, total=10 → 7/10*100 = 70.0 → 70
   // completed=2, total=3  → 2/3*100  = 66.6… → 67
@@ -520,14 +520,14 @@ layout: default
 ```typescript
 // ❌ 錯誤：直接 sort records，原始資料被破壞
 getSortedByDate(): CourseRecord[] {
-  return this.records.sort((a, b) =>
+  return this.records().sort((a, b) =>
     b.date.localeCompare(a.date)
   );
 }
 
 // ✅ 正確：先複製再排序，原始 records 不變
 getSortedByDate(): CourseRecord[] {
-  return [...this.records].sort((a, b) =>
+  return [...this.records()].sort((a, b) =>
     b.date.localeCompare(a.date)
   );
 }

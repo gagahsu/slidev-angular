@@ -178,8 +178,8 @@ class: flex flex-col justify-center items-center text-center
 # 內嵌繫結 — 範例
 
 ```typescript
-// app.component.ts
-export class AppComponent {
+// app.ts
+export class App {
   title = '我的 Angular 應用';
   level = 1;
   name = 'Allen';
@@ -187,7 +187,7 @@ export class AppComponent {
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <h1>{{ title }}</h1>
 <p>玩家：{{ name }}，等級：{{ level }}</p>
 ```
@@ -292,8 +292,8 @@ price * qty = 25000 * 3 = 75000，Angular 在渲染時自動計算並替換。
 | 內嵌屬性 | `src="{{ 變數 }}"` | 需要拼接字串時 |
 
 ```typescript
-// app.component.ts
-export class AppComponent {
+// app.ts
+export class App {
   hintText = '請輸入姓名';
   imgUrl = 'assets/photo.png';
 }
@@ -334,7 +334,7 @@ export class AppComponent {
 `[disabled]` 可傳入**布林變數**或**方法回傳值**來動態啟用或禁用按鈕。建議將條件邏輯抽到 TS 方法，模板只負責呼叫：
 
 ```typescript
-export class AppComponent {
+export class App {
   level = 1;
 
   isMinLevel() { return this.level <= 1;  }
@@ -366,18 +366,18 @@ export class AppComponent {
 `[class.xxx]="條件"` — 條件為 `true` 時加上該 class，`false` 時移除：
 
 ```typescript
-// app.component.ts
+// app.ts
 isSelected = false;
 select() { this.isSelected = !this.isSelected; }
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <button [class.selected]="isSelected" (click)="select()">選取</button>
 ```
 
 ```scss
-/* app.component.scss */
+/* app.scss */
 button { padding: 8px 16px; border: 1px solid #ccc; cursor: pointer; }
 .selected { background-color: #3498db; color: white; border-color: #2980b9; }
 ```
@@ -401,7 +401,7 @@ SCSS 裡定義 .selected 要長什麼樣子——藍底白字。
 同時控制多個 class 時，改用 `[ngClass]`，傳入一個物件（key = class 名稱，value = 條件）：
 
 ```typescript
-// app.component.ts
+// app.ts
 import { NgClass } from '@angular/common';
 // 在 @Component imports 加入 NgClass
 
@@ -410,12 +410,12 @@ hasError = false;
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <div [ngClass]="{'active': isActive, 'error': hasError}">狀態區塊</div>
 ```
 
 ```scss
-/* app.component.scss */
+/* app.scss */
 .active { background-color: #d4edda; padding: 8px; }
 .error  { background-color: #f8d7da; padding: 8px; }
 ```
@@ -505,8 +505,8 @@ HTML 事件觸發時，呼叫 TypeScript 中對應的方法。
 # 事件繫結 — 範例
 
 ```typescript
-// app.component.ts
-export class AppComponent {
+// app.ts
+export class App {
   level = 1;
 
   levelUp() {
@@ -516,7 +516,7 @@ export class AppComponent {
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <p>目前等級：{{ level }}</p>
 <button (click)="levelUp()">升級</button>
 ```
@@ -542,7 +542,7 @@ TS 裡執行 `this.level++`，等級加 1。
 `$event` 是 Angular 傳入事件處理方法的**原生事件物件**，可用來取得使用者輸入的值：
 
 ```typescript
-export class AppComponent {
+export class App {
   keyword = '';
 
   onSearch(event: Event) {
@@ -644,17 +644,16 @@ TS 變數與 HTML 輸入元素同步更新，不管哪邊改變另一邊都會�
 使用 `ngModel` 前，必須將 `FormsModule` 加入元件的 `imports` 陣列，否則 HTML 會報錯「無法識別 ngModel 屬性」。
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FormsModule],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {
+export class App {
   username = '';
 }
 ```
@@ -672,17 +671,16 @@ export class AppComponent {
 # 雙向繫結 — 完整範例
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FormsModule],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {
+export class App {
   inputLevel = 1;
 
   updateStats() {
@@ -881,7 +879,7 @@ layout: default
 ### TypeScript（1／2）
 
 ```typescript
-export class AppComponent {
+export class App {
   level = 1;
   attack = 3;
   defense = 2;

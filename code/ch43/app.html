@@ -48,7 +48,7 @@
   <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
     <h2 style="color: #2e7d32; margin-top: 0;">② 非同步執行（setTimeout 2秒後）</h2>
     <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-      @for (log of asyncLog; track $index) {
+      @for (log of asyncLog(); track $index) {
         <div [style.background]="log.includes('setTimeout') ? '#ff9800' : '#2e7d32'"
              style="color: white; padding: 10px 18px; border-radius: 20px; font-size: 0.9rem;">
           {{ $index + 1 }}. {{ log }}
@@ -65,28 +65,28 @@
     <h2 style="color: #7b1fa2; margin-top: 0;">③ Observable + subscribe（HTTP 請求）</h2>
 
     <button (click)="fetchData()"
-      [disabled]="isLoading"
+      [disabled]="isLoading()"
       style="padding: 10px 20px; background: #7b1fa2; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1rem; margin-bottom: 16px;"
-      [style.opacity]="isLoading ? '0.5' : '1'">
-      {{ isLoading ? '載入中...' : '呼叫 API' }}
+      [style.opacity]="isLoading() ? '0.5' : '1'">
+      {{ isLoading() ? '載入中...' : '呼叫 API' }}
     </button>
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <div style="color: #7b1fa2; text-align: center; padding: 20px;">
         ⏳ 等待 API 回應（非同步，不阻塞其他操作）...
       </div>
     }
 
-    @if (errorMsg) {
+    @if (errorMsg()) {
       <div style="background: #ffcdd2; padding: 12px; border-radius: 8px; color: #c62828;">
-        ❌ {{ errorMsg }}
+        ❌ {{ errorMsg() }}
       </div>
     }
 
-    @if (apiData) {
+    @if (apiData()) {
       <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid #ce93d8;">
         <strong>✅ 資料回來了：</strong>
-        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; margin-top: 8px; font-size: 0.85rem; overflow: auto;">{{ apiData | json }}</pre>
+        <pre style="background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 6px; margin-top: 8px; font-size: 0.85rem; overflow: auto;">{{ apiData() | json }}</pre>
       </div>
     }
   </div>

@@ -48,8 +48,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     FormsModule,
     MatTableModule,
@@ -59,7 +58,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
     MatIconModule
   ]
 })
-export class AppComponent implements AfterViewInit {
+export class App implements AfterViewInit {
 
   // 搜尋輸入框的值（[(ngModel)] 雙向綁定）
   inputData: string = '';

@@ -12,25 +12,24 @@
   ② 自動：使用 takeUntilDestroyed()（Angular 16+）
 */
 
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { LoadingService } from './loading.service';
+import { LoadingService } from './loading-service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: []
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class App implements OnInit, OnDestroy {
 
   private loadingService = inject(LoadingService);
 
   // 目前的 loading 狀態（從 Service 訂閱而來）
-  isLoading: boolean = false;
+  isLoading = signal(false);
 
   // 操作日誌（顯示狀態變化歷程）
-  eventLog: string[] = [];
+  eventLog = signal<string[]>([]);
 
   // 儲存訂閱實例，ngOnDestroy 時取消訂閱
   private loadingSubscription!: Subscription;
@@ -41,16 +40,16 @@ export class AppComponent implements OnInit, OnDestroy {
     // ① 訂閱 loading$ Observable
     // 每次 loadingSubject.next() 被呼叫，這裡就會收到新值
     this.loadingSubscription = this.loadingService.loading$.subscribe((isLoading) => {
-      this.isLoading = isLoading;
+      this.isLoading.set(isLoading);
       const time = new Date().toLocaleTimeString();
-      this.eventLog.unshift(`[${time}] loading 狀態變為：${isLoading}`);
+      this.eventLog.update(l => [`[${time}] loading 狀態變為：${isLoading}`, ...l]);
       console.log('收到 loading 狀態：', isLoading);
     });
 
     // ② 訂閱「資料更新」事件
     this.dataUpdateSubscription = this.loadingService.dataUpdated$.subscribe(() => {
       const time = new Date().toLocaleTimeString();
-      this.eventLog.unshift(`[${time}] 收到「資料更新」通知`);
+      this.eventLog.update(l => [`[${time}] 收到「資料更新」通知`, ...l]);
     });
   }
 
@@ -72,7 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
   showLoading(): void  { this.loadingService.show(); }
   hideLoading(): void  { this.loadingService.hide(); }
 
-  clearLog(): void { this.eventLog = []; }
+  clearLog(): void { this.eventLog.set([]); }
 
   // ==============================
   // 元件銷毀時取消訂閱

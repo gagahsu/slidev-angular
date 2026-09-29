@@ -126,17 +126,17 @@ class: flex flex-col justify-center items-center text-center
 
 Angular 未內建 CookieService（舊版 `cookieStore` 已淘汰），目前主流使用 **ngx-cookie-service**。
 
-指定 19.0.0 版本安裝（最新版與 Angular 19 有衝突）：
+版本要和 Angular 主版本對應，Angular 21 就裝 21.x：
 
 ```bash
-npm install ngx-cookie-service@19.0.0
+npm install ngx-cookie-service@21
 ```
 
 <!--
 因為 Angular 本身沒有內建方便操作 Cookie 的功能。
 所以在業界，我們通常會安裝第三方套件 `ngx-cookie-service`。
-大叔特別提醒大家：安裝時請指定安裝 `@19.0.0` 版本！
-因為最新版有時候會跟 Angular 的版本打架，噴出一堆相容性紅字，裝這個穩定版本可以讓我們少掉很多白頭髮！
+大叔特別提醒大家：安裝時請指定安裝 `@21` 版本（跟 Angular 主版本一致）！
+因為這個套件的主版本號跟 Angular 綁在一起，裝到不對應的版本會噴出一堆相容性紅字，對應版本可以讓我們少掉很多白頭髮！
 -->
 
 ---
@@ -146,17 +146,17 @@ npm install ngx-cookie-service@19.0.0
 使用 `inject()` 將 `CookieService` 注入為類別屬性，後續即可透過該屬性操作 cookie。
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component, inject } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
   imports: [],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent {
+export class App {
   // 使用 inject 相依注入 CookieService 套件
   cookieService = inject(CookieService);
 }
@@ -176,8 +176,8 @@ export class AppComponent {
 使用 `cookieService.set()` 儲存資料，前三個參數最為關鍵：key 名稱、儲存值、過期天數。Cookie 到期後瀏覽器將自動刪除。
 
 ```typescript
-// app.component.ts
-export class AppComponent {
+// app.ts
+export class App {
   cookieService = inject(CookieService);
 
   constructor() {
@@ -227,8 +227,8 @@ export class AppComponent {
 使用 `cookieService.get(key)` 讀取對應 key 的 cookie值，不存在或已過期則回傳空字串。
 
 ```typescript
-// app.component.ts
-export class AppComponent {
+// app.ts
+export class App {
   cookieService = inject(CookieService);
 
   showName() {
@@ -252,9 +252,9 @@ layout: default
 
 請實作以下需求：
 
-1. 在 `LoginComponent`（`login.component.ts`）注入 `CookieService`
+1. 在 `Login`（`login.ts`）注入 `CookieService`
 2. 新增 `onLoginSuccess()` method，登入成功時將 `theme` 設為 `'dark'`，有效期 **30 天**
-3. 在 `DashboardComponent`（`dashboard.component.ts`）注入 `CookieService`
+3. 在 `Dashboard`（`dashboard.ts`）注入 `CookieService`
 4. 進入 dashboard 時（`constructor`），讀取 `theme` 的值並用 `console.log` 印出
 
 <!--
@@ -269,8 +269,8 @@ layout: default
 # Cookie — 小節練習解答
 
 ```typescript
-// login.component.ts
-export class LoginComponent {
+// login.ts
+export class Login {
   cookieService = inject(CookieService);
 
   onLoginSuccess() {
@@ -280,8 +280,8 @@ export class LoginComponent {
 ```
 
 ```typescript
-// dashboard.component.ts
-export class DashboardComponent {
+// dashboard.ts
+export class Dashboard {
   cookieService = inject(CookieService);
 
   constructor() {
@@ -379,16 +379,16 @@ localStorage 與 sessionStorage 皆以 key-value 方式儲存資料，提供兩�
 兩者 API 語法相同，只需替換前綴。屬於原生 Web API，不需 import、不需 inject，元件內直接呼叫即可。
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   imports: [],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent {
+export class App {
   saveName() {
     localStorage.setItem('name', 'Allen');
     sessionStorage.setItem('name', 'Allen');

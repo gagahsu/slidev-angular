@@ -46,7 +46,7 @@ const API_BASE_URL = "https://api.example.com";
 
 // ④ 私有屬性（慣例加底線前綴，告訴其他人「這是內部使用的」）
 // 注意：這只是一種命名習慣，實際上要用 private 關鍵字來保護
-class UserComponent {
+class User {
   private _userId: number = 0;  // 私有變數
   userName: string = "";         // 公開變數
 }

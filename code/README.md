@@ -11,7 +11,6 @@
 | [`ch03/`](./ch03/) | Angular 介紹 | Markdown / Shell |
 | [`ch04/`](./ch04/) | 終端機指令 | Markdown / Shell |
 | [`ch05/`](./ch05/) | Angular 安裝與專案建立 | Markdown |
-| [`ch06/`](./ch06/) | Angular 降版 | Markdown |
 | [`ch07/`](./ch07/) | VS Code 安裝 | Markdown |
 | [`ch08/`](./ch08/) | HTML 標籤 | HTML |
 | [`ch09/`](./ch09/) | CSS 基礎語法 | HTML / CSS |
@@ -76,7 +75,7 @@ npx ts-node 1-naming.ts
 ```
 或直接在 VS Code 裡閱讀程式碼，理解邏輯即可。
 
-### Markdown 檔案（ch03、ch04、ch05、ch06、ch07）
+### Markdown 檔案（ch03、ch04、ch05、ch07）
 用 VS Code 開啟後，按 `Ctrl + Shift + V` 預覽渲染後的效果。
 
 ---
@@ -111,8 +110,6 @@ code/
 │   ├── setup-guide.md
 │   └── project-structure.md
 │
-├── ch06/               ← 第06章：Angular 降版
-│   └── downgrade-guide.md
 │
 ├── ch07/               ← 第07章：VS Code 安裝
 │   └── vscode-extensions.md
@@ -146,186 +143,186 @@ code/
 │
 ├── ch14/               ← 第14章：變數使用
 │   ├── variables.ts    （全域/區域變數、let/const/var）
-│   ├── app.component.ts（Angular 元件變數）
-│   └── app.component.html（插值 {{ }} 顯示資料）
+│   ├── app.ts（Angular 元件變數）
+│   └── app.html（插值 {{ }} 顯示資料）
 │
 ├── ch15/               ← 第15章：方法
 │   ├── methods.ts      （函式語法完整說明）
-│   ├── app.component.ts（RPG 遊戲示範）
-│   └── app.component.html
+│   ├── app.ts（RPG 遊戲示範）
+│   └── app.html
 │
 ├── ch16/               ← 第16章：TypeScript 練習一
 │   └── practice.ts     （if / 型別轉換 / JSON / 迴圈 / 陣列）
 │
 ├── ch17/               ← 第17章：資料設計與呈現
 │   ├── data-design.ts  （資料結構設計、日期、重組）
-│   ├── app.component.ts（商品清單示範）
-│   └── app.component.html（@for / @if 指令）
+│   ├── app.ts（商品清單示範）
+│   └── app.html（@for / @if 指令）
 │
 ├── ch18/               ← 第18章：生命週期
-│   ├── app.component.ts（ngOnInit / ngOnDestroy 示範）
-│   └── app.component.html
+│   ├── app.ts（ngOnInit / ngOnDestroy 示範）
+│   └── app.html
 │
 ├── ch19/               ← 第19章：新增組件
 │   ├── generate-commands.sh（ng generate 指令）
-│   ├── header/header.component.ts
-│   ├── header/header.component.html
-│   └── app.component.html（引用子元件）
+│   ├── header/header.ts
+│   ├── header/header.html
+│   └── app.html（引用子元件）
 │
 ├── ch20/               ← 第20章：繫結
-│   ├── app.component.ts（四種綁定示範）
-│   └── app.component.html（插值/屬性/事件/雙向）
+│   ├── app.ts（四種綁定示範）
+│   └── app.html（插值/屬性/事件/雙向）
 │
 ├── ch21/               ← 第21章：路由
 │   ├── app.routes.ts   （路由設定）
-│   ├── app.component.html（router-outlet / routerLink）
-│   ├── pages/home/home.component.ts
-│   └── pages/course-detail/course-detail.component.ts（動態路由參數）
+│   ├── app.html（router-outlet / routerLink）
+│   ├── pages/home/home.ts
+│   └── pages/course-detail/course-detail.ts（動態路由參數）
 │
 ├── ch22/               ← 第22章：資料傳遞
-│   ├── parent/parent.component.ts（父元件）
-│   ├── parent/parent.component.html
-│   ├── child/child.component.ts（@Input / @Output）
-│   └── child/child.component.html
+│   ├── parent/parent.ts（父元件）
+│   ├── parent/parent.html
+│   ├── child/child.ts（@Input / @Output）
+│   └── child/child.html
 │
 ├── ch23/               ← 第23章：網頁儲存
-│   ├── app.component.ts（localStorage / sessionStorage / 物件儲存）
-│   └── app.component.html
+│   ├── app.ts（localStorage / sessionStorage / 物件儲存）
+│   └── app.html
 │
 ├── ch24/               ← 第24章：陣列顯示
-│   ├── app.component.ts（數字陣列 / 物件陣列 / 巢狀陣列）
-│   └── app.component.html（@for 單層 + 巢狀）
+│   ├── app.ts（數字陣列 / 物件陣列 / 巢狀陣列）
+│   └── app.html（@for 單層 + 巢狀）
 │
 ├── ch25/               ← 第25章：@if 條件顯示
-│   ├── app.component.ts（登入狀態 / 成績等級 / 購物車）
-│   └── app.component.html（@if / @else / @else if）
+│   ├── app.ts（登入狀態 / 成績等級 / 購物車）
+│   └── app.html（@if / @else / @else if）
 │
 ├── ch26/               ← 第26章：@switch 條件切換
-│   ├── app.component.ts（switch 示範 / 角色職業）
-│   └── app.component.html（@switch / @case / @default）
+│   ├── app.ts（switch 示範 / 角色職業）
+│   └── app.html（@switch / @case / @default）
 │
 ├── ch27/               ← 第27章：串接 API
 │   ├── app.config.ts         （provideHttpClient）
-│   ├── http-client.service.ts（get / post / put / delete）
-│   ├── app.component.ts      （inject Service + subscribe）
-│   └── app.component.html
+│   ├── http-client-service.ts（get / post / put / delete）
+│   ├── app.ts      （inject Service + subscribe）
+│   └── app.html
 │
 ├── ch28/               ← 第28章：串接 OpenAI
-│   ├── openai.service.ts     （Chat Completions API）
-│   ├── app.component.ts      （對話歷史 / 送出訊息）
-│   └── app.component.html    （聊天介面）
+│   ├── openai-service.ts     （Chat Completions API）
+│   ├── app.ts      （對話歷史 / 送出訊息）
+│   └── app.html    （聊天介面）
 │
 ├── ch29/               ← 第29章：Interface
 │   ├── user.interface.ts     （介面定義 / 選填欄位 / 巢狀）
-│   ├── app.component.ts      （使用 interface 的元件）
-│   └── app.component.html
+│   ├── app.ts      （使用 interface 的元件）
+│   └── app.html
 │
 ├── ch30/               ← 第30章：資料排序
-│   ├── app.component.ts      （sort() / 多欄位排序）
-│   └── app.component.html    （按鈕切換排序方式）
+│   ├── app.ts      （sort() / 多欄位排序）
+│   └── app.html    （按鈕切換排序方式）
 │
 ├── ch31/               ← 第31章：安裝 Angular Material
 │   └── setup-guide.md        （安裝步驟 / 常用 Module 對照表）
 │
 ├── ch32/               ← 第32章：Mat-table + 分頁
-│   ├── app.component.ts      （MatTableDataSource / @ViewChild Paginator）
-│   └── app.component.html    （mat-table 欄位定義 / mat-paginator）
+│   ├── app.ts      （MatTableDataSource / @ViewChild Paginator）
+│   └── app.html    （mat-table 欄位定義 / mat-paginator）
 │
 ├── ch33/               ← 第33章：Mat-icon
-│   ├── app.component.ts      （MatIconModule / 圖示清單）
-│   └── app.component.html    （基本用法 / 搭配按鈕 / 動態切換）
+│   ├── app.ts      （MatIconModule / 圖示清單）
+│   └── app.html    （基本用法 / 搭配按鈕 / 動態切換）
 │
 ├── ch34/               ← 第34章：日期選擇器
-│   ├── app.component.ts      （原生 Date 字串 / mat-datepicker + Date 物件）
-│   └── app.component.html    （input type="date" / mat-datepicker 完整結構）
+│   ├── app.ts      （原生 Date 字串 / mat-datepicker + Date 物件）
+│   └── app.html    （input type="date" / mat-datepicker 完整結構）
 │
 ├── ch35/               ← 第35章：DatePipe
-│   ├── app.component.ts      （手動格式化方法 / tidyDate）
-│   └── app.component.html    （DatePipe 各種格式代碼對照表）
+│   ├── app.ts      （手動格式化方法 / tidyDate）
+│   └── app.html    （DatePipe 各種格式代碼對照表）
 │
 ├── ch36/               ← 第36章：JsonPipe
-│   ├── app.component.ts      （user / order 物件資料）
-│   └── app.component.html    （ json Pipe + pre 格式化顯示）
+│   ├── app.ts      （user / order 物件資料）
+│   └── app.html    （ json Pipe + pre 格式化顯示）
 │
 ├── ch37/               ← 第37章：即時搜尋
-│   ├── app.component.ts      （(keyup) 篩選 / indexOf / dataSource.data 更新）
-│   └── app.component.html    （mat-table + mat-paginator + 搜尋框）
+│   ├── app.ts      （(keyup) 篩選 / indexOf / dataSource.data 更新）
+│   └── app.html    （mat-table + mat-paginator + 搜尋框）
 │
 ├── ch38/               ← 第38章：ngClass
-│   ├── app.component.ts      （isActive / getStatusClass 方法）
-│   ├── app.component.css     （active / highlighted / in-stock 等 class 定義）
-│   └── app.component.html    （字串 / 物件條件 / 方法回傳三種用法）
+│   ├── app.ts      （isActive / getStatusClass 方法）
+│   ├── app.css     （active / highlighted / in-stock 等 class 定義）
+│   └── app.html    （字串 / 物件條件 / 方法回傳三種用法）
 │
 ├── ch39/               ← 第39章：Tabs
-│   ├── app.component.ts      （staticTabs / links / activeLink）
-│   └── app.component.html    （mat-tab-group / @for 動態頁籤 / mat-tab-nav-bar）
+│   ├── app.ts      （staticTabs / links / activeLink）
+│   └── app.html    （mat-tab-group / @for 動態頁籤 / mat-tab-nav-bar）
 │
 ├── ch40/               ← 第40章：Select
-│   ├── app.component.ts      （selectedCar / courseOptions / 表單送出）
-│   └── app.component.html    （原生 select / matNativeControl / mat-select）
+│   ├── app.ts      （selectedCar / courseOptions / 表單送出）
+│   └── app.html    （原生 select / matNativeControl / mat-select）
 │
 ├── ch41/               ← 第41章：圓餅圖
-│   ├── app.component.ts      （Chart.js pie + bar / ngAfterViewInit）
-│   └── app.component.html    （canvas 元素 / 圖表類型說明表）
+│   ├── app.ts      （Chart.js pie + bar / ngAfterViewInit）
+│   └── app.html    （canvas 元素 / 圖表類型說明表）
 │
 ├── ch42/               ← 第42章：Dialog
-│   ├── app.component.ts      （inject MatDialog / open / afterClosed）
-│   ├── app.component.html    （打開按鈕 / 顯示回傳結果）
+│   ├── app.ts      （inject MatDialog / open / afterClosed）
+│   ├── app.html    （打開按鈕 / 顯示回傳結果）
 │   └── dialog/
-│       ├── dialog.component.ts   （MAT_DIALOG_DATA / dialogRef.close）
-│       └── dialog.component.html （mat-dialog-title/content/actions）
+│       ├── dialog.ts   （MAT_DIALOG_DATA / dialogRef.close）
+│       └── dialog.html （mat-dialog-title/content/actions）
 │
 ├── ch43/               ← 第43章：同步與非同步
-│   ├── app.component.ts      （同步順序 / setTimeout / Observable subscribe）
-│   └── app.component.html    （執行順序視覺化 / subscribe 三個 callback）
+│   ├── app.ts      （同步順序 / setTimeout / Observable subscribe）
+│   └── app.html    （執行順序視覺化 / subscribe 三個 callback）
 │
 └── ch44/               ← 第44章：訂閱
-    ├── loading.service.ts    （BehaviorSubject / Subject / asObservable）
-    ├── app.component.ts      （subscribe / unsubscribe / ngOnDestroy）
-    └── app.component.html    （狀態顯示 / 事件日誌 / 比較表）
+    ├── loading-service.ts    （BehaviorSubject / Subject / asObservable）
+    ├── app.ts      （subscribe / unsubscribe / ngOnDestroy）
+    └── app.html    （狀態顯示 / 事件日誌 / 比較表）
 │
 ├── ch45/               ← 第45章：Loading
-│   ├── loading.service.ts    （BehaviorSubject / show / hide）
-│   ├── app.component.ts      （loading$ Observable + async pipe）
-│   ├── app.component.css     （overlay 遮罩 / mat-spinner 置中）
-│   └── app.component.html    （@if (loading$ | async)）
+│   ├── loading-service.ts    （BehaviorSubject / show / hide）
+│   ├── app.ts      （loading$ Observable + async pipe）
+│   ├── app.css     （overlay 遮罩 / mat-spinner 置中）
+│   └── app.html    （@if (loading$ | async)）
 │
 ├── ch46/               ← 第46章：Signals
-│   ├── loading.service.ts    （signal() / asReadonly / set）
-│   ├── app.component.ts      （Signal<boolean> / effect()）
-│   ├── app.component.css     （overlay / spinner）
-│   └── app.component.html    （loading() 直接讀取，無需 async pipe）
+│   ├── loading-service.ts    （signal() / asReadonly / set）
+│   ├── app.ts      （Signal<boolean> / effect()）
+│   ├── app.css     （overlay / spinner）
+│   └── app.html    （loading() 直接讀取，無需 async pipe）
 │
 ├── ch47/               ← 第47章：Sidenav
-│   ├── app.component.ts      （MatSidenavModule / MatListModule）
-│   ├── app.component.css     （sidenav 寬度 / container 高度）
-│   └── app.component.html    （mat-drawer-container / drawer.toggle / mode 切換）
+│   ├── app.ts      （MatSidenavModule / MatListModule）
+│   ├── app.css     （sidenav 寬度 / container 高度）
+│   └── app.html    （mat-drawer-container / drawer.toggle / mode 切換）
 │
 ├── ch48/               ← 第48章：Toolbar
-│   ├── app.component.ts      （MatToolbarModule / MatBadgeModule）
-│   ├── app.component.css     （.spacer flex: 1 1 auto）
-│   └── app.component.html    （mat-toolbar / spacer / matBadge 角標）
+│   ├── app.ts      （MatToolbarModule / MatBadgeModule）
+│   ├── app.css     （.spacer flex: 1 1 auto）
+│   └── app.html    （mat-toolbar / spacer / matBadge 角標）
 │
 ├── ch49/               ← 第49章：Mat-radio & Checkbox
-│   ├── app.component.ts      （seasons / courses / 全選邏輯）
-│   └── app.component.html    （mat-radio-group / mat-checkbox / indeterminate）
+│   ├── app.ts      （seasons / courses / 全選邏輯）
+│   └── app.html    （mat-radio-group / mat-checkbox / indeterminate）
 │
 ├── ch50/               ← 第50章：Reactive Forms
-│   ├── app.component.ts      （FormBuilder / FormGroup / FormArray）
-│   └── app.component.html    （formGroup / formArrayName / formGroupName）
+│   ├── app.ts      （FormBuilder / FormGroup / FormArray）
+│   └── app.html    （formGroup / formArrayName / formGroupName）
 │
 ├── ch51/               ← 第51章：Validators
-│   ├── app.component.ts      （required / email / pattern / min / max）
-│   └── app.component.html    （invalid && touched 顯示錯誤）
+│   ├── app.ts      （required / email / pattern / min / max）
+│   └── app.html    （invalid && touched 顯示錯誤）
 │
 ├── ch52/               ← 第52章：RWD
-│   ├── app.component.ts      （BreakpointObserver / Breakpoints）
-│   ├── app.component.css     （@media query / grid 響應式欄數）
-│   └── app.component.html    （響應式格線 / 裝置偵測顯示）
+│   ├── app.ts      （BreakpointObserver / Breakpoints）
+│   ├── app.css     （@media query / grid 響應式欄數）
+│   └── app.html    （響應式格線 / 裝置偵測顯示）
 │
 ├── ch53/               ← 第53章：RxJS
-│   ├── app.component.ts      （Observable / of / from / interval / Subject）
-│   └── app.component.html    （四個互動示範區塊）
+│   ├── app.ts      （Observable / of / from / interval / Subject）
+│   └── app.html    （四個互動示範區塊）
 │
 ├── ch54/               ← 第54章：Angular Build
 │   └── build-guide.md        （ng build / dist 結構 / http-server / 最佳化）

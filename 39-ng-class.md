@@ -93,7 +93,7 @@ class: flex flex-col justify-center items-center text-center
 | 前置需求 | 使用前需在元件的 `.ts` 匯入 `CommonModule` |
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 若元件為 standalone，請在 <code>imports</code> 陣列中加入 <code>CommonModule</code>；若使用 NgModule 架構，則在對應模組中匯入。
+💡 <b>注意：</b> Angular 17 之後元件預設就是 standalone，請在 <code>imports</code> 陣列中加入 <code>CommonModule</code>。
 </div>
 
 <!--
@@ -116,11 +116,10 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-questionnaire',
-  standalone: true,
   imports: [CommonModule],
-  templateUrl: './questionnaire.component.html',
+  templateUrl: './questionnaire.html',
 })
-export class QuestionnaireComponent {}
+export class Questionnaire {}
 ```
 
 <!--
@@ -221,7 +220,7 @@ class: flex flex-col justify-center items-center text-center
 在元件的 `.ts` 中宣告布林變數，模板依此變數決定是否套用 class。
 
 ```typescript
-export class QuestionnaireComponent {
+export class Questionnaire {
   ngclassBoolean: boolean = true;
 }
 ```
@@ -416,18 +415,17 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-order-status',
-  standalone: true,
   imports: [CommonModule],
-  templateUrl: './order-status.component.html',
-  styleUrl: './order-status.component.scss',
+  templateUrl: './order-status.html',
+  styleUrl: './order-status.scss',
 })
-export class OrderStatusComponent {
+export class OrderStatus {
 ```
 
 <!--
 先看 import 跟 @Component 設定。CommonModule 一定要匯入並加進 imports 陣列，這是 ch39 一開始就強調過的前置作業，[ngClass] 沒有這個模組會直接報錯；@for 是 Angular 17+ 內建語法，不需要另外 import。
 
-這裡故意留著最後一行 export class OrderStatusComponent { 的左大括號沒收尾，接下來幾張投影片都是這個類別裡面的內容，最後才會看到收尾的右大括號。
+這裡故意留著最後一行 export class OrderStatus { 的左大括號沒收尾，接下來幾張投影片都是這個類別裡面的內容，最後才會看到收尾的右大括號。
 -->
 
 ---
@@ -474,7 +472,7 @@ orders 這個屬性接續上一張還沒收尾的類別，先放三筆示範資�
 <!--
 補齊剩下兩筆資料，第 4 筆是 cancelled 狀態，第 5 筆是 pending 但 isOverdue 為 true，等一下畫面上這一筆會同時看到 pending 狀態標籤跟另一個獨立的 overdue 標籤。
 
-getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態是 cancelled 就回傳 row-cancelled 這個 class 名稱，其他狀態一律回傳空字串，讓 [ngClass] 什麼都不加。最後這個右大括號才是真正把 OrderStatusComponent 這個類別收尾。
+getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態是 cancelled 就回傳 row-cancelled 這個 class 名稱，其他狀態一律回傳空字串，讓 [ngClass] 什麼都不加。最後這個右大括號才是真正把 OrderStatus 這個類別收尾。
 -->
 
 ---

@@ -7,7 +7,7 @@
   沒有這行的話，在 Service 裡 inject(HttpClient) 會報錯。
 */
 
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';  // ← 必須加這行
 
@@ -15,7 +15,7 @@ import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient()   // ← 注入到整個應用，讓所有元件都能使用 HttpClient
   ]

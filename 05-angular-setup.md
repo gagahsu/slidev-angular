@@ -199,7 +199,7 @@ Node.js 安裝完成後，用 npm 全域安裝 Angular CLI：
 
 ```bash
 # 安裝 Angular CLI
-npm install -g @angular/cli@19.0.5
+npm install -g @angular/cli@21
 
 # 確認安裝成功
 ng v
@@ -212,9 +212,9 @@ ng v
 <!--
 前置環境完成，現在要來安裝今天的主角了——Angular CLI！
 這個 CLI 就是你的「Angular 專屬管家機器人」。
-我們輸入 `npm install -g @angular/cli@19.0.5`。
+我們輸入 `npm install -g @angular/cli@21`。
 這個 `-g` 是 Global 的縮寫，代表「全域安裝」。意思是一旦裝好，你的管家機器人就無所不在，不論你在哪個資料夾呼叫它，它都會隨傳隨到。
-我們這次統一安裝 `19.0.5` 版本，確保所有人的環境一模一樣。
+我們這次統一安裝 `21` 版（Angular 21 需要 Node.js 20.19 以上或 22.12 以上，所以前面才建議裝 22），確保所有人的環境一模一樣。
 安裝完之後，大膽地輸入 `ng v`！
 如果你看到黑視窗裡出現一個由文字符號組成的巨大「Angular」Logo，那代表管家機器人已經成功在你的電腦裡醒來，我們準備起飛啦！
 -->
@@ -255,21 +255,22 @@ ng new 專案名稱
 
 # 建立專案 — 安裝選項
 
-執行 `ng new` 後會出現兩個問題：
+執行 `ng new` 後會出現幾個問題：
 
 | 問題 | 選擇 | 說明 |
 | --- | --- | --- |
 | 第一個選項（樣式格式） | **Sass (SCSS)** | 選擇 SCSS 作為樣式格式 |
-| 第二個選項（Server-Side Rendering） | **N** | 輸入 N，不啟用 SSR |
+| 第二個選項（SSR / SSG） | **N** | 輸入 N，不啟用 SSR |
+| 第三個選項（AI 工具設定，新版才有） | **None** | 不需要設定 AI 工具 |
 
 選完後等待安裝完成，看到成功畫面即代表專案建立完畢。
 
 <!--
-在機器人幫你蓋房子時，它會問你兩個問題來確認房屋的裝修風格：
+在機器人幫你蓋房子時，它會問你幾個問題來確認房屋的裝修風格：
 第一個問題：問你樣式表要選哪一種？
 請用鍵盤方向鍵選到 **Sass (SCSS)**。這比一般的 CSS 強大太多，是現代前端必學的裝潢魔法。
 第二個問題：問你要不要開啟 SSR（Server-Side Rendering）？
-請大膽地打上 **N**，然後按 Enter。
+請大膽地打上 **N**，然後按 Enter。如果還有第三題問你要設定哪些 AI 工具，選 **None** 就好。另外，Angular 21 預設已經是 zoneless（不使用 zone.js）、測試框架是 Vitest，這些都不用我們選，後面的章節會慢慢說明。
 因為 SSR 會把房子的管線搞得很複雜，我們新手先從簡單的單頁應用開始就好。
 按完之後，電腦就會開始跑進度，這時可以去喝口水、伸個懶腰，等待你的房子蓋好。
 -->
@@ -332,10 +333,10 @@ class: flex flex-col justify-center items-center text-center
 | --- | --- |
 | `styles.scss` | 全站 Global CSS 設定 |
 | `main.ts` | 整個網站的啟動入口點 |
-| `app.component.html` | 使用者看到的畫面模板（HTML） |
-| `app.component.scss` | 對應 HTML 的樣式（SCSS） |
-| `app.component.spec.ts` | 測試案例撰寫檔案 |
-| `app.component.ts` | 元件的邏輯程式碼（Class） |
+| `app.html` | 使用者看到的畫面模板（HTML） |
+| `app.scss` | 對應 HTML 的樣式（SCSS） |
+| `app.spec.ts` | 測試案例撰寫檔案 |
+| `app.ts` | 元件的邏輯程式碼（Class） |
 | `app.config.ts` | 應用程式配置文件 |
 | `app.routes.ts` | 路由配置文件 |
 
@@ -363,7 +364,7 @@ class: flex flex-col justify-center items-center text-center
 `.ts` 檔則是藏在積木裡面的**「電子晶片與電池」**，決定這塊樂高按下去會發出什麼聲音、會有什麼反應。
 在 Angular 中，我們不是寫一整張大網頁，而是把網頁拆成許多樂高積木。
 比如：把頂部導覽列做成一塊積木，把側邊欄做成另一塊積木，最後把它們疊拼在一起。
-大家可以試著在 VS Code 打開 `app.component.html`，把裡面的字隨便改成「Hello 阿嬤！」，然後存檔。
+大家可以試著在 VS Code 打開 `app.html`，把裡面的字隨便改成「Hello 阿嬤！」，然後存檔。
 你會發現瀏覽器根本不用重新整理，畫面就自動改變了！這就是 Angular 自動同步的魔法！
 -->
 

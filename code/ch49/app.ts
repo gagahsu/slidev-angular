@@ -26,8 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     FormsModule,         // [(ngModel)]
     MatRadioModule,      // mat-radio-group / mat-radio-button
@@ -35,7 +34,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule
   ]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // Radio（單選）

@@ -320,7 +320,7 @@ HTML 貼上去之後，編輯器會噴一堆錯誤，這是因為 TypeScript 這
 
 解法很單純，就是把對應的模組 import 進來：MatTableModule、MatTableDataSource 從 @angular/material/table 來，MatPaginatorModule 從 @angular/material/paginator 來，再加進 @Component 的 imports 陣列，錯誤就會消失。
 
-⚠️ 提醒大家，只 import 是不夠的，還要記得加進 imports 陣列，這是 standalone component 常見會漏掉的地方。
+⚠️ 提醒大家，只 import 是不夠的，還要記得加進 imports 陣列，這是元件最常漏掉的地方。
 -->
 
 ---
@@ -389,7 +389,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({ /* ... */ })
-export class MyComponent implements AfterViewInit {
+export class My implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 

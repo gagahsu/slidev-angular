@@ -15,11 +15,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-child',
-  templateUrl: './child.component.html',
-  standalone: true,
+  templateUrl: './child.html',
   imports: []   // @for 是內建語法，不需要額外 import
 })
-export class ChildComponent {
+export class Child {
 
   // ==============================
   // @Input：接收父元件傳來的資料

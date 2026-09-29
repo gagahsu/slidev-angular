@@ -251,7 +251,7 @@ class: flex flex-col justify-center items-center text-center
 # 動態增減欄位 — 初始化（一）程式碼
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -259,10 +259,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-root',
   imports: [ReactiveFormsModule], // 步驟一：加入 ReactiveFormsModule
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
-export class AppComponent {
+export class App {
   fb = inject(FormBuilder); // 步驟二：取得 FormBuilder 實例
 
   // 步驟三：以 fb.group() 定義根 FormGroup
@@ -306,10 +306,10 @@ fb.array([]) 就是建立一個空的 FormArray，這時候裡面還沒有任何
 # 動態增減欄位 — 初始化（二）程式碼
 
 ```typescript
-// app.component.ts
+// app.ts
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 
-export class AppComponent {
+export class App {
   fb = inject(FormBuilder);
 
   form = this.fb.group({
@@ -341,7 +341,7 @@ export class AppComponent {
 3. `console.log(this.form.value)` 可查看目前表單完整資料
 
 ```typescript
-// app.component.ts
+// app.ts
 addQuestion() {
   const questionGroup = this.fb.group({
     qTitle: ['', Validators.required], // 題目名稱
@@ -373,7 +373,7 @@ addQuestion() {
 **`removeAt(index)`：** `FormArray` 的內建方法，依位置移除元素，後續索引自動重新排列。
 
 ```typescript
-// app.component.ts
+// app.ts
 
 // 刪除題目（根據資料位置移除）
 removeQuestion(index: number) {
@@ -410,7 +410,7 @@ class: flex flex-col justify-center items-center text-center
 `ReactiveFormsModule` 必須已匯入至 `@Component` 的 `imports`，否則 `[formGroup]` 指令無法識別，畫面會報錯。
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <h2>動態問卷設計</h2>
 
 <form [formGroup]="form">
@@ -418,12 +418,12 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 ```typescript
-// app.component.ts
+// app.ts
 @Component({
   selector: 'app-root',
   imports: [ReactiveFormsModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
 ```
 
@@ -442,7 +442,7 @@ class: flex flex-col justify-center items-center text-center
 Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControlName` 對應 `FormGroup` 中定義的 key。
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <form [formGroup]="form">
   <label>問卷名稱：</label>
   <!-- formControlName 後面接的就是 form 中的欄位名稱 -->
@@ -481,7 +481,7 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 # 畫面顯示 — 繫結 formArrayName（三）程式碼
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <form [formGroup]="form">
   <label>問卷名稱：</label>
   <input type="text" formControlName="surveyTitle">

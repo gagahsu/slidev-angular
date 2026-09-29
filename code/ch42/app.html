@@ -12,9 +12,9 @@
   <div style="background: #e3f2fd; padding: 16px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 24px;">
     <h3 style="color: #1565c0; margin-top: 0;">使用流程</h3>
     <ol style="margin: 0; color: #333; line-height: 1.8;">
-      <li>建立 <strong>dialog 元件</strong>（dialog.component.ts + html）</li>
+      <li>建立 <strong>dialog 元件</strong>（dialog.ts + html）</li>
       <li>父元件 <strong>inject MatDialog</strong></li>
-      <li>呼叫 <strong>this.dialog.open(DialogComponent, &#123; data, width &#125;)</strong></li>
+      <li>呼叫 <strong>this.dialog.open(Dialog, &#123; data, width &#125;)</strong></li>
       <li>透過 <strong>afterClosed().subscribe()</strong> 接收回傳值</li>
     </ol>
   </div>
@@ -28,11 +28,11 @@
       打開 Dialog
     </button>
 
-    @if (dialogResult !== null) {
+    @if (dialogResult() !== null) {
       <div style="margin-top: 16px; background: white; padding: 16px; border-radius: 8px; border: 1px solid #c8e6c9;">
         <strong>Dialog 回傳值：</strong>
         <code style="background: #f5f5f5; padding: 4px 8px; border-radius: 4px; margin-left: 8px;">
-          {{ dialogResult | json }}
+          {{ dialogResult() | json }}
         </code>
       </div>
     }
@@ -47,9 +47,9 @@
       打開確認 Dialog
     </button>
 
-    @if (confirmResult) {
+    @if (confirmResult()) {
       <div style="margin-top: 16px; background: white; padding: 16px; border-radius: 8px; border: 1px solid #ffe082;">
-        <strong>結果：</strong> {{ confirmResult }}
+        <strong>結果：</strong> {{ confirmResult() }}
       </div>
     }
   </div>
@@ -58,7 +58,7 @@
   <div style="background: #f5f5f5; padding: 20px; border-radius: 10px;">
     <h3 style="color: #333; margin-top: 0;">關鍵程式碼</h3>
     <pre style="background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-size: 0.85rem; overflow: auto; margin: 0;">// 打開 dialog
-const dialogRef = this.dialog.open(DialogComponent, &#123;
+const dialogRef = this.dialog.open(Dialog, &#123;
   data: &#123; title: '標題', message: '訊息' &#125;,
   width: '450px'
 &#125;);

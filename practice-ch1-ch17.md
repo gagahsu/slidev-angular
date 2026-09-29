@@ -301,19 +301,19 @@ ng g c resume
 ```typescript
 // app.routes.ts
 import { Routes } from '@angular/router';
-import { ResumeComponent } from './resume/resume.component';
+import { Resume } from './resume/resume';
 
 export const routes: Routes = [
-  { path: 'resume', component: ResumeComponent },
+  { path: 'resume', component: Resume },
 ];
 ```
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 確認 <code>app.component.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/resume</code> 即可看到畫面
+💡 確認 <code>app.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/resume</code> 即可看到畫面
 </div>
 
 <!--
-每一題的第一步都是建立 component 然後加 route。`ng g c resume` 產生四個檔案（.ts、.html、.css、.spec.ts），我們只會動到前三個。app.routes.ts 的 path 決定瀏覽器 URL——`{ path: 'resume', component: ResumeComponent }` 表示訪問 /resume 就顯示這個 component。確認 router-outlet 存在是最常被同學忘記的步驟。
+每一題的第一步都是建立 component 然後加 route。`ng g c resume` 產生四個檔案（.ts、.html、.css、.spec.ts），我們只會動到前三個。app.routes.ts 的 path 決定瀏覽器 URL——`{ path: 'resume', component: Resume }` 表示訪問 /resume 就顯示這個 component。確認 router-outlet 存在是最常被同學忘記的步驟。
 -->
 
 ---
@@ -352,10 +352,10 @@ layout: default
 ```typescript
 @Component({
   selector: 'app-resume',
-  templateUrl: './resume.component.html',
-  styleUrl: './resume.component.css'
+  templateUrl: './resume.html',
+  styleUrl: './resume.css'
 })
-export class ResumeComponent {
+export class Resume {
   currentYear = new Date().getFullYear();
 
   skills: Skill[] = [
@@ -733,7 +733,7 @@ layout: default
 
 # P2：功能規格 FR（1/4）— 資料模型
 
-**DM-1**：`Product` 需獨立成 interface 檔（`ng g i shop/product`），因為 ShopComponent 和 ProductCardComponent 兩個元件都要用
+**DM-1**：`Product` 需獨立成 interface 檔（`ng g i shop/product`），因為 Shop 和 ProductCard 兩個元件都要用
 
 ```typescript
 // src/app/shop/product.ts（ng g i shop/product 產生）
@@ -744,7 +744,7 @@ export interface Product {
 ```
 
 ```typescript
-// shop.component.ts 內
+// shop.ts 內
 interface CartItem {
   product: Product;
   qty: number;
@@ -752,7 +752,7 @@ interface CartItem {
 ```
 
 <!--
-P2 的資料形狀比 P1 複雜：cart 裡每一筆要包住整個 product 物件。這一版 Product 要用 ng g i 抽成獨立檔案並 export（Ch30）——因為子元件 ProductCardComponent 的 @Input 也需要這個型別，interface 放在單一元件檔裡就沒辦法共用了。CartItem 只有 ShopComponent 用到，留在元件檔內即可，「誰共用誰抽出去」是實務上的判斷準則。
+P2 的資料形狀比 P1 複雜：cart 裡每一筆要包住整個 product 物件。這一版 Product 要用 ng g i 抽成獨立檔案並 export（Ch30）——因為子元件 ProductCard 的 @Input 也需要這個型別，interface 放在單一元件檔裡就沒辦法共用了。CartItem 只有 Shop 用到，留在元件檔內即可，「誰共用誰抽出去」是實務上的判斷準則。
 -->
 
 ---
@@ -822,15 +822,15 @@ ng g i shop/product    # Product interface 獨立檔
 ```typescript
 // app.routes.ts
 import { Routes } from '@angular/router';
-import { ShopComponent } from './shop/shop.component';
+import { Shop } from './shop/shop';
 
 export const routes: Routes = [
-  { path: 'shop', component: ShopComponent },
+  { path: 'shop', component: Shop },
 ];
 ```
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 確認 <code>app.component.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/shop</code> 即可看到畫面。子元件 product-card 不需要 route，它由 ShopComponent 引用
+💡 確認 <code>app.html</code> 有 <code>&lt;router-outlet /&gt;</code>，瀏覽 <code>/shop</code> 即可看到畫面。子元件 product-card 不需要 route，它由 Shop 引用
 </div>
 
 <!--
@@ -853,16 +853,16 @@ export interface Product {
 ```
 
 ```typescript
-// src/app/product-card/product-card.component.ts
+// src/app/product-card/product-card.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Product } from '../shop/product';
 
 @Component({
   selector: 'app-product-card',
-  templateUrl: './product-card.component.html',
-  styleUrl: './product-card.component.css'
+  templateUrl: './product-card.html',
+  styleUrl: './product-card.css'
 })
-export class ProductCardComponent {
+export class ProductCard {
   @Input() product!: Product;
   @Output() addCart = new EventEmitter<Product>();
 }
@@ -878,12 +878,12 @@ Product 抽成獨立檔案並加 export，兩個元件都能 import（Ch30）。
 layout: default
 ---
 
-# P2：完整解答 — ShopComponent（1/5）
+# P2：完整解答 — Shop（1/5）
 
 ```typescript
 import { Component, OnInit } from '@angular/core';
 import { Product } from './product';
-import { ProductCardComponent } from '../product-card/product-card.component';
+import { ProductCard } from '../product-card/product-card';
 
 interface CartItem {
   product: Product;
@@ -906,16 +906,16 @@ Product 從獨立檔 import，CartItem 留在本檔——誰共用誰抽出去�
 layout: default
 ---
 
-# P2：完整解答 — ShopComponent（2/5）
+# P2：完整解答 — Shop（2/5）
 
 ```typescript
 @Component({
   selector: 'app-shop',
-  imports: [ProductCardComponent],
-  templateUrl: './shop.component.html',
-  styleUrl: './shop.component.css'
+  imports: [ProductCard],
+  templateUrl: './shop.html',
+  styleUrl: './shop.css'
 })
-export class ShopComponent implements OnInit {
+export class Shop implements OnInit {
   categories = ['全部', '前端', '後端', '設計'];
   products = products;
   cart: CartItem[] = [];
@@ -932,7 +932,7 @@ export class ShopComponent implements OnInit {
 
 <!--
 兩個新重點：
-1. @Component 的 imports 加入 ProductCardComponent——Standalone 元件要在 HTML 用 <app-product-card>，必須自己 import，跟 Ch23 的 RouterLink 同一個規則。
+1. @Component 的 imports 加入 ProductCard——Standalone 元件要在 HTML 用 <app-product-card>，必須自己 import，跟 Ch23 的 RouterLink 同一個規則。
 2. implements OnInit + ngOnInit（Ch20）：元件初始化時檢查 localStorage 有沒有上次的購物車，有就用 JSON.parse 把字串還原成陣列（Ch25）。這就是 FR-4「重新整理不消失」的另一半。
 -->
 
@@ -940,7 +940,7 @@ export class ShopComponent implements OnInit {
 layout: default
 ---
 
-# P2：完整解答 — ShopComponent（3/5）
+# P2：完整解答 — Shop（3/5）
 
 ```typescript
   setCategory(cat: string): void {
@@ -969,7 +969,7 @@ sortByPrice 對應 FR-2（Ch31）：比較函式依 order 參數決定升冪或�
 layout: default
 ---
 
-# P2：完整解答 — ShopComponent（4/5）
+# P2：完整解答 — Shop（4/5）
 
 ```typescript
   filterProducts() {
@@ -995,7 +995,7 @@ addToCart 維持「找到就修改、找不到就新增」模式，唯一差異�
 layout: default
 ---
 
-# P2：完整解答 — ShopComponent（5/5）
+# P2：完整解答 — Shop（5/5）
 
 ```typescript
   saveCart(): void {
@@ -1092,7 +1092,7 @@ layout: default
 # P2：完整解答 — HTML（3/3）父子元件
 
 ```html
-<!-- shop.component.html：商品格 -->
+<!-- shop.html：商品格 -->
 <div class="product-grid">
   @for (product of filterProducts(); track product.id) {
     <app-product-card
@@ -1103,7 +1103,7 @@ layout: default
 ```
 
 ```html
-<!-- product-card.component.html -->
+<!-- product-card.html -->
 <div class="product-card">
   <div class="product-img">{{ product.emoji }}</div>
   <div class="product-info">
@@ -1187,7 +1187,7 @@ layout: default
 # P2：完整解答 — CSS（3/5）
 
 ```css
-/* shop.component.css */
+/* shop.css */
 .filter-bar {
   padding: 16px 40px; display: flex; gap: 8px;
   background: white; border-bottom: 1px solid #e2e8f0;
@@ -1219,7 +1219,7 @@ layout: default
 # P2：完整解答 — CSS（4/5）子元件樣式
 
 ```css
-/* product-card.component.css */
+/* product-card.css */
 .product-card {
   border-radius: 12px; background: white;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -1235,7 +1235,7 @@ layout: default
 ```
 
 <!--
-卡片內部的樣式全部搬到 product-card.component.css——Angular 元件的 CSS 是封裝的（View Encapsulation），子元件的樣式不會污染父頁面，父頁面的 .product-card 也管不到子元件內部，所以「卡片長相」的樣式理所當然跟著子元件走。
+卡片內部的樣式全部搬到 product-card.css——Angular 元件的 CSS 是封裝的（View Encapsulation），子元件的樣式不會污染父頁面，父頁面的 .product-card 也管不到子元件內部，所以「卡片長相」的樣式理所當然跟著子元件走。
 分工結果：父元件 CSS 管「格子怎麼排」（flex 尺寸、gap），子元件 CSS 管「卡片長怎樣」（陰影、圓角、按鈕）——這是元件化 CSS 的標準切法。
 -->
 
@@ -1413,14 +1413,14 @@ subjects: Subject[] = [
   { name: 'CSS',  progress: 70 },
   { name: 'TypeScript', progress: 40 },
 ];
-records: CourseRecord[] = [];   // 由 API 載入
+records = signal<CourseRecord[]>([]);   // 由 API 載入（用 signal，資料回來畫面才會更新）
 ```
 
 **API-1**：資料放在 `public/records.json`（4 筆記錄），以 Ch29 的 `HttpClientService.getApi()` 取得
 
 <!--
 Subject、CourseRecord 用 interface 定義。取名 CourseRecord 而不是 Record，避免跟 TypeScript 內建的 `Record<K, V>` 工具型別撞名。status 聯合型別這一版多了 'not-started'，三種字串以外的值 TypeScript 直接報錯。
-DM-1 的重點是 records 初始為空陣列——資料改走 API 後，元件建立當下是沒有資料的，畫面會先渲染一次空清單，等 subscribe 收到回應才更新。這個「先空後有」的過程就是實際專案的常態。
+DM-1 的重點是 records 初始為空陣列——資料改走 API 後，元件建立當下是沒有資料的，畫面會先渲染一次空清單，等 subscribe 收到回應才更新。這個「先空後有」的過程就是實際專案的常態。Angular 21 預設是 zoneless，非同步回來的資料要放在 signal 裡，畫面才會跟著更新，所以 records 宣告成 signal，讀取時要加括號 records()。
 API-1 用 public/ 資料夾模擬後端：Angular dev server 會直接把 public/ 下的檔案當靜態資源供應，getApi('records.json') 就取得到，不需要真的架後端。
 -->
 
@@ -1472,7 +1472,7 @@ ng g c dashboard
 ```typescript
 // app.routes.ts
 export const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'dashboard', component: Dashboard },
 ];
 ```
 
@@ -1489,7 +1489,7 @@ export const appConfig: ApplicationConfig = {
 ```
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>HttpClientService</code>（含 <code>getApi</code> 四方法）沿用 Ch29 建立的 <code>http-service/http-client.service.ts</code>，本題不用重寫
+💡 <code>HttpClientService</code>（含 <code>getApi</code> 四方法）沿用 Ch29 建立的 <code>http-service/http-client-service.ts</code>，本題不用重寫
 </div>
 
 <!--
@@ -1531,8 +1531,8 @@ layout: default
 # P3：完整解答 — TypeScript（1/4）
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
-import { HttpClientService } from '../http-service/http-client.service';
+import { Component, OnInit, signal } from '@angular/core';
+import { HttpClientService } from '../http-service/http-client-service';
 
 interface Subject {
   name: string;
@@ -1558,16 +1558,16 @@ layout: default
 ```typescript
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  templateUrl: './dashboard.html',
+  styleUrl: './dashboard.css'
 })
-export class DashboardComponent implements OnInit {
+export class Dashboard implements OnInit {
   subjects: Subject[] = [
     { name: 'HTML', progress: 80 },
     { name: 'CSS', progress: 70 },
     { name: 'TypeScript', progress: 40 },
   ];
-  records: CourseRecord[] = [];
+  records = signal<CourseRecord[]>([]);   // 非同步載入的資料用 signal
   today = new Date();
 
   constructor(private http: HttpClientService) {}
@@ -1586,16 +1586,16 @@ layout: default
 ```typescript
   ngOnInit(): void {
     this.http.getApi('records.json').subscribe((res) => {
-      this.records = res as CourseRecord[];
+      this.records.set(res as CourseRecord[]);
       this.sortRecords();
     });
   }
   sortRecords(): void {
-    this.records.sort(function (a, b) {
+    this.records.update(list => [...list].sort(function (a, b) {
       if (new Date(a.date).getTime() > new Date(b.date).getTime()) return -1;
       if (new Date(a.date).getTime() < new Date(b.date).getTime()) return 1;
       return 0;
-    });
+    }));
   }
   getToday(): string {
     return this.today.getFullYear() + '/' +
@@ -1617,24 +1617,24 @@ layout: default
 
 ```typescript
   getCompletedCount(): number {
-    return this.records.filter(r => r.status === 'completed').length;
+    return this.records().filter(r => r.status === 'completed').length;
   }
   getInProgressCount(): number {
-    return this.records.filter(r => r.status === 'in-progress').length;
+    return this.records().filter(r => r.status === 'in-progress').length;
   }
   getTotalHours(): number {
-    return this.records.length * 2.5;
+    return this.records().length * 2.5;
   }
   getCompletionRate(): string {
-    if (this.records.length === 0) return '0%';
-    const rate = this.getCompletedCount() / this.records.length;
+    if (this.records().length === 0) return '0%';
+    const rate = this.getCompletedCount() / this.records().length;
     return Math.round(rate * 100) + '%';
   }
 }
 ```
 
 <!--
-統計方法跟舊版邏輯相同，但 getCompletionRate 多了一行防呆：records 現在初始是空陣列，API 還沒回來時 length 是 0，除以 0 會得到 NaN 顯示在畫面上——資料改走非同步載入後，「資料還沒到」的狀態都要處理，這是接 API 跟寫死資料最大的思維差異。
+統計方法跟舊版邏輯相同，但 getCompletionRate 多了一行防呆：records() 現在初始是空陣列，API 還沒回來時 length 是 0，除以 0 會得到 NaN 顯示在畫面上——資料改走非同步載入後，「資料還沒到」的狀態都要處理，這是接 API 跟寫死資料最大的思維差異。
 getCompletionRate 裡呼叫 this.getCompletedCount() 複用邏輯；getStatusText 這一版拿掉了，因為狀態文字改由 template 的 @switch 直接渲染（下一頁）。
 -->
 
@@ -1704,7 +1704,7 @@ layout: default
     }
   </div>
   <div class="records">
-    @for (r of records; track r.name) {
+    @for (r of records(); track r.name) {
       <div class="record-item">
         <span>● {{ r.name }}（{{ r.date }}）</span>
         @switch (r.status) {
@@ -1940,7 +1940,7 @@ layout: default
 
 # P4：功能規格 FR（1/5）— 資料模型
 
-**DM-1**：interface 以 `ng g i order` 建立**獨立檔案**並 `export`——MenuComponent、OrderPanelComponent、CheckoutComponent、OrderService 四個檔案都要用
+**DM-1**：interface 以 `ng g i order` 建立**獨立檔案**並 `export`——Menu、OrderPanel、Checkout、OrderService 四個檔案都要用
 
 ```typescript
 // src/app/order.ts
@@ -1970,14 +1970,14 @@ layout: default
 
 | 檔案 | 指令 | 職責 |
 |---|---|---|
-| `MenuComponent` | `ng g c menu` | 菜單頁：分類切換、加點、持有 `order` 狀態 |
-| `OrderPanelComponent` | `ng g c order-panel` | 訂單面板子元件：`@Input` 收訂單、`@Output` 發移除／結帳事件 |
-| `CheckoutComponent` | `ng g c checkout` | 結帳頁：從 Service 讀訂單顯示明細 |
+| `Menu` | `ng g c menu` | 菜單頁：分類切換、加點、持有 `order` 狀態 |
+| `OrderPanel` | `ng g c order-panel` | 訂單面板子元件：`@Input` 收訂單、`@Output` 發移除／結帳事件 |
+| `Checkout` | `ng g c checkout` | 結帳頁：從 Service 讀訂單顯示明細 |
 | `OrderService` | `ng g s order` | 跨頁共享訂單資料（`providedIn: 'root'` 單例） |
 | `order.ts` | `ng g i order` | `MenuItem`、`OrderItem` 共用 interface |
 
 <!--
-這張架構表是業界 spec 常見的「交付物清單」。P4 的重點從「一頁的功能」升級成「多檔案怎麼分工」：狀態集中在 MenuComponent，子元件純展示，Service 只負責跨頁搬運資料，結帳頁只讀不寫。
+這張架構表是業界 spec 常見的「交付物清單」。P4 的重點從「一頁的功能」升級成「多檔案怎麼分工」：狀態集中在 Menu，子元件純展示，Service 只負責跨頁搬運資料，結帳頁只讀不寫。
 帶題時可以先畫這五個檔案的依賴關係圖：menu → order-panel（@Input/@Output）、menu → order.service → checkout（Service 傳遞）、四者 → order.ts（型別）。
 -->
 
@@ -1985,9 +1985,9 @@ layout: default
 layout: default
 ---
 
-# P4：功能規格 FR（3/5）— MenuComponent 狀態
+# P4：功能規格 FR（3/5）— Menu 狀態
 
-**MenuComponent 狀態**：
+**Menu 狀態**：
 - `menu: MenuItem[]`（模組層級常數）
 - `order: OrderItem[] = []`
 - `activeCategory = '麵食'`
@@ -2046,17 +2046,17 @@ ng g i order          # 共用 interface 檔
 ```typescript
 // app.routes.ts
 import { Routes } from '@angular/router';
-import { MenuComponent } from './menu/menu.component';
-import { CheckoutComponent } from './checkout/checkout.component';
+import { Menu } from './menu/menu';
+import { Checkout } from './checkout/checkout';
 
 export const routes: Routes = [
-  { path: 'menu', component: MenuComponent },
-  { path: 'checkout', component: CheckoutComponent },
+  { path: 'menu', component: Menu },
+  { path: 'checkout', component: Checkout },
 ];
 ```
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>menu</code> 和 <code>checkout</code> 是「頁面」要加 route；<code>order-panel</code> 是頁面裡的「零件」，由 MenuComponent 引用，不加 route
+💡 <code>menu</code> 和 <code>checkout</code> 是「頁面」要加 route；<code>order-panel</code> 是頁面裡的「零件」，由 Menu 引用，不加 route
 </div>
 
 <!--
@@ -2094,7 +2094,7 @@ layout: default
 # P4：完整解答 — OrderService
 
 ```typescript
-// src/app/order.service.ts（ng g s order 產生）
+// src/app/order-service.ts（ng g s order 產生）
 import { Injectable } from '@angular/core';
 import { OrderItem } from './order';
 
@@ -2115,14 +2115,14 @@ OrderService 只有兩個屬性、零方法——它的唯一職責是「跨頁�
 layout: default
 ---
 
-# P4：完整解答 — MenuComponent（1/5）
+# P4：完整解答 — Menu（1/5）
 
 ```typescript
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, OrderItem } from '../order';
-import { OrderService } from '../order.service';
-import { OrderPanelComponent } from '../order-panel/order-panel.component';
+import { OrderService } from '../order-service';
+import { OrderPanel } from '../order-panel/order-panel';
 
 const menu: MenuItem[] = [
   { id: 1, name: '招牌牛肉麵', price: 180, category: '麵食', emoji: '🍜' },
@@ -2141,16 +2141,16 @@ menu 常數放在 class 外面，跟 P2 的 products 同一個模式——菜單
 layout: default
 ---
 
-# P4：完整解答 — MenuComponent（2/5）
+# P4：完整解答 — Menu（2/5）
 
 ```typescript
 @Component({
   selector: 'app-menu',
-  imports: [OrderPanelComponent],
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.css'
+  imports: [OrderPanel],
+  templateUrl: './menu.html',
+  styleUrl: './menu.css'
 })
-export class MenuComponent implements OnInit {
+export class Menu implements OnInit {
   private orderService = inject(OrderService);
   private router = inject(Router);
 
@@ -2168,14 +2168,14 @@ export class MenuComponent implements OnInit {
 ```
 
 <!--
-這一版的 MenuComponent 開頭資訊量大，逐一對照：imports 陣列引入子元件（HTML 才能用 <app-order-panel>）；OrderService 和 Router 用 inject() 注入（Ch24 說的現代寫法，跟 P3 的 constructor 注入對照，兩種都要看得懂）；ngOnInit 從 sessionStorage 讀回上次的訂單（FR-5、Ch25），跟 P2 的 localStorage 一模一樣的 API，只差在儲存空間的生命週期。
+這一版的 Menu 開頭資訊量大，逐一對照：imports 陣列引入子元件（HTML 才能用 <app-order-panel>）；OrderService 和 Router 用 inject() 注入（Ch24 說的現代寫法，跟 P3 的 constructor 注入對照，兩種都要看得懂）；ngOnInit 從 sessionStorage 讀回上次的訂單（FR-5、Ch25），跟 P2 的 localStorage 一模一樣的 API，只差在儲存空間的生命週期。
 -->
 
 ---
 layout: default
 ---
 
-# P4：完整解答 — MenuComponent（3/5）
+# P4：完整解答 — Menu（3/5）
 
 ```typescript
   setCategory(cat: string): void {
@@ -2203,7 +2203,7 @@ addItem 維持「找到就修改、找不到就新增」，最後多呼叫 this.
 layout: default
 ---
 
-# P4：完整解答 — MenuComponent（4/5）
+# P4：完整解答 — Menu（4/5）
 
 ```typescript
   removeItem(id: number): void {
@@ -2227,7 +2227,7 @@ removeItem 維持兩段式刪除：forEach 把目標 qty--，再 filter 掉 qty 
 layout: default
 ---
 
-# P4：完整解答 — MenuComponent（5/5）
+# P4：完整解答 — Menu（5/5）
 
 ```typescript
   getOrderCount(): number {
@@ -2317,19 +2317,19 @@ layout: default
 layout: default
 ---
 
-# P4：完整解答 — OrderPanelComponent
+# P4：完整解答 — OrderPanel
 
 ```typescript
-// order-panel.component.ts
+// order-panel.ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { OrderItem } from '../order';
 
 @Component({
   selector: 'app-order-panel',
-  templateUrl: './order-panel.component.html',
-  styleUrl: './order-panel.component.css'
+  templateUrl: './order-panel.html',
+  styleUrl: './order-panel.css'
 })
-export class OrderPanelComponent {
+export class OrderPanel {
   @Input() order: OrderItem[] = [];
   @Output() remove = new EventEmitter<number>();
   @Output() checkout = new EventEmitter<void>();
@@ -2354,7 +2354,7 @@ layout: default
 # P4：完整解答 — OrderPanel HTML
 
 ```html
-<!-- order-panel.component.html -->
+<!-- order-panel.html -->
 <div class="order-panel">
   <div class="order-title">📋 訂單明細</div>
   @if (order.length === 0) {
@@ -2385,21 +2385,21 @@ layout: default
 layout: default
 ---
 
-# P4：完整解答 — CheckoutComponent TS
+# P4：完整解答 — Checkout TS
 
 ```typescript
-// checkout.component.ts
+// checkout.ts
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { OrderService } from '../order.service';
+import { OrderService } from '../order-service';
 
 @Component({
   selector: 'app-checkout',
   imports: [RouterLink],
-  templateUrl: './checkout.component.html',
-  styleUrl: './checkout.component.css'
+  templateUrl: './checkout.html',
+  styleUrl: './checkout.css'
 })
-export class CheckoutComponent {
+export class Checkout {
   orderService = inject(OrderService);
 }
 ```
@@ -2413,10 +2413,10 @@ export class CheckoutComponent {
 layout: default
 ---
 
-# P4：完整解答 — CheckoutComponent HTML
+# P4：完整解答 — Checkout HTML
 
 ```html
-<!-- checkout.component.html -->
+<!-- checkout.html -->
 <div class="checkout-page">
   <h2>📋 訂單確認</h2>
   @if (orderService.order.length === 0) {
@@ -2514,7 +2514,7 @@ layout: default
 # P4：完整解答 — CSS（3/4）子元件樣式
 
 ```css
-/* menu.component.css（續） */
+/* menu.css（續） */
 .add-btn {
   width: 100%; padding: 6px; background: #1a5c5c;
   color: white; border: none; border-radius: 8px;
@@ -2524,7 +2524,7 @@ layout: default
 ```
 
 ```css
-/* order-panel.component.css */
+/* order-panel.css */
 .order-panel {
   background: white; border-radius: 12px; padding: 20px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
@@ -2539,7 +2539,7 @@ layout: default
 ```
 
 <!--
-面板內部的樣式（白底、圓角、陰影、明細列）全部搬進 order-panel.component.css——跟 P2 的分工一致：父元件管「欄位怎麼排」，子元件管「面板長怎樣」。原本寫在 .order-panel 上的 width: 280px 和 flex-shrink: 0 移到父元件的 app-order-panel 選擇器上了。
+面板內部的樣式（白底、圓角、陰影、明細列）全部搬進 order-panel.css——跟 P2 的分工一致：父元件管「欄位怎麼排」，子元件管「面板長怎樣」。原本寫在 .order-panel 上的 width: 280px 和 flex-shrink: 0 移到父元件的 app-order-panel 選擇器上了。
 .empty-hint 對應 UI-11，是 @if 空狀態的提示文字樣式。
 -->
 
@@ -2550,7 +2550,7 @@ layout: default
 # P4：完整解答 — CSS（4/4）結帳鈕與結帳頁
 
 ```css
-/* order-panel.component.css（續） */
+/* order-panel.css（續） */
 .checkout-btn {
   width: 100%; padding: 10px; background: #1a5c5c;
   color: white; border: none; border-radius: 8px;
@@ -2561,7 +2561,7 @@ layout: default
 ```
 
 ```css
-/* checkout.component.css */
+/* checkout.css */
 .checkout-page { max-width: 480px; margin: 40px auto; padding: 24px;
   background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
 .checkout-item { display: flex; justify-content: space-between; padding: 8px 0; color: #555; }

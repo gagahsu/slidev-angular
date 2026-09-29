@@ -157,7 +157,7 @@ class: flex flex-col justify-center items-center text-center
 在方法中需要取得這個變數的值時，必須使用 `this.` 去呼叫它。
 
 ```typescript
-export class AppComponent {
+export class App {
   title = 'demo2';
 
   showTitle() {
@@ -286,7 +286,7 @@ class: flex flex-col justify-center items-center text-center
 當畫面需要顯示一個**會根據使用者操作而改變的值**，你需要先在該 HTML 的 TS 檔案中宣告一個全域變數，HTML 就可以串接 TS 中的資料並展現在畫面中。
 
 ```typescript
-export class AppComponent {
+export class App {
   testTitle: string = '我是標題';  // 有初始值 ✅
   testContent: string;             // 沒有初始值 ❌ TypeScript 會報錯
 }
@@ -460,12 +460,12 @@ layout: default
 # 練習：解題提示
 ### 完成步驟
 
-1. 在 `app.component.ts` 的 class 內宣告三個全域變數：
+1. 在 `app.ts` 的 class 內宣告三個全域變數：
    - `titleText: string = '我是標題'`
    - `contentText: string = '內容是我'`
    - `imageSrc: string = '你的圖片網址'`
 
-2. 在 `app.component.html` 中：
+2. 在 `app.html` 中：
    - 用 `{{ titleText }}` 放入 `<h1>` 標籤內
    - 用 `{{ contentText }}` 放入 `<h3>` 標籤內
    - 用 `[src]="imageSrc"` 設定 `<img>` 的圖片來源
@@ -474,8 +474,8 @@ layout: default
 
 <!--
 如果沒有頭緒，請看投影片的提示：
-第一步，先在 `app.component.ts` 的 class 裡，宣告三個變數：`titleText`、`contentText` 和 `imageSrc`，並給它們初始值。
-第二步，在 `app.component.html` 裡，
+第一步，先在 `app.ts` 的 class 裡，宣告三個變數：`titleText`、`contentText` 和 `imageSrc`，並給它們初始值。
+第二步，在 `app.html` 裡，
 把 `<h1>` 裡面改成 `{{ titleText }}`；
 `<h3>` 裡面改成 `{{ contentText }}`；
 `<img>` 標籤的 `src` 前面加上中括號，變成 `[src]="imageSrc"`。

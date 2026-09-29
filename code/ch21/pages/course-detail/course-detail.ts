@@ -13,11 +13,10 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-course-detail',
-  templateUrl: './course-detail.component.html',
-  standalone: true,
+  templateUrl: './course-detail.html',
   imports: [RouterLink]  // 模板裡有 routerLink，需要 import
 })
-export class CourseDetailComponent implements OnInit {
+export class CourseDetail implements OnInit {
 
   courseId: string = "";   // 從 URL 取得的 id
   courseData: any = null;  // 模擬的課程資料

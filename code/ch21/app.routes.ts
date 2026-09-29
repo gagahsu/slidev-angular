@@ -7,31 +7,31 @@
   設定步驟：
   ① 建立各頁面的元件
   ② 在 app.routes.ts 定義 URL 路徑 → 元件的對應關係
-  ③ 在 app.component.html 放 <router-outlet> 當作畫面的「切換插槽」
+  ③ 在 app.html 放 <router-outlet> 當作畫面的「切換插槽」
   ④ 用 routerLink 做導覽連結
 */
 
 import { Routes } from '@angular/router';
 
 // 引入各頁面元件
-import { HomeComponent } from './pages/home/home.component';
-import { AboutComponent } from './pages/about/about.component';
-import { CourseDetailComponent } from './pages/course-detail/course-detail.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { Home } from './pages/home/home';
+import { About } from './pages/about/about';
+import { CourseDetail } from './pages/course-detail/course-detail';
+import { NotFound } from './pages/not-found/not-found';
 
 // 路由設定（路徑 → 元件 的對應表）
 export const routes: Routes = [
   // 首頁（根路徑）
-  { path: '', component: HomeComponent },
+  { path: '', component: Home },
 
   // 關於頁面
-  { path: 'about', component: AboutComponent },
+  { path: 'about', component: About },
 
   // 動態路由（:id 是路由參數，可以傳遞不同的 id）
   // 例如：/courses/1、/courses/2、/courses/42
-  { path: 'courses/:id', component: CourseDetailComponent },
+  { path: 'courses/:id', component: CourseDetail },
 
   // 萬用路由（所有不存在的路徑都導向 404 頁面）
   // 注意：這行必須放在最後面！Angular 路由是「從上往下」匹配
-  { path: '**', component: NotFoundComponent }
+  { path: '**', component: NotFound }
 ];

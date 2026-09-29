@@ -24,15 +24,14 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     MatTabsModule,   // mat-tab-group / mat-tab-nav-bar 都需要
     RouterOutlet,    // <router-outlet>
     RouterLink       // [routerLink]
   ]
 })
-export class AppComponent {
+export class App {
 
   // ==============================
   // mat-tab-group：靜態頁籤內容

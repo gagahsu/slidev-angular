@@ -161,7 +161,6 @@ layout: default
 | `npm install -g @angular/cli` | 全域安裝 Angular CLI | Ch5 |
 | `ng new my-app` | 建立新專案 | Ch5 |
 | `ng serve -o` | 啟動開發伺服器並開啟瀏覽器 | Ch5, Ch8 |
-| `npm uninstall -g @angular/cli` | 移除 CLI（降版第一步） | Ch6 |
 | `ng g c components/header` | 建立元件（generate component） | Ch8 |
 
 **專案結構三巨頭**：`src/app` 放程式碼、`app.routes.ts` 管路由、`app.config.ts` 管全域 providers
@@ -169,7 +168,7 @@ layout: default
 <!--
 指令篇用一張表整理。最常用的就是最後三個：ng new 開專案、ng serve 啟動、ng g c 建元件，這三個指令會跟著大家整個開發生涯。
 
-nvm 的價值在 ch6 降版跟 ch56 部署都出現過：不同專案、不同工具需要不同 Node 版本，nvm 讓你不用重灌就能切換。
+nvm 的價值在 ch5 安裝環境跟 ch56 部署都出現過：不同專案、不同工具需要不同 Node 版本，nvm 讓你不用重灌就能切換。
 
 專案結構記三個位置就好：程式碼都在 src/app，路由設定在 app.routes.ts，全域服務註冊在 app.config.ts——後面 ch29 的 provideHttpClient() 就是加在這裡。
 -->
@@ -519,8 +518,8 @@ layout: default
 **設定路由**（app.routes.ts）
 ```typescript
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'user/:id', component: UserComponent },
+  { path: '', component: Home },
+  { path: 'user/:id', component: User },
 ];
 ```
 
@@ -736,7 +735,7 @@ getUsers(): Observable<User[]> {
 
 // ③ 元件：subscribe 訂閱取得結果
 this.userService.getUsers().subscribe(data => {
-  this.users = data;
+  this.users.set(data);   // users = signal<User[]>([])，zoneless 下非同步資料要放 signal
 });
 ```
 
@@ -1013,7 +1012,7 @@ export class CartService {
 
 ```typescript
 // 元件端：訂閱
-this.cartService.cartCount$.subscribe(count => this.count = count);
+this.cartService.cartCount$.subscribe(count => this.count.set(count));   // count = signal(0)
 ```
 
 <div class="mt-2 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
@@ -1040,7 +1039,7 @@ layout: default
 | --- | --- |
 | `LoadingService` | `BehaviorSubject<boolean>` 管理 loading 狀態 |
 | `HttpInterceptor` | **攔截所有 HTTP 請求**：發出時 `show()`、完成時 `hide()` |
-| `AppComponent` | 訂閱 `loading$`，控制 spinner 顯示 |
+| `App` | 訂閱 `loading$`，控制 spinner 顯示 |
 | CSS Overlay | `position: fixed` 全螢幕遮罩 + 置中 spinner |
 
 ```html
@@ -1051,7 +1050,7 @@ layout: default
 ```
 
 <!--
-Loading 是把 ch45 的訂閱套路應用到真實需求的完整案例。四個角色分工：LoadingService 拿 BehaviorSubject 管布林狀態；HttpInterceptor 是關鍵角色，它攔截所有 HTTP 請求，發出時開 loading、回來時關 loading，所以各頁面完全不用自己寫 show/hide；AppComponent 只負責訂閱跟顯示；CSS 用 fixed 遮罩擋住使用者操作。
+Loading 是把 ch45 的訂閱套路應用到真實需求的完整案例。四個角色分工：LoadingService 拿 BehaviorSubject 管布林狀態；HttpInterceptor 是關鍵角色，它攔截所有 HTTP 請求，發出時開 loading、回來時關 loading，所以各頁面完全不用自己寫 show/hide；App 只負責訂閱跟顯示；CSS 用 fixed 遮罩擋住使用者操作。
 
 HTML 裡的 async pipe 值得特別記：它會自動訂閱、元件銷毀時自動退訂，不用手動 subscribe 也不用擔心記憶體洩漏，是 template 裡消費 Observable 的最佳寫法。
 -->

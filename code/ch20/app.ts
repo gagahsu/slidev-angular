@@ -21,12 +21,11 @@ import { FormsModule } from '@angular/forms';  // 使用 ngModel 必須引入
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,         // Angular 17+ 獨立元件
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],         // Angular 17+ 獨立元件
   imports: [FormsModule]    // [(ngModel)] 雙向綁定需要 FormsModule
 })
-export class AppComponent {
+export class App {
 
   // ① 插值 & ② 屬性綁定用的資料
   pageTitle: string = "Data Binding 示範";

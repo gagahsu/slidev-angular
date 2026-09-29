@@ -430,7 +430,7 @@ layout: default
 
 # 練習：任務說明
 
-1. 建立 `RegisterFormComponent`，`imports` 陣列加入 `ReactiveFormsModule`
+1. 建立 `RegisterForm`，`imports` 陣列加入 `ReactiveFormsModule`
 2. 用 `fb.group()` 定義 `form`，包含 `username`、`email`、`age`、`phone`、`agree` 五個欄位，各自套上情境說明限制裡指定的驗證器
 3. HTML 用 `<form [formGroup]="form" (ngSubmit)="onSubmit()">` 包裹整個表單
 4. 每個欄位下方用 `@if` 搭配 `invalid && touched` 顯示對應的錯誤訊息文字
@@ -461,7 +461,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — register-form.component.ts（一）
+# 完整解答 — register-form.ts（一）
 
 匯入模組與元件裝飾器：
 
@@ -471,11 +471,10 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register-form',
-  standalone: true,
   imports: [ReactiveFormsModule],
-  templateUrl: './register-form.component.html',
+  templateUrl: './register-form.html',
 })
-export class RegisterFormComponent {
+export class RegisterForm {
   fb = inject(FormBuilder);
   // form 定義見下一頁
 }
@@ -489,12 +488,12 @@ imports 陣列裡的 ReactiveFormsModule 是使用 [formGroup]、formControlName
 layout: default
 ---
 
-# 完整解答 — register-form.component.ts（二）
+# 完整解答 — register-form.ts（二）
 
 `form` 定義與 `onSubmit()`：
 
 ```typescript
-export class RegisterFormComponent {
+export class RegisterForm {
   fb = inject(FormBuilder);
 
   form = this.fb.group({
@@ -523,7 +522,7 @@ export class RegisterFormComponent {
 layout: default
 ---
 
-# 完整解答 — register-form.component.html（一）
+# 完整解答 — register-form.html（一）
 
 帳號、Email 欄位：
 
@@ -564,7 +563,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — register-form.component.html（二）
+# 完整解答 — register-form.html（二）
 
 年齡、手機欄位：
 
@@ -598,7 +597,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — register-form.component.html（三）
+# 完整解答 — register-form.html（三）
 
 同意條款與送出按鈕：
 
@@ -633,7 +632,7 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — register-form.component.scss
+# 完整解答 — register-form.scss
 
 固定 `.field-error` 的最小高度，避免錯誤訊息造成版面跳動：
 

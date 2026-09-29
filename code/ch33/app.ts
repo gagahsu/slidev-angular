@@ -22,14 +22,13 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     MatIconModule,    // 使用 <mat-icon> 必須引入
     MatButtonModule   // 示範圖示搭配按鈕
   ]
 })
-export class AppComponent {
+export class App {
 
   // 常用圖示清單（從 fonts.google.com/icons 查詢）
   iconList: { name: string; fontIcon: string }[] = [

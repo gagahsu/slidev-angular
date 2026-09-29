@@ -20,11 +20,10 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: []
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   // ==============================
   // 顯示用的資料

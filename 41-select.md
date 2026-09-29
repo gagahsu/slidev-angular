@@ -194,11 +194,10 @@ class: flex flex-col justify-center items-center text-center
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  standalone: true,
   imports: [FormsModule],
   // ...
 })
-export class AppComponent {
+export class App {
   selectData = '';
 }
 ```
@@ -335,12 +334,11 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  templateUrl: './app.html',
+  styleUrl: './app.css'
 })
-export class AppComponent {
+export class App {
   selectData = '';
 }
 ```

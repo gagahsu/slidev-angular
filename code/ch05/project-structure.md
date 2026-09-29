@@ -9,10 +9,10 @@ my-first-app/
 ├── src/                          ← 你平常開發的程式碼都在這裡
 │   │
 │   ├── app/                      ← Angular 應用程式的核心
-│   │   ├── app.component.ts      ← 根元件的邏輯（TypeScript）
-│   │   ├── app.component.html    ← 根元件的畫面（HTML）
-│   │   ├── app.component.css     ← 根元件的樣式（CSS）
-│   │   ├── app.component.spec.ts ← 根元件的測試檔案（先不用管）
+│   │   ├── app.ts      ← 根元件的邏輯（TypeScript）
+│   │   ├── app.html    ← 根元件的畫面（HTML）
+│   │   ├── app.css     ← 根元件的樣式（CSS）
+│   │   ├── app.spec.ts ← 根元件的測試檔案（先不用管）
 │   │   └── app.config.ts         ← 應用程式設定
 │   │
 │   ├── assets/                   ← 放圖片、字型等靜態資源
@@ -32,22 +32,22 @@ my-first-app/
 
 ## 最重要的三個檔案
 
-### 1. `app.component.ts`（邏輯）
+### 1. `app.ts`（邏輯）
 
 ```typescript
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',          // HTML 裡使用這個元件的標籤名稱
-  templateUrl: './app.component.html',  // 對應的 HTML 模板
-  styleUrls: ['./app.component.css']    // 對應的 CSS 樣式
+  templateUrl: './app.html',  // 對應的 HTML 模板
+  styleUrls: ['./app.css']    // 對應的 CSS 樣式
 })
-export class AppComponent {
+export class App {
   title = 'my-first-app';        // 元件的資料（變數）
 }
 ```
 
-### 2. `app.component.html`（畫面）
+### 2. `app.html`（畫面）
 
 ```html
 <!-- Angular 用 {{ }} 雙花括號來顯示元件裡的變數 -->
@@ -55,7 +55,7 @@ export class AppComponent {
 <p>歡迎來到我的 Angular 應用！</p>
 ```
 
-### 3. `app.component.css`（樣式）
+### 3. `app.css`（樣式）
 
 ```css
 h1 {

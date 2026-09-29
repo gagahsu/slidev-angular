@@ -66,20 +66,19 @@ ng add @angular/material
 安裝完後，每個元件都需要在 `imports` 陣列裡引入對應的 Module：
 
 ```typescript
-// app.component.ts
+// app.ts
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [MatButtonModule],   // ← 加在這裡
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
 })
-export class AppComponent {}
+export class App {}
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <button mat-raised-button color="primary">Primary 按鈕</button>
 <button mat-raised-button color="accent">Accent 按鈕</button>
 <button mat-stroked-button>外框按鈕</button>

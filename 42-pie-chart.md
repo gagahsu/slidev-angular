@@ -229,10 +229,9 @@ import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-expense-pie-chart',
-  standalone: true,
-  templateUrl: './expense-pie-chart.component.html',
+  templateUrl: './expense-pie-chart.html',
 })
-export class ExpensePieChartComponent implements AfterViewInit {
+export class ExpensePieChart implements AfterViewInit {
   ngAfterViewInit() {
     // 取得 canvas 元素
     const ctx = document.getElementById('chart') as HTMLCanvasElement;
@@ -535,7 +534,7 @@ ngAfterViewInit() {
 
 # 完整解答 — HTML
 
-`expense-pie-chart.component.html` 完整內容：
+`expense-pie-chart.html` 完整內容：
 
 ```html
 <div style="width: 300px; height: 300px;">
@@ -551,7 +550,7 @@ ngAfterViewInit() {
 
 # 完整解答 — TypeScript（一）
 
-`expense-pie-chart.component.ts` 完整內容：
+`expense-pie-chart.ts` 完整內容：
 
 ```typescript
 import { Component, AfterViewInit } from '@angular/core';
@@ -559,10 +558,9 @@ import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-expense-pie-chart',
-  standalone: true,
-  templateUrl: './expense-pie-chart.component.html',
+  templateUrl: './expense-pie-chart.html',
 })
-export class ExpensePieChartComponent implements AfterViewInit {
+export class ExpensePieChart implements AfterViewInit {
   ngAfterViewInit() {
     const ctx = document.getElementById('chart') as HTMLCanvasElement;
 ```

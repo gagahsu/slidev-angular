@@ -31,9 +31,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
   imports: [
     MatSidenavModule,   // mat-drawer-container / mat-drawer
     MatListModule,      // mat-list / mat-list-item
@@ -42,7 +41,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatToolbarModule
   ]
 })
-export class AppComponent {
+export class App {
 
   // 目前選中的模式
   currentMode: 'over' | 'push' | 'side' = 'over';

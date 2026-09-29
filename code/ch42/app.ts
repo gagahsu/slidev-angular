@@ -4,9 +4,9 @@
   Angular Material 的 MatDialog 讓你彈出一個獨立的對話框視窗。
 
   使用流程：
-  ① 建立 dialog 元件（dialog.component.ts + html）
+  ① 建立 dialog 元件（dialog.ts + html）
   ② 在父元件 inject MatDialog
-  ③ 呼叫 this.dialog.open(DialogComponent, options) 打開
+  ③ 呼叫 this.dialog.open(Dialog, options) 打開
   ④ 透過 afterClosed().subscribe() 接收關閉時的回傳值
 
   options 說明：
@@ -17,34 +17,35 @@
   MatDialog 需要 Angular Material 已安裝（ng add @angular/material）。
 */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { DialogComponent } from './dialog/dialog.component';
+import { JsonPipe } from '@angular/common';
+import { Dialog } from './dialog/dialog';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [
     MatButtonModule,
-    DialogComponent   // 必須 import dialog 元件
+    JsonPipe,
+    Dialog   // 必須 import dialog 元件
   ]
 })
-export class AppComponent {
+export class App {
 
   // inject MatDialog，用來打開 dialog
   readonly dialog = inject(MatDialog);
 
   // 接收 dialog 回傳的結果
-  dialogResult: any = null;
-  confirmResult: string = '';
+  dialogResult = signal<any>(null);
+  confirmResult = signal('');
 
   // ==============================
   // 基本 dialog：傳入資料，接收結果
   // ==============================
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
+    const dialogRef = this.dialog.open(Dialog, {
       data: {
         title: '確認操作',
         message: '你確定要刪除這筆資料嗎？',
@@ -56,7 +57,7 @@ export class AppComponent {
     // afterClosed()：dialog 關閉後觸發
     // result 是 dialog 元件 close() 時傳出的值
     dialogRef.afterClosed().subscribe(result => {
-      this.dialogResult = result;
+      this.dialogResult.set(result);
       console.log('dialog 回傳：', result);
     });
   }
@@ -65,7 +66,7 @@ export class AppComponent {
   // 確認/取消 dialog
   // ==============================
   openConfirmDialog(): void {
-    const dialogRef = this.dialog.open(DialogComponent, {
+    const dialogRef = this.dialog.open(Dialog, {
       data: {
         title: '送出表單',
         message: '確定要送出這份表單嗎？送出後無法修改。',
@@ -77,7 +78,7 @@ export class AppComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.confirmResult = result === true ? '✅ 已確認送出！' : '❌ 已取消';
+      this.confirmResult.set(result === true ? '✅ 已確認送出！' : '❌ 已取消');
     });
   }
 }

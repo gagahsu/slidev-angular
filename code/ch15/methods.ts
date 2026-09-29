@@ -100,7 +100,7 @@ console.log(multiplyShort(3, 4));  // 12
 // ⑦ 在 Angular Class 中的方法（Angular 實際用法）
 // ============================================================
 
-class ProductComponent {
+class Product {
   // 屬性（全域變數）
   productName: string = "Angular 課程";
   price: number = 999;
@@ -129,7 +129,7 @@ class ProductComponent {
 }
 
 // 建立物件並測試
-const product = new ProductComponent();
+const product = new Product();
 product.addToCart();            // 加入購物車！目前數量：2
 product.addToCart();            // 加入購物車！目前數量：3
 console.log(product.calculateTotal());  // 2997

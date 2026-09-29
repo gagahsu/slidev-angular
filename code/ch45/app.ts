@@ -15,20 +15,19 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { LoadingService } from './loading.service';
+import { LoadingService } from './loading-service';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  standalone: true,
+  templateUrl: './app.html',
+  styleUrls: ['./app.css'],
   imports: [
     AsyncPipe,                   // 讓 HTML 能使用 | async
     MatProgressSpinnerModule,    // <mat-spinner>
     MatButtonModule
   ]
 })
-export class AppComponent implements OnInit {
+export class App implements OnInit {
 
   private loadingService = inject(LoadingService);
 

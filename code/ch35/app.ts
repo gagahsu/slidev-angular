@@ -30,11 +30,10 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  standalone: true,
+  templateUrl: './app.html',
   imports: [CommonModule]   // DatePipe 包含在 CommonModule 裡
 })
-export class AppComponent {
+export class App {
 
   today: Date = new Date();
 

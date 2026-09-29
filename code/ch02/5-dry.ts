@@ -56,7 +56,7 @@ function calculatePriceC(price: number): number {
 // ============================================================
 // 例如，你有三個頁面都需要顯示同樣的「導覽列」
 // ❌ 在三個 HTML 檔案裡複製貼上同樣的 <nav> 程式碼
-// ✅ 在 Angular 裡，把它做成一個 HeaderComponent 元件
+// ✅ 在 Angular 裡，把它做成一個 Header 元件
 //    → 在三個頁面都引入 <app-header></app-header>
 //    → 修改外觀只要改一個元件檔案！
 

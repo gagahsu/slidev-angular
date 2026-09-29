@@ -203,12 +203,12 @@ class: flex flex-col justify-center items-center text-center
 
 # 建立 Service 檔案
 
-建議為每個訂閱功能建立獨立的 Service 檔案，名稱以功能命名。例如要管理載入狀態，可在 `@service/` 資料夾下建立 `loading.service.ts`。
+建議為每個訂閱功能建立獨立的 Service 檔案，名稱以功能命名。例如要管理載入狀態，可在 `@service/` 資料夾下建立 `loading-service.ts`。
 
 ```
 app/
 └── @service/
-    └── loading.service.ts
+    └── loading-service.ts
 ```
 
 ```typescript
@@ -227,7 +227,7 @@ export class LoadingService {
 </div>
 
 <!--
-帶大家看一下這個範例，目的是建立我們後面要用的 `LoadingService`，先把骨架搭起來。我們在 `@service/` 資料夾下新增 `loading.service.ts`，命名上就直接對應這個 Service 要管理的功能，這樣之後回頭找程式碼會很好找。
+帶大家看一下這個範例，目的是建立我們後面要用的 `LoadingService`，先把骨架搭起來。我們在 `@service/` 資料夾下新增 `loading-service.ts`，命名上就直接對應這個 Service 要管理的功能，這樣之後回頭找程式碼會很好找。
 
 這裡先產生一個空的 class，加上 `@Injectable({ providedIn: 'root' })`，讓 Angular 知道這是一個可以在整個應用程式共用的服務。等一下我們會陸續把 Subject 變數、公開的 Observable、還有 show/hide 方法都加進這個檔案。
 
@@ -431,14 +431,14 @@ Service 那邊的邏輯都準備好了，接下來我們換到元件端，看看
 在目標元件的 constructor 中注入 `LoadingService`，使元件得以存取 Service 中的訂閱變數與方法。
 
 ```typescript
-// app.component.ts
-import { LoadingService } from '../@service/loading.service';
+// app.ts
+import { LoadingService } from '../@service/loading-service';
 
 @Component({
   selector: 'app-root',
   ...
 })
-export class AppComponent {
+export class App {
 
   constructor(private loadingService: LoadingService) { }
 
@@ -488,7 +488,7 @@ ngOnInit(): void {
 <div class="grid grid-cols-2 gap-4 my-3">
 <div>
 
-**loading.service.ts**
+**loading-service.ts**
 
 1. 宣告 `private` Subject 作為資料來源
 2. 以 `asObservable()` 對外公開 Observable
@@ -497,7 +497,7 @@ ngOnInit(): void {
 </div>
 <div>
 
-**app.component.ts**
+**app.ts**
 
 1. 在 constructor 注入 `LoadingService`
 2. 在 `ngOnInit` 訂閱 `_loading$`
@@ -527,14 +527,14 @@ layout: default
 <div class="grid grid-cols-2 gap-4 my-3">
 <div>
 
-**ProductListComponent**
+**ProductList**
 - 顯示商品清單
 - 按下「加入購物車」按鈕
 
 </div>
 <div>
 
-**HeaderComponent**
+**Header**
 - 顯示購物車數量徽章
 - 與商品列表頁不在同一個元件
 
@@ -559,12 +559,12 @@ layout: default
 1. 建立 `CartService`，內部以 `private` 的 `BehaviorSubject<number>` 儲存購物車數量，初始值為 `0`
 2. 對外公開 `_cartCount$`（`asObservable()`），供元件訂閱
 3. 提供 `addItem()` 方法，每次呼叫將目前數量 `+1` 並透過 `next()` 推送
-4. 在 `ProductListComponent` 注入 `CartService`，按鈕點擊時呼叫 `addItem()`
-5. 在 `HeaderComponent` 注入 `CartService`，於 `ngOnInit` 訂閱 `_cartCount$`，將收到的最新數量存入元件屬性 `cartCount`
-6. `HeaderComponent` 樣板顯示 `cartCount`，確認按下商品列表的按鈕後，徽章數字會即時更新
+4. 在 `ProductList` 注入 `CartService`，按鈕點擊時呼叫 `addItem()`
+5. 在 `Header` 注入 `CartService`，於 `ngOnInit` 訂閱 `_cartCount$`，將收到的最新數量存入元件屬性 `cartCount`
+6. `Header` 樣板顯示 `cartCount`，確認按下商品列表的按鈕後，徽章數字會即時更新
 
 <!--
-大家可以先自己動手寫寫看，重點是想清楚：哪個變數該是 private、哪個該公開；ProductListComponent 該呼叫 Service 的哪個方法；HeaderComponent 又該訂閱哪一個變數。卡住的地方沒關係，下一頁會有解題提示。
+大家可以先自己動手寫寫看，重點是想清楚：哪個變數該是 private、哪個該公開；ProductList 該呼叫 Service 的哪個方法；Header 又該訂閱哪一個變數。卡住的地方沒關係，下一頁會有解題提示。
 -->
 
 ---
@@ -576,12 +576,12 @@ layout: default
 
 1. `BehaviorSubject` 一定要給初始值，這裡是 `0`，因為購物車一開始沒有商品
 2. 讀取目前值可用 `.value`（`BehaviorSubject` 專屬），計算 `+1` 後再 `next()` 推送出去
-3. `ProductListComponent` 只需要呼叫 `addItem()`，不需要也不能直接操作 Subject
-4. `HeaderComponent` 訂閱的是公開的 `_cartCount$`，不是 `private` 的原始 Subject
+3. `ProductList` 只需要呼叫 `addItem()`，不需要也不能直接操作 Subject
+4. `Header` 訂閱的是公開的 `_cartCount$`，不是 `private` 的原始 Subject
 5. 訂閱動作寫在 `ngOnInit`，確保元件一載入就開始監聽後續的數量變化
 
 <!--
-對照一下大家的答案，最容易搞混的地方是誤以為 ProductListComponent 也要注入、訂閱 Observable——其實它只負責「推資料」，呼叫 addItem() 就好；真正需要「訂閱、接收資料」的是 HeaderComponent。另一個常見疏漏是忘記用 .value 讀取目前數量，直接把 next() 寫死成固定數字，這樣多次點擊也不會累加。下一頁我們直接看完整解答。
+對照一下大家的答案，最容易搞混的地方是誤以為 ProductList 也要注入、訂閱 Observable——其實它只負責「推資料」，呼叫 addItem() 就好；真正需要「訂閱、接收資料」的是 Header。另一個常見疏漏是忘記用 .value 讀取目前數量，直接把 next() 寫死成固定數字，這樣多次點擊也不會累加。下一頁我們直接看完整解答。
 -->
 
 ---
@@ -590,7 +590,7 @@ layout: default
 
 # 完整解答 — CartService（一）
 
-`cart.service.ts` 資料來源宣告：
+`cart-service.ts` 資料來源宣告：
 
 ```typescript
 import { Injectable } from '@angular/core';
@@ -619,7 +619,7 @@ layout: default
 
 # 完整解答 — CartService（二）
 
-`cart.service.ts` 公開方法：
+`cart-service.ts` 公開方法：
 
 ```typescript
   addItem(): void {
@@ -641,20 +641,19 @@ layout: default
 layout: default
 ---
 
-# 完整解答 — ProductListComponent
+# 完整解答 — ProductList
 
-`product-list.component.ts` 與 `product-list.component.html`：
+`product-list.ts` 與 `product-list.html`：
 
 ```typescript
 import { Component } from '@angular/core';
-import { CartService } from '../@service/cart.service';
+import { CartService } from '../@service/cart-service';
 
 @Component({
   selector: 'app-product-list',
-  standalone: true,
-  templateUrl: './product-list.component.html',
+  templateUrl: './product-list.html',
 })
-export class ProductListComponent {
+export class ProductList {
 
   constructor(private cartService: CartService) { }
 
@@ -666,40 +665,38 @@ export class ProductListComponent {
 ```
 
 ```html
-<!-- product-list.component.html -->
+<!-- product-list.html -->
 <button (click)="addToCart()">加入購物車</button>
 ```
 
 <!--
-ProductListComponent 的角色是「推送資料的一方」，注入 CartService 之後，按鈕的 (click) 綁定 addToCart()，內部只單純呼叫 cartService.addItem()，把「數量要怎麼變」這件事完全交給 Service 處理，元件本身不需要知道、也不需要儲存目前的購物車數量。
+ProductList 的角色是「推送資料的一方」，注入 CartService 之後，按鈕的 (click) 綁定 addToCart()，內部只單純呼叫 cartService.addItem()，把「數量要怎麼變」這件事完全交給 Service 處理，元件本身不需要知道、也不需要儲存目前的購物車數量。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — HeaderComponent（一）
+# 完整解答 — Header（一）
 
-`header.component.ts` 完整內容：
+`header.ts` 完整內容：
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
-import { CartService } from '../@service/cart.service';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { CartService } from '../@service/cart-service';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
-  templateUrl: './header.component.html',
+  templateUrl: './header.html',
 })
-export class HeaderComponent implements OnInit {
+export class Header implements OnInit {
+  private cartService = inject(CartService);
 
-  cartCount = 0;
-
-  constructor(private cartService: CartService) { }
+  cartCount = signal(0);
 
   ngOnInit(): void {
     this.cartService._cartCount$.subscribe((count) => {
-      this.cartCount = count;
+      this.cartCount.set(count);
     });
   }
 
@@ -707,24 +704,24 @@ export class HeaderComponent implements OnInit {
 ```
 
 <!--
-HeaderComponent 的角色是「接收資料的一方」，注入 CartService 後，ngOnInit 訂閱公開的 _cartCount$，只要 ProductListComponent 那邊呼叫一次 addItem()，這裡的 subscribe 回呼就會自動執行，把最新數量存進 cartCount 屬性。樣板要怎麼顯示這個屬性，下一頁接著看。
+Header 的角色是「接收資料的一方」，注入 CartService 後，ngOnInit 訂閱公開的 _cartCount$，只要 ProductList 那邊呼叫一次 addItem()，這裡的 subscribe 回呼就會自動執行，把最新數量存進 cartCount 屬性。樣板要怎麼顯示這個屬性，下一頁接著看。
 -->
 
 ---
 layout: default
 ---
 
-# 完整解答 — HeaderComponent（二）
+# 完整解答 — Header（二）
 
-`header.component.html` 完整內容：
+`header.html` 完整內容：
 
 ```html
-<!-- header.component.html -->
-<span class="cart-badge">🛒 {{ cartCount }}</span>
+<!-- header.html -->
+<span class="cart-badge">🛒 {{ cartCount() }}</span>
 ```
 
 <!--
-樣板只需要單純綁定 cartCount，因為值的更新是在 TypeScript 那邊的 subscribe 回呼裡完成的，Angular 的變更偵測會自動幫我們把最新數字反映到畫面上——完全不需要重新整理頁面，也不需要兩個元件之間有任何父子關係。
+樣板只需要單純綁定 cartCount()，因為值的更新是在 TypeScript 那邊的 subscribe 回呼裡用 set() 完成的，cartCount 是 signal，Angular 會自動幫我們把最新數字反映到畫面上（Angular 21 預設 zoneless，回呼裡改一般屬性畫面不會更新，這是要改用 signal 的原因）——完全不需要重新整理頁面，也不需要兩個元件之間有任何父子關係。
 
 大家可以拿這三個元件的完整程式碼跟自己寫的對照，確認「誰負責推資料、誰負責收資料」的分工是不是清楚。
 -->
@@ -735,25 +732,24 @@ layout: default
 
 # 完整解答 — 兩元件同時運作
 
-`app.component.ts` 需先 `import` 兩個子元件並加入 `imports` 陣列，`app.component.html` 才能直接使用它們的 selector。
+`app.ts` 需先 `import` 兩個子元件並加入 `imports` 陣列，`app.html` 才能直接使用它們的 selector。
 
 ```typescript
-// app.component.ts
+// app.ts
 import { Component } from '@angular/core';
-import { HeaderComponent } from './header/header.component';
-import { ProductListComponent } from './product-list/product-list.component';
+import { Header } from './header/header';
+import { ProductList } from './product-list/product-list';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [HeaderComponent, ProductListComponent],
-  templateUrl: './app.component.html',
+  imports: [Header, ProductList],
+  templateUrl: './app.html',
 })
-export class AppComponent { }
+export class App { }
 ```
 
 ```html
-<!-- app.component.html -->
+<!-- app.html -->
 <app-header></app-header>
 <app-product-list></app-product-list>
 ```
@@ -761,7 +757,7 @@ export class AppComponent { }
 <div class="grid grid-cols-2 gap-4 my-3">
 <div>
 
-**ProductListComponent（推資料）**
+**ProductList（推資料）**
 - 注入 `CartService`
 - 按鈕點擊呼叫 `addItem()`
 - 不儲存、不關心目前數量
@@ -769,7 +765,7 @@ export class AppComponent { }
 </div>
 <div>
 
-**HeaderComponent（收資料）**
+**Header（收資料）**
 - 注入 `CartService`
 - `ngOnInit` 訂閱 `_cartCount$`
 - 收到推送即更新 `cartCount` 畫面
@@ -778,13 +774,13 @@ export class AppComponent { }
 </div>
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>重點：</b> 兩個元件在 <code>app.component.html</code> 裡是平行關係，沒有互相傳資料，全部靠 <code>CartService</code> 這個共同的訂閱來源串起來。
+💡 <b>重點：</b> 兩個元件在 <code>app.html</code> 裡是平行關係，沒有互相傳資料，全部靠 <code>CartService</code> 這個共同的訂閱來源串起來。
 </div>
 
 <!--
-這一頁把兩個元件放在同一張投影片上，讓大家看清楚整體運作：ProductListComponent 跟 HeaderComponent 在畫面上是完全平行、互不認識的兩個元件，兩者也沒有 @Input、@Output 這種父子傳值關係。
+這一頁把兩個元件放在同一張投影片上，讓大家看清楚整體運作：ProductList 跟 Header 在畫面上是完全平行、互不認識的兩個元件，兩者也沒有 @Input、@Output 這種父子傳值關係。
 
-它們唯一的共同點，就是都注入了同一個 CartService。點擊商品列表的按鈕，會呼叫 addItem() 推送新數量；這個推送會透過 BehaviorSubject 廣播出去，凡是訂閱了 _cartCount$ 的元件（這裡是 HeaderComponent）都會立刻收到通知並更新畫面。這正是訂閱機制最大的價值：讓沒有直接關係的元件也能保持資料同步。
+它們唯一的共同點，就是都注入了同一個 CartService。點擊商品列表的按鈕，會呼叫 addItem() 推送新數量；這個推送會透過 BehaviorSubject 廣播出去，凡是訂閱了 _cartCount$ 的元件（這裡是 Header）都會立刻收到通知並更新畫面。這正是訂閱機制最大的價值：讓沒有直接關係的元件也能保持資料同步。
 -->
 
 ---
