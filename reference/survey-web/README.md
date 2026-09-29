@@ -9,3 +9,16 @@ npx ng serve        # http://localhost:4200
 ```
 
 測試帳號（seed）：`admin@example.com` / `ming@example.com`，密碼 `Passw0rd12`。
+
+## API 網址與 Docker
+
+`src/app/core/api.ts`：開發（`ng serve`）直接呼叫 `http://localhost:8080/api`（後端要設定 CORS）；正式 build 用同源的 `/api`，
+由 nginx 反向代理到後端容器（見 `slidev-docker/reference/survey`），不需要 CORS。
+
+## 端對端測試
+
+```bash
+npm i -D playwright
+node e2e/e2e.mjs                             # 預設打 http://localhost:4200
+BASE=http://localhost:8080 node e2e/e2e.mjs  # 打 Docker 版
+```

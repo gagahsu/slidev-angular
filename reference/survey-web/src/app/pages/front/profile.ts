@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../../core/auth-service';
 import { Dialogs } from '../../shared/dialogs';
 import { AppResponse, UserInfo } from '../../models/models';
+import { API } from '../../core/api';
 
 @Component({
   selector: 'app-profile',
@@ -36,7 +37,7 @@ export class Profile {
 
   save() {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
-    this.http.put<AppResponse<UserInfo>>('http://localhost:8080/api/users/me', this.form.getRawValue()).subscribe({
+    this.http.put<AppResponse<UserInfo>>(`${API}/users/me`, this.form.getRawValue()).subscribe({
       next: res => {
         localStorage.setItem('user', JSON.stringify(res.data));
         this.auth.user.set(res.data);

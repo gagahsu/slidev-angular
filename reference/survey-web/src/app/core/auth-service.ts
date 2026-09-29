@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom, map } from 'rxjs';
 import { AppResponse, LoginResponse, UserInfo } from '../models/models';
+import { API } from './api';
 
-const API = 'http://localhost:8080/api';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs';
 import { AppResponse, PageResult, Response, Statistics, Survey } from '../models/models';
+import { API } from './api';
 
-const API = 'http://localhost:8080/api';
 
 export interface SearchParams { title?: string; startDate?: string; endDate?: string; page: number; size: number; }
 

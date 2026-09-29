@@ -2,7 +2,7 @@
 // 執行：npm i -D playwright && node e2e/e2e.mjs   （資料庫要是剛匯入 seed 的狀態，Email 才不會重複）
 import { chromium } from 'playwright';
 
-const BASE = 'http://localhost:4200';
+const BASE = process.env.BASE ?? 'http://localhost:4200';
 const stamp = Date.now();
 let failed = 0;
 const ok = (name, cond, extra = '') => { console.log((cond ? 'PASS ' : 'FAIL ') + name + (extra ? '  ' + extra : '')); if (!cond) failed++; };
