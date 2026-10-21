@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，恭喜大家走到這裡。這一章是整套課程的總複習，我們會把 ch1 到 ch55 學過的所有東西，濃縮成一趟九站的回顧旅程。
+恭喜大家走到這裡。這一章是整套課程的總複習，我們會把前面五十五章學過的內容，整理成一趟九站的回顧旅程。
 
-這一章的目的不是重新教一遍，而是幫大家把散落在 55 章裡的知識「串成一張地圖」：哪些觀念屬於同一組、彼此怎麼銜接、實務上會在哪裡一起出現。每一站都會有重點速記表跟關鍵程式碼，站與站之間穿插快問快答，最後整理一份全課程最容易踩雷的易錯重點清單。
-
-建議大家用這一章做兩件事：第一，考前或面試前快速掃一遍，找出自己不熟的站，回去重讀該章；第二，把快問快答當自我檢測，答不出來的題目就是你的複習清單。
+這一章不是重新教一遍，而是把散落在各章的知識串成一張地圖。每一站都有重點速記和關鍵程式碼，站與站之間穿插快問快答，最後再整理全課程最容易踩雷的十個重點。
 -->
 
 ---
@@ -72,9 +70,7 @@ layout: default
 - **全課程易錯重點 Top 10**
 
 <!--
-這張投影片是今天的路線圖。我們把 55 章分成九大階段，每一站都會先看「這一站在學什麼、為什麼放在這個位置」，再用速記表把該站的關鍵語法整理出來，並穿插快問快答讓大家自我檢測。
-
-最後的易錯重點 Top 10 是全課程各章「注意」提醒的總整理，實務上大家寫專案最常卡住的地方幾乎都在這十點裡面。
+這是今天的路線圖。我們把五十五章分成九個階段，從開發環境、HTML 和 CSS、TypeScript，一路到 Angular 核心、Material、非同步、版面與表單，最後是 RxJS 和部署上線。每一站先看速記，再用快問快答自我檢測。最後的易錯重點 Top 10，是各章注意事項的總整理。
 -->
 
 ---
@@ -92,7 +88,9 @@ layout: default
 | 五 | Ch25–30 | 模板語法與資料處理 | 控制流程、串 API、整理資料 |
 
 <!--
-先看這張全課程地圖，這是前五個階段。這九個階段不是隨便切的，它其實就是「一個前端工程師從零到上線」的完整工作流程：先有環境跟工具，才刻得出畫面；有畫面之後需要邏輯，所以學 TypeScript；邏輯要組織起來，就進入 Angular 的元件世界；畫面要有資料，所以學模板語法跟串 API。
+先看課程地圖的前五個階段。這九個階段不是隨便切的，它就是一個前端工程師從零到上線的工作流程。
+
+先有環境和工具，才刻得出畫面；有了畫面，需要邏輯，所以學 TypeScript；邏輯要組織起來，就進入 Angular 的元件世界；畫面要有真實的資料，所以接著學模板語法和串接 API。最右邊那一欄，是每一站完成後我們獲得的能力。
 -->
 
 ---
@@ -109,9 +107,9 @@ layout: default
 | 九 | Ch53–55 | RxJS 與部署 | 打包上線，作品見天日 |
 
 <!--
-全課程地圖的後四個階段：要好看省工，用 Material；要處理等待跟共享狀態，學非同步；要做出完整產品，補上版面表單跟 RWD；最後打包部署，作品正式上線。
+接著是後四個階段。要做出好看又省工的介面，就用 Angular Material；要處理等待資料和共享狀態，就學非同步；要做出完整的產品，再補上版面、表單和 RWD；最後打包部署，作品正式上線。
 
-大家複習的時候可以問自己：這九格裡面，哪一格我最心虛？那一格對應的章節就是你優先要回去重讀的。
+複習的時候，可以問自己一個問題：這九格裡面，哪一格我最沒把握？那一格對應的章節，就是我們最優先要回去重讀的地方。
 -->
 
 ---
@@ -123,7 +121,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch1–7
 
 <!--
-第一站是開發環境與工具，對應 ch1 到 ch7。這一站的內容偏觀念跟操作，考試不太考，但實務上「環境建不起來」是新手放棄的第一大原因，所以我們還是把關鍵指令複習一遍。
+第一站是開發環境與工具，對應第一到第七章。內容偏觀念和操作，但環境建不起來，是新手最常卡住的地方。
 -->
 
 ---
@@ -145,7 +143,13 @@ layout: default
 - 前置需求：**Node.js + npm**（用 `node -v`、`npm -v` 確認）
 
 <!--
-觀念篇三件事。第一，前後端分工：前端管畫面跟互動，後端管資料跟邏輯，兩邊靠 API 溝通，這個分工圖是後面 ch28 串 API 的基礎。第二，coding 習慣五原則，其中 DRY 最重要——只要你發現自己在複製貼上同一段程式碼，就該停下來抽成方法或元件。第三，Angular 是「全家桶」框架，路由表單 HTTP 都內建，代價是學習曲線比較陡，但學完就是完整的工程能力。
+觀念篇有三件事。
+
+第一是前後端分工。前端管畫面和互動，後端管資料和邏輯，兩邊靠 API 溝通，這也是後面串接 API 的基礎。
+
+第二是 coding 習慣，其中最重要的是 DRY，不要重複。只要發現自己在複製貼上同一段程式碼，就該停下來，把它抽成方法或元件。
+
+第三，Angular 是一個完整的框架，路由、表單、HTTP 都內建。學習曲線比較陡，但學完就是完整的工程能力。
 -->
 
 ---
@@ -166,11 +170,11 @@ layout: default
 **專案結構三巨頭**：`src/app` 放程式碼、`app.routes.ts` 管路由、`app.config.ts` 管全域 providers
 
 <!--
-指令篇用一張表整理。最常用的就是最後三個：ng new 開專案、ng serve 啟動、ng g c 建元件，這三個指令會跟著大家整個開發生涯。
+指令篇用一張表整理。最常用的是最後三個：`ng new` 建立專案、`ng serve` 啟動開發伺服器、`ng g c` 建立元件，這三個指令會一直陪著我們。
 
-nvm 的價值在 ch5 環境安裝跟 ch55 部署都出現過：不同專案、不同工具需要不同 Node 版本，nvm 讓你不用重灌就能切換。
+nvm 在安裝環境和部署上線時都出現過。不同的專案和工具，可能需要不同版本的 Node，有了 nvm，就不用重灌，直接切換就好。
 
-專案結構記三個位置就好：程式碼都在 src/app，路由設定在 app.routes.ts，全域服務註冊在 app.config.ts——後面 ch28 的 provideHttpClient() 就是加在這裡。
+專案結構記三個位置：程式碼在 `src/app`，路由在 `app.routes.ts`，全域設定在 `app.config.ts`，串接 API 時的 `provideHttpClient` 就是加在這裡。
 -->
 
 ---
@@ -182,7 +186,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch8–11
 
 <!--
-第二站是 HTML 跟 CSS，對應 ch8 到 ch11。這一站是所有畫面的基礎，Angular 的 template 本質上就是 HTML 加上 Angular 語法，所以 HTML/CSS 不熟的話，後面每一章都會卡。
+第二站是 HTML 與 CSS，對應第八到第十一章。Angular 的模板本質上就是 HTML，這一站是畫面的基礎。
 -->
 
 ---
@@ -203,9 +207,9 @@ layout: default
 **行內 vs 區塊**：區塊元素（div、p、h1）獨佔一行；行內元素（span、a、img）並排顯示
 
 <!--
-HTML 標籤複習一張表就夠。大家要能不查資料就寫出：標題段落、兩種清單、超連結、圖片、輸入框加按鈕、還有 table 的三層結構——table 包 tr、tr 包 th 或 td，先有列才有格。
+HTML 的常用標籤，一張表就夠了。我們要能不查資料就寫出：標題和段落、兩種清單、超連結和圖片、輸入框和按鈕，以及表格的結構。表格是 table 包 tr，tr 再包 th 或 td，先有列，才有格。
 
-行內跟區塊的差別會直接影響 CSS 排版：div 預設獨佔一行，span 會並排，這也是 ch11 display 屬性在控制的東西。表格結構在 ch32 學 mat-table 時會再次出現，mat-table 產生的就是原生 table 結構。
+行內和區塊的差別，會直接影響排版。div 預設獨佔一行，span 會並排，這正是 CSS 的 display 屬性在控制的東西。表格結構在學 mat-table 時還會再出現，因為 mat-table 產生的就是原生的 table。
 -->
 
 ---
@@ -226,9 +230,11 @@ p { color: gray; }        /* 元素選擇器 */
 `content → padding → border → margin`
 
 <!--
-CSS 濃縮成四塊，這是前兩塊。第一，選擇器：元素選擇器選標籤、class 選擇器用點開頭，優先權記「後蓋前」——這個觀念在 ch11 特別強調過，很多「我的樣式怎麼沒生效」都是被後面的規則蓋掉了。
+CSS 我們濃縮成四塊，這一頁是前兩塊。
 
-第二，Box Model 由內而外四層：content、padding、border、margin，調間距時先想清楚要調「內距」還是「外距」。
+第一是選擇器。元素選擇器直接寫標籤名稱，class 選擇器用點開頭。優先權記住後蓋前，很多樣式沒有生效的問題，都是被後面的規則蓋掉了。
+
+第二是 Box Model，由內而外四層：content、padding、border、margin。調整間距之前，先想清楚要調的是內距，還是外距。
 -->
 
 ---
@@ -253,9 +259,11 @@ layout: default
 - `z-index` 決定堆疊順序（大的在上）
 
 <!--
-CSS 濃縮成四塊，這是後兩塊。第三，flex 三件套：direction 決定主軸方向，justify-content 管主軸對齊，align-items 管次軸對齊，這組在 ch48 toolbar 的 spacer 技巧、ch52 RWD 都會再用到。
+接著是後兩塊。
 
-第四，position：fixed 是釘在視窗上不動，absolute 要搭配 relative 的父層當定錨，z-index 管誰蓋誰。
+第三是 flex 排版。`flex-direction` 決定主軸方向，`justify-content` 管主軸對齊，`align-items` 管次軸對齊。這組設定在 Toolbar 的 Spacer 技巧和 RWD 都會再用到。
+
+第四是 position。fixed 是釘在視窗上不動，absolute 要搭配一個 relative 的父層當定位點，`z-index` 則決定誰蓋在誰上面，數字大的在上面。
 -->
 
 ---
@@ -274,9 +282,9 @@ layout: default
 </div>
 
 <!--
-第一次快問快答，範圍是前兩站。大家先把投影片暫停在這裡，四題都在心裡回答過一遍再往下翻。
+第一次快問快答，範圍是前兩站。大家先暫停一下，四題都自己回答過一遍，再往下看。
 
-提醒一下第三題，考的是 CSS 優先權的「後蓋前」，注意這裡的「後」指的是 CSS 檔案裡規則定義的順序，不是 class 屬性裡出現的順序，這是很多人誤解的地方。
+提醒一下第三題，考的是後蓋前。這裡的後，指的是 CSS 檔案裡規則寫的順序，不是 class 屬性裡名稱排列的順序，這是很多人誤解的地方。
 -->
 
 ---
@@ -296,7 +304,9 @@ layout: default
 4. `padding` 是**內距**（content 到 border 之間），`margin` 是**外距**（border 之外、與其他元素的距離）（Ch9）
 
 <!--
-對答案。第一題重點是 ng g c 一次產生四個檔案，而且會自動把 selector、templateUrl 這些設定寫好。第二題 flex 置中三行是前端面試的送分題，一定要背起來。第三題再強調一次：決定顏色的是 CSS 規則在檔案裡的順序，寫在後面的蓋前面。第四題用 Box Model 的圖記：padding 在框裡面，margin 在框外面。
+我們來對答案。
+
+第一題，`ng g c` 一次產生四個檔案，而且會自動把元件的設定寫好。第二題，flex 置中的三行是面試常見的送分題，一定要記起來。第三題再強調一次，決定顏色的是 CSS 檔案裡的順序，寫在後面的蓋掉前面。第四題用 Box Model 來記：padding 在框裡面，margin 在框外面。
 -->
 
 ---
@@ -308,7 +318,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch12–17
 
 <!--
-第三站進入 TypeScript，對應 ch12 到 ch17。這一站是整套課程的「邏輯引擎」，後面所有 Angular 元件的 .ts 檔案寫的都是這些東西。
+第三站進入 TypeScript，對應第十二到第十七章。後面每個元件的程式邏輯，寫的都是這一站的東西。
 -->
 
 ---
@@ -333,11 +343,11 @@ let anything: any = '不檢查型別';  // any：盡量避免
 | 畫面呈現 | 字串插值 `{{ userName }}` 顯示到 HTML | Ch14 |
 
 <!--
-型別與變數複習。最上面五行程式碼就是日常八成的宣告場景：string、number、boolean、陣列。any 雖然合法，但等於把 TypeScript 的型別保護關掉，教材一路都提醒大家盡量不要用。
+這是型別與變數。上面這五行，涵蓋了日常大部分的宣告：字串、數字、布林和陣列。`any` 雖然合法，但等於把 TypeScript 的型別檢查關掉，所以盡量不要用。
 
-宣告關鍵字記一個原則：預設用 const，需要重新賦值才用 let，var 因為有作用域陷阱（函式作用域而非區塊作用域），課程明確說不要再用。
+宣告關鍵字記一個原則：預設用 `const`，需要重新賦值才用 `let`。`var` 的作用域是整個函式，而不是區塊，容易出錯，課程裡明確說不要再用。
 
-宣告好的變數用雙大括號插值就能顯示到畫面上，這是 ch21 四種繫結裡的第一種——內嵌繫結。
+宣告好的變數，用雙大括號就能顯示到畫面上，這就是四種繫結裡的第一種，內嵌繫結。
 -->
 
 ---
@@ -363,7 +373,11 @@ else { grade = 'C'; }
 ```
 
 <!--
-方法與流程控制，這是前半段。方法的組成四件事：名稱、參數（可帶型別跟預設值）、回傳型別、return。在元件裡呼叫自己的方法記得加 this。
+方法與流程控制的前半段。
+
+方法由四個部分組成：名稱、參數、回傳型別和 return。參數可以加上型別，也可以給預設值。像這裡的 b 預設是 10，所以只傳一個 5 進去，結果是 15；傳 5 和 20，結果就是 25。在元件裡呼叫自己的方法，記得前面要加上 this。
+
+下面的 if、else if、else，是最基本的條件判斷，由上往下檢查，符合第一個條件就停下來。後面學到的 `@if` 模板語法，結構跟這裡完全一樣。
 -->
 
 ---
@@ -389,9 +403,9 @@ JSON.parse(jsonStr);       // JSON 字串 → 物件
 ```
 
 <!--
-方法與流程控制，這是後半段。迴圈兩種寫法都要看得懂：傳統 for 用索引，for...of 直接拿元素，日常開發推薦 for...of。
+方法與流程控制的後半段。迴圈有兩種寫法：傳統的 for 用索引一個一個跑，for of 則是直接拿到每一個元素。日常開發推薦用 for of，比較不容易寫錯。
 
-這六個方法是全課程出場率最高的工具：filter 在 ch30 排序、ch37 即時搜尋、ch56 封存功能全部用到；indexOf 是即時搜尋的核心判斷；JSON 兩兄弟在 ch24 網頁儲存必用——因為 localStorage 只能存字串，物件進出都要靠 stringify 跟 parse 轉換。
+下面這六個方法，是全課程出場率最高的工具。filter 在排序、即時搜尋和綜合練習的封存功能都用到了；indexOf 是即時搜尋判斷的核心，找不到會回傳負一；JSON 的兩個方法則是網頁儲存必備的，因為 localStorage 只能存字串，物件進出都要靠 stringify 和 parse 轉換。
 -->
 
 ---
@@ -421,9 +435,11 @@ if (dateA.getTime() > dateB.getTime()) { /* A 比較晚 */ }
 </div>
 
 <!--
-Date 物件單獨拉一頁，因為它是後面 Material 章節的常客。三個重點：第一，new Date() 不帶參數是現在，帶字串是指定日期。第二，getMonth() 回傳 0 到 11，六月回傳的是 5，這個陷阱每一屆都有人踩。第三，日期比較不要直接比 Date 物件，先用 getTime() 轉成毫秒數再比，才不會出現奇怪的結果。
+Date 物件單獨拉一頁，因為它是後面 Material 章節的常客。
 
-ch34 的 mat-datepicker 的 min、max 綁的就是 Date 物件，ch35 的 DatePipe 吃的也是 Date 物件，所以這一頁務必熟練。
+重點有三個。第一，`new Date()` 不帶參數是現在的時間，帶字串就是指定的日期。第二，`getMonth()` 回傳的是 0 到 11，六月回傳的是 5，這個陷阱每一屆都有人踩。第三，比較日期時，先用 `getTime()` 轉成毫秒數再比大小，結果才會正確。
+
+日期選擇器的 min 和 max，綁的就是 Date 物件，DatePipe 處理的也是 Date 物件，所以這一頁務必熟練。
 -->
 
 ---
@@ -435,7 +451,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch18–24
 
 <!--
-第四站是整套課程的心臟：Angular 核心觀念，對應 ch18 到 ch24。元件、生命週期、繫結、路由、資料傳遞、網頁儲存，這六個主題構成了 Angular 應用的骨幹，後面所有章節都建立在這一站之上。
+第四站是整套課程的核心：Angular 核心觀念，對應第十八到第二十四章，後面所有章節都建立在這一站之上。
 -->
 
 ---
@@ -474,9 +490,9 @@ layout: default
 </div>
 
 <!--
-元件與生命週期。元件四檔案的分工要很清楚：ts 管邏輯、html 管畫面、scss 管樣式。standalone 元件要用別的元件，就把它加進 @Component 的 imports 陣列。
+元件與生命週期。元件四個檔案各有分工：TypeScript 管邏輯和資料，HTML 管畫面，SCSS 管樣式，spec 是測試。要使用別的元件，就把它加進 `imports` 陣列。
 
-生命週期記四個就夠用：constructor 只做注入、ngOnInit 做初始化跟呼叫 API、ngAfterViewInit 做需要畫面就緒的事——ch32 mat-table 接 paginator 就是在這裡做的，因為 @ViewChild 要等 view 初始化完才拿得到；ngOnDestroy 負責善後，ch44、ch53 強調的取消訂閱就是在這裡呼叫 unsubscribe()。
+生命週期記四個就夠用。constructor 只負責注入；ngOnInit 做初始化和呼叫 API；ngAfterViewInit 處理需要畫面就緒的事，像是表格接上分頁器，因為 `@ViewChild` 要等畫面建立完才拿得到；ngOnDestroy 負責善後，例如取消訂閱。
 -->
 
 ---
@@ -502,11 +518,11 @@ layout: default
 </div>
 
 <!--
-四種繫結是 Angular 的語法核心，記憶口訣是看符號：雙大括號是純顯示、方括號是 TS 塞值給 HTML 屬性、圓括號是 HTML 事件叫 TS 方法、方括號包圓括號（香蕉包在盒子裡）是雙向繫結。
+四種繫結是 Angular 語法的核心，看符號就能分辨。雙大括號是純顯示；中括號是把 TypeScript 的值塞給 HTML 屬性；小括號是 HTML 的事件呼叫 TypeScript 的方法；中括號包小括號，就是雙向繫結，可以想成香蕉放在盒子裡。
 
-下面那三行程式碼把四種繫結全用上了，大家要能逐一指出每個符號屬於哪一種。
+下面這兩行程式碼，把四種繫結全部用上了，大家可以試著指出每個符號屬於哪一種。
 
-最下面的注意事項極度重要：ngModel 來自 FormsModule，忘記匯入的話 Angular 會報「Can't bind to ngModel」，這個錯誤訊息大家在 ch37、ch40、ch49 應該都見過，看到它第一反應就是去檢查 imports 陣列。
+最下面的提醒非常重要。`ngModel` 來自 `FormsModule`，忘記匯入的話，會出現 Can't bind to ngModel 的錯誤。看到這個錯誤，第一個反應就是去檢查 `imports` 陣列。
 -->
 
 ---
@@ -531,7 +547,11 @@ export const routes: Routes = [
 ```
 
 <!--
-路由複習分四塊，這是前兩塊。第一，路由表定義在 app.routes.ts，path 對應到 component，冒號 id 是路由參數的佔位符。第二，HTML 導航用 routerLink，搭配 routerLinkActive 給當前頁面加樣式，router-outlet 是頁面元件實際渲染的位置。
+路由我們分兩頁複習，這是前半段。
+
+第一，路由表定義在 `app.routes.ts`，每一筆設定把 path 對應到一個元件。冒號 id 是路由參數的佔位符，代表這一段可以放不同的值。
+
+第二，在 HTML 裡導航，用 `routerLink` 指定要去的路徑，搭配 `routerLinkActive`，替目前所在的頁面加上樣式。`router-outlet` 則是頁面元件實際顯示的位置。
 -->
 
 ---
@@ -558,7 +578,11 @@ const tab = this.route.snapshot.queryParamMap.get('tab');
 ```
 
 <!--
-路由複習分四塊，這是後兩塊。第三，TS 導航注入 Router 之後用 navigate，適合「按下按鈕、判斷完邏輯再跳頁」的場景。第四，取參數注入 ActivatedRoute：路徑裡的 /user/5 用 paramMap 拿，問號後面的 ?tab=info 用 queryParamMap 拿，這兩個很容易搞混，記「路徑內 param、問號後 query」。
+這是路由的後半段。
+
+第三，在 TypeScript 裡導航，先注入 Router，再呼叫 navigate。這適合按下按鈕、判斷完邏輯之後才跳頁的情況。
+
+第四，取得參數要注入 ActivatedRoute。路徑裡的參數，例如斜線 user 斜線 5，用 paramMap 取得；問號後面的參數，例如 tab 等於 info，用 queryParamMap 取得。這兩個很容易搞混，記住一句話：路徑內用 param，問號後用 query。
 -->
 
 ---
@@ -587,9 +611,11 @@ private exampleService = inject(ExampleService);
 ```
 
 <!--
-資料傳遞三招對應三種距離。父子之間近距離：往下用 @Input、往上用 @Output 加 EventEmitter，父元件的 HTML 用屬性繫結塞值、事件繫結接通知。距離一遠——例如兩個不同路由的頁面——就改用 Service：ng g s 產生、providedIn root 讓全 App 共用同一份實體，一邊塞值一邊讀值。
+資料傳遞的三招，對應三種距離。
 
-注入的寫法課程教了兩種：constructor 參數注入是傳統寫法，inject() 是 Angular 14 之後的現代寫法，兩種都要看得懂，自己寫推薦 inject()，跟 standalone 元件的風格最搭。
+父子元件之間距離最近，往下傳用 `@Input`，往上通知用 `@Output` 搭配 EventEmitter。距離一遠，例如兩個不同路由的頁面，就改用 Service。用 `ng g s` 產生，`providedIn` 設為 root，整個應用程式共用同一份實體，一邊存值，另一邊就能讀到。
+
+注入的寫法有兩種：在 constructor 參數注入是傳統寫法，`inject` 是比較新的寫法。兩種都要看得懂，自己寫的話推薦用 `inject`。
 -->
 
 ---
@@ -611,9 +637,11 @@ const user = JSON.parse(localStorage.getItem('user') ?? '{}');
 ```
 
 <!--
-網頁儲存三種方式用生命週期區分：localStorage 永久存活，適合「記住我」這類設定；sessionStorage 關分頁就消失，適合一次性的暫存；Cookie 可以設過期時間、而且會自動跟著 HTTP 請求送到後端，所以常拿來放登入憑證，在 Angular 裡要裝 ngx-cookie-service 套件來操作。
+網頁儲存的三種方式，用存活時間來區分。
 
-程式碼那兩行是必考組合：Web Storage 只能存字串，所以物件進去前要 JSON.stringify，出來後要 JSON.parse，這裡剛好呼應第三站教過的 JSON 兩兄弟。
+localStorage 會永久保存，適合記住使用者偏好這類設定；sessionStorage 在分頁關閉後就消失，適合一次性的暫存；Cookie 可以設定過期時間，而且會跟著 HTTP 請求送到後端，在 Angular 裡要安裝 `ngx-cookie-service` 來操作。
+
+下面這兩行是必考的組合。Web Storage 只能存字串，所以物件存進去之前要 `JSON.stringify`，取出來之後要 `JSON.parse`，剛好呼應第三站的 JSON 方法。
 -->
 
 ---
@@ -629,7 +657,9 @@ layout: default
 5. 要把物件存進 `localStorage`，直接 `setItem('cart', cartObj)` 會發生什麼事？
 
 <!--
-第二次快問快答，範圍是 TypeScript 跟 Angular 核心。第五題特別實務：直接把物件丟給 setItem，JavaScript 會自動把它轉成字串 "[object Object]"，資料就毀了，大家想一下正確寫法是什麼。
+第二次快問快答，範圍是 TypeScript 和 Angular 核心觀念，五題都先自己想過一遍。
+
+第五題很實務：如果直接把物件交給 setItem，JavaScript 會自動把它轉成 object Object 這串文字，原本的資料就不見了。想一想，正確的寫法是什麼。
 -->
 
 ---
@@ -645,9 +675,11 @@ layout: default
 5. 會存成 `"[object Object]"`，資料遺失。正確作法：`setItem('cart', JSON.stringify(cartObj))`，取出時 `JSON.parse`（Ch24）
 
 <!--
-對答案。第一題是觀念題：constructor 的職責只有注入，真正的初始化工作交給 ngOnInit。第二題的 FormsModule 是全課程最高頻錯誤，沒有之一。第三題再複誦一次口訣：路徑內 param、問號後 query。第四題只要元件之間沒有直接的父子關係，Service 就是標準答案。第五題的 stringify/parse 組合，跟 ch24 的教學完全一致。
+我們來對答案。
 
-五題全對的同學，第三、四站可以放心跳過；有錯的，回去重讀對應章節。
+第一題，constructor 只負責注入，真正的初始化交給 ngOnInit。第二題的 FormsModule，是全課程最常見的錯誤。第三題再複習一次口訣：路徑內用 param，問號後用 query。第四題，只要元件之間沒有直接的父子關係，Service 就是標準答案。第五題，記得 stringify 和 parse 要成對使用。
+
+五題都答對，第三、四站就可以放心；有答錯的，回到對應章節再讀一次。
 -->
 
 ---
@@ -659,7 +691,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch25–30
 
 <!--
-第五站是模板語法與資料處理，對應 ch25 到 ch30。這一站學的是 Angular 新版控制流程語法 @for、@if、@switch，加上串 API、interface 型別設計跟資料排序——畫面終於開始跟「真實資料」互動了。
+第五站是模板語法與資料處理，對應第二十五到第三十章。從這一站開始，畫面要和真實的資料互動了。
 -->
 
 ---
@@ -687,9 +719,11 @@ layout: default
 - `track` 為**必填**，幫 Angular 辨識每筆資料
 
 <!--
-控制流程語法前半段先看 @for 跟 @if。@for 取代舊版的 *ngFor，track 是必填的，通常綁唯一的 id，讓 Angular 知道哪筆資料變了、只重繪那一筆；@empty 是空陣列時的預設顯示，ch56 的已封存清單就用了這個。
+控制流程語法的前半段，先看 `@for` 和 `@if`。
 
-@if / @else if / @else 的結構跟 TypeScript 的 if 完全對應，只是搬到 template 而已。
+`@for` 取代了舊版的 ngFor，其中的 track 是必填的，通常綁定唯一的 id，讓 Angular 知道是哪一筆資料改變了，只重新繪製那一筆。`@empty` 是陣列為空時顯示的內容，綜合練習的已封存清單就用到了它。
+
+`@if`、`@else if`、`@else` 的結構，和 TypeScript 的 if 完全一樣，只是搬到了模板裡。
 -->
 
 ---
@@ -710,9 +744,11 @@ layout: default
 - 條件 2–3 個用 `@if`，多分支等值判斷用 `@switch`
 
 <!--
-控制流程語法後半段是 @switch。@switch 適合「同一個值有很多種可能」的場景，例如訂單狀態、HTTP 狀態碼分類。
+控制流程語法的後半段，是 `@switch`。
 
-選擇原則：兩三個條件用 @if 就好，四種以上的等值分支換 @switch 比較乾淨。
+`@switch` 適合同一個值有很多種可能的情況，例如訂單狀態，或是 HTTP 狀態碼的分類。括號裡放要判斷的值，每個 `@case` 對應一種結果，全部都不符合時，就顯示 `@default` 的內容。
+
+選擇的原則很簡單：只有兩三個條件，用 `@if` 就好；如果是同一個值的多個分支，換成 `@switch` 會比較清楚。
 -->
 
 ---
@@ -742,9 +778,11 @@ this.userService.getUsers().subscribe(data => {
 **四種 HTTP 方法**：`get`（查）、`post`（增）、`put`（改）、`delete`（刪）
 
 <!--
-串 API 的標準三步驟。第一步在 app.config.ts 註冊 provideHttpClient()，這步只做一次，忘記做的話注入 HttpClient 會直接報錯。第二步把 HTTP 呼叫包在 Service 裡，元件不直接碰 HttpClient，這是職責分離的好習慣。第三步元件呼叫 Service 方法之後要 subscribe，因為 HttpClient 回傳的是 Observable——不訂閱的話請求根本不會發出去，這是 ch28 的重要提醒。
+串接 API 有標準的三個步驟。
 
-四種 HTTP 方法對應資料庫的增查改刪：get 查、post 增、put 改、delete 刪，跟後端溝通的語彙就是這四個。
+第一步，在 `app.config.ts` 註冊 `provideHttpClient`。這一步只要做一次，忘記的話，注入 HttpClient 時會直接報錯。第二步，把 HTTP 呼叫包在 Service 裡，元件不直接使用 HttpClient，各自負責自己的工作。第三步，元件呼叫 Service 的方法之後要 subscribe，因為 HttpClient 回傳的是 Observable，沒有訂閱，請求根本不會發出去。
+
+最下面的四種 HTTP 方法，對應資料的增查改刪：get 查詢、post 新增、put 修改、delete 刪除。
 -->
 
 ---
@@ -766,7 +804,11 @@ export interface Product {
 - API 回傳資料都應該定義 interface，取代 `any`
 
 <!--
-Interface 是 TypeScript 型別能力的精華：先定義資料長什麼形狀，API 回傳的資料、表格的每一列都套上型別，打錯屬性名稱編譯器立刻告訴你。問號代表可選屬性，有沒有這個欄位都合法。課程慣例是用 ng g i 產生獨立檔案放在 interfaces 資料夾。
+Interface 用來定義資料的形狀。
+
+先說好資料有哪些欄位、各是什麼型別，之後 API 回傳的資料、表格的每一列，都可以套上這個型別。屬性名稱打錯的時候，編輯器會馬上提醒我們。
+
+屬性後面加問號，代表它是可選的，有沒有這個欄位都合法。課程的慣例是用 `ng g i` 產生獨立的檔案，放在 interfaces 資料夾。API 回傳的資料都應該定義 interface，用來取代 any。
 -->
 
 ---
@@ -788,7 +830,9 @@ sortBy(key: 'price' | 'id') {
 - 回傳負數 → a 在前；正數 → b 在前
 
 <!--
-sort() 的核心是比較函式的回傳值：負數表示 a 排前面、正數表示 b 排前面，所以數字升冪寫 a 減 b、降冪寫 b 減 a，這個公式直接背起來。ch32 的 mat-table 資料、ch56 的員工列表排序都是同一套邏輯。
+排序的核心是比較函式的回傳值。回傳負數，a 排在前面；回傳正數，b 排在前面。所以數字要升冪就寫 a 減 b，降冪就寫 b 減 a，這個公式直接記起來。
+
+下面的 sortBy，把要比較的欄位當作參數傳進來，同一個方法就能切換用價格或用 id 排序。表格資料和綜合練習的員工列表，用的都是同一套邏輯。
 -->
 
 ---
@@ -800,7 +844,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch31–42
 
 <!--
-第六站是 Angular Material，對應 ch31 到 ch42，整整十二章，是課程裡最大的一站。這一站的模式非常固定：裝套件、匯入模組、抄官方範例的 HTML 結構、再客製化。把這個模式學起來，以後遇到沒教過的 Material 元件也能自己看文件上手。
+第六站是 Angular Material，對應第三十一到第四十二章，是最大的一站，學習模式也最固定。
 -->
 
 ---
@@ -820,9 +864,9 @@ layout: default
 | Select | `MatSelectModule` | `mat-select` + `mat-option`，用 `ngModel` 綁值 | Ch40 |
 
 <!--
-Material 元件用兩張總表複習。這張表的用法是：遮住右邊兩欄，看元件名稱能不能講出關鍵模組跟重點。
+Material 元件我們用三張總表複習。使用方法是：遮住右邊兩欄，看到元件名稱，試著說出它的模組和重點。
 
-幾個高頻陷阱先點名：mat-table 的欄位顯示由 displayedColumns 陣列控制，matColumnDef 的名稱要跟陣列裡的字串一致；paginator 一定要在 ngAfterViewInit 裡接，因為 @ViewChild 要等畫面初始化完才抓得到；datepicker 的 provideNativeDateAdapter() 忘記加的話，日曆直接壞掉，這是 ch34、ch56 都特別強調的。
+先點名幾個常見的陷阱。mat-table 要顯示哪些欄位，由 displayedColumns 陣列決定，matColumnDef 的名稱要和陣列裡的字串一致。分頁器一定要在 ngAfterViewInit 裡接上，因為要等畫面建立完才拿得到。日期選擇器忘記加 `provideNativeDateAdapter`，日曆會直接壞掉。
 -->
 
 ---
@@ -839,7 +883,11 @@ layout: default
 | Menu／Badge | `MatMenuModule`、`MatBadgeModule` | 下拉選單與角標提示 | Ch48 |
 
 <!--
-第二張總表。Dialog 的資料流要熟：呼叫端用 dialog.open 開啟並透過 data 傳資料進去，Dialog 元件內部注入 MAT_DIALOG_DATA 接收、注入 MatDialogRef 控制關閉。Sidenav 三種模式的差別：over 蓋在內容上、push 把內容推開、side 跟內容並排，後台版型最常用 side。
+第二張總表。
+
+Dialog 的資料流要熟悉：呼叫端用 `dialog.open` 開啟，透過 data 把資料傳進去；Dialog 元件內部注入 `MAT_DIALOG_DATA` 接收資料，注入 MatDialogRef 控制關閉。
+
+Sidenav 有三種模式：over 蓋在內容上面，push 把內容推開，side 和內容並排，後台版型最常用的是 side。Toolbar 用 Spacer 把按鈕推到最右側，Menu 和 Badge 則是下拉選單和角標提示。
 -->
 
 ---
@@ -859,9 +907,9 @@ layout: default
 </div>
 
 <!--
-radio 跟 checkbox 的本質差異：radio 是一組裡選一個，整組綁同一個變數；checkbox 每個選項獨立，各綁各的 boolean。
+第三張總表。radio 和 checkbox 的差別在於：radio 是一組裡面選一個，整組綁同一個變數；checkbox 每個選項各自獨立，各綁一個 boolean。Spinner 則是搭配 Loading 狀態顯示的轉圈圈。
 
-最下面的通用模式是這一站最重要的帶得走的能力：所有 Material 元件都是同一套流程，報錯的第一反應永遠是「模組匯入了沒」。
+最下面的通用模式，是這一站最重要的能力。所有 Material 元件都是同一套流程，遇到報錯，第一個反應永遠是：模組匯入了沒有。
 -->
 
 ---
@@ -887,9 +935,11 @@ layout: default
 ```
 
 <!--
-Material 站的畫面技巧先看 pipe 跟 ngClass。DatePipe 把 Date 物件排版成想要的格式，格式字串 yyyy/MM/dd 注意大小寫——MM 是月份、mm 是分鐘，寫錯不會報錯但顯示會很奇怪。JsonPipe 是開發時的偵錯神器，搭配 pre 標籤才有縮排。兩個 pipe 都要匯入 CommonModule。
+接著是兩個常用的 Pipe 和 ngClass。
 
-ngClass 三種用法：物件語法適合條件高亮（ch56 的薪水高亮就是這個）、變數語法適合狀態切換、方法回傳適合複雜邏輯。
+DatePipe 把 Date 物件排版成指定的格式，要注意大小寫，大寫 MM 是月份，小寫 mm 是分鐘，寫錯不會報錯，但顯示出來會很奇怪。JsonPipe 是開發時檢查資料的好幫手，搭配 pre 標籤才會保留縮排。這兩個 pipe 都需要匯入 CommonModule。
+
+ngClass 有三種用法：物件寫法適合依條件高亮，像綜合練習的薪水高亮；變數寫法適合切換狀態；方法回傳則適合比較複雜的邏輯。
 -->
 
 ---
@@ -913,9 +963,11 @@ applyFilter() {
 **圓餅圖**（Ch41）：`npm install chart.js`，`new Chart(canvas, { type: 'pie', data, options })`
 
 <!--
-即時搜尋的套路要背熟：keyup 觸發、ngModel 存關鍵字、filter 加 indexOf 過濾，然後把結果指回 dataSource.data——注意是「從完整資料重新算」，不是在已過濾的結果上再過濾。
+即時搜尋的寫法要熟：`keyup` 觸發，`ngModel` 保存關鍵字，用 filter 搭配 indexOf 過濾，最後把結果指定給 `dataSource.data`。
 
-圓餅圖用的是 chart.js 套件：npm install 安裝後，拿 canvas 元素 new 一個 Chart，type 指定 pie，把資料跟選項傳進去就能畫出來。
+注意，過濾的來源永遠是完整的原始陣列 `this.items`，而不是已經過濾過的結果，否則資料會越搜越少。
+
+圓餅圖使用 chart.js 套件。用 npm 安裝之後，拿 canvas 元素建立一個 Chart，type 指定為 pie，再把資料和選項傳進去，就能畫出圖表。
 -->
 
 ---
@@ -931,7 +983,9 @@ layout: default
 5. 搜尋框先過濾出 3 筆結果，接著在**這 3 筆**上再輸入新關鍵字過濾，會有什麼 bug？正確作法是？
 
 <!--
-第三次快問快答，都是實作時真的會遇到的狀況題。第五題是即時搜尋最經典的邏輯錯誤，ch37 跟 ch56 都強調過，大家想清楚「過濾的來源」應該是誰。
+第三次快問快答，範圍是第五、六站，都是實作時真的會遇到的狀況。
+
+第五題是即時搜尋最經典的邏輯錯誤，大家想清楚，每次過濾的來源應該是誰。
 -->
 
 ---
@@ -947,7 +1001,9 @@ layout: default
 5. 越搜越少、刪字也回不來——因為資料來源被覆寫了。正確作法：**每次都從完整的原始陣列**（如 `this.items`）重新 `filter`，把結果指定給 `dataSource.data`（Ch37）
 
 <!--
-對答案。第二題的觀念會在第九站 RxJS 再出現一次：Observable 是惰性的，沒人訂閱就不執行，這跟 Promise 建立就執行的行為是關鍵差異。第三題跟第四題是 Material 兩大定番錯誤，建議大家在自己的筆記裡把這兩條列成 checklist。第五題的原則叫「原始資料不可變、顯示資料用算的」，ch56 綜合練習的 applyFilters 就是這個原則的完整示範。
+我們來對答案。
+
+第一題，新版的 track 是必填，少寫會直接編譯錯誤。第二題，Observable 是惰性的，沒有人訂閱就不會執行，這和 Promise 一建立就執行不同，第九站還會再提到。第三題和第四題，是 Material 最常見的兩個錯誤，建議列進自己的檢查清單。第五題的原則是：原始資料不要動，顯示的資料每次重新計算，綜合練習的 applyFilters 就是完整的示範。
 -->
 
 ---
@@ -959,7 +1015,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch43–46
 
 <!--
-第七站是非同步與狀態管理,對應 ch43 到 ch46。這一站處理兩個實務必考題：「資料還沒回來的時候畫面怎麼辦」跟「多個元件怎麼共享同一份狀態」。
+第七站是非同步與狀態管理，對應第四十三到第四十六章，處理資料還沒回來時畫面怎麼辦，以及多個元件怎麼共享狀態。
 -->
 
 ---
@@ -985,9 +1041,9 @@ console.log('3');
 **同步**：一行做完才做下一行；**非同步**：先登記、先往下走，結果好了再回來
 
 <!--
-非同步的心智模型用上面那三行程式碼建立：即使 setTimeout 延遲設 0，輸出還是 1、3、2——因為非同步工作會先被放到佇列，等同步程式全部跑完才執行。這題是面試經典題，也是理解「為什麼 API 資料要在 subscribe 回呼裡處理」的關鍵。
+非同步的觀念，用上面這三行程式碼來建立。即使 setTimeout 的延遲設為 0，輸出順序還是 1、3、2。因為非同步的工作會先排進佇列，等同步的程式全部跑完，才輪到它執行。這也是為什麼 API 回來的資料，要在 subscribe 裡面處理。
 
-四種非同步寫法由淺入深：setTimeout 是入門、Promise 處理一次性結果、async/await 是 Promise 的語法糖、Observable 則是 Angular 的主力，能多次發值、能取消，下一頁就展開。
+四種非同步寫法由淺入深：setTimeout 是最基本的延遲執行；Promise 處理一次性的結果；async 和 await 讓非同步看起來像同步；Observable 可以多次發出值，也可以取消，是 Angular 的主力。
 -->
 
 ---
@@ -1020,11 +1076,13 @@ this.cartService.cartCount$.subscribe(count => this.count = count);
 </div>
 
 <!--
-這一頁是 ch44 加 ch45 的核心套路，也是業界 Angular 專案最常見的狀態共享模式，三步驟務必能默寫：私有的 Subject 負責收值、asObservable 公開唯讀版本給外面訂閱（命名慣例加錢字號字尾）、next() 發新值通知所有訂閱者。
+這一頁是訂閱與狀態共享的核心寫法，也是 Angular 專案最常見的狀態共享模式。
 
-私有加公開的設計是刻意的：外部元件只能訂閱、不能直接 next，狀態的變更全部集中在 Service 的方法裡，追 bug 的時候才知道去哪找。
+三個步驟要能自己寫出來：第一，宣告一個私有的 Subject 負責保存狀態；第二，用 asObservable 公開一個唯讀的版本給外面訂閱，命名習慣在後面加上錢字號；第三，用 next 發出新的值，通知所有訂閱者。
 
-Subject 跟 BehaviorSubject 的選擇：狀態類的東西（購物車數量、登入狀態、loading）用 BehaviorSubject，因為新訂閱者需要立刻知道「現在的值」；純事件通知才用 Subject。
+私有加公開是刻意的設計。外面的元件只能訂閱，不能直接呼叫 next，狀態的變更全部集中在 Service 的方法裡，出問題時才知道去哪裡找。
+
+購物車數量、登入狀態這類的狀態，用 BehaviorSubject，因為新的訂閱者需要立刻拿到目前的值；單純的事件通知，才用 Subject。
 -->
 
 ---
@@ -1050,9 +1108,11 @@ layout: default
 ```
 
 <!--
-Loading 是把 ch44 的訂閱套路應用到真實需求的完整案例。四個角色分工：LoadingService 拿 BehaviorSubject 管布林狀態；HttpInterceptor 是關鍵角色，它攔截所有 HTTP 請求，發出時開 loading、回來時關 loading，所以各頁面完全不用自己寫 show/hide；AppComponent 只負責訂閱跟顯示；CSS 用 fixed 遮罩擋住使用者操作。
+Loading 是把訂閱與狀態共享，套用到真實需求的完整例子。
 
-HTML 裡的 async pipe 值得特別記：它會自動訂閱、元件銷毀時自動退訂，不用手動 subscribe 也不用擔心記憶體洩漏，是 template 裡消費 Observable 的最佳寫法。
+四個角色各有分工。LoadingService 用 BehaviorSubject 管理是否載入中；HttpInterceptor 是關鍵，它攔截所有 HTTP 請求，發出時打開 loading，回來時關閉，各個頁面不用自己處理；AppComponent 負責訂閱和顯示；CSS 用 fixed 的遮罩擋住畫面。
+
+HTML 裡的 async pipe 值得特別記住。它會自動訂閱，元件銷毀時也會自動退訂，是在模板裡使用 Observable 最好的寫法。
 -->
 
 ---
@@ -1083,11 +1143,11 @@ constructor() {
 | 非同步（API、事件流） | ❌ | ✅ |
 
 <!--
-Signals 是 Angular v16 之後的新狀態管理方式，跟 Observable 的訂閱模式相比，它讓「讀值」變得直覺——不用 subscribe，直接呼叫就拿到現在的值,但要記得加小括號，這是最容易忘的語法細節，template 裡也一樣。
+Signals 是 Angular 比較新的狀態管理方式。和 Observable 相比，它讓讀值變得很直覺，不用 subscribe，直接呼叫就能拿到目前的值。要記得加小括號，在模板裡也一樣，這是最容易忘記的地方。
 
-四個 API：signal 建立（必須給初始值）、set 直接設值、update 由舊值算新值、computed 做衍生值（相依的 signal 一變就自動重算，比 getter 有效率因為有快取）、effect 監聽變化做副作用。
+這裡用到五個 API：signal 建立狀態，必須給初始值；set 直接設定新值；update 根據舊值算出新值；computed 建立衍生值，相依的 signal 一改變就會自動重新計算；effect 則是監聽變化，做額外的處理。
 
-最下面的選擇表是 ch46 的結論：同步狀態用 Signal 更簡潔，但非同步場景——等 API、事件流——仍然是 Observable 的地盤，兩者是互補不是取代。
+最下面的表格是 Signals 的結論：同步的狀態用 Signal 比較簡潔，但非同步的情況，例如等待 API，仍然是 Observable 的強項，兩者是互補，不是取代。
 -->
 
 ---
@@ -1099,7 +1159,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch47–52
 
 <!--
-第八站是版面與表單，對應 ch47 到 ch52。sidenav 加 toolbar 組出後台版型、radio checkbox 處理選項、Reactive Forms 加 Validators 做動態表單驗證，最後用 RWD 讓畫面在手機上也能看。這一站做完，一個完整的後台系統就成形了。
+第八站是版面與表單，對應第四十七到第五十二章。這一站做完，一個完整的後台系統就成形了。
 -->
 
 ---
@@ -1128,9 +1188,9 @@ removeQuestion(i: number) { this.questions.removeAt(i); }
 ```
 
 <!--
-Reactive Forms 的核心是三個積木的層級關係：FormControl 是最小單位的一個欄位，FormGroup 把多個 Control 包成物件，FormArray 管理數量會變的欄位列表——像問卷題目可以一直新增刪除，就是 FormArray 的主場。
+Reactive Forms 的核心，是三個積木的層級關係。FormControl 是一個欄位，FormGroup 把多個欄位包成一組，FormArray 管理數量會變動的欄位，像問卷題目可以一直新增和刪除，就是 FormArray 的用途。
 
-程式碼示範的是 ch50 動態問卷的骨架：getter 把 FormArray 取出來方便操作，push 新增一組題目、removeAt 刪除指定索引。HTML 那邊對應的繫結指令要配對記：formGroup 綁最外層、formControlName 綁欄位、formArrayName 綁陣列，然後用 @for 跑 controls 把每一組題目畫出來。
+程式碼是動態問卷的骨架：getter 把 FormArray 取出來方便操作，push 新增一題，removeAt 刪除指定位置的題目。HTML 的繫結要對應記住：formGroup 綁最外層，formControlName 綁欄位，formArrayName 綁陣列，再用 `@for` 跑過 controls，把每一題畫出來。
 -->
 
 ---
@@ -1164,9 +1224,9 @@ password: new FormControl('', [
 ```
 
 <!--
-Validators 直接掛在 FormControl 的第二個參數陣列裡，可以同時掛多個，全部通過欄位才算 valid。四個內建的要熟，更複雜的規則用 pattern 搭配正規表達式，像密碼要同時有小寫字母跟數字這種需求。
+Validators 寫在 FormControl 的第二個參數，是一個陣列，可以同時放好幾個，全部通過，欄位才算 valid。四個內建的驗證要熟悉，更複雜的規則用 pattern 搭配正規表達式，例如密碼要同時包含小寫字母和數字。
 
-錯誤訊息的顯示時機是 ch51 的重點：不能只判斷 invalid，要搭配 touched——使用者碰過這個欄位——才顯示錯誤，不然表單一打開就滿江紅，體驗很差。touched 是「聚焦過再離開」、dirty 是「值改過」，兩個狀態的差別要分清楚。
+錯誤訊息什麼時候顯示是重點。不能只判斷 invalid，要搭配 touched，也就是使用者碰過這個欄位，才顯示錯誤，否則表單一打開就滿是紅字。touched 是點進去再離開，dirty 是值被改過，兩者要分清楚。
 -->
 
 ---
@@ -1197,11 +1257,11 @@ layout: default
 </div>
 
 <!--
-RWD 的核心武器是 media query：平常寫桌面版樣式，再用 @media max-width 在小螢幕覆寫——注意這裡又用到「後蓋前」原則，media query 要寫在一般規則後面才蓋得掉。
+RWD 的核心是 media query。先寫桌面版的樣式，再用 `@media` 加上 max-width，在小螢幕時覆蓋掉。這裡又用到後蓋前，media query 要寫在一般規則的後面才蓋得掉。
 
-最常用的斷點就表格那三個，記 768 這個數字最重要，它是「平板以下改直向」的業界慣用線。搭配 flex-direction 從 row 切成 column，就是最簡單有效的 RWD 手法，ch52 的範例就是這樣做的。
+表格裡的三個斷點最常用，其中 768 最重要，通常平板以下就改成直向排列。搭配 flex-direction 從 row 切換成 column，就是最簡單有效的 RWD 寫法。
 
-單位的選擇：能用相對單位就不要寫死 px，百分比相對父層、vw/vh 相對視窗、rem 相對根字級，畫面才會跟著螢幕縮放。
+單位能用相對的，就不要寫死 px。百分比相對父層，vw 和 vh 相對視窗，rem 相對根元素的字級，畫面才會跟著螢幕縮放。
 -->
 
 ---
@@ -1213,7 +1273,7 @@ class: flex flex-col justify-center items-center text-center
 # Ch53–55
 
 <!--
-最後一站：RxJS 的系統性整理，加上打包跟部署，對應 ch53 到 ch55。RxJS 其實從 ch28 的 subscribe 開始就一直在用了，ch53 是把散落的概念收攏成完整的知識體系；ch54、ch55 則是讓作品真正上線的最後一哩路。
+最後一站是 RxJS 與部署上線，對應第五十三到第五十五章。把 RxJS 的概念收攏，再把作品真正放上網路。
 -->
 
 ---
@@ -1237,11 +1297,11 @@ layout: default
 </div>
 
 <!--
-RxJS 五個概念一張表收攏。Observable 是生產者而且是惰性的——這解釋了 ch28 那個「不 subscribe 請求不會發出」的行為；Observer 是消費者，subscribe 裡傳的物件可以有 next、error、complete 三個回呼；Subscription 是訂閱的憑證，要取消就對它呼叫 unsubscribe，多個訂閱可以用 add 掛在一起、一次全取消；Subject 一對多廣播，ch44 的狀態共享就是靠它；Operators 用 pipe 串接，對資料流做加工。
+RxJS 的五個概念，用一張表整理。Observable 是資料的生產者，而且是惰性的，有人訂閱才會執行；Observer 是消費者，有 next、error、complete 三個回呼；Subscription 是訂閱的憑證，用 unsubscribe 取消；Subject 可以一對多廣播；Operators 用 pipe 串接，加工資料流。
 
-跟 Promise 的三點差異是面試常客：執行時機、發值次數、可否取消。
+和 Promise 的差異有三點：執行時機、發出值的次數，以及能不能取消。
 
-最下面的紅色警告是全課程最重要的資源管理原則：訂閱了就要在 ngOnDestroy 退訂，不然元件銷毀了訂閱還活著，記憶體洩漏。
+最下面的警告最重要：訂閱了，就要在 ngOnDestroy 退訂，否則元件消失了，訂閱還在，就會造成記憶體洩漏。
 -->
 
 ---
@@ -1259,7 +1319,9 @@ ng build
 - **Bundle Budget 超標**：在 `angular.json` 調整 `budgets` 上限
 
 <!--
-最後一哩路的第一步是打包。ng build 把整個專案壓縮打包成純靜態檔案放進 dist，這包東西丟到任何靜態主機都能跑。build 時如果跳 Bundle Budget 錯誤，代表打包後的檔案超過 angular.json 設定的大小預算，去調 budgets 上限即可。
+最後一哩路的第一步是打包。`ng build` 把整個專案壓縮成純靜態的檔案，放在 dist 資料夾裡，真正要部署的，是 dist 底下專案名稱裡的 browser 資料夾。
+
+這包檔案放到任何靜態主機都能執行。如果打包時出現 Bundle Budget 的錯誤，代表打包後的檔案超過了 `angular.json` 設定的大小上限，可以到 budgets 調整。
 -->
 
 ---
@@ -1281,9 +1343,11 @@ firebase deploy
 **上線流程**：`ng build` → `firebase init hosting` → `firebase deploy` → 取得正式網址 🎉
 
 <!--
-Firebase 部署四個指令：裝 CLI、登入、init、deploy。init 的設定裡最關鍵的是 SPA 模式要選 Yes——Angular 是單頁應用，所有路由都由前端接管，如果不把所有路徑導回 index.html，使用者直接輸入子路由網址或重新整理就會 404，這是 ch55 特別強調的坑。
+部署到 Firebase 只要四個指令：安裝 CLI、登入、初始化，然後部署。
 
-deploy 成功後拿到正式網址，你的作品就真的在網路上活著了。
+初始化時，public directory 要指向打包出來的資料夾，而最關鍵的是 SPA 模式要選 Yes。Angular 是單頁應用，路由都由前端處理，如果沒有把所有路徑導回 `index.html`，使用者直接輸入子頁面的網址，或按重新整理，就會出現 404。
+
+部署成功後會拿到正式的網址，作品就真的上線了。
 -->
 
 ---
@@ -1299,7 +1363,7 @@ layout: default
 5. Angular 部署到 Firebase 後，首頁正常、但**重新整理子頁面就 404**，是哪個設定沒做對？
 
 <!--
-最後一輪快問快答，範圍是後三站。第五題是真實部署後最常見的災情，答案就藏在剛剛的部署頁裡。
+最後一輪快問快答，範圍是後面三站，一樣先自己想過一遍。第五題是部署之後最常見的狀況，答案就在剛剛的部署頁裡。
 -->
 
 ---
@@ -1315,7 +1379,9 @@ layout: default
 5. `firebase init hosting` 時 **SPA 模式沒選 Yes**——需要把所有路徑 rewrite 回 `index.html`，讓 Angular 路由接手（Ch55）
 
 <!--
-對答案。第一題的封裝觀念是業界 code review 會盯的點。第二題順便複習了 Signal 跟 Observable 的分工：同步狀態 Signal 更簡潔，非同步仍用 Observable。第三題的小括號是 Signals 最容易犯的語法錯誤。第四題的 touched 判斷直接影響使用者體驗。第五題記住關鍵字 SPA rewrite，以後換任何靜態主機部署（Netlify、Vercel、nginx）都是同一個設定。
+我們來對答案。
+
+第一題是封裝的觀念，狀態只能透過 Service 的方法改變。第二題順便複習 Signal 和 Observable 的分工：同步狀態用 Signal 更簡潔，非同步仍然用 Observable。第三題的小括號，是 Signals 最容易犯的語法錯誤。第四題的 touched，直接影響使用者的體驗。第五題記住 SPA 要導回 `index.html`，以後換成其他靜態主機部署，也是同樣的設定。
 -->
 
 ---
@@ -1327,7 +1393,7 @@ class: flex flex-col justify-center items-center text-center
 # Top 10
 
 <!--
-最後我們把 55 章裡所有「注意」、「警告」的提醒，濃縮成十條最高頻的易錯重點。這十條就是大家寫專案時的除錯 checklist，建議直接抄進自己的筆記。
+最後，我們把各章的注意事項，濃縮成十個最常踩雷的重點，可以當成除錯時的檢查清單。
 -->
 
 ---
@@ -1345,9 +1411,9 @@ layout: default
 | 5 | 分頁器不動 | `ngAfterViewInit` 裡 `dataSource.paginator = this.paginator` | Ch32 |
 
 <!--
-前五條全部跟「設定漏掉」有關,共同的除錯心法是:元件報錯先看 imports 陣列、注入報錯先看 providers。
+前五條都和設定漏掉有關，共同的除錯原則是：元件相關的錯誤，先看 imports 陣列；注入相關的錯誤，先看 providers。
 
-第一條 FormsModule 是出場率之王,只要畫面上有 ngModel 就要想到它。第二條 CommonModule 管的是 pipe 們。第三條有兩層:全域要註冊 provideHttpClient,呼叫端要 subscribe。第四、五條是 Material 的兩大定番,前面快問快答已經考過,再看到第三次應該忘不掉了。
+第一條的 FormsModule 出現得最頻繁，畫面上只要有 ngModel，就要想到它。第二條的 CommonModule，負責 DatePipe 和 JsonPipe。第三條有兩層：全域要註冊 provideHttpClient，呼叫端要 subscribe。第四、五條是 Material 的兩個常見錯誤，前面的快問快答已經考過了。
 -->
 
 ---
@@ -1369,9 +1435,11 @@ layout: default
 </div>
 
 <!--
-後五條偏邏輯與觀念。第六條是資源管理的鐵律,訂閱與退訂成對出現,template 裡能用 async pipe 就用,它自動處理退訂。第七條的原則是「原始資料不可變,顯示資料用算的」,ch56 綜合練習整個 applyFilters 設計就是在示範這件事。第八條跟第九條是 JavaScript 語言層面的歷史包袱,記下來就好。第十條回到 CSS 最初的觀念——後蓋前,樣式沒生效時打開 DevTools 看是誰蓋了誰。
+後五條偏向邏輯和觀念。
 
-這十條清單的價值在於:它們都不是「不會寫」的問題,而是「忘記了」的問題,考前掃一遍,實作時卡住掃一遍,就能省下大量除錯時間。
+第六條，訂閱和退訂要成對出現，模板裡能用 async pipe 就用，它會自動退訂。第七條，原始資料不要動，顯示的資料每次重新計算。第八條和第九條，是 JavaScript 本身的特性，記下來就好。第十條回到 CSS 最基本的後蓋前，樣式沒生效時，打開開發者工具，看是誰蓋掉了誰。
+
+這十條都不是不會寫，而是忘記了。實作卡住時掃一遍，就能省下很多除錯時間。
 -->
 
 ---
@@ -1402,11 +1470,9 @@ layout: default
 3. 用學過的技術做一個**自己的題目**，部署到 Firebase，放進履歷
 
 <!--
-最後一張投影片,幫大家把成就感具象化。左邊到右邊就是這門課的三個大階段:基礎工程、Angular 開發、進階與上線,每一塊你都有實際動手做過,不是只有聽過。
+最後，我們回頭看看這一路走過的三個階段：基礎工程、Angular 開發，以及進階與上線。每一塊我們都實際動手做過，不只是聽過而已。
 
-接下來的三個建議,按重要性排序。第一,兩個綜合練習是最好的檢測工具,不看解答能independently做完,才算真的會了。第二,今天快問快答答錯的題目就是你個人化的複習清單,別浪費這個訊號。第三,也是最重要的:找一個自己有感的題目——記帳、待辦、追劇清單都好——用課程學過的技術做出來、部署上線,那個網址就是你求職時最有說服力的作品。
-
-恭喜大家完成整套課程,我們有緣再會。
+接下來有三個建議。第一，不看解答，把兩個綜合練習再做一次。第二，回到快問快答答錯的章節重讀。第三，找一個自己有興趣的題目，用學過的技術做出來，部署上線，放進履歷。
 -->
 
 ---
@@ -1417,5 +1483,7 @@ layout: end
 ### 55 章、九大階段、一條從零到上線的完整路徑 — 總複習完成！
 
 <!--
-總複習到這裡結束。這一章沒有教新東西,但它幫大家把 55 章的知識收攏成一張可以隨時翻閱的地圖:九站速記、四輪快問快答、十條易錯清單。之後不管是考試、面試還是開發卡關,都可以回到這一章找到對應的章節線索。辛苦大家了!
+總複習到這裡結束。這一章沒有教新的東西，而是把五十五章的內容，整理成一張隨時可以翻閱的地圖：九站速記、四輪快問快答，以及十條易錯重點。
+
+之後不管是考試、面試，還是開發時卡關，都可以回到這一章，找到對應的章節。恭喜大家完成整套課程，辛苦了。
 -->
