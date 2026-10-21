@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們來學 Angular Material 的表格元件 mat-table。
+上一章我們裝好了 Angular Material，這一章要學它的表格元件：`mat-table`。
 
-想像一下，如果要自己刻一個支援分頁、排序、還要處理欄位對齊的表格，光是 CSS 跟邏輯就要花不少時間。mat-table 就是 Angular Material 幫我們把這些常見需求都包好的表格元件，我們只要照著規則設定資料跟欄位就好。
-
-學完這一章，大家會知道怎麼用官方範例快速建立一個含分頁功能的表格，並且理解 HTML、TypeScript、資料三個地方是怎麼互相對應的。
+自己做一個有分頁、欄位對齊的表格很花時間，`mat-table` 把這些都包好了。學完這一章，我們會用官方範例建立有分頁的表格，並理解 HTML、TypeScript 和資料三者怎麼對應。
 -->
 
 ---
@@ -67,7 +65,7 @@ layout: default
 - **三者對應關係** — HTML 欄位、displayedColumns、資料必須同步
 
 <!--
-這張投影片先讓大家看一下整章的架構：先介紹什麼是 mat-table，接著實際動手做一個範例，中間會講到怎麼匯入模組、怎麼定義資料，最後特別強調 HTML 欄位、displayedColumns、跟資料三者一定要對應一致，這是最容易出錯的地方。
+這一章會先介紹什麼是 `mat-table`，接著實際動手做一個範例：從官方取得程式碼、匯入模組、定義資料，再設定分頁器。最後特別強調 HTML 的欄位、`displayedColumns` 和資料三者一定要一致，這是最容易出錯的地方。
 -->
 
 ---
@@ -79,7 +77,7 @@ class: flex flex-col justify-center items-center text-center
 # What is Mat-table?
 
 <!--
-先問大家一個問題：如果要做一個像 Excel 一樣，可以分頁、排序的表格，我們是不是得自己寫很多重複的邏輯？這就是 mat-table 要解決的問題，它把這些常見功能都內建好了，我們接下來就來看看它實際上是什麼。
+自己做一個能分頁、排序的表格，會有很多重複的邏輯，我們來看看 `mat-table` 怎麼幫忙。
 -->
 
 ---
@@ -93,9 +91,9 @@ ng add @angular/material
 ```
 
 <!--
-`<mat-table>` 就是 Angular Material 提供的表格元件，內建樣式、分頁、排序這些功能都不用我們自己刻。
+`mat-table` 是 Angular Material 提供的表格元件，內建了樣式、分頁和排序等功能，不需要從頭自己實作。
 
-⚠️ 提醒大家，使用前一定要先確認專案已經安裝 @angular/material，如果還沒裝，可以回到前一章用 ng add @angular/material 安裝，不然這裡的元件會找不到。
+使用之前，要先確認專案已經安裝了 `@angular/material`。如果還沒安裝，可以回到上一章，用 `ng add @angular/material` 安裝，否則這裡的元件會找不到。
 -->
 
 ---
@@ -107,7 +105,7 @@ class: flex flex-col justify-center items-center text-center
 # Using Mat-table
 
 <!--
-接下來我們就實際動手，一步一步把一個含分頁功能的表格做出來。大家可以跟著做，等一下會分成好幾個步驟，包含拿範例程式碼、匯入模組、定義資料、設定分頁器。
+接下來實際動手，一步一步做出一個有分頁功能的表格。
 -->
 
 ---
@@ -138,7 +136,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-在動手之前，先讓大家看一下我們最後會做出什麼樣子：一個有 No.、Name、Weight、Symbol 四個欄位的表格，下面還有分頁器，可以選每頁顯示幾筆、也可以切換上一頁下一頁。心裡有這張圖之後，等一下拆解步驟會比較有方向感。
+動手之前，先看看最後會做出什麼樣子。
+
+這個表格有 No.、Name、Weight 和 Symbol 四個欄位。下方有一個分頁器，可以選擇每頁顯示幾筆，也可以切換上一頁和下一頁。
+
+心裡有這張圖之後，接下來拆解步驟會比較有方向。
 -->
 
 ---
@@ -168,11 +170,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-第一步我們不用從零開始寫，直接去 Angular Material 官網找現成的範例。
+第一步，我們不從零開始寫，而是直接到 Angular Material 官網找現成的範例。
 
-帶大家看一下操作順序：先找到 Table with pagination 這個範例，點右上角的 `<>` 展開程式碼，切到 HTML 分頁籤，把內容整個複製貼到我們元件的 HTML 檔案裡。
+找到 Table with pagination 這個範例，點右上角的程式碼符號展開，切換到 HTML 分頁，把內容全部複製，貼到我們元件的 HTML 檔案裡。
 
-⚠️ 提醒大家，官網範例通常包含完整的 HTML 結構，貼上去之後編輯器可能會出現一堆紅字，這是正常的，因為我們還沒匯入對應的模組，等一下會處理。
+貼上之後，編輯器可能會出現很多紅字，這是正常的，因為我們還沒匯入對應的模組，等一下就會處理。
 -->
 
 ---
@@ -194,13 +196,13 @@ HTML table 的結構規範：`<tr>` 底下只能直接放 `<th>`、`<td>`，額�
 </div>
 
 <!--
-在看接下來的 HTML 結構之前，先跟大家補充一個常常被忽略的角色：ng-container。
+在看 HTML 結構之前，先補充一個常見的角色：`ng-container`。
 
-先簡單提一下 DOM：大家可以把它想成瀏覽器讀完 HTML 之後，在背後建立的一棵樹，每個標籤都是樹上的一個節點，瀏覽器就是照著這棵樹的結構去畫出畫面。等一下講 ng-container 不會產生 DOM 元素，指的就是這棵樹裡不會多出對應的節點。
+先說明 DOM。DOM 是瀏覽器讀完 HTML 之後，建立的一個樹狀結構，每個標籤都是樹上的一個節點，瀏覽器就照著這棵樹畫出畫面。
 
-大家可能會想，這個 matColumnDef 為什麼要包在 ng-container 裡面，不能直接包在 div 裡嗎？答案是不行，因為 table 的 DOM 結構有嚴格規定，tr 底下要直接放 th、td，如果我們用 div 多包一層，瀏覽器渲染表格的時候版面就會跑掉，甚至樣式完全失效。
+HTML 表格的結構有嚴格的規定：`tr` 底下只能直接放 `th` 和 `td`。如果多包一層 `div`，表格的版面和樣式就可能跑掉。
 
-ng-container 特別的地方在於，它只是 Angular 範本裡的一個邏輯標籤，編譯之後不會產生任何實際的 DOM 元素，大家用瀏覽器開發者工具檢查畫面，只會看到裡面的 th、td，完全看不到 ng-container 這個標籤本身。
+`ng-container` 是 Angular 提供的邏輯容器，它只存在於模板裡，編譯之後不會產生任何實際的 DOM 元素。所以在 `mat-table` 裡，每個欄位都用 `ng-container` 把 `th` 和 `td` 包起來，既能分組，又不會破壞表格的結構。
 -->
 
 ---
@@ -226,9 +228,11 @@ ng-container 特別的地方在於，它只是 Angular 範本裡的一個邏輯�
 </div>
 
 <!--
-帶大家對照一下這兩段程式碼的差異：左邊用 div 包欄位，畫面渲染出來版面會整個跑掉；右邊改用 ng-container，效果完全一樣，但不會多出任何標籤。
+我們對照一下兩種寫法。
 
-⚠️ 提醒大家，這個概念不只用在 mat-table，平常我們用 *ngIf、*ngFor 這些結構型指令，如果不想多包一層 div，也可以用 ng-container 包起來，是滿常用的技巧。
+上面用 `div` 包住欄位，會多出一個不該出現在表格裡的標籤，版面就可能跑掉。下面改用 `ng-container`，效果一樣，但不會多出任何標籤。用開發者工具檢查，只會看到裡面的 `th` 和 `td`。
+
+這個技巧不只用在 `mat-table`。平常如果想把幾個元素包在一起，又不想多一層 `div`，也可以用 `ng-container`。
 -->
 
 ---
@@ -256,9 +260,11 @@ ng-container 特別的地方在於，它只是 Angular 範本裡的一個邏輯�
 ```
 
 <!--
-帶大家看一下貼進來的 HTML 長什麼樣子。最外層是 `<table mat-table [dataSource]="dataSource">`，裡面每一個 `<ng-container matColumnDef="...">` 就代表一個欄位，像 position、name 這些。
+我們看貼進來的 HTML 結構。
 
-大家可以看到裡面用 `*matHeaderCellDef` 定義表頭要顯示的文字，用 `*matCellDef="let element"` 定義每一列要顯示 element 的哪個屬性，這個 element 就是我們等一下要準備的資料物件。
+最外層是 `table`，加上 `mat-table`，並用中括號 `dataSource` 綁定資料來源。裡面每一個 `ng-container`，搭配 `matColumnDef`，就代表一個欄位，例如 `position` 和 `name`。
+
+每個欄位裡，`th` 搭配 `matHeaderCellDef`，定義表頭要顯示的文字；`td` 搭配 `matCellDef`，寫成 `let element`，代表每一列的資料。雙大括號裡的 `element.position`，就是顯示這筆資料的 position 屬性。
 -->
 
 ---
@@ -291,9 +297,11 @@ ng-container 特別的地方在於，它只是 Angular 範本裡的一個邏輯�
 ```
 
 <!--
-接著往下看，還有 weight、symbol 兩個欄位，寫法跟前面一模一樣，只是換了屬性名稱。
+HTML 的後半段，還有 `weight` 和 `symbol` 兩個欄位，寫法和前面一樣，只是換了屬性名稱。
 
-比較關鍵的是最後這兩行：`<tr mat-header-row *matHeaderRowDef="displayedColumns">` 跟 `<tr mat-row *matRowDef="let row; columns: displayedColumns;">`，這兩行就是告訴 mat-table 要用 displayedColumns 這個陣列決定顯示哪些欄位、順序又是什麼。下面的 `<mat-paginator>` 就是分頁器，pageSizeOptions 決定可以選擇每頁顯示 5、10、20 筆。
+關鍵是最後兩個 `tr`。第一個搭配 `matHeaderRowDef`，第二個搭配 `matRowDef`，兩者都指定了 `displayedColumns`。意思是告訴 `mat-table`，要依照 `displayedColumns` 這個陣列，決定顯示哪些欄位，以及欄位的順序。
+
+最下方的 `mat-paginator` 就是分頁器，`pageSizeOptions` 設定了每頁可以選擇顯示 5、10 或 20 筆。
 -->
 
 ---
@@ -316,11 +324,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 ```
 
 <!--
-HTML 貼上去之後，編輯器會噴一堆錯誤，這是因為 TypeScript 這邊還不認識 mat-table、mat-paginator 這些標籤。
+第二步，HTML 貼上之後出現的錯誤，是因為 TypeScript 還不認識 `mat-table` 和 `mat-paginator` 這些標籤。
 
-解法很單純，就是把對應的模組 import 進來：MatTableModule、MatTableDataSource 從 @angular/material/table 來，MatPaginatorModule 從 @angular/material/paginator 來，再加進 @Component 的 imports 陣列，錯誤就會消失。
+解決方法是匯入對應的模組。`MatTableModule` 和 `MatTableDataSource` 從 `@angular/material/table` 引入，`MatPaginatorModule` 從 `@angular/material/paginator` 引入。
 
-⚠️ 提醒大家，只 import 是不夠的，還要記得加進 imports 陣列，這是 standalone component 常見會漏掉的地方。
+要注意，只寫 `import` 還不夠，還要把模組加進 `@Component` 的 `imports` 陣列，錯誤才會消失。這是獨立元件很常漏掉的地方。
 -->
 
 ---
@@ -345,9 +353,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ```
 
 <!--
-接下來要準備資料。第一步先定義資料的型別，我們用 PeriodicElement 這個 interface，規定每筆資料要有 position、name、weight、symbol 四個屬性。
+第三步是準備資料。
 
-有了型別之後，就可以宣告 ELEMENT_DATA 這個陣列，放入實際的假資料，像氫、氦、鋰這些元素，大家可以照著範例照抄，或是換成自己想示範的資料。
+先定義資料的型別。這裡用 `PeriodicElement` 這個 interface，規定每筆資料要有 position、name、weight 和 symbol 四個屬性。這就是上一個主題學過的 interface。
+
+有了型別之後，再宣告 `ELEMENT_DATA` 陣列，放入氫、氦、鋰這些元素的假資料。
 -->
 
 ---
@@ -371,9 +381,13 @@ dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 | `paginator` | 透過 @ViewChild 取得分頁器實例 |
 
 <!--
-接下來要宣告三個變數，把 HTML 跟資料串起來。
+接著要宣告三個變數，把 HTML 和資料串起來。
 
-`displayedColumns` 是一個字串陣列，決定表格要顯示哪些欄位、以及順序，這裡的名稱要跟 HTML 的 matColumnDef 完全一致。`dataSource` 則是用 MatTableDataSource 把我們的 ELEMENT_DATA 包起來，mat-table 才看得懂。`paginator` 則是透過 @ViewChild 取得畫面上分頁器的實例，這個等一下下一步會用到。
+`displayedColumns` 是一個字串陣列，決定要顯示哪些欄位，以及它們的順序，名稱要和 HTML 的 `matColumnDef` 完全一致。
+
+`dataSource` 用 `MatTableDataSource` 把 `ELEMENT_DATA` 包起來，`mat-table` 才能使用這份資料。
+
+`paginator` 用 `@ViewChild` 取得畫面上分頁器的實例，下一步會用到它。
 -->
 
 ---
@@ -406,11 +420,11 @@ export class MyComponent implements AfterViewInit {
 </div>
 
 <!--
-最後一步是要讓分頁器真正發揮作用，也就是把 dataSource 的 paginator 屬性指定成我們用 @ViewChild 拿到的分頁器實例。
+第四步，讓分頁器真正發揮作用。
 
-帶大家看一下這段程式碼的關鍵：這件事一定要放在 ngAfterViewInit 這個生命週期方法裡做，因為 @ViewChild 要等畫面（view）都渲染完成之後才能保證抓得到 DOM 裡的 mat-paginator 元件。
+做法是把 `dataSource` 的 `paginator` 屬性，指定為用 `@ViewChild` 取得的分頁器。
 
-⚠️ 這是很多同學會踩的坑：如果把這行寫在 ngOnInit 裡，畫面可能還沒渲染完成，paginator 會是 undefined，分頁功能就會失效。一定要記得用 ngAfterViewInit。
+這一行一定要寫在 `ngAfterViewInit` 裡。還記得生命週期那一章嗎？`@ViewChild` 要等畫面建立完成，才能確定拿得到畫面上的元素。如果寫在 `ngOnInit`，分頁器可能還沒建立，`paginator` 會是 undefined，分頁功能就不會有作用。
 -->
 
 ---
@@ -427,11 +441,11 @@ HTML 的 `matColumnDef`、TS 的 `displayedColumns` 與資料物件的屬性名�
 | TS `ELEMENT_DATA` | `{ position, name, weight, symbol }` |
 
 <!--
-這張投影片是整章最重要的觀念，一定要跟大家強調清楚。
+這是這一章最重要的觀念。
 
-mat-table 能不能正常顯示，關鍵在於三個地方的名稱要完全一致：HTML 裡 matColumnDef 寫的欄位名稱、TypeScript 裡 displayedColumns 陣列的內容、還有資料物件本身的屬性名稱。這三者只要有一個拼錯、順序不對，畫面就可能整個空白，或是跳出奇怪的錯誤訊息。
+`mat-table` 能不能正常顯示，關鍵在於三個地方的名稱要完全一致：HTML 裡 `matColumnDef` 的欄位名稱、TypeScript 裡 `displayedColumns` 的內容，以及資料物件的屬性名稱。
 
-⚠️ 這也是實務上最常見的除錯情境，如果表格顯示不出來，第一件事就是檢查這三個地方是不是對得上。
+只要其中一個拼錯，畫面就可能一片空白，或出現錯誤訊息。所以如果表格顯示不出來，第一件事就是檢查這三個地方有沒有對上。
 -->
 
 ---
@@ -457,9 +471,11 @@ const ELEMENT_DATA = [
 ```
 
 <!--
-我們直接用程式碼對照一次給大家看：HTML 裡 matColumnDef="position"，對應到 TS 的 displayedColumns 陣列裡也要有 'position' 這個字串，資料物件 ELEMENT_DATA 裡也要有 position 這個屬性。三個地方，同一個名字，缺一不可。
+我們用程式碼再對照一次。
 
-大家以後自己刻表格的時候，可以把這張投影片當成檢查清單，一個一個核對。
+HTML 裡寫了 `matColumnDef` 等於 position；TypeScript 的 `displayedColumns` 陣列裡也要有 position；`ELEMENT_DATA` 的資料物件裡，也要有 position 這個屬性。
+
+三個地方，同一個名稱，缺一不可。之後自己做表格時，可以把這頁當作檢查清單。
 -->
 
 ---
@@ -470,5 +486,7 @@ layout: end
 ### 善用 Angular Material 提供的 mat-table，輕鬆打造具備分頁的資料表格
 
 <!--
-這一章我們學會了怎麼用 Angular Material 的 mat-table 快速做出一個含分頁功能的表格，也搞懂了 HTML、TypeScript、資料三者要怎麼對應。下一章我們會接著看 mat-icon，讓介面更完整。辛苦大家了！
+這一章我們學會了用 `mat-table` 建立有分頁功能的表格。我們從官方範例取得 HTML，用 `ng-container` 包住每個欄位而不破壞表格結構。接著匯入 `MatTableModule` 和 `MatPaginatorModule`，用 interface 定義資料，用 `MatTableDataSource` 包裝資料，並在 `ngAfterViewInit` 設定分頁器。最重要的是，HTML 的欄位、`displayedColumns` 和資料屬性三者要一致。
+
+下一章，我們會學習 Material 的圖示元件 `mat-icon`。我們下一章見。
 -->

@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要來學「訂閱」，也就是 RxJS 裡的 Subscription。
+上一章我們學了同步與非同步，也認識了 Observable 和 `subscribe`。這一章，我們要用 RxJS 的 Subject，自己建立一個可以被訂閱的資料來源。
 
-大家有沒有遇過這種情況：一個頁面的資料在 Service 裡改變了，另一個正在畫面上的元件卻完全不知道，還是顯示舊資料？這就是我們接下來要解決的問題——讓元件之間可以「即時」同步資料，而不是各自讀各自的、資料一改就對不上。
-
-學完這一章，大家會知道怎麼用 RxJS 的 Subject 建立一個可以被訂閱的資料來源，並且讓多個元件同時監聽同一份資料的變化。
+想像 Service 裡的資料改變了，但畫面上另一個元件完全不知道，還在顯示舊資料。這一章要解決的，就是讓多個元件即時同步同一份資料。
 -->
 
 ---
@@ -69,7 +67,7 @@ layout: default
 - **如何訂閱** — 在元件中注入 Service 並呼叫 subscribe()
 
 <!--
-這張投影片先讓大家看一下整章的路線圖。我們會先搞懂訂閱跟三種 Subject 的差異，接著實際動手，在一個獨立的 Service 檔案裡，一步一步宣告 Subject、公開成 Observable、寫 next() 方法，最後回到元件裡示範怎麼呼叫 subscribe() 完成訂閱。整個流程走完，大家就能自己刻出一套可重複使用的訂閱機制。
+這一章會先說明什麼是訂閱、為什麼需要它，以及三種 Subject 的差別。接著實際動手：建立一個 Service，在裡面宣告 Subject、用 `asObservable` 對外公開、撰寫用 `next` 更新資料的方法。最後回到元件裡呼叫 `subscribe`，並做一個購物車數量同步的練習。
 -->
 
 ---
@@ -81,7 +79,7 @@ class: flex flex-col justify-center items-center text-center
 # What is a Subscription?
 
 <!--
-先讓大家對「訂閱」這個詞有點感覺。我們平常訂閱一個 YouTube 頻道，代表以後那個頻道一有新影片，我們就會收到通知，不用自己每天跑去看有沒有更新。RxJS 的訂閱其實就是一樣的概念，只是把「頻道」換成程式裡的資料來源。
+訂閱頻道之後，有新影片就會收到通知。RxJS 的訂閱也是一樣，只是頻道換成了資料來源。
 -->
 
 ---
@@ -101,11 +99,11 @@ class: flex flex-col justify-center items-center text-center
 | Angular 元件角度 | `ngOnInit` 只讀取一次，資料更新後無感知 | 資料一變更，訂閱回呼自動觸發 |
 
 <!--
-這張投影片把訂閱的概念講清楚。訂閱最重要的一句話就是「監聽資料來源的變化，資料更新時自動執行對應邏輯」，大家可以先把這句話記起來。
+訂閱，英文是 Subscription，是 RxJS 的核心機制。它讓程式可以「監聽資料來源的變化，並在資料更新時自動執行對應的邏輯」。
 
-延續剛剛 YouTube 的比喻：頻道沒訂閱，不管更新幾支影片我們都不會知道；訂閱了之後，一有新內容就會推播通知我們。放到 Angular 裡也一樣——`ngOnInit` 就像是我們自己「主動」跑去看一次頻道，只看得到當下的內容；訂閱之後，資料一變，回呼函式就會自動被觸發，完全不用我們手動去檢查。
+延續頻道的比喻：沒有訂閱，頻道更新再多內容，我們都不會知道；訂閱之後，一有新內容就會收到通知。
 
-這個機制在實務上非常常見，只要牽扯到「一個地方改資料、多個地方要同步顯示」的情境，幾乎都會用到訂閱。
+放到 Angular 來看，`ngOnInit` 就像自己主動去看一次頻道，只看得到當下的內容；訂閱之後，資料一改變，回呼函式就會自動觸發。只要是「一個地方改資料、好幾個地方要同步顯示」的情況，幾乎都會用到訂閱。
 -->
 
 ---
@@ -117,7 +115,7 @@ class: flex flex-col justify-center items-center text-center
 # Why Use Subscription?
 
 <!--
-接下來我們具體來看，沒有訂閱機制時，Angular 元件會遇到什麼樣的痛點。
+接下來我們具體看看，沒有訂閱的時候，元件會遇到什麼問題。
 -->
 
 ---
@@ -148,11 +146,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這張投影片點出了問題的核心：`ngOnInit` **只會在元件初始化時執行一次**，這是它的天生限制，不是寫錯了。所以如果 Service 裡的資料之後又被改了，元件完全不會知道，畫面就會一直停留在舊資料。
+在頁面之間傳資料時，我們通常會用 Service，並在 `ngOnInit` 讀取資料。但 `ngOnInit` 只會在元件初始化時執行一次。之後 Service 裡的資料再改變，元件不會知道，畫面就一直停在舊的資料。
 
-我們可以想成，`ngOnInit` 就像是「開店前先看一次進貨單」，只看那一次；訂閱則像是請廠商「以後每次補貨都主動通知我」，貨一到我們馬上就知道，不用自己一直跑去倉庫確認。
+可以想成開店前看一次進貨單，就只看那一次。訂閱則像是請廠商之後每次補貨都主動通知，貨一到馬上就知道。
 
-用了訂閱之後，大家可以看到右邊這一欄，元件不用手動觸發、不用額外按鈕，資料一變就自動反映在畫面上，這也是我們接下來要動手實作的目標。
+看下方的比較，不用訂閱的話，資料更新後要手動重新讀取，還需要額外的按鈕或事件觸發。使用訂閱之後，元件會自動監聽，資料一變，畫面就立刻更新。
 -->
 
 ---
@@ -164,7 +162,7 @@ class: flex flex-col justify-center items-center text-center
 # Three Types of Subject
 
 <!--
-訂閱的觀念有了，接著我們來看 RxJS 到底提供了哪幾種 Subject 可以用。
+了解訂閱的觀念之後，我們來看 RxJS 提供了哪幾種 Subject。
 -->
 
 ---
@@ -182,9 +180,11 @@ RxJS 提供三種常見的 Subject，依使用情境選擇：
 本章重點介紹 **Subject** 與 **BehaviorSubject**，這兩種是實務中最常使用的類型。
 
 <!--
-這三種 Subject 大家可以用「加入群組聊天」的時間點來理解差異。`Subject` 就像是你加入群組後，只看得到你加入之後大家傳的訊息，之前聊過什麼完全看不到；`BehaviorSubject` 則像是加入時管理員會先告訴你「目前的狀態」（也就是初始值），之後也能收到後續更新；`ReplaySubject` 更貼心一點，會把最近 N 則歷史訊息重播給你看，讓你補上之前錯過的內容。
+RxJS 提供三種常見的 Subject，可以用加入群組聊天來理解它們的差別。
 
-實務上我們最常用的是 `Subject` 跟 `BehaviorSubject`，尤其 `BehaviorSubject` 因為一定有初始值、訂閱當下就能拿到最新狀態，非常適合拿來管理像 Loading 狀態這種「隨時都要有一個值」的情境。接下來的範例我們就會用這兩種來實作。
+`Subject` 最基本，沒有初始值，就像加入群組後，只看得到加入之後的訊息。`BehaviorSubject` 需要設定初始值，訂閱的當下會立刻拿到最新的一筆資料，就像加入群組時，管理員先告訴你目前的狀態。`ReplaySubject` 則會把最後幾筆歷史資料重新播放給新的訂閱者。
+
+實務上最常用的是 `Subject` 和 `BehaviorSubject`。尤其 `BehaviorSubject` 一定有值，很適合管理載入狀態這類隨時都需要有一個值的情況。
 -->
 
 ---
@@ -196,7 +196,7 @@ class: flex flex-col justify-center items-center text-center
 # Create a Dedicated Service
 
 <!--
-了解類型之後，我們開始動手實作，第一步是把訂閱邏輯集中放到一個獨立的 Service 檔案裡。
+接下來開始動手。第一步，把訂閱的邏輯集中放在一個獨立的 Service 裡。
 -->
 
 ---
@@ -227,11 +227,11 @@ export class LoadingService {
 </div>
 
 <!--
-帶大家看一下這個範例，目的是建立我們後面要用的 `LoadingService`，先把骨架搭起來。我們在 `@service/` 資料夾下新增 `loading.service.ts`，命名上就直接對應這個 Service 要管理的功能，這樣之後回頭找程式碼會很好找。
+建議每個訂閱功能都建立一個獨立的 Service，用功能來命名。例如要管理載入狀態，就在 `@service` 資料夾下建立 `loading.service.ts`。
 
-這裡先產生一個空的 class，加上 `@Injectable({ providedIn: 'root' })`，讓 Angular 知道這是一個可以在整個應用程式共用的服務。等一下我們會陸續把 Subject 變數、公開的 Observable、還有 show/hide 方法都加進這個檔案。
+這裡先建立基本的結構：加上 `@Injectable`，`providedIn: 'root'`，讓這個 Service 在整個應用程式裡共用。等一下會陸續加入 Subject、公開的 Observable，以及 show 和 hide 方法。
 
-⚠️ 提醒大家，慣例上是一個訂閱功能對應一個 Service，不要把不相關的功能全部塞進同一個 Service，不然之後維護會很痛苦。
+一個訂閱功能對應一個 Service，不要把不相關的功能都塞在同一個 Service 裡，否則之後很難維護。
 -->
 
 ---
@@ -243,7 +243,7 @@ class: flex flex-col justify-center items-center text-center
 # Declare Subject Variables
 
 <!--
-Service 骨架有了，接下來我們要在裡面放進真正負責存資料的 Subject 變數。
+Service 的骨架有了，接下來放進真正負責存放資料的 Subject。
 -->
 
 ---
@@ -271,11 +271,11 @@ export class LoadingService {
 </div>
 
 <!--
-這段範例的目的是在 Service 裡宣告真正存資料的 Subject。大家可以看到我們同時示範了 `BehaviorSubject` 跟 `Subject` 兩種寫法，`BehaviorSubject` 一定要給初始值（這裡是 `false`），`Subject` 則不用。
+在 Service 裡，從 rxjs 引入 `BehaviorSubject` 和 `Subject`，各宣告一個變數。`BehaviorSubject` 一定要給初始值，這裡是 false；`Subject` 則不需要。
 
-關鍵行是變數前面的 `private`，這個修飾詞很重要——它就像是把資料放進「員工專用倉庫」，只有 Service 內部的人（也就是我們自己寫的方法）可以直接進去搬動東西，外部元件完全不能碰。
+關鍵是變數前面的 `private`。它就像把資料放進員工專用的倉庫，只有 Service 內部的方法可以改動，外部元件不能直接碰。
 
-⚠️ 這是同學很容易忽略的一個細節：如果忘記加 `private`，外部元件就能直接呼叫 `loading$.next()`，資料就不再是「集中管理」，之後除錯會很痛苦，因為你不知道到底是誰改了這個值。
+如果忘了加 `private`，外部元件就能直接修改資料，資料就不再是集中管理，之後出問題時，很難知道到底是誰改了這個值。
 -->
 
 ---
@@ -298,9 +298,11 @@ private loading$ = new BehaviorSubject<boolean>(false);
 </div>
 
 <!--
-大家應該也注意到變數名稱都是 loading$ 這種字尾加 $ 的寫法，這是 RxJS 社群的命名慣例，叫做 Finnish notation。一看到 $ 結尾，就知道這個變數是 Observable 或 Subject，要呼叫 .subscribe() 才能拿到裡面的值，不能像一般變數直接使用；這樣可以跟 loading（布林值本身）這種一般變數清楚區分開來。
+你可能注意到，變數名稱後面都加了一個錢字號，例如 `loading$`。這是 RxJS 社群的命名慣例。
 
-這只是命名習慣，不是 TypeScript 或 Angular 規定的語法，不加 $ 一樣能執行，只是可讀性會變差，業界普遍會遵守這個慣例，大家也養成習慣比較好。
+看到錢字號結尾，就知道這是 Observable 或 Subject，要用 `subscribe` 才能拿到裡面的值，不能像一般變數直接使用。看表格，`loading` 是布林值本身，`loading$` 則是一個 `BehaviorSubject`。
+
+這只是命名習慣，不加也能執行，但加上之後可讀性更好，業界普遍都會遵守。
 -->
 
 ---
@@ -312,7 +314,7 @@ class: flex flex-col justify-center items-center text-center
 # Expose as Observable
 
 <!--
-資料來源鎖起來了，但外部完全看不到也不行，所以我們需要開一個「觀察窗口」給外部元件用。
+資料來源設成 `private` 之後，外部完全看不到也不行，所以我們要開一個讓外部觀察的窗口。
 -->
 
 ---
@@ -339,11 +341,11 @@ export class LoadingService {
 外部元件透過 `_loading$` 訂閱資料，但無法呼叫 `next()` 修改內容，達到資料封裝的目的。
 
 <!--
-這段範例的目的是幫剛剛鎖起來的 Subject 開一個「唯讀窗口」。我們新增一個公開變數 `_loading$`，呼叫 `asObservable()` 把 `private` 的 Subject 轉成 Observable。
+`private` 的 Subject 不能被外部直接訂閱，所以我們再宣告一個公開的變數 `_loading$`，呼叫 `asObservable()`，把 Subject 轉成一個只能觀察、不能修改的 Observable。
 
-大家可以想成，`private` 的 Subject 是倉庫裡的貨物本體，`asObservable()` 產生的則是一面「單向玻璃窗」——外面的人（其他元件）可以透過這面窗看到裡面貨物的狀態變化，但沒辦法伸手進去動貨物。這就是為什麼 Observable 沒有 `next()` 方法。
+可以把它想成一面單向玻璃：外部元件可以透過它看到資料的變化，但沒辦法伸手進去改，因為 Observable 沒有 `next` 方法。
 
-⚠️ 提醒同學，命名習慣上加底線的 `_loading$` 代表這是要公開給外部訂閱用的，跟前面 `private` 的 `loading$` 要區分清楚，不要搞混两者的用途。
+這裡用底線開頭的 `_loading$`，代表公開給外部訂閱用的版本，要和 `private` 的 `loading$` 區分清楚。
 -->
 
 ---
@@ -355,7 +357,7 @@ class: flex flex-col justify-center items-center text-center
 # Update via next()
 
 <!--
-外部能看到資料了，但總要有人負責改資料，這一段我們就來寫真正觸發更新的方法。
+外部可以觀察資料了，接下來要寫負責更新資料的方法。
 -->
 
 ---
@@ -384,11 +386,11 @@ export class LoadingService {
 ```
 
 <!--
-這段範例的目的是提供對外的公開方法，讓外部元件透過 `show()` 跟 `hide()` 來改資料，而不是直接操作 Subject。
+在 Service 裡寫兩個公開的方法：`show` 和 `hide`。
 
-大家看一下這兩個方法內部做的事情很單純，就是呼叫 `next()` 把新的值推送出去——`show()` 推 `true`，`hide()` 推 `false`。所有訂閱這個 Subject 的地方，都會在這一刻同時收到最新的值。
+方法裡面很單純，就是呼叫 `next`，把新的值推送出去。`show` 推送 true，`hide` 推送 false。推送的那一刻，所有訂閱這個資料的地方，都會同時收到最新的值。
 
-這樣設計的好處是，以後如果我們想在改資料的同時做一些額外處理（比如記錄 log），只需要改這兩個方法，不用去改每個呼叫的地方。
+外部元件統一透過這兩個方法來修改資料，而不是直接操作 Subject。這樣之後如果想在修改資料時多做一些處理，例如記錄 log，只要改這兩個方法就好。
 -->
 
 ---
@@ -405,11 +407,11 @@ export class LoadingService {
 | `_loading$` | `Observable` | ❌ | 對外公開，僅供訂閱觀察 |
 
 <!--
-這張投影片是一個容易搞混的地方，特別整理出來提醒大家。⚠️ 重點是：能呼叫 `next()` 修改資料的，永遠只有 `private` 的原始 Subject（這裡是 `loading$`），公開給外部的 `_loading$` 是 Observable，它天生就沒有 `next()` 這個方法可以呼叫。
+這頁整理一個容易搞混的地方。
 
-同學常犯的錯誤是在 Service 內部寫方法時，不小心呼叫成 `this._loading$.next(...)`，結果編譯器就會報錯說找不到 `next` 方法。看到這種錯誤，第一個要檢查的就是「我是不是呼叫錯變數了」。
+能呼叫 `next` 修改資料的，只有 `private` 的原始 Subject，也就是 `loading$`。公開的 `_loading$` 是 Observable，本身就沒有 `next` 方法。
 
-這張表格大家可以當作日後複習的小抄，把兩個變數的角色分清楚，之後寫 Service 就不會搞混。
+常見的錯誤是在 Service 裡寫成 `this._loading$.next`，結果編譯時出現找不到 `next` 的錯誤。看到這個錯誤，第一件事就是檢查是不是呼叫錯了變數。
 -->
 
 ---
@@ -421,7 +423,7 @@ class: flex flex-col justify-center items-center text-center
 # How to Subscribe?
 
 <!--
-Service 那邊的邏輯都準備好了，接下來我們換到元件端，看看實際上要怎麼訂閱這個資料來源。
+Service 這邊都準備好了，接下來換到元件，看看怎麼訂閱這個資料來源。
 -->
 
 ---
@@ -446,11 +448,11 @@ export class AppComponent {
 ```
 
 <!--
-這段範例的目的是讓元件拿到 `LoadingService` 的實例，這是訂閱前必要的第一步。我們在 constructor 的參數上加 `private loadingService: LoadingService`，Angular 的依賴注入機制就會自動幫我們準備好這個 Service 的實例。
+第一步，在元件的 `constructor` 注入 `LoadingService`，Angular 會自動準備好這個 Service 的實例。
 
-大家可以把這一步想成「先辦一張圖書館借閱證」，有了這張證（也就是注入好的 Service），我們才能接著去借書（訂閱資料）。
+可以想成先辦一張圖書館的借閱證，有了證件，才能接著去借書。
 
-⚠️ 注意這裡只是「拿到」Service，還沒有開始訂閱，訂閱的動作我們放在下一頁的 `ngOnInit` 裡進行。
+要注意，這一步只是取得 Service，還沒有開始訂閱，訂閱的動作放在下一頁的 `ngOnInit` 裡。
 -->
 
 ---
@@ -472,13 +474,13 @@ ngOnInit(): void {
 </div>
 
 <!--
-這段範例的目的是真正開始「訂閱」這個動作。我們在 `ngOnInit` 裡呼叫 `this.loadingService._loading$.subscribe(...)`，傳進去的回呼函式，就是每次資料更新時會被自動執行的邏輯。
+第二步，在 `ngOnInit` 裡訂閱公開的 `_loading$`。
 
-帶大家看一下這裡的 `res`，它代表 Service 那邊 `next()` 推送過來的最新值，名字可以自己取，習慣上會取一個有意義的名字，例如這裡如果是 boolean 狀態，也可以取名叫 `isLoading`。
+傳進 `subscribe` 的函式，就是每次資料更新時會自動執行的邏輯。這裡的 `res` 代表 Service 用 `next` 推送過來的最新值，名稱可以自己取，例如取名叫 `isLoading` 會更有意義。
 
-執行後的預期結果是：只要 Service 呼叫一次 `show()` 或 `hide()`，這裡的 console.log 就會馬上印出對應的值，完全不需要我們手動再去讀取一次資料，這就是訂閱機制發揮作用的地方。
+執行之後，只要 Service 呼叫一次 `show` 或 `hide`，這裡的 `console.log` 就會馬上印出對應的值，不需要手動再去讀取資料。
 
-⚠️ 提醒同學，訂閱通常要寫在 `ngOnInit`，而不是 constructor，因為 constructor 執行時機較早，也不是 Angular 建議放商業邏輯的地方。
+訂閱通常寫在 `ngOnInit`，而不是 `constructor`，因為 `constructor` 主要用來注入，不建議放邏輯。
 -->
 
 ---
@@ -508,11 +510,13 @@ ngOnInit(): void {
 
 
 <!--
-我們一起把整個流程串起來複習一次。左邊是 Service 端要做的三件事：先用 `private` 藏好資料來源，再用 `asObservable()` 開一個唯讀窗口給外部看，最後提供 `show()` / `hide()` 這種公開方法，統一透過 `next()` 去改資料。
+我們把整個流程串起來複習一次。
 
-右邊則是元件端要做的三件事：先在 constructor 注入 Service，再到 `ngOnInit` 訂閱公開的 Observable，訂閱回呼一觸發，就能拿到最新資料去更新畫面。
+Service 這邊做三件事：用 `private` 宣告 Subject 作為資料來源；用 `asObservable` 對外公開一個唯讀的 Observable；提供 `show` 和 `hide` 方法，透過 `next` 更新資料。
 
-這一整套模式非常通用，不只是 Loading 狀態，未來大家在處理任何「一個地方改資料、多個地方要同步」的需求時，都可以直接套用這個結構。
+元件這邊也做三件事：在 `constructor` 注入 Service；在 `ngOnInit` 訂閱公開的 Observable；在訂閱的回呼裡取得最新值，更新畫面。
+
+這套模式非常通用，不只是載入狀態，任何需要多處同步的資料都可以套用。
 -->
 
 ---
@@ -544,9 +548,11 @@ layout: default
 兩個元件彼此沒有父子關係，必須透過 Service 搭配 Subject，才能讓其中一邊改資料、另一邊即時收到通知。
 
 <!--
-這是實務上非常典型的訂閱情境：購物車數量要在網站的好幾個地方同步顯示（導覽列徽章、結帳頁、購物車頁），只要有任何一個地方新增商品，其他地方都要立刻反映最新數字，不能等使用者重新整理頁面才看到正確數量。
+我們來做一個練習，這是電商網站很常見的情境。
 
-大家可以想像今天負責開發一個購物網站，商品列表跟導覽列是完全不同的元件、甚至可能不在同一個路由畫面上，這時候就是我們這一章學的訂閱機制派上用場的時候。
+使用者在商品列表頁按下「加入購物車」，畫面上方導覽列的購物車數字，要立即同步更新，不用重新整理頁面。
+
+這裡有兩個元件：商品列表 `ProductListComponent`，負責按下按鈕；導覽列 `HeaderComponent`，負責顯示數量。兩者沒有父子關係，所以要透過 Service 搭配 Subject，讓一邊改資料、另一邊即時收到通知。
 -->
 
 ---
@@ -564,7 +570,13 @@ layout: default
 6. `HeaderComponent` 樣板顯示 `cartCount`，確認按下商品列表的按鈕後，徽章數字會即時更新
 
 <!--
-大家可以先自己動手寫寫看，重點是想清楚：哪個變數該是 private、哪個該公開；ProductListComponent 該呼叫 Service 的哪個方法；HeaderComponent 又該訂閱哪一個變數。卡住的地方沒關係，下一頁會有解題提示。
+任務有六個步驟。
+
+第一，建立 `CartService`，用 `private` 的 `BehaviorSubject` 儲存購物車數量，初始值是 0。第二，用 `asObservable` 對外公開 `_cartCount$`。第三，提供 `addItem` 方法，每次呼叫就把數量加 1，再用 `next` 推送。第四，商品列表元件注入 `CartService`，按鈕點擊時呼叫 `addItem`。第五，導覽列元件注入 `CartService`，在 `ngOnInit` 訂閱 `_cartCount$`，把最新數量存進 `cartCount`。第六，導覽列顯示 `cartCount`，確認按下按鈕後數字會即時更新。
+
+想一想，哪個元件負責推送資料，哪個元件負責訂閱？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -581,7 +593,11 @@ layout: default
 5. 訂閱動作寫在 `ngOnInit`，確保元件一載入就開始監聽後續的數量變化
 
 <!--
-對照一下大家的答案，最容易搞混的地方是誤以為 ProductListComponent 也要注入、訂閱 Observable——其實它只負責「推資料」，呼叫 addItem() 就好；真正需要「訂閱、接收資料」的是 HeaderComponent。另一個常見疏漏是忘記用 .value 讀取目前數量，直接把 next() 寫死成固定數字，這樣多次點擊也不會累加。下一頁我們直接看完整解答。
+我們來看解題提示。
+
+第一，`BehaviorSubject` 一定要給初始值，這裡是 0。第二，要讀取目前的值，可以用 `.value`，這是 `BehaviorSubject` 才有的屬性，加 1 之後再用 `next` 推送。第三，商品列表元件只需要呼叫 `addItem`，不能直接操作 Subject。第四，導覽列訂閱的是公開的 `_cartCount$`。第五，訂閱寫在 `ngOnInit`。
+
+最容易搞混的，是以為商品列表也要訂閱。其實它只負責推送，真正需要訂閱的是導覽列。
 -->
 
 ---
@@ -610,7 +626,9 @@ export class CartService {
 ```
 
 <!--
-先看 CartService 的資料來源部分：private 的 cartCount$ 是真正存資料的 BehaviorSubject，初始值為 0，代表購物車一開始沒有商品；公開的 _cartCount$ 透過 asObservable() 提供給外部訂閱，但無法呼叫 next()，維持資料封裝。負責改資料的方法下一頁接著看。
+我們看完整的解答，先看 `CartService` 的資料來源。
+
+`private` 的 `cartCount$` 是真正存放資料的 `BehaviorSubject`，初始值 0，代表購物車一開始沒有商品。公開的 `_cartCount$` 用 `asObservable` 提供給外部訂閱，但不能呼叫 `next`。
 -->
 
 ---
@@ -634,7 +652,11 @@ layout: default
 ```
 
 <!--
-接續上一頁的 class，addItem() 讀取 cartCount$.value 目前的數量、加一後再 next() 推送出去，這也是為什麼一定要用 BehaviorSubject 而不是 Subject——因為 BehaviorSubject 才有 .value 可以直接讀到目前的值。clear() 則示範結帳完成後把購物車數量歸零的情境，同樣是實務上會需要的操作。
+接著是 `CartService` 的方法。
+
+`addItem` 讀取 `cartCount$.value`，也就是目前的數量，加 1 之後用 `next` 推送出去。這也是為什麼這裡要用 `BehaviorSubject`，因為只有它才能用 `.value` 直接讀到目前的值。
+
+`clear` 則示範結帳完成後，把數量歸零的情況。
 -->
 
 ---
@@ -671,7 +693,9 @@ export class ProductListComponent {
 ```
 
 <!--
-ProductListComponent 的角色是「推送資料的一方」，注入 CartService 之後，按鈕的 (click) 綁定 addToCart()，內部只單純呼叫 cartService.addItem()，把「數量要怎麼變」這件事完全交給 Service 處理，元件本身不需要知道、也不需要儲存目前的購物車數量。
+接著是商品列表元件，它是推送資料的一方。
+
+在 `constructor` 注入 `CartService`，按鈕用小括號 `click` 綁定 `addToCart`，方法裡只呼叫 `cartService.addItem()`。數量要怎麼改變，完全交給 Service 處理，元件本身不需要知道目前的數量。
 -->
 
 ---
@@ -707,7 +731,9 @@ export class HeaderComponent implements OnInit {
 ```
 
 <!--
-HeaderComponent 的角色是「接收資料的一方」，注入 CartService 後，ngOnInit 訂閱公開的 _cartCount$，只要 ProductListComponent 那邊呼叫一次 addItem()，這裡的 subscribe 回呼就會自動執行，把最新數量存進 cartCount 屬性。樣板要怎麼顯示這個屬性，下一頁接著看。
+接著是導覽列元件，它是接收資料的一方。
+
+注入 `CartService` 之後，在 `ngOnInit` 訂閱 `_cartCount$`。只要商品列表那邊呼叫一次 `addItem`，這裡的回呼就會自動執行，把最新的數量存進 `cartCount`。
 -->
 
 ---
@@ -724,9 +750,9 @@ layout: default
 ```
 
 <!--
-樣板只需要單純綁定 cartCount，因為值的更新是在 TypeScript 那邊的 subscribe 回呼裡完成的，Angular 的變更偵測會自動幫我們把最新數字反映到畫面上——完全不需要重新整理頁面，也不需要兩個元件之間有任何父子關係。
+導覽列的模板很簡單，只要用雙大括號顯示 `cartCount`。
 
-大家可以拿這三個元件的完整程式碼跟自己寫的對照，確認「誰負責推資料、誰負責收資料」的分工是不是清楚。
+數值的更新是在訂閱的回呼裡完成的，Angular 會自動把最新的數字反映到畫面上，不用重新整理頁面，兩個元件之間也不需要任何父子關係。
 -->
 
 ---
@@ -782,9 +808,11 @@ export class AppComponent { }
 </div>
 
 <!--
-這一頁把兩個元件放在同一張投影片上，讓大家看清楚整體運作：ProductListComponent 跟 HeaderComponent 在畫面上是完全平行、互不認識的兩個元件，兩者也沒有 @Input、@Output 這種父子傳值關係。
+最後，把兩個元件放進 `app.component`。
 
-它們唯一的共同點，就是都注入了同一個 CartService。點擊商品列表的按鈕，會呼叫 addItem() 推送新數量；這個推送會透過 BehaviorSubject 廣播出去，凡是訂閱了 _cartCount$ 的元件（這裡是 HeaderComponent）都會立刻收到通知並更新畫面。這正是訂閱機制最大的價值：讓沒有直接關係的元件也能保持資料同步。
+先在 `imports` 加入 `HeaderComponent` 和 `ProductListComponent`，HTML 裡才能直接使用它們的標籤。兩個元件在畫面上是平行的，彼此不認識，也沒有 `@Input` 或 `@Output`。
+
+它們唯一的共同點，是都注入了同一個 `CartService`。商品列表呼叫 `addItem` 推送新數量，訂閱了 `_cartCount$` 的導覽列就會立刻收到並更新畫面。這就是訂閱最大的價值：讓沒有直接關係的元件，也能保持資料同步。
 -->
 
 ---
@@ -795,7 +823,7 @@ layout: end
 ### 掌握 RxJS Subject，實現元件間的即時資料同步！
 
 <!--
-這一章就到這邊，大家辛苦了。我們從「為什麼 ngOnInit 感知不到資料變化」的痛點出發，一步步認識了 Subject、BehaviorSubject，也親手在 Service 裡搭出一整套訂閱機制。
+這一章我們學了用 Subject 建立訂閱機制。`ngOnInit` 只執行一次，沒辦法感知之後的資料變化，訂閱則能在資料更新時自動通知。實作的模式是：在 Service 用 `private` 宣告 Subject，用 `asObservable` 對外公開，提供方法透過 `next` 更新資料；元件注入 Service，在 `ngOnInit` 訂閱。需要初始值或讀取目前的值時，就用 `BehaviorSubject`。
 
-回去可以試著把今天的 `LoadingService` 範例自己敲一次，感受一下 Service 改一次資料、多個元件同時收到通知的那種感覺，這會幫助大家真正把訂閱這個概念記在腦子裡。下一章我們會延伸應用，看看訂閱在實際專案中還能怎麼玩。
+下一章，我們會用訂閱來實作全站共用的載入畫面。我們下一章見。
 -->

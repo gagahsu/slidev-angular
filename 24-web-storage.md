@@ -46,13 +46,11 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎來到「網頁儲存（Web Storage）」的主題！
-你想想看，今天我們點了一款線上養成遊戲，辛辛苦苦把勇者練到 99 級。
-結果不小心按到鍵盤 F5 重新整理，或者是瀏覽器閃退，再打開時勇者居然回到了 1 級新手村！
-這絕對會讓人氣到想砸電腦！
-之前我們學的 Service，雖然能幫我們在各個房間傳遞貨物。
-但只要你一刷新網頁，Service 還是會當場「失憶」，重新歸零。
-所以，今天我們要來學習如何把資料「刺青（持久化）」在瀏覽器的硬碟裡！
+上一章我們用 Service 在頁面之間傳遞資料，但也提到一個限制：只要使用者按 F5 重新整理，Service 裡的資料就會歸零。
+
+想像玩一款網頁遊戲，好不容易把角色練到 99 級，重新整理之後卻回到 1 級，這一定很令人沮喪。
+
+這一章，我們要學習網頁儲存，把資料存在瀏覽器裡，重新整理之後資料依然存在。
 -->
 
 ---
@@ -67,11 +65,7 @@ layout: default
 - **儲存跟讀取** — setItem 與 getItem 用法
 
 <!--
-今天我們的瀏覽器置物櫃大作戰計畫如下：
-先了解三種網頁儲存的法寶：Cookie、localStorage 與 sessionStorage。
-接著，看看比較古老但身分驗證必備的 Cookie 怎麼在 Angular 裡透過套件安裝與 set / get 使用。
-然後，對決 localStorage 和 sessionStorage 這兩個親兄弟，釐清它們的生命週期和地盤範圍。
-最後，掌握最核心的儲存與讀取 API：setItem 和 getItem 的用法！
+這一章會先介紹網頁儲存的三種方法：Cookie、localStorage 和 sessionStorage。接著看 Cookie 怎麼在 Angular 裡使用，包括安裝套件、存入和讀取。然後比較 localStorage 和 sessionStorage 的差別，最後學習它們的存取方法 `setItem` 和 `getItem`。
 -->
 
 ---
@@ -83,7 +77,7 @@ class: flex flex-col justify-center items-center text-center
 # Web Storage Overview
 
 <!--
-第一站，我們先來挑選合適的置物櫃。
+我們先來認識三種網頁儲存的方式。
 -->
 
 ---
@@ -101,11 +95,13 @@ Cookie 主要用於 API 身分驗證，使用頻率較低。localStorage 與 ses
 | sessionStorage | 約 5–10MB | 自訂資料，分頁關閉即消失 |
 
 <!--
-網頁的儲存方式主要有這三種：Cookie、localStorage 和 sessionStorage。
-這三種地方，大叔用日常生活的容器來比喻。
-第一種 Cookie：容量極小（只有 4KB），它就像是你的「通行證/身分證」。通常是伺服器要用來確認你到底是誰的，每次發請求都會自動帶上它。
-第二種 localStorage：容量非常大（有 5 到 10MB），它就像是網頁在你瀏覽器裡的「保險箱」。只要你不主動去把它清空，它裡面的資料就算放了一萬年、關掉瀏覽器再開，依然都在。
-第三種 sessionStorage：容量一樣大，但它像是一個「臨時保管箱」。小命比較短。只要你把這個網頁分頁關掉，保管箱裡的東西就會當場銷毀，開新分頁也是讀不到的喔！
+除了用 Service 在元件之間傳遞資料，有時候我們需要把資料保存在瀏覽器本地。網頁的儲存方式有三種：Cookie、localStorage 和 sessionStorage。
+
+Cookie 的容量很小，大約 4KB，主要用在登入和身分驗證。我們可以把它想成通行證，伺服器用它來確認使用者是誰。
+
+localStorage 的容量大約 5 到 10MB，像是一個保險箱。只要不主動清除，關掉瀏覽器再打開，資料都還在。
+
+sessionStorage 的容量一樣，但它像是一個臨時保管箱，分頁關閉之後，資料就會消失。
 -->
 
 ---
@@ -117,7 +113,7 @@ class: flex flex-col justify-center items-center text-center
 # Cookie Usage
 
 <!--
-既然認識了置物櫃，我們先來看看那個管身分驗證的 Cookie 要怎麼在 Angular 裡使用。
+我們先來看 Cookie 怎麼在 Angular 裡使用。
 -->
 
 ---
@@ -133,10 +129,11 @@ npm install ngx-cookie-service@19.0.0
 ```
 
 <!--
-因為 Angular 本身沒有內建方便操作 Cookie 的功能。
-所以在業界，我們通常會安裝第三方套件 `ngx-cookie-service`。
-大叔特別提醒大家：安裝時請指定安裝 `@19.0.0` 版本！
-因為最新版有時候會跟 Angular 的版本打架，噴出一堆相容性紅字，裝這個穩定版本可以讓我們少掉很多白頭髮！
+Angular 本身沒有內建方便操作 Cookie 的工具，目前主流的做法是安裝第三方套件 `ngx-cookie-service`。
+
+安裝時請指定 19.0.0 版本。因為最新版跟我們使用的 Angular 19 有相容性的問題，指定版本可以避免安裝時出現錯誤。
+
+這也呼應了我們之前學的版本觀念：套件版本要和 Angular 版本對得上。
 -->
 
 ---
@@ -163,10 +160,11 @@ export class AppComponent {
 ```
 
 <!--
-安裝完成後，在你的元件 TS 檔裡。
-我們用 `inject(CookieService)` 的方式注入這個服務。
-把它指派給 `cookieService` 變數。
-這樣我們就能在元件內部，透過這個服務來存取 Cookie 了。
+安裝完成之後，在元件裡注入 `CookieService`。
+
+這裡用的是上一章學過的 `inject()` 寫法，從套件引入 `CookieService`，再宣告 `cookieService` 等於 `inject(CookieService)`。
+
+注入之後，就可以透過 `this.cookieService` 來存取 Cookie 了。
 -->
 
 ---
@@ -195,12 +193,11 @@ export class AppComponent {
 ```
 
 <!--
-存資料的語法是 `cookieService.set()`。
-這裡面最多可以傳入 7 個參數，其中前三個最重要：
-第一個是 Key（名稱），比如 'user_display_name'。
-第二個是 Value（值），比如 'Allen'。
-第三個是 Expires（過期天數），比如我們寫 7，就代表這個 Cookie 在 7 天後會自動灰飛煙滅。
-剩下的參數是用來做安全防護的，一般維持預設就可以了。
+儲存 Cookie 用的是 `cookieService.set()`。
+
+它最多可以傳入七個參數，其中前三個最重要。第一個是名稱，這裡是 `user_display_name`；第二個是值，這裡是 Allen；第三個是過期天數，這裡寫 7，代表 7 天後這個 Cookie 會被瀏覽器自動刪除。
+
+後面四個參數，分別是路徑、網域、是否只用加密連線傳送，以及跨站的限制，主要跟安全性有關，一般情況維持預設就可以了。
 -->
 
 ---
@@ -214,10 +211,9 @@ export class AppComponent {
 </div>
 
 <!--
-如果你想親眼看看它是不是真的存進去了。
-可以在瀏覽器按下 F12 開啟開發者工具。
-切換到「Application」分頁，在左側找到「Cookies」，點開你正在測試的網址。
-登登！你會看到剛才設定的 Key、Value 還有到期時間，都整整齊齊地躺在表格裡囉！
+存進去之後，可以在瀏覽器裡確認。
+
+按 F12 打開開發者工具，切換到 Application 頁籤，在左側找到 Storage 底下的 Cookies，點開正在測試的網址。就會看到剛才設定的名稱、值和到期時間。
 -->
 
 ---
@@ -238,10 +234,9 @@ export class AppComponent {
 ```
 
 <!--
-讀取的語法非常簡單：
-`cookieService.get('Key 名稱')`。
-拿剛才的例子來說，我們傳入 'user_display_name'，它就會回傳字串 'Allen'。
-如果這個 Key 根本不存在或者是早就過期被瀏覽器擦掉了，它就會摸摸鼻子回傳一個空字串給你。
+讀取 Cookie 用的是 `cookieService.get()`，傳入名稱就好。
+
+這裡傳入 `user_display_name`，就會取得 Allen。如果這個名稱不存在，或是已經過期被刪除了，會回傳空字串。
 -->
 
 ---
@@ -258,8 +253,11 @@ layout: default
 4. 進入 dashboard 時（`constructor`），讀取 `theme` 的值並用 `console.log` 印出
 
 <!--
-考察 cookieService.set() 前三個參數（key、value、過期天數）與 cookieService.get() 的基本語法。
-情境改為登入頁存值、儀表板頁讀值，貼近實務上跨頁面共享 Cookie 的用法。改為需求描述題，讓學員自行寫出完整程式碼而非填空。
+我們用一個小練習熟悉 Cookie。
+
+請在登入元件注入 `CookieService`，新增 `onLoginSuccess` 方法，登入成功時把 `theme` 設成 dark，有效期限 30 天。接著在後台元件也注入 `CookieService`，在 `constructor` 裡讀取 `theme` 的值並印出來。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -295,8 +293,13 @@ export class DashboardComponent {
 </div>
 
 <!--
-set 的第三個參數過期天數是 Cookie 的重要特性：不設定的話預設是 Session Cookie，關掉瀏覽器就消失。
-Cookie 綁定網域，所以就算換了頁面元件，只要同網域就能共用，這也是它跟元件內部變數最大的不同。
+我們來看答案。
+
+登入元件在 `onLoginSuccess` 裡呼叫 `set`，傳入 theme、dark 和 30。後台元件在 `constructor` 裡呼叫 `get('theme')`，印出 dark。
+
+Cookie 是綁定在網域上的，不是綁定在某個元件，所以不同頁面只要在同一個網域，都能讀到同一份資料。
+
+另外，如果沒有設定過期天數，Cookie 通常會在關閉瀏覽器時就消失。
 -->
 
 ---
@@ -308,7 +311,7 @@ class: flex flex-col justify-center items-center text-center
 # Differences & Usage
 
 <!--
-接下來，我們來看看更常用、而且不需要安裝任何套件的原生 Web Storage：localStorage 和 sessionStorage！
+接下來，我們看更常用、而且不需要安裝任何套件的 localStorage 和 sessionStorage。
 -->
 
 ---
@@ -328,12 +331,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-我們把這兩兄弟的差別列在這張表格。
-主要的勝負在於「生命週期（壽命）」：
-localStorage 的資料是「萬年不老」的。除非使用者自己去清除瀏覽器快取，或者是我們用程式碼手動 delete 它，否則它會一直在。
-sessionStorage 的資料則是「短命鬼」。它只活在這個特定的瀏覽器分頁裡。一旦分頁被叉掉關閉，資料就瞬間灰飛煙滅。
-而且注意喔！這兩個儲存空間都有「網域防護」。
-你在 `localhost:4200` 存的東西，換到 `localhost:4201` 是讀不到的！這也是瀏覽器為了安全性所做的一種保護防線。
+localStorage 和 sessionStorage 的寫法和容量都一樣，最大的差別在於資料保存的時間。
+
+localStorage 的資料會一直保存，除非我們用程式刪除，或使用者清除瀏覽器資料。sessionStorage 的資料則只存在目前這個分頁，分頁關閉，或開新分頁，就讀不到了。
+
+另外，兩者都有網域的限制。例如在 localhost 冒號 4200 存的資料，換到 localhost 冒號 4201 就讀不到，因為埠號不同，瀏覽器會把它們視為不同的來源。這是瀏覽器的安全保護機制。
 -->
 
 ---
@@ -345,7 +347,7 @@ class: flex flex-col justify-center items-center text-center
 # setItem & getItem
 
 <!--
-那我們要怎麼對這兩個保管箱寫扣進行存取呢？
+那要怎麼對這兩個儲存空間存取資料呢？
 -->
 
 ---
@@ -364,12 +366,11 @@ localStorage 與 sessionStorage 皆以 key-value 方式儲存資料，提供兩�
 </div>
 
 <!--
-這兩個保管箱用的是瀏覽器內建的原生 API，語法非常一致且好記：
-要塞東西，叫 `setItem(Key, Value)`。
-要拿東西，叫 `getItem(Key)`。
-這兩個方法都只需要傳入字串。
-大叔要特別提醒一件事：**如果你用同一個 Key 再次呼叫 setItem，舊的資料會被新資料直接覆蓋過去**！
-所以取名字（Key）的時候一定要注意，不要撞名，免得自己的資料被鬼隱了！
+localStorage 和 sessionStorage 都用「鍵值對」的方式儲存資料，有兩個操作方法。
+
+儲存用 `setItem`，傳入名稱和值；讀取用 `getItem`，傳入名稱，就會取得對應的值。
+
+要注意，如果用同一個名稱再呼叫一次 `setItem`，原本的資料會被覆蓋。所以取名稱時要確保不重複。
 -->
 
 ---
@@ -402,14 +403,13 @@ export class AppComponent {
 ```
 
 <!--
-我們看看寫法。
-因為是瀏覽器內建的，不需要 import 任何東西，在 TS 或 JS 裡直接寫 `localStorage.setItem(...)` 或者是 `sessionStorage.setItem(...)` 就可以了。
-讀取就是 `localStorage.getItem(...)`。
-非常直覺！
-但有一個小陷阱：**它們只能存字串（String）**！
-如果你要把一個複雜的 JS 物件（Object）存進去，你直接丟進去，它會變成一串沒用的 `[object Object]`。
-所以如果想存物件，我們要先用 `JSON.stringify()` 把物件烤成 JSON 字串才能存；
-讀出來時，再用 `JSON.parse()` 把它還原成物件。這個是業界最常用的小技巧，大家先記在大腦裡！
+我們看程式碼範例。
+
+localStorage 和 sessionStorage 是瀏覽器內建的功能，不需要 import，也不需要注入，在元件裡直接呼叫就可以了。兩者的寫法一樣，只要換掉前面的名稱。
+
+`saveName` 用 `setItem` 把 Allen 存進兩個儲存空間，`showName` 用 `getItem` 把它讀出來印出。
+
+這裡有一個要注意的地方：它們只能存字串。如果直接把物件存進去，會變成一段沒有意義的文字。所以要存物件時，要先用 `JSON.stringify` 轉成字串；讀出來之後，再用 `JSON.parse` 轉回物件。
 -->
 
 ---
@@ -426,7 +426,13 @@ layout: default
 4. 用 `console.log` 印出還原後物件的 `name` 與 `level`
 
 <!--
-考察 localStorage 只能存字串的限制：存入前需 JSON.stringify()，取出後需 JSON.parse()，這是存物件的必備組合技。改為需求描述題，讓學員自行寫出完整程式碼。
+我們用一個小練習熟悉 localStorage。
+
+請定義一個使用者物件，包含名字 Allen 和等級 5。把這個物件存進 localStorage，名稱是 user。接著把它讀出來，還原成物件，並印出名字和等級。
+
+想一想，存入之前和讀出之後，分別要做什麼處理？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -450,7 +456,13 @@ console.log(parsed.name, parsed.level);  // Allen 5
 </div>
 
 <!--
-直接存物件會得到 [object Object] 字串，完全無法還原。stringify + parse 是處理 localStorage 物件資料的黃金組合。
+我們來看答案。
+
+存入之前，用 `JSON.stringify` 把物件轉成字串，再用 `setItem` 存進去。讀取時用 `getItem` 取出字串，再用 `JSON.parse` 還原成物件，就能讀到 name 和 level，印出 Allen 和 5。
+
+這裡的 `raw` 後面加了驚嘆號，因為 `getItem` 可能回傳 null，加上驚嘆號是告訴 TypeScript「這裡一定有值」。
+
+`JSON.stringify` 搭配 `JSON.parse`，是在網頁儲存裡存放物件的標準做法。
 -->
 
 ---
@@ -461,7 +473,7 @@ layout: end
 ### Cookie、localStorage、sessionStorage — 依需求選擇合適的儲存方式
 
 <!--
-恭喜大家！學會了這三種瀏覽器的本地儲存法寶！
-現在你寫的網頁再也不會一重整就鬧失憶了，不論是使用者的自訂偏好、Token、還是暫存資料，你都有合適的地方可以安放它們。
-下一堂課，我們要迎來重頭戲了——「陣列顯示（Array Display）」，去看怎麼在網頁畫面上，用循環語法把一整張陣列的清單列表一口氣畫出來！大家休息一下，我們等一下見！
+這一章我們學了三種網頁儲存方式。Cookie 容量小，主要用在身分驗證，在 Angular 裡透過 `ngx-cookie-service` 的 `set` 和 `get` 操作。localStorage 會一直保存資料，sessionStorage 則在分頁關閉時消失，兩者都用 `setItem` 和 `getItem` 存取，而且只能存字串，存物件時要搭配 `JSON.stringify` 和 `JSON.parse`。
+
+下一章，我們會學習怎麼把陣列資料顯示在畫面上。我們下一章見。
 -->

@@ -46,15 +46,9 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎回來！
-上一章我們學會了用 `if` 和 `else if` 來做分支判斷。
-但是，你想想看，如果今天我們要設計一個遊戲角色選擇畫面。
-角色職業有「戰士、法師、刺客、弓箭手、牧師、德魯伊...」等十幾種。
-如果你用 `if` 來寫，代碼就會變成：
-`if (職業 == 戰士) ... else if (職業 == 法師) ... else if (職業 == 刺客) ...`
-這一長串的 `else if` 排下來，不只你看得眼花，連你的編輯器都不想理你了。
-今天，我們就要來學習條件判斷的另一個秘密武器——`switch case`！
-不只在 TypeScript 大腦裡好用，Angular 17 的 HTML 模板裡也有非常相似的 `@switch` 機制喔！
+上一章我們學了 `@if` 和 `@else if`。但如果分支很多，例如遊戲裡有戰士、法師、刺客、弓箭手、牧師等十幾種職業，用 `else if` 一路寫下去，程式碼會變得又長又難讀。
+
+這一章，我們要學另一種條件判斷的寫法：`switch case`。它在 TypeScript 裡很好用，Angular 的 HTML 模板也有一個很相似的 `@switch` 語法。
 -->
 
 ---
@@ -71,13 +65,7 @@ layout: default
 - **@switch — HTML 模板語法** — Angular 模板中的 switch case 寫法
 
 <!--
-今天我們的分支切換作戰計畫如下：
-先了解什麼是 `switch case`，以及它如何用 `case` 取代討人厭的 `else if`。
-接著，拆解 `switch case` 的四大零件：switch、case、default 和 break。
-然後，把 `switch` 和 `if` 放在拳擊場上進行實況 PK，看看它們的代碼長相。
-隨後，深入探討最容易遺忘、也是新手最常踩雷的 `break` 與穿透（fall-through）機制。
-接著，看看如何在 `switch` 裡面塞入算術運算式！
-最後，把這套邏輯搬進 HTML 模板，學習 Angular 17+ 的 `@switch` 語法。
+這一章會先介紹什麼是 `switch case`，以及 switch、case、default、break 這幾個組成部分。接著把 `switch` 和 `if` 放在一起比較。然後說明 `case` 和 `break` 的關係，以及在 `switch` 裡使用運算式。最後學習 HTML 模板裡的 `@switch`，並用一個練習收尾。
 -->
 
 ---
@@ -89,7 +77,7 @@ class: flex flex-col justify-center items-center text-center
 # What is Switch Case
 
 <!--
-第一站，我們先來認識這個分支選擇器的基本骨架。
+我們先來認識 `switch case` 的基本結構。
 -->
 
 ---
@@ -117,13 +105,11 @@ switch (變數名稱或運算式) {
 </div>
 
 <!--
-`switch case` 的運作邏輯，大叔把它比喻成「自動販賣機的按鈕」。
-你投了硬幣，按了「1 號」按鈕，販賣機就掉出可樂；按了「2 號」按鈕，掉出雪碧；按了沒設定的號碼，就跑出「請重新選擇」（default）。
-我們在 `switch()` 括號裡放入要判斷的變數。
-底下用一個個 `case` 來比對變數的值。
-如果對上了，就執行該 case 底下的陳述句。
-最後別忘了加 `default`，它就是防呆安全網（相當於 `else`）。
-當前面的 case 通通都不符合時，就會被引導到這條預設的備用道路。
+`switch case` 和 `if` 一樣是條件判斷，差別在寫法：`if` 用 `else if` 處理多個分支，`switch` 則用 `case` 逐一比對。
+
+我們可以把它想成自動販賣機。按 1 號按鈕掉出可樂，按 2 號掉出汽水，按了沒有設定的號碼，就顯示「請重新選擇」。
+
+`switch` 的小括號裡放要判斷的變數，底下用一個個 `case` 比對它的值，符合的話就執行那個 `case` 底下的程式。最後的 `default`，相當於 `if` 裡的 `else`，當所有 `case` 都不符合時才執行。
 -->
 
 ---
@@ -135,7 +121,7 @@ class: flex flex-col justify-center items-center text-center
 # Switch vs If Comparison
 
 <!--
-既然兩者都能做判斷，我們直接把它們放在一起對照，感受一下語法的視覺差異。
+兩種寫法都能做判斷，我們直接放在一起比較看看。
 -->
 
 ---
@@ -168,7 +154,7 @@ switch (this.testNum) {
     console.log(1);
     break;
   case(2):
-    console.log(1);
+    console.log(2);
     break;
   default:
     console.log('other');
@@ -177,13 +163,13 @@ switch (this.testNum) {
 ```
 
 <!--
-大家看看這左右兩邊的程式碼。
-左邊是我們熟悉的 `if-else`。
-右邊是新朋友 `switch-case`。
-當 `testNum` 等於 1 的時候，兩邊都會印出 1；等於 2 的時候，都會印出 2。
-你可以感覺到，右邊的 `switch` 排版更加的「對齊」、一目了然。
-在分支很多的時候，`switch` 的代碼結構不會像 `if` 那樣往右下角斜斜地斜過去，維護起來更加舒服！
-但大叔要提醒：右邊那個 `break` 到底是什麼鬼？為什麼不寫不行？我們下一張投影片來解密！
+這個範例的需求是：值為 1 時印出 1，值為 2 時印出 2，其他情況印出 other。
+
+上面是 `if` 的寫法，用 `if`、`else if`、`else` 串起來。下面是 `switch` 的寫法，`switch` 小括號裡放 `testNum`，再用 `case(1)`、`case(2)` 和 `default` 分別處理。
+
+分支一多，`switch` 的每個 `case` 都對齊排列，結構會比一長串 `else if` 更清楚。
+
+你可能注意到，每個 `case` 最後都有一個 `break`。它的作用是什麼？我們接著來看。
 -->
 
 ---
@@ -195,7 +181,7 @@ class: flex flex-col justify-center items-center text-center
 # Case and Break
 
 <!--
-現在，我們來聊聊 switch 裡最關鍵、也是最容易讓新手在半夜抓狂加班的 `break` 指令！
+接下來，我們看 `switch` 裡最關鍵，也最容易忘記的指令：`break`。
 -->
 
 ---
@@ -214,7 +200,7 @@ switch (this.testNum) {
     console.log(1);
     break;
   case(2):
-    console.log(1);
+    console.log(2);
     break;
   default:
     console.log('other');
@@ -227,13 +213,11 @@ switch (this.testNum) {
 </div>
 
 <!--
-在 TypeScript 的 `switch` 語法裡，**`break` 代表「跳出這台機器」**。
-如果你忘記在 `case(1)` 底下寫 `break`。
-當 `testNum` 等於 1 時，電腦執行完 `console.log(1)` 之後，它不會下班！
-它會像是煞車壞掉的卡車一樣，繼續往下撞進 `case(2)` 裡執行 `console.log(2)`，直到它碰到下一個 `break` 或者把整個 switch 撞穿為止！
-這種靈異現象在程式界叫作「Fall-through（穿透）」。
-所以，寫 case 時，千萬要養成好習慣：**寫完一行，立刻補上 `break;`**！
-不然你的程式跑出奇怪的雙重執行結果，你可能要對著螢幕哭一整晚！
+在 `switch` 裡，`break` 的意思是「結束這個 switch」。
+
+每個 `case` 結尾都要加上 `break`。如果忘了加，例如 `case(1)` 底下沒有 `break`，當值是 1 的時候，程式執行完 `case(1)` 的內容，並不會停下來，而是繼續往下執行 `case(2)` 的內容，直到遇到下一個 `break`，或是整個 `switch` 結束。
+
+這種情況叫做「穿透」，英文是 fall-through。它會讓程式執行了不該執行的內容，而且不容易發現。所以寫 `case` 時，要養成習慣，每個 `case` 寫完就立刻補上 `break`。
 -->
 
 ---
@@ -245,7 +229,7 @@ class: flex flex-col justify-center items-center text-center
 # Expression in Switch
 
 <!--
-除了放單一變數之外，switch 的括號裡其實還可以玩點花樣。
+`switch` 的小括號裡，除了放變數，也可以放運算式。
 -->
 
 ---
@@ -264,7 +248,7 @@ switch (this.testNum * 3) {
     console.log(1);
     break;
   case(2):
-    console.log(1);
+    console.log(2);
     break;
   default:
     console.log('other');
@@ -277,11 +261,11 @@ switch (this.testNum * 3) {
 </div>
 
 <!--
-我們不只可以寫 `switch(this.testNum)`，我們還可以在括號裡塞入運算式，比如 `switch(this.testNum * 3)`。
-這時候，電腦會非常聰明地先幫你把 `testNum * 3` 的算術結果算出來。
-比如結果是 6，它再拿著這個 6，去底下每一個 `case` 裡敲門，看看誰是 6。
-所以在 switch 括號裡，算術加減乘除都是完全合法的！
-大家回去可以在自己的 TS 練習檔裡，試著把這段 code 敲敲看，觀察它的執行結果！
+這裡 `switch` 的小括號裡放的是 `this.testNum` 乘以 3。
+
+程式會先算出運算式的結果，再拿這個結果去和每個 `case` 比對。例如 `testNum` 是 2，乘以 3 等於 6，就會去找有沒有 `case` 是 6，這裡都沒有，所以會執行 `default`，印出 other。
+
+所以小括號裡寫加減乘除這些運算都是可以的。要注意 `switch` 和 `if` 的寫法不同，`case` 後面放的是要比對的值，而不是條件式。
 -->
 
 ---
@@ -293,7 +277,7 @@ class: flex flex-col justify-center items-center text-center
 # Switch Case in Templates
 
 <!--
-剛才我們學的 switch case 都是寫在 TypeScript 大腦裡的邏輯運算。但還記得開頭大叔賣的關子嗎？Angular 17 的 HTML 模板裡，其實也內建了一套長得非常相似的 @switch 機制！我們現在就來看看它怎麼用。
+剛才的 `switch` 寫在 TypeScript 裡。接下來看 HTML 模板裡很相似的 `@switch` 語法。
 -->
 
 ---
@@ -321,11 +305,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-`@switch` 的長相跟 TypeScript 的 `switch` 幾乎是雙胞胎。
-括號 `()` 裡放你要判斷的變數或運算式，底下用一個個 `@case (值)` 來比對。
-比對成功，花括號 `{}` 裡的 HTML 就會被畫到畫面上。
-都比對不到，就交給 `@default` 收尾，效果跟 TS 的 `default` 一樣。
-最大的差異是：HTML 模板裡完全不用寫 `break`！Angular 會自動幫你在比對成功後停止往下比對，不會有 fall-through 穿透的問題，這點比 TypeScript 的 switch 更省心。
+`@switch` 是 Angular 模板裡的多分支條件語法，效果等於連續好幾個 `@if` 和 `@else if`，但在比對同一個變數的多種值時，寫起來更簡潔。
+
+小括號裡放要判斷的變數，底下用 `@case` 加上小括號裡的值來比對，符合的話，大括號裡的 HTML 就會顯示出來。都不符合時，就顯示 `@default` 的內容。
+
+跟 TypeScript 最大的差別是：`@switch` 不用寫 `break`。比對成功後 Angular 會自動停止，不會有穿透的問題。
+
+`@switch` 取代了舊版的 `*ngSwitch` 寫法，在舊專案裡可能還會看到。
 -->
 
 ---
@@ -343,7 +329,11 @@ layout: default
    - 其他 → `一般會員`
 
 <!--
-考察 @switch / @case / @default 基本語法，以及和 TypeScript switch 的對照。
+我們用一個小練習熟悉 `@switch`。
+
+請宣告 `role` 等於 admin，然後用 `@switch`、`@case` 和 `@default`，依照角色顯示對應的文字：admin 顯示管理員，editor 顯示編輯者，其他顯示一般會員。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -375,7 +365,11 @@ role: string = 'admin';
 </div>
 
 <!--
-role 改成 'editor' 或其他任意字串，畫面會自動切換顯示對應文字，且未命中的區塊完全不會出現在 DOM 中，這點跟 @if 一樣安全。
+我們來看答案。
+
+`@switch` 小括號裡放 `role`，接著兩個 `@case`，分別比對 admin 和 editor，最後用 `@default` 顯示一般會員。注意比對的是字串，所以值要加上引號。
+
+`@case` 不用寫 `break`。可以試著把 `role` 改成 editor 或其他文字，畫面會自動切換。跟 `@if` 一樣，沒有符合的區塊不會出現在 DOM 裡。
 -->
 
 ---
@@ -387,7 +381,7 @@ class: flex flex-col justify-center items-center text-center
 # Chapter Practice
 
 <!--
-好，switch case 的重點都學完了，我們馬上來做一個總複習的實戰練習！
+`switch case` 的重點都介紹完了，接下來我們做一個綜合練習。
 -->
 
 ---
@@ -407,9 +401,15 @@ layout: default
 4. 每個 `case` 記得加上 `break`
 
 <!--
-這題把整章重點串起來：switch/case/default/break 的基本結構，加上括號內運算式的應用。
-比對 HTTP 狀態碼百位數是業界常見的實務寫法，例如 404 屬於 4xx 客戶端錯誤。
-動手寫寫看，注意括號裡不能只放變數本身，要放一個運算式！
+這個練習要依照 HTTP 狀態碼，印出對應的分類。
+
+請宣告 `statusCode` 等於 404。`switch` 的小括號裡要放一個運算式，取出狀態碼的百位數。百位數是 2，印出請求成功；是 4，印出客戶端錯誤；是 5，印出伺服器錯誤；其他就印出未知狀態。每個 `case` 都記得加上 `break`。
+
+在實務上，像 404 這種 4 開頭的狀態碼，就屬於客戶端錯誤，這種依百位數分類的寫法很常見。
+
+想一想，要怎麼從 404 算出 4？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -429,8 +429,11 @@ layout: default
 </div>
 
 <!--
-如果卡關，提示大家用 Math.floor 而不是直接寫死數字判斷。
-這一步的關鍵是先算出運算式的結果，再讓 switch 拿這個結果去跟 case 比對，而不是直接拿 statusCode 原始值比對。
+我們來看解題提示。
+
+取百位數，可以把狀態碼除以 100，再用 `Math.floor` 無條件捨去小數。404 除以 100 等於 4.04，捨去之後就是 4。
+
+所以 `switch` 的小括號裡寫 `Math.floor(statusCode / 100)`，`case` 要比對的是計算後的結果，也就是 2、4、5，而不是原本的 404。最後別忘了每個 `case` 都要加上 `break`。
 -->
 
 ---
@@ -441,8 +444,7 @@ layout: end
 ### 熟悉 TypeScript switch 與 Angular @switch，讓多條件判斷更整潔易讀
 
 <!--
-恭喜大家！成功收服了 `switch case` 這個強大的分支語法，而且是 TypeScript 和 HTML 模板兩邊一起收服！
-今天你學會了這招，以後遇到十幾種職業、或是多種狀態切換的畫面，就能寫出極度整潔、好讀的代碼了。
-回去把 TS 的 `break` 觀念，跟 HTML 模板 `@switch` 不用寫 break 的差異牢牢記住。
-下一堂課，我們要迎來整個前端課程的終極重頭戲——「串接 API（Fetch API）」，去學習如何用程式碼向政府或是遠端的伺服器要資料，把真實世界的實時數據搬到我們的網頁上！大家休息一下，我們等一下見！
+這一章我們學了 `switch case`。它用 `case` 逐一比對值，`default` 處理都不符合的情況。在 TypeScript 裡，每個 `case` 結尾都要加 `break`，否則會穿透到下一個 `case`。小括號裡也可以放運算式，先算出結果再比對。在 HTML 模板裡則用 `@switch`、`@case` 和 `@default`，而且不用寫 `break`。
+
+下一章，我們要學習串接 API，從遠端伺服器取得真實的資料。我們下一章見。
 -->

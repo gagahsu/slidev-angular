@@ -46,12 +46,11 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎回來！
-在前面的學習中，我們的網頁功能越來越強大，但不知道大家有沒有發現一個隱憂：
-「如果我們把整張網頁的選單、內容、按鈕、側邊欄、頁尾，幾千行 HTML 通通塞在一個 app.component.html 裡面，那這個檔案會有多難看、多難維護？」
-這就像是把整間公司的所有員工，通通擠在同一間辦公室裡大吵大鬧一樣，效率極低。
-今天，我們要來學習 Angular 最核心的「樂高積木哲學」——「元件拆解（Components）」。
-我們會學習怎麼把大畫面切成一個個獨立、好管理、而且可以重複利用的 UI 零件！
+上一章我們認識了元件的生命週期。不過到目前為止，我們的程式幾乎都寫在 `app.component` 裡。
+
+想像一下，如果把整個網頁的選單、內容、側邊欄、頁尾，幾千行 HTML 全部塞在同一個檔案，會有多難閱讀、多難維護？
+
+這一章，我們要學習 Angular 最核心的觀念：元件化。我們會把大畫面切成一個個獨立、好管理、可以重複使用的元件。
 -->
 
 ---
@@ -69,12 +68,7 @@ layout: default
 - **實作練習**
 
 <!--
-今天我們的組裝任務如下：
-首先，我們要了解為什麼現代網頁都必須「元件化」。
-接著，學習使用 Angular CLI 工具，用一行指令秒建元件。
-再來，我們會拆解元件背後的四個核心檔案與 `@Component` 裝飾器的設定。
-然後，學習如何把新建的積木引入到我們的頁面中。
-最後，大叔會分享一個 VS Code 的神級偷懶小工具，並帶大家做一個同時新增並引用兩個元件的實作練習！
+這一章會先說明為什麼要用元件，接著用 Angular CLI 新增元件，認識它產生的四個檔案，以及 `@Component` 裝飾器的設定。然後學習怎麼在頁面中引用元件，再介紹一個 VS Code 的實用小工具。最後做一個新增並引用兩個元件的練習。
 -->
 
 ---
@@ -86,7 +80,7 @@ class: flex flex-col justify-center items-center text-center
 # Why Components?
 
 <!--
-第一站，我們先來聊聊，為什麼要把好好的網頁切得碎碎的？
+我們先來聊聊，為什麼要把網頁拆成一個一個元件。
 -->
 
 ---
@@ -107,16 +101,13 @@ Component（元件）是 Angular 的核心構建單位，代表畫面上一個�
 </div>
 
 <!--
-什麼是 `Component` 元件？
-你可以把它想像成「樂高積木」。
-在傳統的網頁開發中，我們寫網頁像是在捏黏土，整張網頁黏在一起。
-而 Angular 是在堆樂高。
-元件有四大神級優勢：
-第一是「組合性」：一張大網頁可以由選單積木、按鈕積木組合而成。
-第二是「重複使用」：寫好一個漂亮的按鈕元件，在首頁能用，在購物車也能直接拿去用，不用複製貼上 HTML。
-第三是「獨立性」：每個積木有自己獨立的 HTML、SCSS 和 TypeScript 邏輯，互不干擾。
-第四是「維護性」：如果按鈕長相要改，我只要修改按鈕積木，全站的按鈕就自動同步更新，不用一個個去改。
-這就是現代前端工程的降維打擊！
+元件，英文是 Component，是 Angular 的核心單位，代表畫面上一個獨立的區塊。
+
+我們可以把它想成樂高積木。傳統的開發方式，是把整個網頁當成一整塊來寫；元件化則是把畫面拆成很多小積木，再組合起來。
+
+看表格，元件有四個特性。組合性，一個畫面可以由多個元件組成。可重複使用，同一個元件可以在不同頁面使用。獨立性，每個元件有自己的 HTML、CSS 和 TypeScript。維護性，修改一個元件，不會影響其他元件。
+
+例如做好一個按鈕元件，首頁和購物車都能用，之後要改樣式，也只要改一個地方。
 -->
 
 ---
@@ -130,14 +121,11 @@ Component（元件）是 Angular 的核心構建單位，代表畫面上一個�
 </div>
 
 <!--
-這是一張典型的後台系統畫面。
-如果讓你來設計，你會怎麼拆？
-看投影片上的色塊，我們通常會把它拆成四大積木：
-最上方的 Header 頁首元件（藍色）、
-左邊的 Sidebar 側邊欄元件（綠色）、
-右邊的 Content 主要內容區（橘色）、
-以及最底下的 Footer 頁尾元件。
-這樣拆分完後，你的主畫面 HTML 就只會剩下四行，非常清爽！
+我們看一個實際的例子，這是一個典型的後台系統畫面。
+
+如果要拆分，通常會依照功能，把它分成幾個區塊：最上方的頁首 Header、左邊的側邊欄 Sidebar、右邊的主要內容區 Content，以及最下方的頁尾 Footer。
+
+拆分之後，主畫面的 HTML 就只需要把這幾個元件排好，結構會清楚很多。
 -->
 
 ---
@@ -157,10 +145,11 @@ Component（元件）是 Angular 的核心構建單位，代表畫面上一個�
 </div>
 
 <!--
-這頁是這幾個區塊的細部說明。
-大家只要記住一個原則：
-「只要是功能獨立、或者是在多個地方會重複出現的 UI，就值得把它拆成一個獨立的元件。」
-拆分得越合理，你的專案架構就越漂亮。
+這張表說明了每個區塊負責的內容。
+
+頁首放網站 Logo、導覽列和使用者資訊；側邊欄放選單和功能連結；主內容區顯示目前頁面的核心資料；頁尾放版權資訊。另外，按鈕、卡片、彈窗這類會重複出現的 UI，也很適合做成共用元件。
+
+每個大區塊裡面，還可以繼續拆成更小的子元件。拆分的原則是：「功能獨立，或是會在多個地方重複出現的 UI，就值得拆成元件」。
 -->
 
 ---
@@ -172,7 +161,7 @@ class: flex flex-col justify-center items-center text-center
 # Generate a Component
 
 <!--
-那麼在 Angular 裡，我們要怎麼動手新增一個新元件呢？非常簡單，叫出我們的 CLI 助手！
+那在 Angular 裡，要怎麼新增一個元件呢？我們用 Angular CLI 來完成。
 -->
 
 ---
@@ -196,13 +185,11 @@ ng g c components/header
 </div>
 
 <!--
-在 Angular 中，我們絕對不會用滑鼠右鍵慢慢去建立 .html、.ts、.scss 檔案。
-我們直接在終端機輸入這行指令：
-`ng generate component components/header`。
-或者用縮寫：`ng g c components/header`。
-這個 `ng g c` 就是 generate component 的簡寫。
-它會自動在 `src/app/components` 下面建立一個叫 `header` 的資料夾，並且幫你把所有檔案都建好，連裡面基本的 class 名稱都填好了。
-這就是框架的威力，自動化拉滿！
+在終端機切換到專案的根目錄，執行 `ng generate component`，後面接資料夾和元件名稱，也可以用縮寫 `ng g c`。
+
+例如輸入 `ng g c components/header`，CLI 就會在 `src/app/components` 底下建立一個 `header` 資料夾，並把元件需要的檔案全部建好，連基本的程式結構都寫好了。
+
+建議把元件統一放在 `components` 資料夾裡管理，如果資料夾不存在，CLI 也會自動建立。
 -->
 
 ---
@@ -214,7 +201,7 @@ class: flex flex-col justify-center items-center text-center
 # Component Files
 
 <!--
-CLI 跑完之後，我們去目錄看看，到底生出了哪四個孿生兄弟檔案。
+CLI 執行完之後，我們看看它產生了哪些檔案。
 -->
 
 ---
@@ -235,15 +222,11 @@ CLI 跑完之後，我們去目錄看看，到底生出了哪四個孿生兄弟�
 </div>
 
 <!--
-這四個檔案各司其職，形成一個完美的元件生態系：
-`.html` 負責肉體結構；
-`.scss` 負責衣服樣式；
-`.spec.ts` 負責自動化單元測試（這在進階測試時才會寫）；
-`.ts` 負責大腦邏輯。
-大叔這裡要給一個「血淚提示」：
-**如果你本來正開著 `ng serve` 在啟動網頁，當你要用 CLI 產生新元件時，大叔強烈建議你先按下 Ctrl+C 把 `ng serve` 關掉**！
-元件生好之後再重新開。
-因為在 server 運行的狀態下動態加檔案，Angular 有時候會發生記憶體抓不到新檔案的靈異事件喔。
+執行 `ng g c` 之後，會產生四個檔案。
+
+`.html` 放元件的畫面模板，`.scss` 放這個元件專屬的樣式，`.spec.ts` 放測試程式，之後學到單元測試才會用到，`.ts` 則放元件的邏輯程式碼。
+
+這裡有一個建議：如果新增元件時，`ng serve` 正在執行，可以先按 Ctrl 加 C 把它關掉，新增完再重新啟動。在伺服器執行中新增檔案，有時候 Angular 會抓不到新的檔案。
 -->
 
 ---
@@ -255,7 +238,7 @@ class: flex flex-col justify-center items-center text-center
 # @Component Decorator
 
 <!--
-接下來，我們打開大腦 `.ts` 檔案，看看 Angular 是怎麼把這四個檔案黏在一起的。
+接下來，我們打開元件的 `.ts` 檔，看看 Angular 是怎麼把這些檔案組合在一起的。
 -->
 
 ---
@@ -282,13 +265,11 @@ export class HeaderComponent {}
 ```
 
 <!--
-在 `.ts` 檔案的最上方，你會看到一個用小老鼠開頭的 `@Component` 裝飾器。
-這個裝飾器就是元件的「身份設定檔」！
-裡面有三個核心鑰匙：
-第一個是 `selector`：這是在定義這個元件的「HTML 標籤名稱」，比如叫 `app-header`。
-第二個是 `templateUrl`：指定要跟哪一個 HTML 網頁連結。
-第三個是 `styleUrl`：指定要套用哪一個 SCSS 樣式檔。
-只要有這三個設定，Angular 就會自動把它們編譯成一個完整的網頁積木。
+在 `.ts` 檔上方，有一個以小老鼠符號開頭的 `@Component` 裝飾器，它就是元件的設定。
+
+裡面有三個重要的屬性。`selector` 是元件的標籤名稱，之後在 HTML 裡就用這個名稱來使用元件，這裡是 `app-header`。`templateUrl` 指定元件對應的 HTML 檔案。`styleUrl` 指定元件使用的樣式檔。
+
+有了這三個設定，Angular 就知道這個元件長什麼樣子、要套用什麼樣式。
 -->
 
 ---
@@ -311,14 +292,13 @@ export class HeaderComponent {}
 ```
 
 <!--
-這個 `selector` 該怎麼用呢？
-單是設定了 `selector: 'app-header'` 還不夠。
-這是在定義 HTML 中的標籤名稱。
-在別人的 HTML 裡，你可以直接打像 `<app-header></app-header>` 這樣的自訂標籤！
-瀏覽器在渲染時，一看到這個標籤，就會自動把 header 的 HTML 內容塞進這個位置。
-你看下面 app.component.html 的寫法，
-是不是就像是堆積木一樣，把 Header、Sidebar、Footer 排排站排好？
-這代碼的可讀性，簡直舒服得像在看童書！
+`selector` 怎麼使用呢？
+
+設定了 `selector` 之後，就可以在其他元件的 HTML 裡，像使用一般 HTML 標籤一樣使用它。看表格，`selector` 是 `app-header`，在 HTML 裡就寫 `app-header` 的開始和結束標籤。
+
+Angular 在顯示畫面時，看到這個標籤，就會把 header 元件的內容放在這個位置。
+
+看下面的範例，把頁首、側邊欄和頁尾三個元件依序排好，畫面的結構一目了然。
 -->
 
 ---
@@ -345,7 +325,11 @@ export class ProfileComponent {}
 ```
 
 <!--
-考察 @Component 三個核心屬性的寫法：selector 決定 HTML 標籤名稱，templateUrl 和 styleUrl 指定對應檔案路徑。
+我們用一個小練習熟悉 `@Component` 的三個屬性。
+
+請依照規格補完裝飾器：HTML 標籤名稱是 `app-profile`，模板路徑是 `./profile.component.html`，樣式路徑是 `./profile.component.scss`。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -370,7 +354,11 @@ export class ProfileComponent {}
 </div>
 
 <!--
-三個屬性缺一不可：selector 定義 HTML 標籤名稱，templateUrl 告訴 Angular 去哪找 HTML，styleUrl 指定樣式來源。
+我們來看答案。
+
+`selector` 填 `app-profile`，`templateUrl` 和 `styleUrl` 分別填入 HTML 和 SCSS 的路徑。
+
+實務上，用 CLI 執行 `ng g c profile` 就會自動產生這個結構，不需要手動填寫。但理解每個屬性代表什麼，遇到問題時才知道去哪裡檢查。
 -->
 
 ---
@@ -382,8 +370,7 @@ class: flex flex-col justify-center items-center text-center
 # Using Components
 
 <!--
-「大叔，那我在 HTML 裡打了 `<app-header>`，為什麼畫面一片空白，還跳紅字說不認識這個標籤？」
-別急！因為在新版 Standalone 模式下，你需要手動去 TS 檔案裡做「元件引用（Import）」。我們來看看怎麼做。
+在 HTML 寫了 `app-header`，畫面卻是空白，還出現錯誤？因為還需要在 TypeScript 引用元件。
 -->
 
 ---
@@ -412,13 +399,13 @@ export class AppComponent {}
 ```
 
 <!--
-要讓 AppComponent 能夠認得 HeaderComponent。
-我們必須在 `app.component.ts` 檔裡做兩件事：
-第一，在最上面寫 `import { HeaderComponent } from ...` 把對方的 class 匯進來。
-第二，**在 `@Component` 裝飾器的 `imports: []` 陣列中，把 `HeaderComponent` 放進去**！
-這就像是你要帶新朋友回家，你得先跟警衛登記這個人的名字。
-登記完之後，你在 `app.component.html` 裡打的 `<app-header>` 標籤，Angular 才能順利解析它！
-這一步很多初學者常常會漏掉，導致卡關一下午，大家一定要小心！
+要在某個頁面使用元件，需要完成兩個步驟。
+
+第一步，在 `app.component.ts` 裡，用 `import` 把 `HeaderComponent` 引入進來。第二步，在 `@Component` 裝飾器的 `imports` 陣列裡，把 `HeaderComponent` 放進去。
+
+可以想成帶朋友進社區，要先向警衛登記朋友的名字。登記完之後，在 `app.component.html` 裡寫 `app-header`，Angular 才認得它。
+
+很多初學者只寫了上面的 `import`，卻忘了放進 `imports` 陣列，結果還是出現錯誤，這點要特別注意。
 -->
 
 ---
@@ -441,8 +428,11 @@ export class AppComponent {}
 </div>
 
 <!--
-完成 import 之後，在 `app.component.html` 裡，我們就可以像使用普通 div 標籤一樣，把 `<app-header>` 和 `<app-footer>` 擺在頁面的最上方 and 最下方。
-這時候，整個網頁就順利拼裝成功囉！
+完成引用之後，就可以在 HTML 裡使用元件標籤了。
+
+這裡把 `app-header` 放在最上面，中間是主要內容，最下面是 `app-footer`，整個頁面就組裝起來了。
+
+整理一下流程：先到元件的 `.ts` 確認 `selector` 名稱，再到要使用它的元件，把它加進 `imports`，最後在 HTML 用標籤名稱放進畫面。
 -->
 
 ---
@@ -467,7 +457,11 @@ export class AppComponent {}
 ```
 
 <!--
-考察引用元件最容易遺漏的兩步：import 語句與 imports 陣列，兩者缺一 HTML 標籤都會顯示紅線錯誤。
+我們用一個小練習熟悉元件的引用。
+
+假設已經用 CLI 建立了 `sidebar` 元件，請在 `app.component.ts` 補上兩個地方：上方的 `import` 語句，以及 `imports` 陣列，讓 HTML 裡的 `app-sidebar` 能正確顯示。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -499,7 +493,11 @@ export class AppComponent {}
 </div>
 
 <!--
-初學者最常踩的坑：只寫 import 語句，忘記把元件類別加入 @Component 的 imports 陣列，導致 HTML 標籤無法被辨識。
+我們來看答案。
+
+第一，在上方加上 `import`，從 sidebar 元件的路徑引入 `SidebarComponent`。第二，在 `imports` 陣列裡放入 `SidebarComponent`。這樣 HTML 裡的 `app-sidebar` 就能正確顯示了。
+
+這兩個步驟缺一不可。最常見的錯誤，就是只寫了 `import` 語句，忘了加進 `imports` 陣列。
 -->
 
 ---
@@ -511,9 +509,7 @@ class: flex flex-col justify-center items-center text-center
 # VS Code Quick Fix
 
 <!--
-「大叔，每次手動寫 import 還有 imports 陣列好累喔，有沒有更懶人的方式？」
-哈哈，工程師最大的美德就是懶！
-VS Code 其實有內建神級偷懶工具，我們來學學。
+每次都要手動寫 `import` 和 `imports` 陣列，有沒有更省事的方法？VS Code 其實有內建的工具可以幫忙。
 -->
 
 ---
@@ -535,13 +531,11 @@ VS Code 其實有內建神級偷懶工具，我們來學學。
 </div>
 
 <!--
-如果你懶得手動寫 import，你可以直接去 `app.component.html` 裡輸入 `<app-header></app-header>`。
-這時候，因為還沒有登記，VS Code 會在它下面畫一條紅色波浪線。
-別慌！用滑鼠點擊 `app-header`，這時候左邊或右邊會出現一個「藍色的小燈泡」。
-按一下小燈泡，選擇「快速修正（Quick Fix）」。
-VS Code 就會發揮 AI 的超能力，自動去背景幫你把 `app.component.ts` 的 import 語句與 imports 陣列通通補齊！
-全程只需要滑鼠點兩下，一秒搞定。
-這個快捷鍵一定要學會，這能幫你省下大把寫無聊程式碼的時間！
+這個工具叫做「快速修正」，英文是 Quick Fix。
+
+當我們在 HTML 裡寫了元件標籤，但還沒有引用，VS Code 會在標籤下面畫一條紅色底線。這時候點一下標籤名稱，旁邊會出現一個藍色的燈泡。點擊燈泡，選擇快速修正，VS Code 就會自動把 `import` 語句和 `imports` 陣列都補好。
+
+前提是標籤名稱要寫對，跟元件的 `selector` 一致，VS Code 才找得到對應的元件。這個技巧可以省下很多時間。
 -->
 
 ---
@@ -553,7 +547,7 @@ class: flex flex-col justify-center items-center text-center
 # Practice
 
 <!--
-好，樂高積木的理論大家都懂了，我們馬上來動手組裝自己的 Header 與 Footer 吧！
+理論都介紹完了，接下來我們動手組裝自己的頁首和頁尾。
 -->
 
 ---
@@ -576,12 +570,13 @@ layout: two-cols
 </div>
 
 <!--
-這次的任務是「新增兩個組件並引用它」：
-第一步，用 CLI 產生 `header` 和 `footer` 元件。
-第二步，分別在他們的 HTML 裡加點簡單的文字（像是「這是 Header」）。
-第三步，在 `app.component.ts` 裡引用這兩個元件。
-第四步，在主畫面裡呈現出來。
-大家動手做做看，順便可以測試看看 VS Code 的藍色小燈泡好不好用喔！
+這個練習要新增兩個元件並引用它們。
+
+第一，用 Angular CLI 在 `components` 資料夾下，新增 `header` 和 `footer` 兩個元件。第二，在各自的 HTML 裡加上辨識文字，例如「這是 Header」。第三，在 `app.component.ts` 引用這兩個元件。第四，在 `app.component.html` 裡放上兩個元件的標籤，讓畫面同時顯示它們。
+
+也可以順便試試看 VS Code 的藍色燈泡。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -616,14 +611,13 @@ export class AppComponent {}
 </div>
 
 <!--
-如果稍微卡住了，請看解題步驟：
-首先，在 terminal 執行 `ng g c components/header`，接著執行 `ng g c components/footer`。
-然後，打開 `app.component.ts`，在 `@Component` 的 `imports` 裡填入 `HeaderComponent` 和 `FooterComponent`。
-最後，去 `app.component.html` 裡，
-把 `<app-header></app-header>` 放最上面，
-把 `<app-footer></app-footer>` 放最下面。
-儲存後，看看瀏覽器是不是成功顯示出「這是 Header」與「這是 Footer」的文字？
-有出現，就代表你已經成功解鎖了 Angular 元件化的偉大旅程！
+我們來看解題步驟。
+
+先在終端機執行 `ng g c components/header` 和 `ng g c components/footer`，各自在 HTML 加上辨識文字。
+
+接著在 `app.component.ts` 引入 `HeaderComponent` 和 `FooterComponent`，並把它們都放進 `imports` 陣列。
+
+最後在 `app.component.html` 裡，把 `app-header` 放上面，`app-footer` 放下面。存檔之後，畫面上就會顯示這兩個元件的文字。也可以先在 HTML 寫好標籤，再用藍色燈泡自動引用。
 -->
 
 ---
@@ -634,8 +628,7 @@ layout: end
 ### 用元件切割畫面，讓程式更易維護與重用
 
 <!--
-恭喜大家！成功征服了「元件新增與引用」！
-現在你的網頁已經正式告別了「幾千行代碼塞同一個檔案」的史前時代，跨入了模組化積木的現代前端世界。
-回去把 CLI 指令和 import 流程多練習幾次。
-下一堂課，我們要迎來元件化開發最精彩的重頭戲——「元件資料綁定（Component Data Binding）」，去看看父積木與子積木是怎麼進行資料傳遞的！大家休息一下，我們等一下見！
+這一章我們學了元件化。元件就像樂高積木，可以組合、重複使用、各自獨立，也更好維護。用 `ng g c` 新增元件，會產生四個檔案。`@Component` 的 `selector` 決定標籤名稱。要在頁面使用元件，要先 `import`，再加進 `imports` 陣列，最後在 HTML 放上標籤。
+
+下一章，我們會學習 Angular 的各種資料綁定方式。我們下一章見。
 -->

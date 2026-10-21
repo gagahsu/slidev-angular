@@ -46,11 +46,11 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要一起做一個很有成就感的功能——即時搜尋。
+前面幾章，我們學了 `mat-table` 和幾個內建管道。這一章，我們要做一個很實用的功能：即時搜尋。
 
-我們平常用購物網站或通訊錄的時候，只要在搜尋框打字，下面的清單就會馬上跟著篩選，完全不用按送出按鈕。這種體驗其實靠的就是 `<input>` 標籤的事件屬性，搭配我們前面學過的 mat-table，就能自己做出這樣的效果。
+平常使用購物網站或通訊錄時，只要在搜尋框打字，下面的清單就會立刻跟著篩選，不用按送出。這個效果靠的是輸入框的事件，再搭配我們學過的 `mat-table`，就能自己做出來。
 
-學完這一章，大家會知道怎麼監聽輸入框的按鍵事件、怎麼把輸入值即時套用到表格的資料來源上，做出一個真正能用的即時搜尋功能。
+學完這一章，我們會知道怎麼監聽輸入框的按鍵事件，並把輸入的內容即時套用到表格的資料上。
 -->
 
 ---
@@ -66,7 +66,7 @@ layout: default
 - **過濾邏輯** — 用 `forEach` + `indexOf` 即時更新 `dataSource.data`
 
 <!--
-這張投影片先讓大家看一下今天的完整路線：我們會先講即時搜尋的概念跟事件選擇，接著準備一個 mat-table 當作示範用的資料表格，然後在搜尋框寫好事件繫結，學怎麼從按鍵事件裡拿到使用者輸入的內容，最後把這些輸入拿去過濾資料、更新表格顯示，一步一步把整個功能兜起來。
+這一章會先說明即時搜尋的概念，以及該用哪一種事件。接著準備一個 `mat-table` 當作示範的表格，在搜尋框寫好事件繫結，學習怎麼取得使用者輸入的內容。最後撰寫過濾的邏輯，並看一次完整的程式碼。
 -->
 
 ---
@@ -78,7 +78,7 @@ class: flex flex-col justify-center items-center text-center
 # Live Search Concept
 
 <!--
-大家先想像一個情境：如果一個表格有幾百筆資料，使用者想找某一筆，得自己滑到底慢慢找，體驗會很差。如果能打幾個字就自動篩選出想要的資料，使用起來就順手很多，這就是即時搜尋要解決的問題。接下來我們就來看看怎麼做到這件事。
+資料一多，慢慢往下找很不方便。打幾個字就自動篩選，這就是即時搜尋要解決的問題。
 -->
 
 ---
@@ -95,9 +95,11 @@ class: flex flex-col justify-center items-center text-center
 4. 將符合條件的資料寫回 `dataSource.data`
 
 <!--
-即時搜尋的核心概念其實不複雜，就是利用 `<input>` 標籤本身就有的事件屬性，只要使用者一打字，就馬上呼叫我們寫好的方法，去篩選資料、更新畫面。
+即時搜尋的概念並不複雜：利用輸入框的事件，使用者一打字，就呼叫我們寫好的方法，篩選資料、更新畫面。
 
-大家可以照著這四個步驟來理解等一下的流程：先有一個裝了資料的表格，然後在上面放一個搜尋框，接著每次按鍵都會觸發一個過濾方法，這個方法會把符合條件的資料重新寫回表格的 `dataSource.data`，畫面就會自動更新。這四步環環相扣，等一下我們會一步一步實作出來。
+實作的思路有四個步驟。第一，建立一個有資料的 `mat-table`。第二，在表格上方放一個搜尋框。第三，每次按鍵時觸發過濾的方法。第四，把符合條件的資料，寫回 `dataSource.data`，畫面就會自動更新。
+
+接下來我們一步一步實作。
 -->
 
 ---
@@ -113,13 +115,13 @@ class: flex flex-col justify-center items-center text-center
 建議使用 `(keyup)` 以避免中文輸入法的相容問題。
 
 <!--
-這裡有個很重要的選擇：到底要用 `(input)` 還是 `(keyup)` 事件？
+這裡有一個重要的選擇：要用 `input` 事件，還是 `keyup` 事件？
 
-`(input)` 事件是值一有變動就觸發，聽起來很即時，但大家如果用中文輸入法打字，會先經過「選字」的過程，這時候 `(input)` 事件的觸發時機可能會跟輸入法的組字狀態打架，導致畫面沒有即時更新或更新錯誤。
+`input` 事件是值一改變就觸發。但用中文輸入法打字時，會先經過選字的過程，這時候 `input` 的觸發時機可能會和輸入法的組字狀態衝突，畫面不一定會即時更新。
 
-`(keyup)` 則是每次放開按鍵才觸發，時機比較單純、穩定，尤其是中文輸入環境下的相容性比較好。
+`keyup` 則是每次放開按鍵時觸發，時機比較單純，在中文輸入的環境下比較穩定。
 
-⚠️ 這是同學實作時很容易忽略的細節，如果教材或範例只用英文測試，可能感覺不出差異，但正式上線後遇到中文輸入就會出問題，所以我們建議統一使用 `(keyup)`。
+如果只用英文測試，可能感覺不出差別，但正式上線遇到中文輸入就可能出問題，所以這裡建議使用 `keyup`。
 -->
 
 ---
@@ -131,7 +133,7 @@ class: flex flex-col justify-center items-center text-center
 # Set Up the Data Table
 
 <!--
-在做搜尋功能之前，我們得先有東西可以搜。接下來這張投影片就是準備一個示範用的 mat-table，讓大家等一下可以在上面練習套用搜尋邏輯。
+在做搜尋之前，要先有資料可以搜尋。接下來我們準備一個示範用的 `mat-table`。
 -->
 
 ---
@@ -147,9 +149,11 @@ class: flex flex-col justify-center items-center text-center
 表格包含 No.、Name、Weight、Symbol 四個欄位，共 12 筆元素資料，分頁顯示每頁 5 筆。
 
 <!--
-這張範例的目的是先讓大家有一個可以操作的表格。我們沿用之前教過的 mat-table，準備了一份化學元素的假資料 `ELEMENT_DATA`，一共十筆，包含編號、名稱、重量、符號四個欄位，並且設定每頁顯示五筆做分頁。
+我們沿用之前學過的 `mat-table`，準備一份化學元素的假資料 `ELEMENT_DATA`。
 
-大家可以看到畫面上的表格跟我們之前 mat-table 章節做的長得很像，這是刻意的，因為即時搜尋本來就是建立在既有的表格功能之上，等一下我們只是在上面「加裝」一個搜尋框而已，不需要重新設計整個表格。
+表格有 No.、Name、Weight 和 Symbol 四個欄位，共 12 筆資料，每頁顯示 5 筆。
+
+這個表格跟之前 `mat-table` 那一章做的幾乎一樣，因為即時搜尋是建立在現有的表格上，我們只是在上面加一個搜尋框，不需要重新設計表格。
 -->
 
 ---
@@ -161,7 +165,7 @@ class: flex flex-col justify-center items-center text-center
 # Search Input HTML
 
 <!--
-表格準備好了，接下來就是真正的重點——在表格上方加一個搜尋框，並且把它跟我們的過濾方法接起來。
+表格準備好了，接下來是重點：在表格上方加上搜尋框，並把它和過濾的方法接起來。
 -->
 
 ---
@@ -188,11 +192,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這段範例的目的是把搜尋框跟過濾邏輯串起來。大家可以看到 `<input>` 標籤上同時掛了兩個東西：一個是 `(keyup)` 事件繫結，呼叫我們待會會寫的 `changeData()` 方法；另一個是 `[(ngModel)]` 雙向繫結，把輸入的文字同步存到 `inputData` 這個變數。
+在模板裡加上一個 `input`，上面有兩個設定。
 
-之所以兩個一起用，是因為 `(keyup)` 負責「觸發時機」，`[(ngModel)]` 負責「保存輸入值」，等一下我們寫過濾邏輯的時候，這兩種取值方式都會用到。
+第一個是小括號 `keyup` 事件繫結，每次按鍵放開時，就呼叫 `changeData`，並把 `$event` 傳進去。第二個是 `ngModel` 雙向繫結，把輸入的文字同步存進 `inputData`。
 
-⚠️ 提醒大家再次注意，這裡用的是 `(keyup)` 不是 `(input)`，原因就是前面講的中文輸入相容性問題。
+兩者分工不同：`keyup` 負責「觸發的時機」，`ngModel` 負責「保存輸入的值」。下方則是原本的 `mat-table`。
+
+再提醒一次，這裡用的是 `keyup`，而不是 `input`，原因就是剛才提到的中文輸入問題。
 -->
 
 ---
@@ -204,7 +210,7 @@ class: flex flex-col justify-center items-center text-center
 # Reading the Input Value
 
 <!--
-搜尋框接好了事件，接下來要解決的是：在 `changeData()` 方法裡，到底要怎麼拿到使用者剛剛打的字？這裡有兩種做法，我們一起來看看。
+搜尋框接好事件之後，接下來的問題是：在 `changeData` 方法裡，要怎麼拿到使用者輸入的文字？這裡有兩種做法。
 -->
 
 ---
@@ -233,13 +239,11 @@ changeData(event: Event) {
 ```
 
 <!--
-這段範例的目的是示範兩種拿到輸入值的方式，讓大家知道兩者的差別在哪裡。
+第一種方法，是從 `$event` 取得。這在繫結那一章學過，因為 TypeScript 不知道 `event.target` 是哪一種元素，所以要用 `as HTMLInputElement` 告訴它這是輸入框，才能讀取 `.value`。
 
-方法一是直接從 `$event` 這個原生事件物件下手，因為 TypeScript 不知道 `event.target` 實際上是哪種 HTML 元素，所以要用 `as HTMLInputElement` 做型別斷言，才能安全地讀到 `.value`。
+第二種方法，是利用 `ngModel`。因為雙向繫結的關係，使用者打字的當下，`inputData` 就已經同步更新了，直接讀取 `this.inputData` 就好，不需要用到 `$event`。
 
-方法二則是借助我們前面繫結好的 `[(ngModel)]`，因為雙向繫結的關係，`inputData` 這個變數在使用者打字的當下就已經自動同步好了，我們直接讀 `this.inputData` 就可以，完全不用碰 `$event`。
-
-⚠️ 同學常見的誤會是以為 `event.target.value` 可以直接用，其實 TypeScript 型別檢查會擋下來，一定要記得加上型別斷言。兩種方法擇一使用即可，接下來的範例我們會用方法一來示範完整的過濾邏輯。
+兩種方法擇一使用就可以，接下來的範例會用第一種方法示範完整的過濾邏輯。
 -->
 
 ---
@@ -251,7 +255,7 @@ class: flex flex-col justify-center items-center text-center
 # Filter Logic
 
 <!--
-最後一塊拼圖來了：拿到輸入值之後，要怎麼真正去篩選資料、把結果顯示回表格？這就是即時搜尋最核心的邏輯。
+最後一塊拼圖：拿到輸入的值之後，要怎麼篩選資料，並把結果顯示回表格？這是即時搜尋最核心的邏輯。
 -->
 
 ---
@@ -280,11 +284,13 @@ changeData(event: Event) {
 - `this.dataSource.data = tidyData` — 更新表格顯示
 
 <!--
-這段範例的目的是把前面學到的東西整合成真正可以運作的搜尋功能。大家帶著我一起看一下邏輯：我們先準備一個空陣列 `tidyData` 用來裝篩選後的結果，然後用 `forEach` 把原始的 `ELEMENT_DATA` 一筆一筆檢查過去，用 `indexOf` 判斷這一筆的 `name` 欄位裡有沒有包含使用者輸入的字串，如果有（也就是 `indexOf` 不等於 -1），就把這筆資料放進 `tidyData`。
+我們來看過濾的邏輯。
 
-全部檢查完之後，最後一行 `this.dataSource.data = tidyData` 才是真正讓畫面更新的關鍵，因為 mat-table 是靠 `dataSource.data` 的變化來重新渲染的。
+先準備一個空陣列 `tidyData`，用來存放篩選後的結果。接著用 `forEach`，逐一檢查原始資料 `ELEMENT_DATA` 的每一筆，用 `indexOf` 判斷這筆的 `name` 裡，有沒有包含使用者輸入的文字。`indexOf` 的結果不等於負一，就代表有包含，把這筆資料放進 `tidyData`。
 
-⚠️ 這裡要特別注意，我們自始至終都沒有動到 `ELEMENT_DATA` 本身，每次搜尋都是從完整的原始資料重新篩選一次，這樣才不會發生資料越搜尋越少、清空後找不回來的問題。執行結果就是，大家打字的當下，表格會即時只留下名稱包含輸入字串的元素。
+全部檢查完之後，最後一行把 `tidyData` 指定給 `this.dataSource.data`，表格就會重新顯示。
+
+要特別注意，我們從頭到尾都沒有修改 `ELEMENT_DATA`。每次搜尋都從完整的原始資料重新篩選，這樣才不會越搜尋資料越少，清空搜尋框之後也能恢復完整的清單。
 -->
 
 ---
@@ -309,9 +315,11 @@ export interface PeriodicElement {
 ```
 
 <!--
-這四張投影片的目的，是把剛剛拆開講解的片段組合成一份完整的元件程式碼，讓大家可以對照著自己專案裡的檔案檢查。這裡刻意把完整內容都列出來，不用 `// ... 更多資料` 或 `{ /* ... */ }` 這種省略寫法，是因為同學實作時常常直接照抄投影片，省略寫法照抄出來的程式碼會編譯不過或缺少必要的 import。
+接下來五頁，我們把剛才拆開講的片段，組合成完整的元件程式碼，方便對照自己的專案檢查。
 
-這張先看 import 跟型別定義：`MatTableDataSource`、`MatPaginator` 是等一下會用到的類別，`FormsModule`、`MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule`、`MatInputModule` 則是元件 `imports` 陣列需要註冊的模組，一次列在最前面，後面幾張就不用再重複 import。`PeriodicElement` 這個 interface 描述每一筆資料要有 position、name、weight、symbol 四個屬性。
+這頁是匯入和型別定義。`MatTableDataSource` 和 `MatPaginator` 是等一下會用到的類別；`FormsModule`、`MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule` 和 `MatInputModule`，則是要放進元件 `imports` 陣列的模組。
+
+`PeriodicElement` 這個 interface，描述每一筆資料都有 position、name、weight 和 symbol 四個屬性。
 -->
 
 ---
@@ -337,7 +345,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ```
 
 <!--
-接著宣告 `ELEMENT_DATA` 這份原始假資料，一共 12 筆元素。這部分其實跟我們之前 mat-table 章節看到的一模一樣，沒有新增任何跟搜尋相關的東西，等一下搜尋功能就是從這份資料裡篩選。
+這頁是原始的假資料 `ELEMENT_DATA`，一共 12 筆元素。
+
+這部分和之前 `mat-table` 那一章完全一樣，沒有任何跟搜尋相關的修改。等一下的搜尋，就是從這份資料裡篩選。
 -->
 
 ---
@@ -361,7 +371,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ```
 
 <!--
-這張是元件的 `@Component` 設定，用到的模組都已經在範例（一）匯入好了。因為用 `[(ngModel)]`，一定要註冊 `FormsModule`，這是同學最常漏掉的一步；其餘的 `MatTableModule`、`MatPaginatorModule`、`MatFormFieldModule`、`MatInputModule` 則是 mat-table 跟搜尋框需要的模組。
+這頁是元件的 `@Component` 設定。
+
+因為用到了 `ngModel`，一定要在 `imports` 加入 `FormsModule`，這是最常漏掉的一步。其他四個模組，則是 `mat-table`、分頁器和輸入框需要的。
 -->
 
 ---
@@ -383,7 +395,11 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-這是今天真正的重點所在，先看類別的前半段。`inputData`、`displayedColumns`、`dataSource` 三個屬性，`dataSource` 一開始是用完整的 `ELEMENT_DATA` 建立的，`ngAfterViewInit()` 裡把分頁器接上表格，這些都是既有的 mat-table 設定，還沒碰到搜尋邏輯。
+這頁是 class 的前半段。
+
+`inputData` 存放搜尋框的內容，`displayedColumns` 決定顯示的欄位，`dataSource` 一開始用完整的 `ELEMENT_DATA` 建立。`ngAfterViewInit` 裡把分頁器接上表格。
+
+這些都是原本 `mat-table` 的設定，還沒有涉及搜尋的邏輯。
 -->
 
 ---
@@ -405,9 +421,11 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-這裡接續上一張的類別，收尾的 `}` 是類別本身的結尾。真正新增的就是 `changeData()` 這個方法，也就是我們剛剛一步一步拆解過的過濾邏輯，現在放回完整的元件裡，大家可以看到它跟 `inputData`、`dataSource` 之間是怎麼配合運作的。
+這頁是 class 的後半段，也就是新增的 `changeData` 方法，最後的右大括號是整個 class 的結尾。
 
-大家可以拿這份完整程式碼對照自己專案裡寫的內容，看看有沒有哪個環節漏掉，例如忘記加 `FormsModule`（`[(ngModel)]` 需要用到）或是忘記把事件換成 `(keyup)`。
+方法的內容，就是剛才拆解過的過濾邏輯：準備空陣列，用 `forEach` 加 `indexOf` 篩選，最後寫回 `dataSource.data`。
+
+可以拿這份程式碼對照自己的專案，檢查有沒有漏掉 `FormsModule`，或是事件忘了換成 `keyup`。
 -->
 
 ---
@@ -426,9 +444,9 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-這三張投影片補上完整的 `app.component.html`，讓大家可以跟前面幾張 TypeScript 對照著看，一樣不省略任何一段，避免同學照抄後編譯不過。
+接下來三頁是完整的 HTML，先看搜尋框。
 
-這張是搜尋框本身：`matInput` 讓輸入框套用 Material 樣式，`(keyup)` 綁定我們寫好的 `changeData()`，`[(ngModel)]` 則雙向繫結 `inputData`，這兩個事件繫結是即時搜尋能運作的關鍵。
+`matInput` 讓輸入框套用 Material 的樣式，小括號 `keyup` 綁定 `changeData`，並傳入 `$event`，`ngModel` 雙向繫結 `inputData`。這兩個繫結，就是即時搜尋能運作的關鍵。
 -->
 
 ---
@@ -461,7 +479,9 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-這張是 `<table mat-table>` 裡四組 `matColumnDef`，分別對應 position、name、weight、symbol 四個欄位，跟我們之前 mat-table 章節寫法完全一樣，即時搜尋沒有改動這一段。
+這頁是表格裡的四組欄位定義，分別對應 position、name、weight 和 symbol。
+
+寫法和之前 `mat-table` 那一章完全一樣，即時搜尋沒有修改這一段。
 -->
 
 ---
@@ -479,9 +499,11 @@ export class AppComponent implements AfterViewInit {
 ```
 
 <!--
-最後這張收尾：`matHeaderRowDef` 跟 `matRowDef` 都吃 `displayedColumns` 這個陣列，決定欄位跟順序；`<mat-paginator>` 負責分頁，記得要在 `ngAfterViewInit()` 把它跟 `dataSource.paginator` 接起來，不然分頁器不會生效。
+最後是表頭列、資料列和分頁器。
 
-⚠️ 提醒大家，`matColumnDef` 的名稱、`displayedColumns` 陣列裡的字串、還有資料物件的屬性名稱，這三者一定要完全一致，這是我們在 mat-table 章節就強調過的重點，即時搜尋也不例外。
+兩個 `tr` 都指定了 `displayedColumns`，決定欄位和順序。`mat-paginator` 負責分頁，記得要在 `ngAfterViewInit` 把它接到 `dataSource.paginator`，否則分頁不會生效。
+
+另外再提醒一次，`matColumnDef` 的名稱、`displayedColumns` 的內容，以及資料物件的屬性名稱，三者一定要一致。
 -->
 
 ---
@@ -492,8 +514,10 @@ layout: end
 ### 善用 `(keyup)` 事件與 `indexOf` 過濾，即可為 mat-table 加入流暢的即時搜尋功能
 
 <!--
-今天我們從頭到尾做出了一個完整的即時搜尋功能，大家應該對整個流程都有感覺了：搜尋框監聽 `(keyup)` 事件，取得輸入值後用 `forEach` 加 `indexOf` 去篩選原始資料，最後把結果寫回 `dataSource.data` 讓表格自動更新。
+這一章我們做出了完整的即時搜尋功能。搜尋框用 `keyup` 事件觸發，比 `input` 事件更適合中文輸入。取得輸入值可以用 `$event` 搭配型別斷言，或直接讀取 `ngModel` 綁定的變數。過濾時用 `forEach` 加 `indexOf`，從原始資料篩選，再寫回 `dataSource.data`，讓表格自動更新。
 
-這個技巧不只限於元素週期表這種範例，大家以後遇到任何清單、表格需要搜尋功能，都可以套用同樣的思路。小提醒大家可以自己動手試試看，如果想要搜尋條件更精準，例如不分大小寫比對，或是同時比對多個欄位，可以怎麼修改 `changeData()` 這個方法？
+可以想一想，如果要搜尋時不分大小寫，或同時比對多個欄位，`changeData` 要怎麼修改？
+
+下一章，我們會學習用 `ngClass` 動態切換樣式。我們下一章見。
 -->
 

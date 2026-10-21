@@ -46,12 +46,11 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎回來！
-上一章我們學會了用「路由」把網頁分成好幾個房間，讓使用者能在不同的網址之間跑來跑去。
-但是，這時候遇到了一個非常尷尬的狀況：
-「大叔，我在首頁讓使用者填好了他的名字，結果他一走到下一頁，剛剛填的名字直接人間蒸發！這是失憶症嗎？」
-沒錯！因為在單頁應用裡，切換頁面時，原來的元件會被直接銷毀（Destroy）。
-所以，今天我們要來學習如何打通各頁面與各積木之間的「通訊管道」，讓資料可以跨頁面、跨父子積木自由飛翔！
+上一章我們學會用路由，在不同頁面之間切換。但這時候會遇到一個問題：使用者在第一頁輸入了名字，切換到第二頁之後，資料就不見了。
+
+原因是在單頁應用裡，切換頁面時，原本的元件會被銷毀，裡面的資料也跟著消失。
+
+這一章，我們要學習怎麼讓資料在頁面之間、以及父子元件之間傳遞。
 -->
 
 ---
@@ -69,11 +68,7 @@ layout: default
 - **實作練習**
 
 <!--
-今天我們的通訊建置作戰計畫如下：
-首先，了解為什麼需要 `Service` 服務，並動手建立它。
-接著，看怎麼用 Service 當作中央轉運站，把資料從 A 頁送往 B 頁。
-然後，我們會轉向組件內部的通訊：學習把資料傳進子元件的 `@Input` 絕招，以及子元件向外發送通知的 `@Output` 絕招。
-最後，透過兩道組件傳值的實作題，讓我們完全掌握父子通訊的奧義！
+這一章分成兩大部分。第一部分是頁面之間的傳遞：先說明為什麼需要 Service，接著建立 Service，再用它在兩個頁面之間傳遞資料。第二部分是元件之間的傳遞：用 `@Input` 讓父元件把資料傳給子元件，用 `@Output` 讓子元件通知父元件。最後用兩個練習把父子傳值練熟。
 -->
 
 ---
@@ -85,7 +80,7 @@ class: flex flex-col justify-center items-center text-center
 # Route Data Sharing
 
 <!--
-第一站，我們先來解決「跨路由頁面（沒有父子關係）」的通訊痛點。
+我們先解決第一個問題：沒有父子關係的頁面之間，要怎麼傳遞資料。
 -->
 
 ---
@@ -107,12 +102,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-你想想看，今天我們點擊路由從第一頁切換到第二頁。
-因為第一頁的元件已經被卸載、銷毀了，所以第二頁根本抓不到第一頁大腦裡的變數。
-這時候，我們就需要一個「中央轉運倉庫」——也就是 `Service`（服務）！
-這個服務是個「Singleton 單例」，也就是在整個網頁運行期間，不管你怎麼換頁，這個倉庫永遠只有一間，而且永遠不會倒塌。
-第一頁把貨物（資料）寄存在倉庫，第二頁進來直接去倉庫提貨。
-這樣，跨頁面傳值就輕輕鬆鬆搞定了！
+從 A 頁面切換到 B 頁面時，A 頁面的元件已經被銷毀了，所以 B 頁面沒辦法直接取得 A 頁面的資料。
+
+解決方法是建立一個 Service，當作中間的儲存空間。我們可以把它想成一個中央倉庫：A 頁面把資料寄放在倉庫，B 頁面再到倉庫把資料取出來。每個頁面都可以注入這個 Service，讀取裡面的資料。Service 除了放變數，也可以放多個頁面共用的方法。
+
+不過要注意一個限制：Service 的資料只在應用程式運作期間有效。如果使用者按 F5 重新整理、直接輸入網址，或開新分頁，應用程式會重新啟動，Service 裡的資料就會全部歸零。
 -->
 
 ---
@@ -124,7 +118,7 @@ class: flex flex-col justify-center items-center text-center
 # Create a Service
 
 <!--
-既然知道倉庫的好處，我們馬上用 CLI 指令，在專案裡蓋一間轉運倉庫吧！
+知道 Service 的用途之後，我們用 CLI 來建立一個。
 -->
 
 ---
@@ -146,10 +140,11 @@ ng g s @services/example
 </div>
 
 <!--
-怎麼建 Service 呢？
-我們打開終端機，輸入 `ng generate service @services/example`，或者是縮寫 `ng g s @services/example`。
-大叔這裡習慣把所有的服務檔案，通通丟進一個叫 `@services` 的資料夾裡統一管理。
-注意喔！你打指令的時候，後面「不需要寫 .service.ts」，Angular 會自動幫你把後綴補齊。
+建立 Service 的指令是 `ng generate service`，縮寫是 `ng g s`，後面接路徑和名稱。
+
+一個專案可能會有好幾個 Service，建議在 `src` 底下建立 `@services` 資料夾統一管理。例如輸入 `ng g s @services/example`，就會在這個資料夾裡建立 example 這個 Service。
+
+注意名稱後面不用加 `.service.ts`，CLI 會自動補上，產生 `example.service.ts`。
 -->
 
 ---
@@ -173,11 +168,11 @@ export class ExampleService {
 `providedIn: 'root'` 表示這個 Service 在整個應用程式中只有一個實例（Singleton），所有頁面共用同一份資料。
 
 <!--
-產生好檔案後，我們打開它。
-你會看到最上面有一個用小老鼠開頭的 `@Injectable` 裝飾器。
-裡面寫著 `providedIn: 'root'`。
-這行意思就是：「全專案的人，都可以隨時進來使用我這個倉庫！」
-有了這個設定，我們就不需要手動在各個地方實例化它，Angular 會自動在背景幫我們管理這個唯一的倉庫實例。
+打開剛建立的檔案，會看到預設的內容。
+
+上方有一個 `@Injectable` 裝飾器，裡面寫著 `providedIn: 'root'`。意思是這個 Service 在整個應用程式裡「只有一個實例」，這叫做單例，英文是 Singleton。
+
+所以不管在哪個頁面注入它，拿到的都是同一個 Service，裡面的資料也是同一份，這正是它能在頁面之間傳遞資料的原因。
 -->
 
 ---
@@ -199,10 +194,11 @@ export class ExampleService {
 以此例：A 頁面（`first.component.ts`）要將 `userName` 傳給 B 頁面（`second.component.ts`），就在 Service 中同樣宣告 `userName`。
 
 <!--
-既然倉庫蓋好了，我們要怎麼用呢？
-很簡單，我們在 Service 的 class 肚子裡宣告變數，比如 `userName: string = ''`。
-這就是我們要在 A 頁和 B 頁之間傳遞的貨物。
-只要把這個變數準備好，轉運站就正式開始營業囉！
+接著在 Service 裡宣告要傳遞的變數。
+
+假設 A 頁面要把 `userName` 傳給 B 頁面，就在 Service 的 class 裡同樣宣告一個 `userName`，初始值是空字串。建議命名跟原本頁面的變數一樣，比較好辨識。
+
+這樣倉庫就準備好了，接下來就是 A 頁面存入、B 頁面取出。
 -->
 
 ---
@@ -223,7 +219,11 @@ export class CartService {
 ```
 
 <!--
-考察 @Injectable 裝飾器與 providedIn: 'root' 的意義：這兩行決定 Service 是否為全域單例。
+我們用一個小練習熟悉 Service 的結構。
+
+請補完 `CartService`：從 `@angular/core` 引入裝飾器，加上讓整個應用程式共用同一個實例的設定，並宣告一個數字型別、初始值為 0 的 `cartCount`。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -248,7 +248,11 @@ export class CartService {
 </div>
 
 <!--
-@Injectable 是 Service 的身份標記，缺少它 Angular 注入系統無法識別。providedIn: 'root' 讓這個倉庫在全站只有一間。
+我們來看答案。
+
+從 `@angular/core` 引入 `Injectable`，加上 `@Injectable` 裝飾器，裡面寫 `providedIn: 'root'`。class 裡宣告 `cartCount` 等於 0。
+
+`@Injectable` 讓 Angular 知道這是一個可以被注入的 Service；`providedIn: 'root'` 讓它在整個應用程式中只有一個實例，所以 A 頁存入的值，B 頁可以直接讀到。
 -->
 
 ---
@@ -260,7 +264,7 @@ class: flex flex-col justify-center items-center text-center
 # Pass Data Between Pages
 
 <!--
-現在，我們就來演練一下「A 頁寄貨、B 頁收貨」的完整物流流程。
+接下來，我們完整演練一次，A 頁面存入資料、B 頁面取出資料的流程。
 -->
 
 ---
@@ -285,13 +289,11 @@ export class FirstComponent {
 此時 Service 中的 `userName` 就等於 `'Allen'`。
 
 <!--
-首先是 A 頁（寄貨方）。
-我們在 `first.component.ts` 的 constructor 括號裡，寫上 `private exampleService: ExampleService`。
-這代表我們把倉庫的鑰匙（注入服務）拿到手了。
-接著在送出方法裡，直接寫 `this.exampleService.userName = 'Allen'`。
-看！我們直接把貨物塞進了倉庫的置物櫃裡。
-A 頁的任務到此圓滿完成！
-大叔特別提醒：這個倉庫只在應用程式「運作期間」有效！只要使用者按 F5 重新整理、直接在網址列輸入新網址、或是開新分頁，整個 Angular 應用程式會重新啟動，倉庫就會被砸掉重蓋，裡面的貨物通通清空。這招只適合處理 SPA 內部靠路由（router）切換頁面的情境。
+先看 A 頁面，也就是發送方。
+
+在 `first.component.ts` 的 `constructor` 裡注入 `ExampleService`。接著在 `sendData` 方法裡，寫 `this.exampleService.userName` 等於 Allen，把資料存進 Service。
+
+執行之後，Service 裡的 `userName` 就變成 Allen 了。A 頁面的任務到這裡就完成了。
 -->
 
 ---
@@ -318,12 +320,13 @@ export class SecondComponent {
 </div>
 
 <!--
-再來是 B 頁（收貨方）。
-同樣地，在 `second.component.ts` 的 constructor 注入同一個服務。
-接著，我們在大腦初始化時，直接寫 `this.userName = this.exampleService.userName`。
-這就是在從置物櫃裡把貨物拿出來，灌給自己的變數！
-這樣，使用者就能在第二頁看到剛剛在第一頁填的 'Allen' 了。
-大叔特別提醒：這招非常適合在「登入後存取 Token」或是「多步驟結帳表單」使用喔！
+再來看 B 頁面，也就是接收方。
+
+在 `second.component.ts` 的 `constructor` 裡，同樣注入 `ExampleService`，然後把 `this.exampleService.userName` 指定給自己的 `userName` 變數。這樣 B 頁面就能顯示剛才在 A 頁面存入的 Allen。
+
+要注意時間順序：A 頁面必須先把資料存進 Service，B 頁面才讀得到正確的值。
+
+這個做法很適合用在登入後保存使用者資訊，或是分成好幾個步驟的表單。
 -->
 
 ---
@@ -347,8 +350,11 @@ export class FirstComponent {
 ```
 
 <!--
-inject() 是 Angular 14 推出的函式式注入，適合 Standalone Component。
-不需要寫 constructor 參數，直接在屬性初始化時呼叫 inject()，程式碼更簡潔。
+除了在 `constructor` 注入，Angular 還提供了另一種寫法：`inject()` 函式。
+
+看發送方的範例，從 `@angular/core` 引入 `inject`，然後直接在類別屬性寫 `private exampleService` 等於 `inject(ExampleService)`，就完成注入了。
+
+這種寫法不需要在 `constructor` 的參數裡宣告，程式碼更簡潔，很適合獨立元件。`sendData` 方法的寫法則完全一樣。
 -->
 
 ---
@@ -373,8 +379,11 @@ export class SecondComponent {
 ```
 
 <!--
-接收方一樣用 inject() 拿到 Service 實例，屬性宣告即完成注入。
-constructor 內讀值時機與傳統寫法相同，需確保發送方已寫入資料。
+接收方也一樣，用 `inject()` 取得 Service。
+
+類別屬性宣告 `exampleService` 等於 `inject(ExampleService)`，讀值的邏輯則放在 `constructor` 裡，把 Service 裡的 `userName` 指定給自己的變數。
+
+讀值的時機跟傳統寫法相同，一樣要確認發送方已經先存入資料。
 -->
 
 ---
@@ -393,8 +402,11 @@ constructor 內讀值時機與傳統寫法相同，需確保發送方已寫入�
 </div>
 
 <!--
-constructor 注入是傳統寫法，舊專案幾乎都長這樣。
-inject() 是新式函式寫法，可在 ch24（Cookie）、ch42（Dialog）、ch50（ReactiveForm）看到大量應用。
+我們比較一下兩種注入方式。
+
+`constructor` 注入是傳統寫法，寫在 `constructor` 的參數裡，所有版本的 Angular 都支援，舊專案大多是這種寫法。`inject()` 是較新的寫法，寫成類別屬性，新版的獨立元件比較推薦。
+
+兩種寫法注入的都是同一個 Service 實例，功能完全一樣。之後的章節會看到兩種寫法，這門課較新的範例以 `inject()` 為主。
 -->
 
 ---
@@ -419,7 +431,11 @@ constructor(private authService: AuthService) {
 ```
 
 <!--
-考察 Service 跨頁傳值的完整流程：A 頁存值到 Service 屬性，B 頁讀取 Service 屬性。
+我們用一個小練習熟悉頁面之間的傳遞。
+
+A 頁面是登入頁，登入成功後，把 token 存進 `AuthService`。B 頁面是後台頁，在 `constructor` 裡讀取 token，存進自己的變數。請補完兩個頁面的程式碼。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -446,7 +462,11 @@ constructor(private authService: AuthService) {
 </div>
 
 <!--
-Service 是中央倉庫：A 頁把貨物（token）存進去，B 頁進來直接提貨。這是跨路由傳值最常用的模式。
+我們來看答案。
+
+A 頁面在 `onLogin` 裡，寫 `this.authService.token` 等於 abc123，把值存進去。B 頁面在 `constructor` 裡，寫 `this.token` 等於 `this.authService.token`，把值讀出來。
+
+兩個頁面注入的是同一個 Service 實例，所以 A 頁存入之後切換到 B 頁，B 頁就能讀到最新的值。這是頁面之間傳遞資料最常用的方式。
 -->
 
 ---
@@ -458,9 +478,7 @@ class: flex flex-col justify-center items-center text-center
 # Component Data Passing
 
 <!--
-「大叔，那如果我的子積木就嵌套在父網頁裡面，我也要大費周章去建一個 Service 倉庫嗎？」
-問得好！如果元件有親近的「父子血緣關係」，我們有更直接、更即時的通訊絕招。
-那就是 `@Input` 和 `@Output`！
+子元件就放在父元件裡時，不需要 Service，可以用更直接的 `@Input` 和 `@Output`。
 -->
 
 ---
@@ -476,13 +494,13 @@ class: flex flex-col justify-center items-center text-center
 | @Output | ✅ 子元件觸發時即時回傳 | 子元件 → 父元件（回傳事件） |
 
 <!--
-為什麼有父子關係的積木不用 Service？
-因為 Service 雖然能存值，但它沒辦法「即時廣播」。
-如果父網頁的輸入框字變了，用 Service 傳遞，子積木是不知道要重新讀取的。
-而 `@Input` 和 `@Output` 就像是接在父子積木之間的一根「傳聲筒」。
-父網頁的資料一變，子元件的接收端（@Input）會在一毫秒內同步更新！
-子元件發生點擊，也能立刻用事件（@Output）震動傳回給父網頁。
-這兩招是元件化開發的最核心必修課！
+為什麼父子元件不用 Service？
+
+看表格，Service 的值通常只在某個時間點讀取一次，父元件的資料後來改變了，子元件不會自動知道。
+
+`@Input` 和 `@Output` 則像是接在父子元件之間的傳聲筒。`@Input` 讓父元件傳資料給子元件，父元件的變數一改變，子元件就會同步更新。`@Output` 則讓子元件在發生事件時，即時通知父元件。
+
+整理一下：頁面之間用 Service，父子元件之間用 `@Input` 和 `@Output`。
 -->
 
 ---
@@ -494,7 +512,7 @@ class: flex flex-col justify-center items-center text-center
 # Pass Data Into Component
 
 <!--
-首先，我們先來學習「父傳子」的專屬標記：`@Input`！
+我們先學父元件傳資料給子元件的 `@Input`。
 -->
 
 ---
@@ -523,12 +541,13 @@ export class SecondComponent {
 ```
 
 <!--
-要讓子元件能夠收錢、收資料，它必須自己先安裝一個「接收天線」。
-我們在子元件（SecondComponent）的 TS 檔案中，
-匯入 `Input`，並在變數前方加上 `@Input()` 裝飾器。
-例如 `@Input() value: string = ''`。
-這樣就是在對外宣告：「大家聽好，我身上多了一個叫 value 的插孔，歡迎大家把資料插進來！」
-子元件的 HTML 就可以直接用雙大括號 `{{ value }}` 來顯示這個隨時會變的值了。
+要讓子元件接收資料，子元件要先準備一個「接收的插孔」。
+
+在子元件的 TypeScript 裡，從 `@angular/core` 引入 `Input`，然後在變數前面加上 `@Input()` 裝飾器，例如 `@Input() value`。
+
+這樣就等於對外宣告：「我有一個叫做 value 的插孔，可以從外面把資料傳進來」。
+
+子元件的 HTML 就可以用雙大括號顯示 `value`，父元件傳什麼進來，這裡就顯示什麼。
 -->
 
 ---
@@ -552,11 +571,13 @@ export class FirstComponent {
 當 `parentName` 更新時，子元件的 `value` 也會即時同步更新。
 
 <!--
-那父元件要怎麼把資料塞進去呢？
-在父元件的 HTML 裡面，我們呼叫子元件標籤 `<app-second>`。
-並且在中括號裡，寫上子元件的插孔名字：`[value]="parentName"`。
-這行意思就是：「把父元件 TS 裡的 `parentName` 變數值，源源不斷地灌進子元件的 `value` 插孔！」
-只要父元件的 `parentName` 一變，子元件的畫面就立刻同步，不需要寫任何額外的 JS 監聽，非常方便！
+接著看父元件怎麼把資料傳進去。
+
+父元件的 TypeScript 裡有一個 `parentName` 等於 Allen。在父元件的 HTML 裡使用子元件標籤 `app-second`，再用中括號寫上子元件的插孔名稱，`value` 等於 `parentName`。
+
+意思是「把父元件的 `parentName`，傳進子元件的 `value`」。這其實就是我們學過的屬性繫結，只是對象換成了子元件。
+
+只要父元件的 `parentName` 改變，子元件的 `value` 就會即時同步更新。
 -->
 
 ---
@@ -578,11 +599,13 @@ layout: two-cols
 </div>
 
 <!--
-我們馬上來做第一個練習：
-請在父頁面放三個輸入框（姓名、年齡、職稱）。
-然後在父元件裡放上子元件的積木標籤。
-子元件要用三個天線 `@Input` 接收這三個值，並且在畫面上把這三個值即時排版印出來。
-這題主要是訓練大家對於多個 Input 傳參綁定的手感！
+我們來做第一個練習，熟悉 `@Input`。
+
+請建立父頁面 A 和子元件 B。父頁面有三個輸入欄位，子元件要即時顯示父頁面輸入的內容，三個欄位都要同步更新。
+
+想一想，父頁面的輸入框要用哪一種繫結？子元件又需要幾個 `@Input`？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -606,12 +629,13 @@ layout: default
 </div>
 
 <!--
-大叔給大家點出核心思路：
-子元件的 TS 要寫三個帶有 `@Input()` 裝飾器的變數：userName、userEmail、userAddress。
-父元件在 HTML 呼叫子元件時，要連寫三個中括號綁定，像是 `[userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress"`。
-還有，別忘了在父元件的 TS 匯入子元件的 class，並且在 HTML 輸入框加上 `[(ngModel)]` 雙向綁定。
-小括號、中括號要分清楚喔。
-只要這幾條線連上了，你在頁面A打字，頁面B（組件）就會即時亮起來！
+我們來看解題提示。
+
+子元件宣告三個 `@Input` 變數：使用者名稱、Email 和地址。父元件也宣告三個變數，各自用 `ngModel` 和輸入框雙向繫結。
+
+在父元件的 HTML 裡使用子元件標籤，連續寫三個中括號屬性繫結，把三個變數分別傳進子元件。子元件的 HTML 再用雙大括號顯示。
+
+記得父元件要匯入 `FormsModule` 和子元件 `SecondComponent`。
 -->
 
 ---
@@ -645,7 +669,9 @@ export class SecondComponent {
 ```
 
 <!--
-子元件開三個接收天線：userName、userEmail、userAddress，並在 HTML 上用雙大括號直接顯示出來。
+我們看完整的解答，先看子元件。
+
+TypeScript 裡用 `@Input()` 宣告三個變數：`userName`、`userEmail` 和 `userAddress`。HTML 裡用雙大括號，把這三個值顯示出來。
 -->
 
 ---
@@ -674,8 +700,9 @@ export class FirstComponent {
 ```
 
 <!--
-父元件需匯入 FormsModule（供 ngModel 雙向繫結用）與 SecondComponent（子元件）。
-宣告 userName、userEmail、userAddress 三個變數，對應三個輸入欄位。
+接著是父元件的 TypeScript。
+
+`imports` 陣列裡加入 `FormsModule` 和 `SecondComponent`，前者是為了使用 `ngModel`，後者是為了在 HTML 使用子元件。class 裡宣告三個變數，對應三個輸入欄位。
 -->
 
 ---
@@ -699,8 +726,11 @@ layout: default
 </div>
 
 <!--
-父元件用 ngModel 雙向繫結三個輸入框的值，再逐一用中括號綁定傳給子元件的三個 @Input 插孔。
-只要輸入框字一變，userName/userEmail/userAddress 立刻更新，子元件的三個插孔也跟著同步顯示。
+最後是父元件的 HTML。
+
+三個輸入框各自用 `ngModel` 雙向綁定一個變數。下方的子元件標籤，再用三個中括號屬性繫結，把變數分別傳進子元件的三個 `@Input`。
+
+在輸入框打字時，父元件的變數立刻更新，子元件收到新的值，畫面也就同步顯示出來。
 -->
 
 ---
@@ -712,8 +742,7 @@ class: flex flex-col justify-center items-center text-center
 # Pass Data Out of Component
 
 <!--
-「大叔，那如果我想在子元件裡放個按鈕，點了之後通知父元件，該怎麼辦？」
-這就是反向傳遞的絕招——`@Output`！
+那如果子元件裡有一個按鈕，點擊之後要通知父元件呢？這就要用反方向的 `@Output`。
 -->
 
 ---
@@ -737,11 +766,11 @@ export class SecondComponent {
 ```
 
 <!--
-如果說 `@Input` 是接收天線，那麼 `@Output` 就是「發射電台（Emitter）」。
-在新版的 Angular 中，我們宣告一個輸出變數，寫成：
-`changeUserName = output<string>()`。
-這個 `output<string>()` 是一個泛型，括號裡的 string 代表這個發射台等一下要發射出去的資料型態是字串。
-準備好這個發射台之後，子元件就可以在需要的時候發送信號了。
+如果 `@Input` 是接收的插孔，`@Output` 就是向外發送訊號的發射器。
+
+在新版的 Angular 裡，我們從 `@angular/core` 引入 `output`，然後宣告 `changeUserName` 等於 `output`，角括號裡寫 `string`。
+
+角括號裡的型別，代表這個發射器之後要送出的資料型別。這裡是字串。
 -->
 
 ---
@@ -769,12 +798,13 @@ export class SecondComponent {
 ```
 
 <!--
-怎麼發射呢？
-在子元件的 TS 方法裡，我們呼叫：
-`this.changeUserName.emit(this.inputName)`。
-那個 `.emit()` 就是「發送訊號」的意思。
-我們把子元件輸入框裡的 `inputName` 當作砲彈，用這個發射台轟炸出去。
-這時候子元件的任務就完成了，它只管發射，不管誰來接收。
+發射器準備好之後，要怎麼送出資料？
+
+在子元件的方法裡，呼叫 `this.changeUserName.emit()`，並把要送出的值放進去，這裡送出的是輸入框的 `inputName`。`emit` 就是「發送」的意思。
+
+HTML 裡，輸入框用 `ngModel` 綁定 `inputName`，按鈕點擊時呼叫 `emitName`。
+
+子元件只負責把資料送出去，不需要知道是誰來接收。
 -->
 
 ---
@@ -801,12 +831,13 @@ export class FirstComponent {
 ```
 
 <!--
-那父元件要怎麼攔截這枚砲彈呢？
-在父元件的 HTML 呼叫子元件標籤時，
-我們在小括號裡監聽這個發射台：`(changeUserName)="onNameChanged($event)"`。
-**特別注意！那個 `$event` 是 Angular 的保留字**，代表子元件剛剛用 `.emit()` 射出來的那顆砲彈（資料）！
-當訊號一進來，父元件就會執行 `onNameChanged` 方法，並把 `$event` 裡帶過來的字串塞給自己的變數。
-這樣就完成了精準的「子傳父」通訊！
+父元件要怎麼接收子元件送出的資料呢？
+
+在父元件的 HTML 裡使用子元件標籤時，用小括號監聽這個 output，寫成 `changeUserName` 等於 `onNameChanged($event)`。
+
+這裡的 `$event`，就是子元件用 `emit` 送出來的那筆資料。當子元件送出訊號，父元件就會執行 `onNameChanged`，並把 `$event` 傳進去。方法裡再把收到的名稱存進 `receivedName`，畫面就會顯示出來。
+
+這其實就是事件繫結，只是監聽的對象換成了子元件自訂的事件。
 -->
 
 ---
@@ -827,11 +858,11 @@ layout: two-cols
 </div>
 
 <!--
-好，馬上進行 Output 的實戰：
-請在子元件裡放一個輸入框跟送出按鈕。
-點按鈕時，用 `output` 把字串射出去。
-父頁面監聽這個事件，並在收到資料後，把收到的字印在根畫面上。
-這題考驗的是你對事件監聽與 `$event` 保留字取值的能力！
+我們來做第二個練習，熟悉 `@Output`。
+
+子元件 B 有輸入框和一個按鈕，按下按鈕後，把值輸出給父頁面 A，父頁面收到之後顯示出來。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -862,9 +893,13 @@ layout: default
 </div>
 
 <!--
-大叔提醒：子元件不要對三個欄位各自開一個 output，而是先把三個欄位包成一個物件，比如 `userData = { userName: '', userEmail: '', userAddress: '' }`。
-宣告輸出時，型別也跟著寫成物件泛型：`myOutput = output<{ userName: string; userEmail: string; userAddress: string }>()`。
-按鈕點擊時，直接把整個 `userData` 物件 emit 出去，一次搞定三筆資料。
+我們先看子元件的解題提示。
+
+子元件有三個輸入框：使用者名稱、Email 和地址。這裡的建議是，不要替三個欄位各開一個 output，而是用一個物件把三個欄位包起來。
+
+先宣告一個 `userData` 物件，存放三個欄位的值。output 的型別也寫成同樣形狀的物件。按鈕點擊時呼叫 `sendData`，用 `emit` 把整個物件一次送出去。
+
+這樣一次就能把三筆資料一起傳給父元件。
 -->
 
 ---
@@ -893,10 +928,13 @@ onReceive(event: { userName: string; userEmail: string; userAddress: string }) {
 </div>
 
 <!--
-父元件這邊，一樣準備一個同樣形狀的物件 `receivedData = { userName: '', userEmail: '', userAddress: '' }` 來裝收到的貨。
-在 HTML 監聽 `(myOutput)="onReceive($event)"`，這時候的 `$event` 就是那整包物件，包含三個欄位。
-在 `onReceive` 方法裡，直接把 `event` 整包塞進 `receivedData` 即可，不需要拆開一個一個賦值。
-這樣做的好處是，物件是「傳址」的容器，以後想多傳幾個欄位，只要往物件裡加屬性，不需要改 output 的參數個數，擴充性更好！
+接著是父元件的解題提示。
+
+父頁面沒有輸入框，只負責顯示收到的資料。父元件準備一個同樣形狀的 `receivedData` 物件，用來存放收到的資料。
+
+HTML 裡用小括號監聽 `myOutput`，呼叫 `onReceive($event)`。這時候的 `$event` 就是那整包物件，方法裡直接把它存進 `receivedData` 就好，不用拆開一個一個指定。
+
+用物件傳遞還有一個好處：之後想多傳幾個欄位，只要在物件裡加屬性，不需要再多開 output。
 -->
 
 ---
@@ -927,8 +965,9 @@ export class SecondComponent {
 ```
 
 <!--
-子元件宣告 userData 物件裝三個欄位，並開一個 output 型別同樣是三個欄位的物件。
-按鈕點擊時呼叫 sendData()，把整包 userData 一次 emit 出去。
+我們看完整的解答，先看子元件的 TypeScript。
+
+匯入 `FormsModule`，宣告 `userData` 物件存放三個欄位，再宣告型別相同的 `myOutput`。`sendData` 方法用 `emit` 把整包 `userData` 送出去。
 -->
 
 ---
@@ -951,7 +990,9 @@ layout: default
 </div>
 
 <!--
-三個輸入框直接雙向繫結 userData 物件裡的三個屬性，這樣打字時物件內容會即時更新，按鈕按下去 emit 出去的就是最新資料。
+子元件的 HTML。
+
+三個輸入框直接用 `ngModel` 綁定物件的屬性，例如 `userData.userName`，不用另外宣告三個獨立的變數。打字時物件的內容即時更新，按下按鈕時送出去的就是最新的資料。
 -->
 
 ---
@@ -981,7 +1022,9 @@ export class FirstComponent {
 ```
 
 <!--
-父元件宣告 receivedData 物件，形狀跟子元件傳來的一致。onReceive 方法直接把收到的整包 event 存進 receivedData。
+父元件的 TypeScript。
+
+`imports` 加入子元件 `SecondComponent`。宣告 `receivedData`，形狀和子元件送來的物件一樣。`onReceive` 方法接收這個物件，直接存進 `receivedData`。
 -->
 
 ---
@@ -1014,7 +1057,11 @@ layout: default
 </div>
 
 <!--
-父元件監聽子元件的 myOutput 事件，收到的 $event 就是子元件那包 { value, time } 物件，直接整包存進 receivedData，畫面上就能各自取出 value 跟 time 顯示。
+最後是父元件的 HTML。
+
+上方用雙大括號，分別顯示 `receivedData` 的名稱、Email 和地址。下方的子元件標籤，用小括號監聽 `myOutput`，把 `$event` 傳給 `onReceive`。
+
+在子元件填好資料、按下輸出按鈕之後，父頁面上方的三個欄位才會顯示收到的值。父元件不需要知道子元件內部怎麼組資料，只要照著物件的形狀接收就好。
 -->
 
 ---
@@ -1025,8 +1072,7 @@ layout: end
 ### 掌握 Service、@Input、@Output，讓元件之間資料自由流通
 
 <!--
-恭喜大家！成功克服了元件通訊這座前端大山！
-到了這一步，你的網頁積木之間再也不是孤島了，不論是隔壁房間的 Service，還是樓上樓下的 Input/Output，全部都通訊自如。
-回去把這幾種傳值方式反覆敲打練習。
-下一堂課，我們要跨入一個非常實用的主題——「網頁儲存（Web Storage）」，去看看如何把資料存在瀏覽器裡，就算使用者重新整理甚至關掉瀏覽器，資料依然不會消失！大家休息一下，我們等一下見！
+這一章我們學了兩種資料傳遞方式。頁面之間用 Service：用 `ng g s` 建立，`providedIn: 'root'` 讓全站共用同一個實例，可以用 `constructor` 或 `inject()` 注入，但重新整理後資料會歸零。父子元件之間，父傳子用 `@Input` 搭配中括號屬性繫結，子傳父用 `output` 和 `emit`，父元件再用小括號和 `$event` 接收。
+
+剛才提到 Service 的資料在重新整理後會消失。下一章，我們會學習網頁儲存，把資料存在瀏覽器裡。我們下一章見。
 -->

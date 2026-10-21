@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要來認識 Signals，這是 Angular 近年來主打的響應式狀態管理機制。
+前兩章我們用 RxJS 的 Subject 和 Observable，做出了跨元件共享的狀態。這一章，我們要認識 Angular 近年主推的另一種方式：Signals。
 
-前面我們處理跨元件共享狀態時，習慣用 RxJS 的 Subject 搭配 Observable，訂閱值的變化。這種寫法其實有點像請一個郵差每次都要「訂閱」才會收到信，程式碼繞了一圈。Signals 的出現就是想讓「讀值」跟「值變了要更新畫面」這件事變得更直覺，就像看一個隨時更新的看板，讀的時候直接看現在的值就好。
-
-學完這一章，大家會知道怎麼用 signal() 建立狀態、怎麼在 template 中讀取、怎麼用 computed() 做衍生計算、以及用 effect() 監聽變化，取代原本同步情境下的 Observable 寫法。
+用 Observable 時，要讀取一個值，得先訂閱。Signals 則像一塊隨時更新的看板，要讀取時直接看現在的值就好，寫起來更直覺。
 -->
 
 ---
@@ -69,7 +67,7 @@ layout: default
 - **注意事項**
 
 <!--
-這張投影片先讓大家看一下這一章的路線圖。我們會先快速複習一下之前用 Observable 做狀態共享的寫法，接著把同一個範例改寫成 Signals 版本，然後看怎麼在 template 中用、怎麼用 computed() 做衍生值、用 effect() 監聽變化，最後整理 Signals 適用與不適用的場景。
+這一章會先介紹 Signals 的概念，接著回顧上一章用 Observable 做的載入狀態，再把它改寫成 Signals 版本，並看看在模板裡怎麼使用。然後討論改用 Signal 之後，攔截器還需不需要調整。接著學習用 `computed` 做衍生計算、用 `effect` 監聽變化，最後整理注意事項，並做一個購物車小計的練習。
 -->
 
 ---
@@ -80,7 +78,7 @@ class: flex flex-col justify-center items-center text-center
 # Signals 概念介紹
 
 <!--
-這一節我們先建立 Signals 的基本概念，還不急著寫程式，先搞懂它是什麼、跟我們熟悉的 Observable 差在哪裡。
+我們先建立 Signals 的基本概念，搞懂它是什麼，以及跟 Observable 差在哪裡。
 -->
 
 ---
@@ -118,11 +116,13 @@ Signals 是 Angular v16 後推出的響應式狀態管理機制，用於監測�
 </div>
 
 <!--
-白話來說，Signal 就是一個「會被監控的容器」，裡面裝一個值，只要值變了，任何有讀取這個 Signal 的地方（template、effect）都會自動更新，不用我們手動去通知。
+Signals 是 Angular 16 之後推出的響應式狀態管理機制，用來監測值的變化，並即時反映到畫面上。
 
-大家可以想像成手機的電池百分比顯示：電量一變，狀態列就自動更新數字，不需要我們每次都去「訂閱」電量變化。這就是 Signal 的同步、即時特性。
+可以把 Signal 想成一個會被監控的容器，裡面裝著一個值。只要值改變，所有讀取這個 Signal 的地方，都會自動更新。就像手機的電量顯示，電量一變，數字就自動更新。
 
-在業界實務上，Signal 很適合用在元件內部狀態或簡單的跨元件共享狀態，比如 loading 旗標、計數器。但如果是要等後端 API 回應這種非同步情境，Signal 目前還是不夠用，這時候還是要用 Observable，這點等一下會反覆提醒大家。
+它有幾個特性：必須設定初始值；讀取時要用函式呼叫的方式；適用於同步、即時的狀態。
+
+看表格，Signal 一定要有初始值，用呼叫的方式讀取，不支援非同步；Observable 則用 `subscribe` 讀取，適合 API 這類非同步的情況。所以要等 API 回應時，還是要用 Observable。
 -->
 
 ---
@@ -133,7 +133,7 @@ class: flex flex-col justify-center items-center text-center
 # 以 Observable 實作狀態共享（回顧）
 
 <!--
-在改寫成 Signals 之前，我們先快速複習一下：原本的 loading 狀態共享是怎麼用 Observable 做的，等一下才有基準可以比較兩者的差異。
+在改寫之前，我們先快速回顧上一章用 Observable 做的載入狀態，等一下才有比較的基準。
 -->
 
 ---
@@ -158,13 +158,13 @@ export class LoadingService {
 ```
 
 <!--
-這段就是上一章 Loading 完成的 Service：在裡面建立一個 BehaviorSubject，再透過 asObservable() 包裝成外部可訂閱、但不能直接 next 的版本，show/hide 兩個方法負責推送新的值。
+這是上一章的 `LoadingService`。
 
-跟一般 Subject 不同，BehaviorSubject 建立時要給初始值（這裡是 false），而且新訂閱者會馬上拿到「目前」這個最新值，不用等下一次 next() 才有資料，這點跟等一下要介紹的 Signal 概念更接近。
+用 `BehaviorSubject` 存放狀態，初始值是 false；再用 `asObservable` 包成外部只能訂閱、不能修改的版本；`show` 和 `hide` 用 `next` 推送新的值。
 
-帶大家看一下重點：_loading$ 本身是 private，只有 Service 內部能呼叫 next()；公開的 loading$ 是給外部訂閱用的唯讀窗口，這是為了避免外部元件亂呼叫 .next()，只能透過 show()/hide() 這種受控的方法去改變狀態。
+`_loading$` 是 `private`，只有 Service 內部能修改；公開的 `loading$` 是給外部訂閱的唯讀窗口。
 
-等一下我們會看到，改成 Signal 之後，這整個「包一層 Observable」的動作就可以省略了。
+等一下會看到，改成 Signal 之後，這一層包裝就可以省略了。
 -->
 
 ---
@@ -191,9 +191,11 @@ export class AppComponent {
 ```
 
 <!--
-這也是上一章的原始碼：元件本身沒有 subscribe，只是把 Service 公開的 loading$ 接到自己的屬性上，真正的訂閱交給樣板裡的 async pipe，它會自動訂閱，元件銷毀時也會自動取消訂閱。
+這是上一章的 `AppComponent`。
 
-大家可以留意一下這條鏈路有多長：BehaviorSubject → asObservable() → 元件屬性 → async pipe → @if，光是「讓畫面知道一個布林值變了」就要串五層。等一下改成 Signal，大家會看到這條鏈路縮短成什麼樣子。
+元件把 Service 的 `loading$` 接到自己的屬性上，再交給模板裡的 `async` pipe 自動訂閱。
+
+注意這條鏈路有多長：`BehaviorSubject`、`asObservable`、元件屬性、`async` pipe，最後才是 `@if`。只是要讓畫面知道一個布林值變了，就要串好幾層。等一下看看改成 Signal 之後會變成什麼樣子。
 -->
 
 ---
@@ -204,7 +206,7 @@ class: flex flex-col justify-center items-center text-center
 # 改寫為 Signals 寫法
 
 <!--
-複習完 Observable 版本，現在我們動手把同一個 loading 狀態共享的例子，一步一步改寫成 Signals 版本，讓大家直接感受兩種寫法的差異。
+回顧完 Observable 的版本，接下來我們把同一個例子，一步一步改寫成 Signals。
 -->
 
 ---
@@ -235,11 +237,11 @@ export class LoadingService {
 ```
 
 <!--
-帶大家看一下改寫的重點：原本兩行「宣告 Subject + asObservable()」現在合併成一行 signal(false)，而且一定要給初始值，這是跟 Observable 最大的不同。
+先改寫 `LoadingService`。
 
-⚠️ 提醒同學，這裡的初始值不能省略，Signal 建立時一定要指定型別對應的初始狀態，不像 Observable 可以先不給值。
+原本「宣告 `BehaviorSubject`，再用 `asObservable` 包裝」這兩行，現在合併成一行：`loading` 等於 `signal`，型別是布林，初始值 false。Signal 一定要給初始值，不能省略。
 
-更新狀態的方式也從 .next() 改成 .set()，語意上更直覺：「把值設成什麼」，而不是「推送一個新值到串流裡」。
+更新值的方式，從 `next` 改成 `set`。`show` 裡寫 `this.loading.set(true)`，`hide` 寫 `set(false)`。語意上也更直覺：「把值設成什麼」。
 -->
 
 ---
@@ -266,11 +268,13 @@ export class AppComponent {
 ```
 
 <!--
-這段最關鍵的地方是 ngOnInit 裡那一行：this.loading = this.loadingService.loading，寫法跟上一章接 loading$ 幾乎一模一樣，只是接過來的東西從 Observable 變成 Signal 本身。
+接著改寫 `AppComponent`。
 
-大家可以留意一下型別，loading 宣告成 Signal<boolean>，代表它是一個「函式型別」的物件，不是單純的布林值，等一下在 template 或程式碼中要讀值，都得用 this.loading() 這種函式呼叫的形式。
+`loading` 的型別宣告成 `Signal<boolean>`，在 `ngOnInit` 裡把 Service 的 `loading` 指定過來，寫法跟上一章幾乎一樣，只是接過來的是 Signal 本身。
 
-跟 Observable 版本比較起來，這裡不需要 async pipe 幫忙訂閱，也沒有任何訂閱要取消，Angular 會自動幫我們追蹤依賴關係。
+要注意，Signal 是一個函式型別的物件，不是單純的布林值。所以要讀取它的值，必須寫成 `this.loading()`，加上小括號。
+
+和 Observable 版本相比，這裡不需要 `async` pipe，也沒有訂閱需要取消，Angular 會自動追蹤。
 -->
 
 ---
@@ -281,7 +285,7 @@ class: flex flex-col justify-center items-center text-center
 # 在 Template 中使用 Signal
 
 <!--
-Service 跟元件的邏輯都改寫完了，接下來看看在畫面（template）上要怎麼讀取 Signal 的值。
+邏輯都改寫完了，接下來看看在模板裡怎麼讀取 Signal 的值。
 -->
 
 ---
@@ -307,13 +311,11 @@ Service 跟元件的邏輯都改寫完了，接下來看看在畫面（template�
 </div>
 
 <!--
-帶大家對照這兩行：上一章的寫法是 loading$ | async，要靠 async pipe 幫忙訂閱；Signal 版本只要 loading() 直接呼叫就好，連 CommonModule 的 async pipe 都不用 import。
+在模板裡，Signal 一樣用函式呼叫的方式讀取。
 
-@if (loading()) 這裡的 loading() 一定要加括號，這是同學最容易忘記的地方，因為我們平常寫 {{ 屬性名稱 }} 已經寫習慣了，Signal 卻要多加一組括號才能拿到裡面的值。
+上一章寫的是 `loading$`、直線符號、`async`；Signal 版本只要寫 `loading()` 就好，連 `async` pipe 都不需要。當 Signal 的值改變，Angular 會自動重新顯示這個區塊。
 
-⚠️ 易錯點提醒：如果忘記加括號，寫成 loading（沒有括號），Angular 不會報錯，但你拿到的是一個函式物件而不是布林值，畫面邏輯就會整個跑掉，這個坑務必提醒同學小心。
-
-執行結果是：只要 Service 裡的 loading 值一變，這段 @if 區塊就會自動重新渲染，完全不用我們手動處理更新畫面的邏輯。
+最容易犯的錯，是忘了加小括號。只寫 `loading` 的話，Angular 不會報錯，但拿到的是函式本身，而不是布林值，畫面的邏輯就會出錯。
 -->
 
 ---
@@ -324,7 +326,7 @@ class: flex flex-col justify-center items-center text-center
 # 延伸：Signal 與 ch45 的 Interceptor
 
 <!--
-既然 LoadingService 改成了 Signal 版本，我們回頭看一下上一章的 loadingInterceptor：那個為了 NG0100 加的 setTimeout，現在還需要嗎？Interceptor 本身又能不能直接拿掉？
+改用 Signal 之後，上一章攔截器裡的 `setTimeout` 還需要嗎？攔截器能不能拿掉？
 -->
 
 ---
@@ -353,11 +355,13 @@ export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 ```
 
 <!--
-上一章我們花了整整一頁解釋為什麼 show() 要包 setTimeout：因為 BehaviorSubject 的 next() 是「當下立刻」改值，如果根元件樣板這一輪已經檢查過 loading$ 的值，同一輪裡值又變了，開發模式的二次檢查就會抓到不一致，噴出 NG0100。
+答案是：改用 Signal 之後，NG0100 不會再發生。
 
-Signal 的更新機制天生就避開了這個問題：set() 不是直接闖進正在進行的這一輪檢查，而是把讀取這個 Signal 的畫面標記為 dirty，等 Angular 安排下一輪變更偵測才重新渲染。用拍團體照的比喻來說，Signal 版的舉手的人會自動等這張拍完、下一張再舉手，不用攝影師（我們）另外喊「等一下再舉」（setTimeout）。
+上一章的 NG0100，是因為模板已經檢查過 `loading$` 的值，同一輪檢查中，值又被 `next` 改掉了。
 
-所以改用 Signal 之後，攔截器裡那行 setTimeout 補丁可以拿掉，show() 直接呼叫就好，程式碼更乾淨、意圖也更清楚。
+Signal 的運作方式不同。`set` 不會直接改掉這一輪已經檢查過的結果，而是把讀取這個 Signal 的畫面標記為需要更新，再由 Angular 安排下一輪重新顯示。官方的錯誤說明也建議，改用 Signal 是解決這類時序問題的方法之一。
+
+用團體照的比喻，Signal 會自動等這張拍完，下一張才舉手。所以攔截器裡的 `setTimeout` 可以拿掉，直接呼叫 `show` 就好。
 -->
 
 ---
@@ -376,13 +380,11 @@ Signal 的更新機制天生就避開了這個問題：set() 不是直接闖進�
 </div>
 
 <!--
-這裡幫大家釐清一個容易混淆的點：Signal 跟 Interceptor 解決的是不同層面的問題，不是二選一的關係。
+那攔截器可以整個拿掉嗎？答案是不行。
 
-Signal 負責的是「狀態怎麼存、畫面怎麼知道狀態變了」這一層，它取代的是 BehaviorSubject、asObservable()、async pipe 這一整串。
+看表格，攔截器當初解決了兩個問題。第一個是 NG0100 的時序衝突，改用 Signal 之後就不會發生了，`setTimeout` 可以移除。第二個是每個元件都要手動呼叫 `show` 和 `hide`，容易忘記 `hide`，這個問題跟狀態用什麼技術存放無關，攔截器加上 `finalize` 仍然需要保留。
 
-Interceptor 負責的是「什麼時機呼叫 show()/hide()」這一層：如果拿掉它，就回到 ch45 前半段的手動模式——每個元件自己注入 Service、自己記得在成功跟失敗都呼叫 hide()，漏寫一個 error 分支，Loading 就卡住不消失。finalize() 保證收尾這個好處，跟狀態用什麼技術存完全無關。
-
-所以最終架構是：Signal 版 LoadingService + 拿掉 setTimeout 的 Interceptor，兩者搭配，各司其職。
+結論是：Signal 取代的是「狀態的存放和通知」，也就是 `BehaviorSubject` 加上 `async` pipe；而「什麼時候觸發 show 和 hide」，仍然是攔截器的工作。兩者各自負責不同的事。
 -->
 
 ---
@@ -393,7 +395,7 @@ class: flex flex-col justify-center items-center text-center
 # computed() 計算 Signal
 
 <!--
-接下來我們要看 Signal 的一個好搭檔：computed()，用來處理「這個值是根據另一個 Signal 算出來的」這種情境。
+接下來看 Signal 的好搭檔：`computed`，用來處理「這個值是根據另一個 Signal 算出來的」這種情況。
 -->
 
 ---
@@ -427,8 +429,11 @@ levelUp() {
 ```
 
 <!--
-getter 是 TypeScript 語法，讓屬性變成「唯讀計算屬性」。
-在 ch21 練習中，我們用手動更新 attack/defense，getter 是更乾淨的替代方案。
+在介紹 `computed` 之前，先看 TypeScript 的 getter。
+
+上半部沒有用 getter。`attack` 是根據 `level` 算出來的，所以每次 `level` 改變，都要記得手動更新 `attack`，忘了就會出錯。繫結那一章的等級計算機，就是這樣寫的。
+
+下半部改用 getter，在 `attack` 前面加上 `get`，裡面回傳 `level` 乘以 3。這樣只要定義一次，`level` 改變時，讀取 `attack` 就會自動得到新的值，不用再手動更新。
 -->
 
 ---
@@ -457,7 +462,13 @@ export class AppComponent {
 </div>
 
 <!--
-computed() 與 getter 概念一樣，差別在於 computed() 追蹤的是 Signal，變化時 Angular 自動通知 template 更新。
+`computed` 就是 Signal 版本的 getter。
+
+這裡 `level` 是一個 Signal，`attack` 等於 `computed`，裡面回傳 `this.level()` 乘以 3，`defense` 則是乘以 2。只要 `level` 改變，`attack` 和 `defense` 就會自動重新計算。
+
+`levelUp` 用 `update` 更新 `level`，`update` 接收一個函式，根據目前的值算出新值，這裡是加 1。
+
+要注意，`computed` 是唯讀的，不能呼叫 `set`。
 -->
 
 ---
@@ -477,8 +488,11 @@ computed() 與 getter 概念一樣，差別在於 computed() 追蹤的是 Signal
 </div>
 
 <!--
-總結：getter 和 computed() 都是「計算屬性」，只是適用的資料型態不同。
-記住：Signal 用 computed()，一般屬性用 getter。
+我們比較一下 getter 和 `computed`。
+
+getter 適用於一般屬性，讀取時直接寫 `this.attack`；`computed` 適用於 Signal，讀取時要加小括號。`computed` 會自動追蹤它依賴的 Signal，兩者都是唯讀的。
+
+演進的脈絡是：手動更新屬性、getter，再到 `computed`，三者解決的是同一個問題。記住一個原則：Signal 用 `computed`，一般屬性用 getter。
 -->
 
 ---
@@ -489,7 +503,7 @@ class: flex flex-col justify-center items-center text-center
 # 偵測 Signal 值變化（effect）
 
 <!--
-除了 computed() 算出新的值，有時候我們想在 Signal 變化的當下「順便做點事」，比如印個 log、操作 DOM，這種副作用邏輯就要靠 effect() 來處理。
+除了用 `computed` 算出新的值，有時候我們想在 Signal 改變時順便做一些事，例如印出 log，這就要用 `effect`。
 -->
 
 ---
@@ -518,13 +532,11 @@ export class AppComponent {
 ```
 
 <!--
-帶大家看重點：effect() 一定要寫在 constructor 裡面呼叫，這跟 computed() 不太一樣，是 Angular 對它的硬性要求。
+當 Signal 的值更新時，如果需要執行額外的邏輯，就可以用 `effect`。
 
-Angular 很聰明的地方是，它會自動偵測 effect 函式內讀取了哪些 Signal（這裡是 this.loading()），只要這個 Signal 之後值一變，effect 裡的程式碼就會重新執行一次，我們不用手動註冊監聽。
+`effect` 必須寫在 `constructor` 裡。Angular 會自動追蹤函式裡讀取了哪些 Signal，這裡是 `this.loading()`，只要這個值改變，`effect` 裡的程式就會重新執行一次。
 
-範例裡用 setTimeout 模擬一秒後呼叫 show()，執行結果是：一開始 console 先印出初始值 false，一秒後 loading 變成 true，effect 就會自動再印一次 true。
-
-⚠️ 提醒同學，effect 比較像是「監聽用」的工具，不建議在裡面直接改動同一個 Signal 的值，不然容易造成無限迴圈，這點下一頁會再整理。
+範例中用 `setTimeout` 模擬一秒後呼叫 `show`。執行結果是：一開始 Console 先印出初始值 false，一秒之後值變成 true，`effect` 就自動再印出 true。
 -->
 
 ---
@@ -540,9 +552,11 @@ Angular 很聰明的地方是，它會自動偵測 effect 函式內讀取了哪�
 | 注意 | 不可在 `effect` 內直接呼叫 `.set()` 修改同一 Signal（可能造成無限迴圈） |
 
 <!--
-這張表幫大家整理 effect() 的重點，考試或實作時最常忘記的通常是「必須定義在 constructor 中」這一點，同學要特別記住。
+這張表整理了 `effect` 的重點。
 
-⚠️ 最後一項提醒很重要：不要在 effect 裡面又去 .set() 同一個被它追蹤的 Signal，這樣會變成「值變了觸發 effect，effect 又改值，又觸發 effect」，形成無限迴圈，這是實務上很容易踩到的坑。
+它必須在 `constructor` 裡呼叫；會自動追蹤函式裡讀取的所有 Signal；值改變時就會執行；適合用在記錄 log、操作畫面元素這類副作用。
+
+最後一項很重要：不要在 `effect` 裡用 `set` 修改它正在追蹤的同一個 Signal。值改變觸發 `effect`，`effect` 又改值，又再觸發，就會形成無限迴圈。
 -->
 
 ---
@@ -553,7 +567,7 @@ class: flex flex-col justify-center items-center text-center
 # 注意事項
 
 <!--
-這一章的最後，我們來整理一下 Signals 的適用場景，特別是要跟大家強調它「不」適合用在哪裡，避免大家誤用。
+最後，我們整理 Signals 的適用情境，特別是它不適合用在哪裡。
 -->
 
 ---
@@ -574,9 +588,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這張表大家可以當作查表用，最重要的一句話是：Signal 處理的是「同步、即時」的狀態，不是拿來取代所有的 Observable。
+這張表整理了 Signals 的注意事項。
 
-⚠️ 常見誤區是有同學會想「Signal 比較新，是不是以後都不用 Observable 了」，這是不對的。像 HTTP 請求這種需要「等」的非同步操作，Signal 目前沒辦法直接表達「還沒收到值」跟「已經收到值」這種狀態轉換，還是得靠 Observable + subscribe。
+最重要的一點是：Signal 處理的是同步、即時的狀態，不是用來取代所有 Observable。
+
+需要等待 API 回應的非同步操作，還是要用 Observable 搭配 `subscribe`。另外，Signal 建立時一定要有初始值，讀取用函式呼叫，更新用 `set`。
+
+很多人會以為 Signal 比較新，以後都不用 Observable 了，這是不對的。
 -->
 
 ---
@@ -605,7 +623,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這張總結表把兩邊的使用情境並排列出來，大家可以拿它當作日後選擇要用 Signal 還是 Observable 的判斷依據：問自己「這個狀態需不需要等待、需不需要 RxJS 的操作子」，需要就用 Observable，不需要就優先考慮 Signal，程式碼會更簡潔。
+這頁把兩者的使用時機並排比較。
+
+適合用 Signals 的情況：元件內部的狀態，例如載入狀態或計數器；透過 Service 共享的同步狀態；要在模板直接綁定並自動更新的值；以及搭配 `effect` 執行副作用。
+
+適合用 Observable 的情況：呼叫 API 等待回應；需要 `pipe`、`map`、`filter` 這些 RxJS 運算子；處理使用者輸入這類事件流；以及需要管理取消訂閱的情況。
+
+判斷的方式是問自己：這個狀態需要等待嗎？需要 RxJS 的運算子嗎？需要就用 Observable，不需要就優先考慮 Signal。
 -->
 
 ---
@@ -639,7 +663,13 @@ layout: default
 這一題不需要 Service，單一元件內用 `signal()` + `computed()` + `effect()` 就能完成，練習三者如何搭配。
 
 <!--
-這一題刻意設計成單一元件就能完成，目的是讓大家把這一章學到的 signal、computed、effect 三個工具，在同一個情境裡串起來用一次，感受它們各自負責的角色：signal 存原始狀態、computed 算衍生值、effect 處理副作用。
+我們來做一個練習。
+
+商品詳情頁常見的情境：使用者調整購買數量，小計金額要立即跟著變化；如果金額超過門檻，還要顯示一則優惠提醒。
+
+需求是：顯示數量、單價和小計；按加號和減號調整數量，最少是 1；小計超過 500 時顯示提醒。限制是：數量和小計都要用 Signal 管理，小計要用 `computed` 自動計算，提醒用 `effect` 處理。
+
+這題不需要 Service，在單一元件裡就能完成，重點是練習三個工具的分工。
 -->
 
 ---
@@ -657,7 +687,13 @@ layout: default
 6. Template 顯示 `quantity()`、`subtotal()`，並提供 `+` / `-` 按鈕分別綁定 `increase()` / `decrease()`
 
 <!--
-大家可以先自己動手寫寫看。重點是想清楚：哪個值是「原始狀態」該用 signal，哪個值是「算出來的」該用 computed，哪個邏輯是「順便做的副作用」該用 effect，不要三個工具混在一起用錯地方。卡住的地方沒關係，下一頁會有解題提示。
+任務有六個步驟。
+
+第一，建立 `quantity` Signal，初始值 1。第二，建立常數 `price` 等於 100，它不會變，不需要是 Signal。第三，用 `computed` 建立 `subtotal`，等於數量乘以單價。第四，撰寫 `increase` 和 `decrease`，用 `update` 加 1 或減 1，`decrease` 要確保數量不小於 1。第五，在 `constructor` 用 `effect` 監聽 `subtotal`，超過 500 時在 Console 印出提醒。第六，模板顯示數量和小計，並提供加減按鈕。
+
+想一想，哪個是原始狀態、哪個是算出來的值、哪個是副作用？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -674,7 +710,9 @@ layout: default
 5. Template 綁定按鈕記得用 `(click)`，讀值記得加括號：`quantity()`、`subtotal()`
 
 <!--
-对照一下大家的答案，最容易搞混的地方是把 price 也包成 signal——其實不需要，它從頭到尾不會變，包成 signal 反而多一層不必要的複雜度。另一個常見疏漏是 decrease() 忘記做下限判斷，直接 v - 1，數量按幾次就會變成負數，畫面邏輯就不合理了。下一頁我們直接看完整解答。
+我們來看解題提示。
+
+第一，`price` 是固定的單價，用一般常數就好。第二，`decrease` 在 `update` 的函式裡要加判斷：大於 1 才減 1，否則維持原值。第三，`computed` 裡只能讀取 Signal，不能用 `set` 修改。第四，`effect` 一定要寫在 `constructor` 裡，並且在裡面讀取 `this.subtotal()`，才能被追蹤到。第五，模板的按鈕用小括號 `click` 綁定，讀取值記得加上小括號。
 -->
 
 ---
@@ -704,7 +742,9 @@ export class CartComponent {
 ```
 
 <!--
-先看狀態宣告部分：quantity 是唯一需要被追蹤變化的原始狀態，所以用 signal，初始值 1；price 是固定不變的單價，維持一般屬性即可；subtotal 用 computed() 包起來，內部讀取 this.quantity()，Angular 會自動追蹤這個依賴關係，quantity 一變，subtotal 就自動重新計算。constructor 跟方法下一頁接著看。
+我們看完整的解答，先看狀態的宣告。
+
+`quantity` 是唯一需要追蹤變化的原始狀態，所以用 `signal`，初始值 1。`price` 是固定的單價，維持一般屬性。`subtotal` 用 `computed`，裡面讀取 `this.quantity()`，Angular 會自動追蹤，數量一變，小計就自動重新計算。
 -->
 
 ---
@@ -734,9 +774,11 @@ layout: default
 ```
 
 <!--
-接續上一頁的 class：effect() 寫在 constructor 裡，內部讀取 this.subtotal()，只要小計超過 500 就在 console 印出提醒，這是典型的「值變了、順便做點事」的副作用邏輯，不需要也不應該用 computed() 來做，因為 computed() 是用來「算出一個新值」，不是用來「執行動作」。
+接著是 `constructor` 和兩個方法。
 
-increase() 很單純，每次呼叫 quantity 就 +1；decrease() 則在 update() 的回呼裡加了三元判斷，數量大於 1 才減 1，否則維持原值，避免數量歸零或變負數。
+`effect` 寫在 `constructor` 裡，讀取 `this.subtotal()`，超過 500 就在 Console 印出提醒。這是「值變了，順便做一件事」的副作用，所以用 `effect`，而不是 `computed`。
+
+`increase` 用 `update` 把數量加 1。`decrease` 在 `update` 裡用三元運算子判斷，數量大於 1 才減 1，否則維持原值。
 -->
 
 ---
@@ -760,9 +802,13 @@ layout: default
 </div>
 
 <!--
-Template 部分沒有任何 subscribe、也沒有 async pipe，quantity() 跟 subtotal() 都是直接函式呼叫讀值，按鈕透過 (click) 綁定 increase()/decrease()。
+最後是模板。
 
-執行結果：每按一次 + 或 -，quantity 更新，Angular 自動重新計算 subtotal 並更新畫面；同時因為 effect() 有在監聽 subtotal()，只要跨過 500 這個門檻，console 就會自動印出提醒，完全不需要在 increase()/decrease() 裡額外寫判斷邏輯，這就是 signal、computed、effect 三者分工合作的完整範例。
+數量和小計都直接用函式呼叫讀取，沒有任何 `subscribe`，也沒有 `async` pipe。加減按鈕用小括號 `click` 綁定兩個方法。
+
+驗證的方式是：按加號到數量 6，小計 600，打開 Console 應該會看到優惠提醒；再按減號減到 1，繼續按，數量應該停在 1，不會變成 0 或負數。
+
+這就是 `signal`、`computed`、`effect` 三者分工合作的完整例子。
 -->
 
 ---
@@ -774,8 +820,8 @@ layout: end
 ### 掌握 Angular Signals 的核心概念：以 signal() 建立響應式狀態，以 .set() 更新值，以 effect() 偵測變化，取代同步場景下的 Observable 訂閱模式。
 
 <!--
-這一章我們從 Observable 的舊寫法出發，一步一步改寫成 Signals，希望大家現在能感受到 Signal 在同步狀態管理上的簡潔感：不用包一層 Observable、不用 subscribe、也不用手動取消訂閱。
+這一章我們學了 Angular Signals。用 `signal` 建立狀態，一定要有初始值，用呼叫的方式讀取，用 `set` 或 `update` 更新。用 `computed` 自動計算衍生的值，用 `effect` 在值改變時執行副作用。Signal 適合同步的狀態，也能避開 NG0100；但等待 API 這類非同步操作，還是要用 Observable。
 
-回家可以練習看看，把自己專案裡某個簡單的同步狀態（像是一個開關、一個計數器）改寫成 Signal 版本，感受一下差異。下一章我們會接著看更多 Angular Material 相關的元件應用。
+下一章，我們會學習 Material 的側邊導覽列 Sidenav。我們下一章見。
 -->
 

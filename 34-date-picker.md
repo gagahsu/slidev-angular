@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要來聊「日期選擇器」。
+上一章我們學了 `mat-icon`。這一章要看表單裡很常見的欄位：日期。
 
-在做表單的時候，只要是生日、訂單日期、預約時間這類欄位，都免不了要讓使用者挑一個日期出來。如果讓使用者自己手打日期文字，格式亂七八糟不說，還很容易打錯，後端解析起來也很頭痛。這時候就需要一個「選擇器」，讓使用者用點的、用選的，而不是用打的。
-
-學完這一章，大家會知道 Angular 裡有兩種做法可以選：一種是原生 HTML 的 input date，另一種是 Angular Material 提供的 mat-datepicker，也會知道各自適合什麼場景。
+如果讓使用者自己打日期，格式五花八門，也容易打錯，所以需要一個用點選的日期選擇器。學完這一章，我們會知道原生的 `input type="date"` 和 Material 的 `mat-datepicker` 兩種做法，以及各自適合的情境。
 -->
 
 ---
@@ -68,7 +66,7 @@ layout: default
 - **mat-datepicker 資料綁定** — ngModel 初始值與 min/max 限制
 
 <!--
-先讓大家看一下這一章的路線圖。我們會先比較兩種方案的差異，接著看原生 input date 有哪些型別可以切換，然後練習用 ngModel 綁定它的值。後半段我們會把重心放在 mat-datepicker，從 HTML 結構、TypeScript 設定，一路講到資料綁定與範圍限制，整體是由淺入深。
+這一章會先比較兩種方案的差異，接著看原生的 `input type="date"` 有哪些類型可以切換，以及怎麼用 `ngModel` 綁定它的值。後半段的重點是 `mat-datepicker`，從 HTML 結構、TypeScript 設定，一路到資料綁定和日期範圍的限制。
 -->
 
 ---
@@ -80,9 +78,7 @@ class: flex flex-col justify-center items-center text-center
 # What is a Date Picker?
 
 <!--
-大家可以想像一下，如果每次填日期都要自己打字，像是「2024年11月5日」，光是格式就有十種寫法，程式很難統一處理。日期選擇器就是為了解決這個問題而生的元件，讓使用者透過點選而不是輸入來決定日期。
-
-接下來我們就來看看 Angular 裡有哪些方式可以做到這件事。
+自己打字填日期，格式很難統一，日期選擇器讓使用者用點選的方式決定日期。
 -->
 
 ---
@@ -124,11 +120,13 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-這張投影片把兩種寫法並排放在一起，大家可以直接比對。
+頁面需要使用者選擇日期時，有兩種方案。
 
-左邊的 input date 寫法非常單純，一行搞定，缺點是外觀完全交給瀏覽器決定，Chrome、Safari、手機瀏覽器看起來都不太一樣，我們沒辦法客製化樣式。右邊的 mat-datepicker 需要多幾行 HTML，也要多裝套件，但換來的是統一、好看的介面，而且日曆彈出視窗、格式提示這些功能都內建好了。
+第一種是原生的 `input type="date"`。寫法很簡單，一行就完成，但外觀由瀏覽器決定，不同瀏覽器和手機上看起來都不太一樣，也很難客製化。
 
-簡單說：想要快、簡單、不在意外觀就用 input date；想要跨瀏覽器一致、外觀漂亮就用 mat-datepicker。等一下我們會分別深入這兩種寫法。
+第二種是 Angular Material 的 `mat-datepicker`。需要多寫幾行 HTML，也要匯入比較多模組，但版面和資料格式由 Angular Material 統一處理，在不同瀏覽器上外觀一致，日曆彈出視窗、格式提示這些功能也都內建好了。
+
+簡單說，想要快速簡單，就用原生的 input；想要外觀一致、好看，就用 `mat-datepicker`。
 -->
 
 ---
@@ -140,9 +138,7 @@ class: flex flex-col justify-center items-center text-center
 # Input Date Type Variants
 
 <!--
-我們先從比較簡單的原生 input date 開始講。其實 type="date" 不是只有一種長相，它還有好幾個兄弟姊妹，像是只選月份、只選時間、選日期加時間、甚至以「週」為單位選取。
-
-等一下我們會一個一個示範給大家看，順便說明它們共通的資料格式規則。
+我們先從比較簡單的原生 `input` 開始。除了 date，它還有好幾種類型，例如只選月份、只選時間，或是以週為單位選取。
 -->
 
 ---
@@ -162,9 +158,13 @@ class: flex flex-col justify-center items-center text-center
 每種類型皆支援 `value`、`min`（最小可選時間）、`max`（最大可選時間）屬性。
 
 <!--
-這張表格是給大家的速查表，重點是這五種 type 各自顯示的介面不一樣，但底層資料格式都是統一規則：yyyy-MM-ddThh:mm，小於 10 的月份、日期都要補一個 0 在前面。
+`input` 可以依照需求切換 `type`，每種類型會顯示不同的選擇介面。
 
-⚠️ 這裡最容易忘記的就是補零這件事，如果直接把數字拼接成字串，忘記補零，瀏覽器可能就讀不懂這個日期格式。另外 min、max 這兩個屬性每種類型都能用，用來限制使用者能選的範圍。接下來我們一個一個實際看畫面長什麼樣子。
+看表格，`month` 選年和月，`date` 選年月日，`time` 選時間，`datetime-local` 同時選日期和時間，`week` 選年份和第幾週。
+
+這些值的格式都有統一的規則，以 `datetime-local` 為例是 `yyyy-MM-ddThh:mm`。要特別注意，月份和日期小於 10 時，前面要補 0，否則瀏覽器可能讀不懂這個日期。
+
+另外，每種類型都支援 `min` 和 `max` 屬性，用來限制可以選擇的範圍。接下來我們一個一個看畫面。
 -->
 
 ---
@@ -178,7 +178,9 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-month 這個類型很適合用在像是信用卡到期月份、月報表這種只需要年月、不需要精確到哪一天的情境。大家可以看到畫面上只會出現年份跟月份的選單，沒有日期可以選。
+`month` 只選年份和月份，不含日期。
+
+它很適合用在信用卡到期月份、月報表這類只需要年月的情境。畫面上只會出現年份和月份可以選擇。
 -->
 
 ---
@@ -192,7 +194,9 @@ month 這個類型很適合用在像是信用卡到期月份、月報表這種�
 </div>
 
 <!--
-date 是這幾種類型裡面大家最常用到的，像是生日、預約日期、訂單日期，幾乎都是用這個。畫面上就是我們熟悉的年月日日曆選擇介面，之後的範例我們也會以這個類型為主。
+`date` 選擇完整的年月日，是最常用的類型。
+
+生日、預約日期、訂單日期，大多都用它。畫面上就是我們熟悉的日曆選擇介面。
 -->
 
 ---
@@ -206,7 +210,9 @@ date 是這幾種類型裡面大家最常用到的，像是生日、預約日期
 </div>
 
 <!--
-time 只處理時、分，不含日期，適合像是預約看診時段、開會時間這種只需要時間點的欄位。大家可以想像成手機裡設定鬧鐘的那個時間滾輪，操作起來是類似的概念。
+`time` 只選擇時和分，不含日期。
+
+適合用在預約時段、開會時間這類只需要時間的欄位，操作起來就像在手機上設定鬧鐘。
 -->
 
 ---
@@ -220,7 +226,9 @@ time 只處理時、分，不含日期，適合像是預約看診時段、開會
 </div>
 
 <!--
-datetime-local 就是把 date 跟 time 合體，一次選日期又選時間，適合像是活動報名截止時間、班機起飛時間這種需要精確到分鐘的情境。畫面上會同時看到日曆跟時間滾輪，兩邊各司其職。
+`datetime-local` 是把日期和時間合在一起，左邊是日曆，右邊是時間的選單。
+
+適合用在活動報名截止時間、班機起飛時間這類需要精確到分鐘的情境。
 -->
 
 ---
@@ -234,9 +242,11 @@ datetime-local 就是把 date 跟 time 合體，一次選日期又選時間，�
 </div>
 
 <!--
-week 比較特別，它選的不是某一天，而是「第幾週」，選中之後大家會看到整個星期的日期都被反白，適合像是排班表、週報這種以週為單位在管理的資料。
+`week` 比較特別，它選的不是某一天，而是第幾週。選中之後，整個星期的日期都會被標示起來。
 
-到這裡五種 type 都介紹完了，接下來我們來看怎麼在 Angular 裡用 ngModel 把這個值綁到我們的元件上。
+適合用在排班表、週報這類以週為單位管理的資料。
+
+五種類型都介紹完了，接下來看怎麼在 Angular 裡把選到的值綁定到變數上。
 -->
 
 ---
@@ -248,7 +258,7 @@ class: flex flex-col justify-center items-center text-center
 # Input Date with ngModel
 
 <!--
-前面看的都是純 HTML 的畫面展示，現在我們要把它跟 Angular 的資料綁定機制接起來，讓選到的日期可以存進我們元件的變數裡，這樣才能真正拿來做後續的邏輯處理。
+接下來把原生的日期欄位和 Angular 的資料綁定接起來，讓選到的日期存進變數。
 -->
 
 ---
@@ -277,11 +287,13 @@ today = '2024-11-05';
 </div>
 
 <!--
-帶大家看一下這段程式碼，重點是 [(ngModel)] 這個雙向綁定，取代了原生的 value 屬性，這樣使用者選的日期就會自動同步到我們 TS 裡的 today 變數。min 跟 max 這兩個屬性負責限制可選範圍，超出範圍的日期使用者就點不動。
+在 Angular 裡，我們用 `ngModel` 雙向綁定取代原生的 `value` 屬性。使用者選了日期，TypeScript 裡的 `today` 變數就會自動同步。
 
-⚠️ 這裡要特別注意，跟前面說的 datetime-local 格式不一樣，input date 搭配 ngModel 時，字串格式是 yyyy-MM-dd，不含時間，大家寫的時候要對照清楚。
+`min` 和 `max` 屬性用來限制可選的範圍，這裡設定在 11 月 5 日到 11 月 10 日之間，超出範圍的日期就不能選。
 
-執行起來的效果，大家可以看右邊的畫面，today 這個變數的初始值會直接顯示在選擇器裡，使用者只能在 11/5 到 11/10 之間做選擇。
+要注意，`type="date"` 搭配 `ngModel` 時，值的格式是 `yyyy-MM-dd`，不含時間，而且是字串。
+
+右邊的畫面可以看到，`today` 的初始值會直接顯示在選擇器裡。
 -->
 
 ---
@@ -293,7 +305,7 @@ class: flex flex-col justify-center items-center text-center
 # Angular Material Datepicker
 
 <!--
-接下來我們進入這一章的重頭戲：mat-datepicker。前面提過，如果我們希望日期選擇器在各種瀏覽器、各種裝置上外觀都一致，而且長得漂亮，那就要靠 Angular Material 提供的這個元件了。
+接下來是重點：外觀一致、在各種瀏覽器都好看的 `mat-datepicker`。
 -->
 
 ---
@@ -307,7 +319,9 @@ Angular Material 提供的 `mat-datepicker` 外觀統一、功能完整，使用
 </div>
 
 <!--
-在動手寫程式之前，我們養成一個好習慣：先去官方文件找範例。大家可以看到官方文件裡有一個 Basic datepicker 的範例，這就是我們今天要練習的目標，等一下我們會照著這個範例的 HTML 跟 TS 一步一步拆解。
+動手之前，一樣先到官方文件找範例。
+
+官方文件裡有一個 Basic datepicker 的範例，畫面上就是它的樣子：一個輸入框，旁邊有日曆圖示，點下去會彈出日曆。接下來我們照著這個範例的 HTML 和 TypeScript，一步一步拆解。
 -->
 
 ---
@@ -327,11 +341,13 @@ Angular Material 提供的 `mat-datepicker` 外觀統一、功能完整，使用
 ```
 
 <!--
-大家先看一下整體結構，這裡有五個元件疊在一起：mat-form-field 是最外層的容器，裡面包了 label、input、hint、toggle 按鈕、還有 datepicker 本體。
+我們先看整體的 HTML 結構，總共有五個元件。
 
-⚠️ 這裡最容易漏掉的就是 mat-form-field，它負責套用 Angular Material 統一的樣式跟排版，如果忘記包這一層，畫面版面會亂掉，看起來不像 Material 元件。
+最外層是 `mat-form-field`，裡面依序是 `mat-label`、`input`、`mat-hint`、`mat-datepicker-toggle`，以及 `mat-datepicker` 本身。
 
-接下來我們拆開來一個一個講每個元件的作用。
+最容易漏掉的是 `mat-form-field`。它負責套用 Angular Material 統一的樣式和排版，少了這一層，畫面的版面就會亂掉。
+
+接下來，我們把每個元件拆開來看。
 -->
 
 ---
@@ -345,9 +361,11 @@ Angular Material 提供的 `mat-datepicker` 外觀統一、功能完整，使用
 | `<input matInput [matDatepicker]="picker">` | 實際輸入框，`matInput` 指令加入預設功能與樣式，`[matDatepicker]` 綁定對應的日期選擇器 |
 
 <!--
-先看前三個元件。mat-form-field 就像是一個「相框」，把裡面的東西統一包裝起來。mat-label 是輸入框還沒輸入資料時顯示的提示文字，跟我們平常看到的 placeholder 概念很像。
+先看前三個。
 
-最重要的是 input 這一行，matInput 這個指令負責讓輸入框套用 Material 的樣式跟互動行為，而 [matDatepicker]="picker" 則是告訴這個輸入框：「你要跟 picker 這個日曆綁在一起」。這個 picker 是什麼，我們下一頁繼續看。
+`mat-form-field` 是最外層的容器，就像一個相框，把裡面的元件統一包裝起來。`mat-label` 是輸入框的提示標籤，概念跟 placeholder 類似。
+
+最重要的是 `input` 這一行。`matInput` 讓輸入框套用 Material 的樣式和行為；中括號 `matDatepicker` 等於 picker，則是告訴這個輸入框：「你要和叫做 picker 的日曆綁在一起」。
 -->
 
 ---
@@ -365,9 +383,11 @@ Angular Material 提供的 `mat-datepicker` 外觀統一、功能完整，使用
 </div>
 
 <!--
-mat-hint 就是輸入框下方那行小提示文字，通常拿來告訴使用者格式長怎樣。mat-datepicker-toggle 是那顆日曆圖示按鈕，點下去就會彈出日曆，如果想把圖示放到輸入框前面而不是後面，可以把 matIconSuffix 換成 matIconPrefix。最後 mat-datepicker 這個標籤本身，就是點擊後彈出來的那個日曆面板。
+再看後三個。
 
-⚠️ 這裡是同學最容易出錯的地方：input 上的 [matDatepicker]="picker"、toggle 上的 [for]="picker"、還有 mat-datepicker #picker 這三個地方的名稱，一定要完全一致，這個 picker 只是個變數名稱，大家可以自己取名，但三處必須對得起來，不然日曆按鈕點了會沒反應。
+`mat-hint` 是輸入框下方的提示文字，通常用來說明日期格式。`mat-datepicker-toggle` 是輸入框後面的日曆圖示按鈕，如果想把圖示移到前面，可以把 `matIconSuffix` 換成 `matIconPrefix`。最後的 `mat-datepicker`，就是點擊圖示後彈出的日曆面板，用井字號 picker 當作它的名稱。
+
+這裡要特別注意，`input` 上的 `matDatepicker`、按鈕上的中括號 `for`，以及 `mat-datepicker` 的井字號名稱，三個地方要完全一致。名稱可以自己取，但三處對不上的話，點日曆按鈕就不會有反應。
 -->
 
 ---
@@ -379,7 +399,7 @@ class: flex flex-col justify-center items-center text-center
 # TypeScript Configuration
 
 <!--
-HTML 結構講完了，接下來我們切到 TypeScript 那一側，看看要在元件裡加哪些設定，mat-datepicker 才能真正運作起來。
+HTML 結構看完了，接下來切到 TypeScript，看看元件需要加上哪些設定。
 -->
 
 ---
@@ -406,11 +426,13 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 ```
 
 <!--
-帶大家看這段設定，重點有兩個地方。第一個是 providers 裡的 provideNativeDateAdapter()，它負責讓 Angular Material 知道要用瀏覽器原生的 Date 物件來處理日期邏輯，這行沒加的話，datepicker 會直接噴錯。
+TypeScript 這邊有兩個重點。
 
-第二個重點是 imports 陣列，MatFormFieldModule、MatInputModule、MatDatepickerModule 這三個模組缺一不可，分別對應到我們前面 HTML 裡用到的 mat-form-field、matInput、mat-datepicker 這些元件跟指令。
+第一個是 `providers` 裡的 `provideNativeDateAdapter()`。它讓 Angular Material 知道，要用瀏覽器原生的 Date 物件來處理日期。少了這一行，日期選擇器會直接報錯。
 
-⚠️ 同學常見的錯誤就是漏匯入某一個模組，結果畫面上元件顯示不出來或是樣式跑掉，遇到這種狀況第一件事就是回頭檢查 imports 陣列有沒有補齊。
+第二個是 `imports` 陣列。`MatFormFieldModule`、`MatInputModule` 和 `MatDatepickerModule` 三個模組缺一不可，分別對應 HTML 裡的 `mat-form-field`、`matInput` 和 `mat-datepicker`。
+
+如果畫面上的元件顯示不出來，或樣式跑掉，第一件事就是檢查這幾個模組有沒有匯入齊全。
 -->
 
 ---
@@ -422,7 +444,7 @@ class: flex flex-col justify-center items-center text-center
 # Data Binding
 
 <!--
-結構跟設定都準備好了，最後我們來看怎麼把選到的日期綁定成我們自己的變數，還有怎麼限制使用者可以選的日期範圍。
+結構和設定都準備好了，最後我們看怎麼綁定選到的日期，以及怎麼限制可選的範圍。
 -->
 
 ---
@@ -444,11 +466,11 @@ sDate = new Date('2024/11/8');
 </div>
 
 <!--
-這裡跟前面 input date 不太一樣，大家要特別留意：mat-datepicker 綁定的初始值必須是一個真正的 Date 物件，不能像原生 input date 那樣直接給字串，所以我們用 new Date('2024/11/8') 來建立。
+在 `input` 上加上 `ngModel`，就能雙向綁定選到的日期。
 
-⚠️ 這是同學很容易搞混的地方，原生 input date 用字串格式，mat-datepicker 用 Date 物件，兩種寫法不能互換。
+這裡要注意，和原生的 `input type="date"` 不同，`mat-datepicker` 綁定的值必須是 Date 物件，不能直接給字串。所以 `sDate` 用 `new Date` 建立，代表 2024 年 11 月 8 日。
 
-執行後大家可以看到畫面上，選擇器一開啟就已經停在 2024 年 11 月 8 號，這就是我們設定的初始值。
+原生的 input 用字串，`mat-datepicker` 用 Date 物件，這兩種寫法不能混用。執行之後，打開日曆就會停在我們設定的 11 月 8 日。
 -->
 
 ---
@@ -480,11 +502,11 @@ maxDate  = new Date('2024/11/20');
 </div>
 
 <!--
-這一頁我們把限制範圍的功能加上去。跟前面原生 input date 的 min、max 概念一樣，只是這裡改用 [min] 跟 [max] 屬性綁定，接的值也要是 Date 物件，而不是字串。
+接著加上日期範圍的限制。
 
-大家可以看右邊的畫面，超出 11/3 到 11/20 這個範圍的日期，會呈現灰色、點不下去的狀態，這樣就能避免使用者選到不合理的日期，像是訂單日期選到未來很久以後，或是預約日期選到已經過去的時間。
+用中括號 `min` 和 `max` 屬性綁定，值一樣要是 Date 物件。這裡設定 `minDate` 是 11 月 3 日，`maxDate` 是 11 月 20 日。
 
-這也是這一章 mat-datepicker 的最後一個重點，接下來我們做個總結。
+看右邊的畫面，超出範圍的日期會變成灰色，不能點選。這樣就能避免使用者選到不合理的日期，例如預約時選到已經過去的時間。
 -->
 
 ---
@@ -511,13 +533,13 @@ constructor() {
 </div>
 
 <!--
-前面我們把 minDate、maxDate 都寫死成固定日期，這在示範的時候沒問題，但實務上很少有需求是「日期範圍永遠固定」，通常都是「以今天為基準，往前往後推算」，像訂單日期通常只能選未來 90 天內，請假申請可能只能回溯 7 天，這種範圍是每天都在滾動的，寫死日期字串完全不合理。
+前面的 `minDate` 和 `maxDate` 都是寫死的日期。但實務上的需求，通常是「只能選未來 90 天內」或「只能回溯 7 天」，範圍要跟著今天移動。
 
-解法就是用 new Date() 先抓到今天的日期物件，再搭配 setDate() 跟 getDate() 這兩個方法做位移運算：getDate() 會回傳目前日期是幾號，setDate() 則是把日期設成我們指定的數字，兩個搭配起來就能做「往前 7 天」「往後 90 天」這種相對運算。
+做法是用 `new Date()` 取得今天，再用 `setDate` 搭配 `getDate` 位移天數。`getDate` 回傳今天是幾號，`setDate` 把日期設成指定的數字。所以 `minDate` 是今天減 7 天，`maxDate` 是今天加 90 天。
 
-⚠️ 這裡有個大家很容易踩到的坑：setDate() 是直接修改呼叫它的那個 Date 物件本身，不會回傳一個新的物件。所以 today、minDate、maxDate 這三個變數，一定要分別各自呼叫 new Date() 建立三個獨立的物件，如果偷懶讓 minDate、maxDate 指向同一個參照，setDate() 呼叫兩次會互相覆蓋，最後兩個變數會變成同一個日期。
+要注意，`setDate` 會直接修改原本的 Date 物件，而不是回傳新的物件。所以三個變數一定要各自 `new Date()`，如果共用同一個物件，兩次 `setDate` 就會互相覆蓋。
 
-另外要提醒大家，這個範圍是在元件初始化的當下算出來的，也就是使用者打開頁面那一刻的「今天」，不會在畫面停留期間即時更新，這點在大部分情境下沒問題，但如果頁面會開很久跨到隔天，範圍就不會自動往後移動，這是設計上要注意的地方。
+另外，這個範圍是在元件建立時算出來的。如果頁面一直開著跨到隔天，範圍不會自動更新。
 -->
 
 ---
@@ -528,7 +550,7 @@ layout: end
 ### 善用 input date 與 mat-datepicker，依需求選擇最適合的日期選擇方案
 
 <!--
-這一章我們一起看了兩種做日期選擇的方式：原生的 input date，簡單快速，但外觀交給瀏覽器決定；還有 Angular Material 的 mat-datepicker，需要多一點設定，但換來統一美觀的介面，還有完整的 min/max 範圍限制功能。
+這一章我們學了兩種日期選擇的方式。原生的 `input type="date"` 簡單快速，有多種類型可以切換，搭配 `ngModel` 時值是字串，但外觀由瀏覽器決定。`mat-datepicker` 需要匯入三個模組和 `provideNativeDateAdapter`，三個地方的 picker 名稱要一致，綁定的值必須是 Date 物件，並且可以用中括號 `min` 和 `max` 限制範圍。
 
-大家往後拿到「要讓使用者選日期」的需求時，可以想想這個專案在不在意介面的一致性、有沒有安裝 Angular Material，再決定要用哪一種方案。下一章我們會接著看，選好的日期要怎麼格式化成我們想要的顯示樣式。
+下一章，我們會學習用 DatePipe 把日期格式化成想要的顯示方式。我們下一章見。
 -->

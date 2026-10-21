@@ -46,10 +46,9 @@ style: |
 </div>
 
 <!--
-各位學員，恭喜大家順利通關了 HTML 和 CSS 的視覺裝修期！
-現在，我們要開始接觸程式開發的真正核心——「JavaScript（簡稱 JS）」。
-如果 HTML 是蓋一棟房子的鋼筋水泥，CSS 是幫房子刷油漆、挑選家具；那麼 JavaScript 就是幫房子接通水電、安裝自動感應門和防盜系統！
-今天，我們要來認識這個讓網頁「活過來」的靈魂語言，並且了解它與它的大哥 TypeScript 到底有什麼愛恨情仇。
+前面幾章，我們用 HTML 和 CSS 做好了網頁的結構和外觀。從這一章開始，要進入程式邏輯：JavaScript。
+
+如果 HTML 是鋼筋水泥，CSS 是油漆家具，JavaScript 就是讓房子運作的水電。這一章會認識 JavaScript 和它的進階版 TypeScript，並看看 TypeScript 在 Angular 裡的樣子。
 -->
 
 ---
@@ -66,13 +65,7 @@ layout: default
 - **實作練習**
 
 <!--
-今天我們的作戰路線圖：
-首先，我們要了解 JavaScript 的基本定位。
-接著，介紹我們在 Angular 專案中天天都會寫的 TypeScript 又是什麼。
-再來，我們把這兩兄弟拉出來 PK 一下，看看它們的差別。
-接著，我們會用一個極其簡單的「按鈕點擊」小實例，讓你親眼看看 HTML、CSS 與 JS 是怎麼合體運作的！
-然後，我們進入 Angular 的 TypeScript 世界，看看怎麼在 class 裡宣告帶型別的變數。
-最後，兩道實作練習——分別針對 TypeScript 和 JavaScript！
+這一章的路線是這樣的。先認識 JavaScript 和 TypeScript 各是什麼，再比較兩者的差別。接著用一個按鈕的小例子，看 HTML、CSS 和 JavaScript 怎麼一起運作。然後看 TypeScript 在 Angular 元件裡的寫法。最後有兩個練習，分別針對 TypeScript 和 JavaScript。
 -->
 
 ---
@@ -84,7 +77,7 @@ class: flex flex-col justify-center items-center text-center
 # What is JavaScript?
 
 <!--
-第一站，我們先來認識這位稱霸瀏覽器世界數十年的超級霸主——JavaScript。
+我們先來認識 JavaScript。
 -->
 
 ---
@@ -107,10 +100,11 @@ JavaScript 是一種腳本，也能稱它為**程式語言**，可以讓你在�
 </div>
 
 <!--
-JavaScript 是一種腳本，也就是所謂的「程式語言」。
-它是前端開發的「大腦」，專門負責實現複雜的互動邏輯。
-你想想看，當你滑手機滑到 FB 貼文底部，網頁「不用重新整理」就自動載入新貼文；或是點擊 Google 地圖時，地圖會跟著你的手指滑動；又或者你在 Netflix 上點擊播放，影片就開始順暢播放。
-只要網頁上發生的不是那種死板板的文字跳轉，而是「有生命力、即時回應」的功能，你就可以一百％肯定——JavaScript 在裡面扮演著幕後推手！
+JavaScript 是一種程式語言，可以讓網頁實現比較複雜的功能。
+
+想想看，我們滑社群網站滑到底，新的貼文自動出現，不用重新整理頁面；用地圖時，地圖會跟著手指移動；點擊播放，影片就開始播放。
+
+只要網頁不只是顯示固定的內容，而是會「即時回應使用者」，背後幾乎都有 JavaScript 在運作。
 -->
 
 ---
@@ -133,12 +127,11 @@ HTML、CSS、JavaScript 分別負責網頁的不同層次：
 </div>
 
 <!--
-我們來複習並總結一下網頁開發的三大支柱。
-請看投影片上的三層積木：
-最底層是藍色的 HTML，它是「內容與結構」，就像是你的骨架、或者是水泥毛胚屋。
-中間層是綠色的 CSS，它是「外觀與樣式」，負責化妝、排版、穿搭，讓毛胚屋變成漂亮的樣品屋。
-最上層是橘色的 JavaScript，它是「互動與行為」，負責寫大腦的邏輯。
-這三者合一，才是一個現代化、合格的網頁應用程式。缺了 JavaScript，你的網頁就只是一張好看的「電子傳單」而已！
+我們來複習網頁的三層架構。
+
+最底層是 HTML，負責頁面的結構和內容。中間是 CSS，負責視覺樣式和排版。最上層是 JavaScript，負責互動和行為邏輯。
+
+三層各自負責不同的事，合在一起才是一個完整的網頁應用程式。少了 JavaScript，網頁就只能看，沒辦法回應使用者的操作。
 -->
 
 ---
@@ -150,7 +143,7 @@ class: flex flex-col justify-center items-center text-center
 # What is TypeScript?
 
 <!--
-知道了 JavaScript，那經常聽到的 TypeScript（簡稱 TS）又是什麼呢？
+認識了 JavaScript，接下來我們看常常聽到的 TypeScript。
 -->
 
 ---
@@ -172,15 +165,13 @@ TypeScript 是一種由 **Microsoft** 開發的開源程式語言，它是 JavaS
 </div>
 
 <!--
-TypeScript 是微軟（Microsoft）大爸爸開發的一門程式語言。
-它在程式界的名詞叫做 JavaScript 的「超集（Superset）」。
-什麼叫超集？
-簡單來說，就是「你有的我全都有，而且我還比你更強」！
-任何原本可以在 JavaScript 裡執行的程式碼，直接複製到 TypeScript 裡，都百分之百能跑。
-但是，TypeScript 額外加上了強大的「型別系統（Types）」以及像介面（Interfaces）、泛型（Generics）這些高級功能。
-為什麼要多此一舉呢？
-因為 JavaScript 太自由了，自由到它常常「寫錯了也不會警告你」，直到網頁跑起來 crash 了你才知道。
-而 TypeScript 就像是一個嚴格的輔導老師，在你寫錯型別的瞬間就嗶嗶警告你，這對我們在寫 Angular 這種大型專案時，能省下無數的 debug 時間！
+TypeScript 是微軟開發的開源程式語言，它是 JavaScript 的「超集」。
+
+超集的意思是，JavaScript 有的，TypeScript 全都有，而且還多了更多功能。任何可以執行的 JavaScript 程式碼，放進 TypeScript 裡也一樣能執行。
+
+TypeScript 多出來的，最重要的是「型別系統」，另外還有 interface、泛型、enum 這些功能。
+
+為什麼需要型別？因為 JavaScript 很多錯誤要等到執行時才會發現，TypeScript 則在寫程式的當下就提醒我們。Angular 就是用 TypeScript 開發的。
 -->
 
 ---
@@ -196,11 +187,13 @@ TypeScript 是微軟（Microsoft）大爸爸開發的一門程式語言。
 | **物件導向** | 有 `class` 與 `object`，但無 `interface` | 支援 `interface`、`class`、`object`，物件導向更直觀 |
 
 <!--
-我們把這兩兄弟拉出來直接做個表格PK。
-首先是「型別系統」：JS 是動態型別，變數裝蘋果還是裝香蕉隨便你換，很有彈性，但也容易翻車；TS 是靜態型別，你宣告了裝蘋果，以後塞香蕉進去，編譯器就會立刻賞你一個紅色底線。
-第二是「執行方式」：瀏覽器其實只看得懂 JavaScript。所以，我們寫的 TypeScript 程式碼，在給瀏覽器跑之前，都必須經過編譯器「翻譯」成標準的 JavaScript。
-第三是「物件導向」：TS 提供了非常完整、像 Java 那樣的 `interface` 功能，讓架構規劃起來更舒服。
-因為 Angular 框架原生就是以 TypeScript 為核心設計的，所以今天我們先建立好 JS 的基本觀念，等一下寫 TS 才會如魚得水喔！
+我們把兩者放在一起比較。
+
+第一是型別系統。JavaScript 是動態型別，一個變數一下裝數字、一下裝文字都可以，很有彈性，但也容易出錯。TypeScript 是靜態型別，宣告時就決定了型別，之後放錯型別的值，編輯器會馬上提醒。
+
+第二是編譯。瀏覽器其實只看得懂 JavaScript，所以 TypeScript 寫好之後，要先編譯成 JavaScript，才能在瀏覽器上執行。
+
+第三是物件導向。TypeScript 支援 `interface`，規劃程式架構時更直觀。
 -->
 
 ---
@@ -212,7 +205,7 @@ class: flex flex-col justify-center items-center text-center
 # JavaScript in Action
 
 <!--
-接下來，大叔不說空話，我們直接用一個最簡單的「點擊按鈕跳通知」的實例，來看看三者是怎麼配合工作的！
+介紹完概念，我們用一個點擊按鈕跳出訊息的例子，看看 HTML、CSS 和 JavaScript 怎麼一起運作。
 -->
 
 ---
@@ -238,11 +231,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-第一步，我們先用 HTML 捏出按鈕的骨架。
-程式碼裡，我們寫了一個 `<button>` 標籤，上面寫「我是按鈕！點我！」。
-特別注意，裡面有一個特別的屬性叫 `onclick="clickBnt()"`。
-這個 `onclick` 就是網頁的「點擊事件監聽器」。
-這句的意思就是告訴瀏覽器：「喂！當使用者用滑鼠點擊這個按鈕時，請去大腦呼叫執行一個叫作 `clickBnt` 的指令！」
+第一步，先用 HTML 建立一個按鈕。
+
+按鈕上加了一個 `class`，等一下給 CSS 使用。另外還有一個 `onclick` 屬性，值是 `clickBnt()`。
+
+`onclick` 是點擊事件，這行的意思是告訴瀏覽器：「當使用者點擊這個按鈕時，去執行一個叫做 `clickBnt` 的方法」。方法的名稱可以自己取。
 -->
 
 ---
@@ -270,10 +263,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-第二步，雖然有了按鈕，但它是灰灰乾乾的預設樣式。
-我們用上堂課學過的 CSS 選擇器，選中 `.bntCss`，把 `color` 改成紅色。
-你看，套用樣式後，按鈕上的文字就變成了紅色，看起來稍微顯眼一點了。
-此時骨架（HTML） and 外皮（CSS）都有了，只差讓它做出回應的大腦了！
+第二步，用 CSS 幫按鈕加上樣式。
+
+用剛才設定的 class 名稱當作選擇器，把文字顏色改成紅色。套用之後，按鈕上的文字就變成紅色了。
+
+現在 HTML 和 CSS 都準備好了，但點擊按鈕還不會有任何反應，接下來就輪到 JavaScript。
 -->
 
 ---
@@ -301,12 +295,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-第三步，也就是我們的 JS 登場！
-我們在 `<script>` 標籤中，宣告一個叫作 `function clickBnt()` 的函數。
-裡面只寫了一行程式碼：`alert("你按按鈕了！")`。
-這個 `alert` 是瀏覽器內建的功能，它會彈出一個系統警告對話框。
-一旦這三者在同一個網頁合體，當使用者伸出手指點擊紅色按鈕時，按鈕就會觸發 `onclick`，去執行 JS 裡的 `clickBnt()`，網頁就會「噹」一聲彈出「你按按鈕了！」的對話框！
-這就是網頁前端互動最基本的運行公式啦！
+第三步，加上 JavaScript。
+
+在 `script` 標籤裡，宣告一個叫做 `clickBnt` 的 function，名稱要跟剛才 `onclick` 裡寫的一樣。裡面只有一行 `alert`，它是瀏覽器內建的功能，會跳出一個訊息框。
+
+三個部分合在一起之後，使用者點擊按鈕，就會觸發 `onclick`，執行 `clickBnt`，畫面上跳出「你按按鈕了」的訊息框。
+
+這就是網頁互動最基本的運作方式：HTML 提供元素，CSS 提供外觀，JavaScript 提供反應。
 -->
 
 ---
@@ -318,8 +313,7 @@ class: flex flex-col justify-center items-center text-center
 # TypeScript in Angular
 
 <!--
-好，現在我們知道 TypeScript 是什麼了，也看完了 JavaScript 的基本運作方式。
-接下來，大叔帶你看看 TypeScript 在 Angular 專案裡長什麼樣子、要怎麼寫。
+看完 JavaScript 的基本運作，接下來我們看看 TypeScript 在 Angular 專案裡長什麼樣子。
 -->
 
 ---
@@ -347,10 +341,11 @@ export class AppComponent {
 </div>
 
 <!--
-打開 Angular 專案的 app.component.ts，你會看到這樣的結構。
-上面的 @Component({}) 是「裝飾器」，告訴 Angular 這個 class 是一個元件。
-真正要寫的邏輯，包括變數和方法，全部寫在最下面 export class AppComponent { } 的大括號裡。
-這個大括號，就是我們寫 TypeScript 的家！
+在 Angular 裡，元件的邏輯寫在 `.ts` 檔案中。打開 `app.component.ts`，會看到這樣的結構。
+
+最上面用 `import` 引入 `Component`。中間的 `@Component` 叫做「裝飾器」，告訴 Angular 這個 class 是一個元件。
+
+最下面的 `export class AppComponent`，它的大括號就是我們寫 TypeScript 的地方。之後的變數和方法，都會寫在這對大括號裡面。
 -->
 
 ---
@@ -375,11 +370,15 @@ export class AppComponent { }
 ```
 
 <!--
-@Component 是 Angular 賦予這個 class「元件身份」的魔法標籤。
-selector 就是這個元件的「身份證名稱」，設定成 app-root 後，你就可以在其他 HTML 裡寫 <app-root> 來嵌入它。
-standalone: true 是 Angular 14 之後推薦的寫法，代表這個元件不需要傳統的 NgModule 來管理，可以獨立運作。
-templateUrl 則是告訴 Angular：「這個元件的畫面長什麼樣，請去 app.component.html 那個檔案裡找。」
-這三行是 Angular 元件的標準配備，之後每個章節的程式碼範例都會看到它，記住這三個屬性的意義就對了！
+我們仔細看 `@Component` 裝飾器裡的三個屬性。
+
+`selector` 是這個元件在 HTML 裡使用的標籤名稱。設成 `app-root`，就可以在 HTML 裡用 `app-root` 這個標籤把元件放進來。
+
+`standalone: true` 代表這是一個獨立元件，不需要另外用 NgModule 來管理，這是新版 Angular 推薦的寫法。
+
+`templateUrl` 指定這個元件對應的 HTML 檔案，也就是元件的畫面要去哪個檔案找。
+
+這三個屬性在之後的範例裡會一直出現，先記住它們的意思就好。
 -->
 
 ---
@@ -401,11 +400,11 @@ export class AppComponent {
 </div>
 
 <!--
-格式是：變數名稱，冒號，型別，等號，初始值。
-title 後面寫 : string，代表這個變數只能裝字串。
-count 後面寫 : number，只能裝數字。
-isLoading 後面寫 : boolean，只能是 true 或 false。
-如果你不小心把數字塞給 string 的變數，TypeScript 在你打完的瞬間就會劃紅線——這就是 TypeScript 最大的價值！
+在 class 的大括號裡宣告變數，格式是：變數名稱、冒號、型別、等號、初始值。
+
+這裡宣告了三個變數。`title` 的型別是 `string`，只能放文字。`count` 是 `number`，只能放數字。`isLoading` 是 `boolean`，只能是 true 或 false。
+
+如果不小心把數字放進 `string` 的變數，TypeScript 會立刻在下面畫紅線提醒，不用等到程式執行才發現錯誤，這就是 TypeScript 最大的價值。
 -->
 
 ---
@@ -424,9 +423,13 @@ layout: default
 完成後，試著把 `myAge` 指定為一個字串（如 `'twenty'`），觀察 TypeScript 的報錯訊息，再改回數字。
 
 <!--
-這個練習的目的很單純：讓你親眼確認「TypeScript 的型別保護是真實存在的」。
-當你改成字串，VSCode 會立刻劃紅線，告訴你型別不對。
-這種「寫錯立刻知道」的保護，正是我們要用 TypeScript 而不用 JavaScript 的核心原因。
+我們來做第一個練習，在 Angular 裡宣告帶型別的變數。
+
+請在 `AppComponent` 裡宣告三個變數：字串型別的 `myName`，數字型別的 `myAge`，以及布林型別的 `isStudent`。
+
+完成之後，試著把 `myAge` 改成一個字串，看看會發生什麼事，再把它改回數字。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -454,10 +457,13 @@ Type 'string' is not assignable to type 'number'
 改回數字後紅線消失。這就是**靜態型別檢查**的威力——在編譯階段就攔截錯誤！
 
 <!--
-解法非常單純，就是三行變數宣告。
-重點在於體驗那個報錯訊息：Type 'string' is not assignable to type 'number'。
-意思是：「你想把字串塞給一個只能裝數字的盒子，我不幹！」
-這種保護機制，在你的 Angular 專案規模變大之後，會讓你省下非常多除錯時間。
+我們來看答案。
+
+在 class 裡加上三行宣告，分別是 `string`、`number` 和 `boolean`。
+
+當我們把 `myAge` 改成字串，TypeScript 會出現這個錯誤訊息，意思是「字串型別不能指定給數字型別」。把它改回數字，紅線就消失了。
+
+這就是「靜態型別檢查」，在寫程式的階段就把錯誤攔下來。專案規模變大之後，這種保護能省下很多除錯的時間。
 -->
 
 ---
@@ -475,8 +481,13 @@ layout: default
 4. 在 `<style>` 中為兩個按鈕各自設定不同的文字顏色
 
 <!--
-這題考驗的是 HTML、CSS、JavaScript 三者如何在同一個檔案裡互相配合。
-可以直接新建一個 .html 檔案，用 VSCode 開啟後以 Live Server 執行，或貼入 CodePen 測試。
+第二個練習，我們回到純 JavaScript，把 HTML、CSS 和 JavaScript 整合在同一個檔案裡。
+
+請建立兩個按鈕：「打招呼」和「掰掰」。點擊「打招呼」，跳出歡迎的訊息；點擊「掰掰」，跳出道別的訊息。另外，在 `style` 裡幫兩個按鈕設定不同的文字顏色。
+
+可以新建一個 `.html` 檔案，用瀏覽器直接打開測試。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -509,9 +520,11 @@ layout: default
 </div>
 
 <!--
-先把 HTML 的按鈕骨架與 CSS 樣式寫好。
-兩個按鈕分別給不同的 class，style 裡用 class 選擇器各自設定顏色。
-onclick 屬性先填好要呼叫的方法名稱，但方法的本體還沒寫，所以現在點按鈕不會有反應。
+我們分兩步來看答案，先看 HTML 和 CSS。
+
+兩個按鈕各自有不同的 class，在 `style` 裡分別設定綠色和紅色。按鈕的 `onclick` 分別填上 `sayHello()` 和 `sayBye()`。
+
+注意，這時候方法本身還沒寫，所以點擊按鈕還不會有反應。
 -->
 
 ---
@@ -540,9 +553,11 @@ layout: default
 </div>
 
 <!--
-最後在 </body> 前面加入 <script> 標籤，宣告兩個 function。
-function 名稱跟 HTML 裡 onclick 填的名稱完全一致，三層就正式接通了。
-儲存後用 Live Server 或直接用瀏覽器開啟，點兩個按鈕，確認 alert 各自彈出對應訊息。
+第二步，在 `body` 結束之前加上 `script` 標籤，宣告兩個 function：`sayHello` 和 `sayBye`，裡面分別用 `alert` 顯示對應的訊息。
+
+function 的名稱要跟 `onclick` 裡寫的完全一樣，三個部分才會接起來。
+
+另外提醒一下，這裡是純 JavaScript，不是 Angular，所以不需要 class，直接宣告 function 就可以了。存檔後用瀏覽器打開，點兩個按鈕，就會跳出各自的訊息。
 -->
 
 ---
@@ -553,8 +568,7 @@ layout: end
 ### 互動的起點，從這裡開始！
 
 <!--
-恭喜大家！成功跨出了程式邏輯的第一步！
-這雖然只是一個小小的 `alert`，但這就是所有網頁大腦互動的起點。
-萬丈高樓平地起，學會了 JS 的運作原理，
-下一堂課，我們要開始真正動手撰寫程式碼中的核心要素——「資料型態」囉！大家休息一下，我們等一下繼續！
+這一章我們認識了 JavaScript，它負責網頁的互動和邏輯。TypeScript 是 JavaScript 的超集，加上了型別系統，能在寫程式時就發現錯誤，Angular 就是用 TypeScript 開發的。我們也看到了 Angular 元件的結構，以及帶型別的變數怎麼宣告。
+
+下一章，我們會深入介紹 TypeScript 的各種資料型別。我們下一章見。
 -->

@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要進入 Reactive Forms，也就是響應式表單。
+用 `ngModel` 做表單很快，但欄位一多、規則一多，甚至欄位數量會動態變化時，HTML 的邏輯就會變得很難維護。
 
-之前我們做表單大概都是用 `[(ngModel)]` 這種雙向繫結，寫起來很快，但如果表單一複雜——欄位一多、驗證規則一多、甚至欄位數量還會動態增減——HTML 裡的邏輯就會變得又亂又難維護。這就像是家裡東西全部堆在客廳，找東西的時候很痛苦。Reactive Forms 就是把表單的「控制權」搬到 TypeScript，用程式碼把每個欄位、每條規則都定義清楚，就像把東西分類收進不同的抽屜。
-
-學完這一章，大家會知道 Reactive Forms 是什麼、跟 Template-Driven Forms 有什麼差別，以及怎麼用 FormControl、FormGroup、FormArray 做出一個可以動態新增刪除題目的問卷表單。
+這一章要學 Reactive Forms，響應式表單，把表單的控制權搬到 TypeScript。最後我們會做出一個可以動態新增和刪除題目的問卷。
 -->
 
 ---
@@ -66,7 +64,7 @@ layout: default
 - **畫面顯示** — HTML 樣板繫結 `formGroup`、`formControlName`、`formArrayName`
 
 <!--
-這張投影片先讓大家掌握整章的地圖。我們會先講 Reactive Forms 是什麼、為什麼要用它，接著介紹三個核心積木 FormControl、FormGroup、FormArray，然後實際動手做一個可以動態新增刪除題目的問卷，最後看怎麼把這些東西繫結到 HTML 畫面上。
+這一章會先說明 Reactive Forms 是什麼、為什麼要用它，接著介紹三個核心的元件：FormControl、FormGroup 和 FormArray。然後實際動手，用 FormArray 做出可以新增和刪除題目的問卷，最後把它繫結到 HTML 畫面上。
 -->
 
 ---
@@ -78,9 +76,7 @@ class: flex flex-col justify-center items-center text-center
 # What is Reactive Forms?
 
 <!--
-先問大家一個問題：如果表單的驗證規則、欄位狀態全部都寫在 HTML 樣板裡，會發生什麼事？欄位一多，樣板就會塞滿一堆邏輯，很難讀也很難測試。
-
-這就是 Reactive Forms 想解決的問題——它讓我們用「模型驅動」的方式，在 TypeScript 裡把整個表單的結構跟規則定義清楚，畫面只負責顯示。
+如果表單的規則全寫在 HTML 裡，欄位一多就很難維護。Reactive Forms 把規則定義在 TypeScript。
 -->
 
 ---
@@ -101,11 +97,11 @@ Reactive Forms（響應式表單）是 Angular 中以**模型驅動（Model-Driv
 </div>
 
 <!--
-這邊幫大家把 Reactive Forms 的定義講清楚：它是「以 TypeScript 顯式定義表單結構與驗證邏輯」的技術，讓視圖跟模型保持同步。
+Reactive Forms 是 Angular 裡以「模型驅動」方式處理表單的技術。表單的結構和驗證邏輯，都在 TypeScript 裡明確定義，再讓畫面和程式保持同步。
 
-大家可以把它想成填寫紙本申請表之前，先有一份「表單設計圖」放在辦公室裡，設計圖上寫清楚每一欄要填什麼、哪些是必填、格式限制是什麼，畫面只是照著設計圖印出來給人填而已。
+可以想成填申請表之前，辦公室裡先有一份表單設計圖，寫清楚每一欄要填什麼、哪些必填、有什麼格式限制，畫面只是照著設計圖印出來給人填。
 
-核心特性我們看一下：狀態完全由 TypeScript 管理，所以很穩定；驗證邏輯集中，好維護；也因為邏輯都在程式碼裡，適合複雜表單，而且方便寫單元測試。這在業界做後台管理系統、動態問卷這種複雜表單時特別常用。
+它的特性是：狀態完全由 TypeScript 管理，比較穩定；驗證邏輯集中，好維護；適合複雜和動態的表單；也容易寫單元測試。
 -->
 
 ---
@@ -117,7 +113,7 @@ class: flex flex-col justify-center items-center text-center
 # Why Use Reactive Forms?
 
 <!--
-講完定義，我們來看實際的理由：為什麼要選 Reactive Forms 而不是我們比較熟悉的 Template-Driven Forms？
+為什麼要選 Reactive Forms，而不是熟悉的 Template-Driven Forms？我們來比較看看。
 -->
 
 ---
@@ -155,9 +151,11 @@ Reactive Forms 將表單的「控制權」從 HTML 移至 TypeScript，以程式
 4. 處理深層巢狀資料（Nested Data Structures）
 
 <!--
-這張表把兩種表單方式並排比較，大家可以看到 Template-Driven Forms 邏輯散在 HTML 裡，適合簡單表單；Reactive Forms 則是把邏輯集中在 TypeScript，適合複雜、會變動的表單。
+這頁把兩種表單方式並排比較。
 
-四大優勢我們特別強調一下：動態增減欄位，像等一下要做的問卷題目可以自由新增刪除；即時監聽變化，可以隨時訂閱表單值的變動；複雜驗證邏輯好組合；還有處理巢狀資料的能力，這些都是 Template-Driven Forms 比較難做到的。業界只要遇到「表單會變、規則會變」的情境，幾乎都會選 Reactive Forms。
+Template-Driven Forms，也就是用 `ngModel` 的寫法，邏輯分散在 HTML 裡，適合簡單、固定的表單，比較不容易測試。Reactive Forms 則把邏輯集中在 TypeScript，明確宣告表單結構，適合複雜、會變動的表單，也容易測試和重複使用。
+
+下方列了四大優勢：可以動態增減欄位，可以即時監聽表單值的變化，容易組合複雜的驗證規則，也能處理多層的巢狀資料。只要遇到「表單會變、規則會變」的情況，實務上大多會選擇 Reactive Forms。
 -->
 
 ---
@@ -169,7 +167,7 @@ class: flex flex-col justify-center items-center text-center
 # Core Building Blocks
 
 <!--
-接下來我們認識 Reactive Forms 的三個核心積木，等一下實作動態問卷的時候都會用到。
+接下來認識 Reactive Forms 的三個核心元件，等一下做問卷時都會用到。
 -->
 
 ---
@@ -191,9 +189,11 @@ Reactive Forms 由三種積木組合而成：
 - 整份表單通常以一個根 `FormGroup` 為起點
 
 <!--
-這三個積木大家可以想成收納盒的概念：FormControl 是最小的一格，裝一個值，例如姓名或 Email；FormGroup 是把好幾個 FormControl 放進同一個盒子，變成一組，像地址就是縣市、區域、路名綁在一起；FormArray 則是「盒子的清單」，裡面可以動態增加或減少 FormGroup，像問卷題目數量不固定就很適合用它。
+Reactive Forms 由三種元件組合而成，可以用收納盒來理解。
 
-記得三者關係：FormGroup 可以包 FormControl 也可以包巢狀 FormGroup，FormArray 通常包的是一組一組的 FormGroup，整份表單最外層一般會是一個根 FormGroup。等一下的問卷範例會把這三個全部用上。
+FormControl 是最小的單位，代表一個輸入欄位，例如姓名或 Email。FormGroup 是一個容器，把多個 FormControl 包成一組，例如地址就是縣市、區域和路名綁在一起。FormArray 是一個動態的陣列，管理數量不固定的欄位群組，例如問卷的題目清單。
+
+三者的關係是：FormGroup 可以包含 FormControl，也可以包含另一個 FormGroup；FormArray 通常包含好幾個 FormGroup，每一組代表一筆資料；整份表單最外層通常是一個 FormGroup。
 -->
 
 ---
@@ -205,7 +205,7 @@ class: flex flex-col justify-center items-center text-center
 # Dynamic Form Controls with FormArray
 
 <!--
-接下來我們用一個實際案例——動態問卷——來練習怎麼用 FormArray 做出可以自由增減欄位的表單。
+接下來，我們用動態問卷這個實際例子，練習用 FormArray 做出可以自由增減欄位的表單。
 -->
 
 ---
@@ -223,9 +223,11 @@ class: flex flex-col justify-center items-center text-center
 - 每道題目包含：題目名稱（`qTitle`）、題目類型（`qType`）、是否必填（`need`）
 
 <!--
-想像我們要做一個問卷系統，問卷標題是固定的一欄，但題目數量完全不知道——使用者可能加兩題，也可能加二十題。如果用一般的 JavaScript Array 存這些題目，雖然也能新增刪除，但拿不到 Reactive Forms 幫我們處理好的驗證跟狀態管理，等於少了很多好處。
+想像一個問卷系統，問卷標題是固定的一欄，但題目的數量不固定，使用者可能加兩題，也可能加二十題。
 
-所以這裡我們選用 FormArray。等一下的範例會有一個固定欄位 surveyTitle，跟一個動態欄位 questions，每道題目底下又有題目名稱、類型、是否必填三個小欄位，這正好是 FormGroup 包在 FormArray 裡的典型情境。
+如果用一般的 JavaScript 陣列存放題目，雖然也能新增和刪除，卻沒辦法使用 Reactive Forms 的驗證和狀態管理。所以這裡用 FormArray。
+
+範例裡，固定欄位是 `surveyTitle`，問卷標題，必填。動態欄位是 `questions`，題目清單。每道題目包含三個欄位：題目名稱 `qTitle`、題目類型 `qType`，以及是否必填 `need`。
 -->
 
 ---
@@ -241,9 +243,13 @@ class: flex flex-col justify-center items-center text-center
 - `questions`：`fb.array([])` — 初始化空的 `FormArray`
 
 <!--
-我們一步一步來建立這個問卷表單。第一步別忘記把 ReactiveFormsModule 加進 imports，這是很多同學第一次用 Reactive Forms 時會漏掉的地方，沒加的話畫面上的 formGroup、formControlName 這些指令都會抓不到。
+我們一步一步建立這個表單。
 
-第二步用 inject(FormBuilder) 拿到 fb，這是 Angular 官方建議的建構方式，比自己手動 new FormGroup 更簡潔。第三步就是用 fb.group() 定義整份表單的根結構，這邊 surveyTitle 是固定欄位，questions 先給一個空陣列，之後再動態塞資料進去。
+第一步，在 `@Component` 的 `imports` 加入 `ReactiveFormsModule`。這是最常漏掉的一步，沒有它，畫面上的 `formGroup`、`formControlName` 這些指令都無法使用。
+
+第二步，用 `inject(FormBuilder)` 取得 `fb`。FormBuilder 是 Angular 提供的建構工具，比自己一個一個建立更簡潔。
+
+第三步，用 `fb.group()` 定義整份表單的結構：`surveyTitle` 的初始值是空字串，加上必填驗證；`questions` 用 `fb.array` 建立一個空的 FormArray。
 -->
 
 ---
@@ -274,11 +280,13 @@ export class AppComponent {
 ```
 
 <!--
-我們帶大家看一下這段程式碼的重點。imports 裡加了 ReactiveFormsModule，這是必要條件。fb 這個屬性透過 inject(FormBuilder) 拿到，之後所有 group、array、control 的建立都靠它。
+我們看程式碼。
 
-最重要的是 form 這個屬性，它就是我們整份表單的根 FormGroup，裡面 surveyTitle 給了初始值跟必填驗證，questions 先建立一個空的 FormArray，等一下我們會用程式把題目一筆一筆推進去。
+`imports` 加入 `ReactiveFormsModule`。`fb` 用 `inject(FormBuilder)` 取得，之後建立表單都靠它。
 
-⚠️ 提醒大家，這邊的 fb.group() 只是「宣告結構」，實際資料還要等後面 addQuestion() 執行才會出現。
+最重要的是 `form` 這個屬性，它就是整份表單最外層的 FormGroup。`surveyTitle` 有初始值和必填驗證，`questions` 先是一個空的 FormArray。
+
+要注意，`fb.group()` 只是宣告結構，題目要等之後呼叫新增的方法才會出現。
 -->
 
 ---
@@ -294,11 +302,11 @@ export class AppComponent {
 建立 getter `questionsArray`，方便 TypeScript 與 HTML 存取該 `FormArray`，需將 `form.get('questions')` 強型轉換為 `FormArray`。
 
 <!--
-先講一下 surveyTitle 這個陣列語法：第一個位置放初始值，第二個位置放驗證規則，這個結構我們之後在 Validators 那一章還會再深入講。
+我們仔細看 `surveyTitle` 的寫法。它是一個陣列，第一個元素是欄位的初始值，第二個元素是驗證規則。驗證規則在下一章會深入介紹。
 
-fb.array([]) 就是建立一個空的 FormArray，這時候裡面還沒有任何題目。因為 form.get('questions') 回傳的型別預設是比較通用的型別，所以我們額外寫一個 questionsArray 的 getter，把它強制轉型成 FormArray，這樣不管是 TypeScript 還是 HTML 樣板要存取題目陣列，都可以直接呼叫這個 getter，程式碼會乾淨很多。
+`fb.array` 建立的是空的 FormArray，之後再用程式把題目推進去。
 
-⚠️ 這邊常見的錯誤是忘記轉型，直接把 form.get('questions') 當 FormArray 用，TypeScript 會報型別錯誤。
+另外，`form.get('questions')` 回傳的型別比較通用，TypeScript 不知道它是 FormArray。所以我們寫一個 `questionsArray` 的 getter，把它轉型成 FormArray。這樣不管是 TypeScript 還是 HTML，要存取題目陣列，都直接用這個 getter，程式碼會乾淨很多。
 -->
 
 ---
@@ -325,9 +333,11 @@ export class AppComponent {
 ```
 
 <!--
-帶大家看一下這段程式碼，重點是最下面的 getter：questionsArray 回傳的是把 form.get('questions') 轉型成 FormArray 之後的結果。之後不管是要 push 新題目、還是要在 HTML 用 @for 迭代題目，都直接呼叫 this.questionsArray，不用每次都重複寫轉型的程式碼。
+我們看加上 getter 之後的程式碼。
 
-執行這段之後，表單裡就有 surveyTitle 跟一個空的 questions 陣列，接下來我們就要學怎麼把題目動態加進 questions 裡。
+最下面的 `questionsArray`，回傳的是 `form.get('questions')`，並用 `as FormArray` 轉型。之後要新增題目，或在 HTML 用 `@for` 顯示題目，都直接使用 `this.questionsArray`，不用每次重複寫轉型。
+
+到這裡，表單裡有 `surveyTitle` 和一個空的 `questions`，接下來學怎麼把題目加進去。
 -->
 
 ---
@@ -357,11 +367,15 @@ addQuestion() {
 ```
 
 <!--
-這段就是動態新增題目的核心邏輯，我們一步一步帶大家看。第一步用 fb.group() 建立一個新的題目 FormGroup，裡面有三個欄位：qTitle 必填、qType 預設是 'M'、need 預設是 false。
+這是新增題目的方法 `addQuestion`。
 
-第二步是關鍵：用 questionsArray.push() 把這個新的 FormGroup 推進題目陣列裡，這就是「動態新增欄位」真正發生的地方。第三步是個小技巧，執行完之後可以用 console.log(this.form.value) 印出整份表單的資料，方便我們在開發時確認結構有沒有跑對。
+第一步，用 `fb.group()` 建立一個新的題目，裡面有三個欄位：`qTitle` 必填，`qType` 預設是 M，`need` 預設是 false。
 
-執行這個方法之後，畫面上題目列表就會多出一筆新的題目輸入區塊，因為 HTML 那邊會用 @for 迭代 questionsArray，陣列多了元素，畫面就會跟著多渲染一組。
+第二步，用 `questionsArray.push()` 把這個題目推進陣列，這就是動態新增欄位真正發生的地方。
+
+最後的 `console.log(this.form.value)` 是開發時的小技巧，可以印出整份表單目前的資料，確認結構對不對。
+
+因為 HTML 會用 `@for` 顯示 `questionsArray`，陣列多了一筆，畫面上就會多出一組題目的輸入區塊。
 -->
 
 ---
@@ -382,11 +396,11 @@ removeQuestion(index: number) {
 ```
 
 <!--
-刪除的邏輯其實跟大家平常操作 JavaScript Array 一模一樣，只是換成呼叫 FormArray 提供的方法。removeAt(index) 就是依照索引位置把對應的 FormGroup 從陣列裡拿掉，之後面的元素會自動往前遞補索引。
+刪除題目的概念，和操作一般陣列一樣。
 
-這裡的重點只有一行：this.questionsArray.removeAt(index)。等一下 HTML 那邊我們會在每個題目旁邊放一個刪除按鈕，按下去就會呼叫這個方法，把該題目從畫面跟資料裡同時移除。
+FormArray 提供了 `removeAt` 方法，傳入要刪除的位置，就會把那一筆 FormGroup 移除，後面的元素會自動往前補。
 
-⚠️ 提醒大家，index 一定要對應到目前畫面上的位置，如果搭配 @for 的 $index 使用就不會有問題，但如果自己額外去記錄索引就要小心陣列變動後索引跟著改變的情況。
+所以 `removeQuestion` 只有一行：`this.questionsArray.removeAt(index)`。等一下會在每題旁邊放一個刪除按鈕，點擊時把這一題的位置傳進來。
 -->
 
 ---
@@ -398,7 +412,7 @@ class: flex flex-col justify-center items-center text-center
 # Template Binding
 
 <!--
-邏輯都寫好了，接下來我們把這份表單繫結到 HTML 畫面上，讓使用者實際看得到、填得到這個問卷。
+邏輯都寫好了，接下來把表單繫結到 HTML 畫面上。
 -->
 
 ---
@@ -428,9 +442,11 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-第一步很單純，就是在 <form> 標籤上加 [formGroup]="form"，這一行等於是告訴 Angular：「這張表單接下來的所有內容，都要對應到 TypeScript 裡的 form 這個變數」。
+第一步，在 `form` 標籤上加上中括號 `formGroup` 等於 `form`。
 
-⚠️ 這裡最容易漏掉的地方，就是忘記在 @Component 的 imports 加上 ReactiveFormsModule。如果沒加，[formGroup] 這個指令 Angular 根本不認識，畫面打開就會直接報錯，這個錯誤訊息也是同學最常來問的問題之一，大家實作時務必先檢查這一步。
+這一行的意思是告訴 Angular：「這張表單裡的所有內容，都對應到 TypeScript 裡的 `form`」。
+
+再提醒一次，`@Component` 的 `imports` 一定要有 `ReactiveFormsModule`，否則 Angular 不認得 `formGroup` 這個指令，畫面一打開就會報錯。
 -->
 
 ---
@@ -451,11 +467,11 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 ```
 
 <!--
-這裡跟大家強調一個很重要的觀念轉換：Reactive Forms 不用 [(ngModel)] 做雙向繫結，而是改用 formControlName。
+第二步，用 `formControlName` 把輸入欄位繫結到表單裡的欄位。
 
-大家可以這樣記：formControlName 後面接的字串，一定要跟 TypeScript 那邊 fb.group() 裡定義的欄位名稱一模一樣，這邊就是 surveyTitle。這個屬性就像是一條線，把畫面上的這個 input 跟 TypeScript 裡對應的那個 FormControl 綁在一起。
+這裡有一個重要的觀念轉換：Reactive Forms 不使用 `ngModel`，而是用 `formControlName`。它後面的字串，要和 `fb.group()` 裡定義的名稱完全一樣，這裡是 `surveyTitle`。
 
-⚠️ 如果 formControlName 打錯字或大小寫不一致，Angular 不會幫你自動對應，欄位就會抓不到值，這是初學者最容易犯的錯誤之一。
+這就像一條線，把畫面上的 `input` 和 TypeScript 裡對應的 FormControl 連在一起。如果打錯字或大小寫不一致，欄位就會抓不到值。
 -->
 
 ---
@@ -469,11 +485,11 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 3. 迴圈內的 `<div>` 加上 `[formGroupName]="$index"`，對應每筆題目的 `FormGroup`
 
 <!--
-問卷題目是一個陣列，畫面上要用迴圈把每一題都渲染出來，這邊有三個步驟要注意。
+第三步，顯示題目清單。題目是一個陣列，要用迴圈顯示，這裡有三層繫結。
 
-第一，外層 div 加 formArrayName="questions"，這行是告訴 Angular「這個範圍裡的內容，對應到 questions 這個 FormArray」。第二，用 @for 迭代 questionsArray.controls，這樣才能拿到陣列裡每一個 FormGroup。第三，迴圈裡的每個 div 要加上 [formGroupName]="$index"，用索引對應到陣列裡的第幾筆題目資料。這三層繫結（FormArray → 迴圈 → 每筆的 FormGroup）是同學第一次接觸時比較容易搞混的地方，我們接下來直接看程式碼會更清楚。
+第一，外層的 `div` 加上 `formArrayName` 等於 questions，代表這個範圍對應到 `questions` 這個 FormArray。第二，用 `@for` 走過 `questionsArray.controls`，取得每一個 FormGroup。第三，迴圈裡的 `div` 加上中括號 `formGroupName` 等於 `$index`，用位置對應到第幾題。
 
-⚠️ 這裡先預告一個地雷：@for 的 track 千萬不要用 $index，要 track control 本身，原因下一頁詳細解釋。
+另外先提醒，`@for` 的 `track` 不要用 `$index`，而要用 `control` 本身，原因在下一頁說明。
 -->
 
 ---
@@ -503,15 +519,13 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 ```
 
 <!--
-帶大家逐段看一下這段 HTML。formArrayName="questions" 鎖定了題目陣列的範圍，@for 迴圈裡用 track control，這樣 Angular 才知道怎麼追蹤每個項目的變化。
+我們看實際的 HTML。
 
-最關鍵的是 [formGroupName]="$index"，因為 questionsArray 裡面裝的每一個元素都是一個 FormGroup，所以要用「第幾組」這個索引來對應，而不是像 formControlName 那樣用固定的名字。裡面的 input 再用平常熟悉的 formControlName="qTitle" 對應到題目裡的欄位。
+`formArrayName` 鎖定題目陣列的範圍，`@for` 用 `track control`。每一題的 `div` 用中括號 `formGroupName` 對應位置，因為陣列裡的每個元素都是一個 FormGroup，要用第幾組來對應。裡面的 `input` 再用 `formControlName` 對應 `qTitle`。
 
-⚠️ 提醒同學，畫面上要真的看得到題目輸入欄位，一定要有個按鈕呼叫 addQuestion()，不然 questionsArray 一開始是空陣列，@for 沒有資料可以跑，畫面上除了問卷名稱欄位之外會完全是空的，這是很多人做這個練習卡住的地方。這裡把 button 放在 formArrayName 的 div 外面、form 裡面即可，type="button" 是為了避免它被瀏覽器當成表單送出按鈕。
+下方還有一個新增題目的按鈕，`type` 設為 button，避免被當成送出表單。一開始陣列是空的，沒有這個按鈕，畫面上就看不到任何題目。
 
-⚠️ 另一個更隱蔽的地雷：track 千萬不要用 $index。刪除中間某一題時，track $index 會讓 Angular 誤以為「位置」沒變，於是重複使用同一個輸入框 DOM 節點去顯示不同的題目資料，結果不管點哪一列的刪除按鈕，畫面上看起來永遠是最後一列消失，其他列的內容卻沒有正確更新。改成 track control，讓 Angular 用每個 FormGroup 物件本身的身分去追蹤，DOM 節點才會跟著正確的資料一起被建立或刪除。
-
-執行到這一步，畫面應該會看到：每按一次「新增題目」，就會多出一個題目輸入欄位，並且輸入的內容會即時同步回 TypeScript 的 form 裡；點任何一列的「刪除題目」，也會正確刪掉那一列，而不是永遠刪最後一列。
+為什麼 `track` 不能用 `$index`？如果刪除中間的某一題，用位置追蹤的話，Angular 會以為位置沒變，重複使用同一個輸入框去顯示不同的資料，結果看起來永遠是最後一題消失。改用 `control` 本身追蹤，畫面才會跟著正確的資料一起更新。
 -->
 
 ---
@@ -545,11 +559,11 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 </div>
 
 <!--
-這張是完整的題目區塊，我們把 qTitle、qType、need 三個欄位都用 formControlName 綁上去，另外還加了一個刪除按鈕，按下去呼叫我們前面寫好的 removeQuestion($index)。
+這頁是完整的題目區塊，三個欄位都用 `formControlName` 繫結。
 
-大家可以看到 select 裡的 qType 對應題目類型，checkbox 的 need 對應是否必填，這些都跟 qTitle 一樣，靠 formControlName 這個字串跟 TypeScript 的欄位名稱對起來。
+`qTitle` 是題目的輸入框，`qType` 用 `select` 選擇題型，`need` 用 checkbox 設定是否必填。最後的刪除按鈕呼叫 `removeQuestion`，並傳入 `$index`。
 
-⚠️ 特別提醒剛剛畫面上那個提示：formControlName 的值一定要跟 fb.group() 裡定義的 key 完全一致，包含大小寫，這個是同學做練習時最常見的 typo 錯誤來源，抓 bug 的時候可以優先檢查這裡。「新增題目」按鈕前面 formArrayName（三）那一頁已經示範過，這裡不重複放。
+要特別注意，`formControlName` 的值要和 `fb.group()` 定義的名稱完全一致，大小寫也要一樣，這是練習時最常見的錯誤來源。
 -->
 
 ---
@@ -561,7 +575,7 @@ layout: end
 ### Reactive Forms 以 TypeScript 顯式管理表單結構，透過 FormControl、FormGroup、FormArray 三種積木實現動態欄位、複雜驗證與巢狀資料的完整控制
 
 <!--
-這一章我們從「為什麼需要 Reactive Forms」講到實際做出一個可以動態新增刪除題目的問卷表單，也認識了 FormControl、FormGroup、FormArray 這三個積木怎麼互相搭配。
+這一章我們學了 Reactive Forms。它把表單的結構和規則集中在 TypeScript 管理，適合複雜和動態的表單。三個核心元件是：代表單一欄位的 FormControl、把欄位包成一組的 FormGroup，以及管理動態清單的 FormArray。我們用 `fb.group` 和 `fb.array` 建立結構，用 `push` 和 `removeAt` 增減題目，在 HTML 用 `formGroup`、`formControlName`、`formArrayName` 和 `formGroupName` 繫結，記得匯入 `ReactiveFormsModule`。
 
-大家現在應該能夠自己動手，用 fb.group() 跟 fb.array() 建立一個表單結構，並且知道怎麼把它繫結到 HTML 畫面上。下一章我們會接著講 Validators，也就是怎麼替這些欄位加上更完整的驗證規則。
+下一章，我們會學習用 Validators 替表單加上驗證規則。我們下一章見。
 -->

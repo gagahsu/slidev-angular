@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要來學 Toolbar，也就是網頁最上方那條導覽列。
+上一章我們做出了側邊導覽。這一章，我們要學網頁最上方的那條導覽列：Toolbar。
 
-我們平常用的每一個 App，幾乎都有一條固定在頂部的工具列，上面放著標題、選單按鈕、通知圖示。如果要自己刻這種版面，光是把按鈕對齊左右兩側就要花不少時間調 CSS。Angular Material 幫我們把這件事包好了，就是今天要介紹的 mat-toolbar。
-
-學完這一章，大家會知道怎麼用 mat-toolbar 快速做出一條左右對齊的頂部導覽列，也會學到一個很實用的排版技巧叫 Spacer。
+幾乎每個 App 頂部都有一條工具列，放著標題、選單按鈕和通知圖示。自己做的話，光是把按鈕對齊左右兩側就要調很久。學完這一章，我們會用 `mat-toolbar` 快速做出左右對齊的頂部導覽列，也會學到一個實用的排版技巧：Spacer。
 -->
 
 ---
@@ -66,7 +64,7 @@ layout: default
 - **mat-menu 下拉選單與 matBadge 角標** — 工具列常搭配的兩個延伸元件
 
 <!--
-這張投影片先讓大家看一下整章的地圖。我們會先搞懂 Toolbar 是什麼、用在哪裡，接著看它的基本 HTML 結構，然後學一個很關鍵的排版技巧叫 Spacer，最後看 TypeScript 那邊要 import 哪些模組才能讓它正常運作。
+這一章會先說明 Toolbar 是什麼、用在哪裡，接著看它的基本 HTML 結構，然後學習 Spacer 排版技巧，以及 TypeScript 要匯入哪些模組。最後介紹工具列常搭配的下拉選單 `mat-menu` 和角標 `matBadge`，並做一個整合練習。
 -->
 
 ---
@@ -78,9 +76,7 @@ class: flex flex-col justify-center items-center text-center
 # What Is a Toolbar?
 
 <!--
-大家有沒有注意到，幾乎所有網站或 App 打開來，最上面都有一條固定的橫條，放著 Logo、標題、還有一些按鈕？那條就是 Toolbar，工具列。
-
-接下來我們就來看看 Angular Material 怎麼幫我們快速做出這樣的東西。
+網站最上面那條放著 Logo、標題和按鈕的橫條，就是 Toolbar，工具列。
 -->
 
 ---
@@ -96,11 +92,11 @@ Angular Material 提供 `<mat-toolbar>` 元件，可快速建立符合 Material 
 </div>
 
 <!--
-白話一點說，Toolbar 就是網頁上方那條「常駐工具列」，通常用來放標題、或是登入登出、開關側邊選單這種功能按鈕。
+Toolbar 通常放在網頁頂部，用來顯示標題，或放置功能按鈕，例如登入登出、開啟側邊導覽列。
 
-Angular Material 提供了 mat-toolbar 這個元件，我們不用自己刻版面、自己調樣式，直接用它就能做出符合 Material Design 規範的頂部工具列，大家可以看一下畫面上這張截圖的樣子。
+Angular Material 提供了 `mat-toolbar` 元件，不用自己設計版面和樣式，就能做出符合 Material Design 規範的工具列，畫面上就是它的樣子。
 
-這在實際專案裡幾乎是標配，因為前台後台系統的頂部導覽列，十之八九都會用到它。
+在實際專案裡，前台和後台系統的頂部導覽列，大多都會用到它。
 -->
 
 ---
@@ -112,14 +108,14 @@ class: flex flex-col justify-center items-center text-center
 # Basic HTML Structure
 
 <!--
-知道 Toolbar 是什麼之後，我們來看看它實際的 HTML 要怎麼寫。
+知道 Toolbar 是什麼之後，我們來看它的 HTML 怎麼寫。
 -->
 
 ---
 
 # 基本 HTML 結構 — mat-toolbar 範本
 
-將工具列內容包裹於 `<mat-toolbar>` 中。預設情況下，所有子元素會排列在右側，需透過 Spacer 調整版面。
+將工具列內容包裹於 `<mat-toolbar>` 中。預設情況下，所有子元素會依序靠左排列，需透過 Spacer 將右側按鈕推至最右邊。
 
 ```html
 <mat-toolbar>
@@ -138,15 +134,15 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 若未加入 Spacer，工具列中的所有內容會集中於右側，版面無法正確對齊。
+💡 <b>注意：</b> 若未加入 Spacer，工具列中的所有內容會擠在左側，無法分散到左右兩側。
 </div>
 
 <!--
-我們來看一下這段範例，目的是做出一個左邊放選單按鈕跟標題、右邊放兩個圖示按鈕的工具列。大家可以看到，整個結構其實很單純，就是把按鈕跟文字都包在 mat-toolbar 裡面。
+這個範例要做出：左邊是選單按鈕和標題，右邊是兩個圖示按鈕。
 
-這裡要帶大家看一下中間那個 example-spacer 的 span，這個是空的，看起來好像沒作用，但它其實是撐開左右版面的關鍵，等一下下一頁會細講。
+結構很單純，把按鈕和文字都包在 `mat-toolbar` 裡。按鈕用 `mat-icon-button`，裡面放 `mat-icon` 顯示圖示。
 
-⚠️ 提醒大家，如果只是把內容包進 mat-toolbar，沒有加這個 spacer，所有元素預設都會靠左排列在一起，不會自動分散到左右兩側，版面會擠成一團，這是最常見的誤會。
+注意中間那個空的 `span`，class 是 `example-spacer`。它看起來沒有內容，卻是把左右內容撐開的關鍵。如果沒有它，所有元素會擠在一起，不會自動分散到左右兩側。下一頁我們詳細說明。
 -->
 
 ---
@@ -158,7 +154,7 @@ class: flex flex-col justify-center items-center text-center
 # Spacer Layout Technique
 
 <!--
-剛剛我們留了一個伏筆，就是那個看起來空空的 spacer 到底在做什麼，現在就來把它講清楚。
+剛才留了一個伏筆：那個空空的 Spacer 到底在做什麼？現在來說清楚。
 -->
 
 ---
@@ -201,11 +197,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這個技巧其實可以想像成彈簧。我們在 HTML 裡放一個空的 span，本身沒有任何內容，但在 CSS 裡把它的 flex 設成 1 1 auto，就等於告訴瀏覽器「這個空白區塊要把剩下的空間全部吃掉」。
+Spacer 的做法，是在 HTML 放一個空的 `span`，再在 CSS 設定它的 `flex` 屬性。
 
-大家可以看一下這三個屬性拆開來的意思：flex-grow: 1 表示它會盡量長大佔滿空間，flex-shrink: 1 表示容器變小時它可以縮小，flex-basis: auto 表示一開始的大小看內容決定，因為它是空的，所以初始大小幾乎是零。
+`flex: 1 1 auto` 等於同時設定三件事：`flex-grow: 1`，盡量長大，佔滿剩下的空間；`flex-shrink: 1`，容器變小時可以縮小；`flex-basis: auto`，初始大小由內容決定，因為是空的，所以幾乎是零。
 
-結果就是，標題跟右側按鈕之間會被這個看不見的彈簧撐開，右側按鈕自然就被推到最右邊，達到我們要的「左右對齊」效果。這個技巧不只用在 Toolbar，很多需要左右分散排列的版面都可以用同樣的手法。
+可以把它想成一個彈簧，夾在標題和右側按鈕之間，把剩下的空間全部撐開，右側的按鈕就被推到最右邊了。這是我們在 Flexbox 那一章學過的 `flex` 屬性，這個技巧不只用在工具列，很多需要左右分開的版面都可以用。
 -->
 
 ---
@@ -217,7 +213,7 @@ class: flex flex-col justify-center items-center text-center
 # Importing Required Modules
 
 <!--
-版面搞定之後，最後我們來看程式碼那邊還需要準備什麼，才能讓這些元件真的跑得起來。
+版面處理好了，最後看程式碼這邊要準備什麼，元件才能運作。
 -->
 
 ---
@@ -249,11 +245,11 @@ export class AppComponent {}
 ```
 
 <!--
-這段範例的目的，是讓 mat-toolbar、mat-icon、mat-icon-button 這幾個標籤在畫面上真的能運作起來。我們前面已經在 HTML 裡寫好版面了，但如果沒有在元件裡 import 對應的模組，Angular 是不會認識這些標籤的。
+要使用 `mat-toolbar`、`mat-icon` 和 `mat-icon-button`，就要在元件的 `imports` 加入對應的模組。
 
-大家帶著看一下 imports 陣列裡面，這裡放了三個模組：MatToolbarModule 對應 mat-toolbar、MatIconModule 對應 mat-icon、MatButtonModule 對應 mat-icon-button。因為這是 standalone component，所以直接把模組放進 imports 陣列就可以，不用像以前一樣去改 NgModule。
+這裡放了三個：`MatToolbarModule` 對應 `mat-toolbar`，`MatIconModule` 對應 `mat-icon`，`MatButtonModule` 對應 `mat-icon-button`。
 
-⚠️ 這裡最常見的錯誤，就是漏掉某一個模組沒有 import，這樣對應的標籤在畫面上就不會生效，甚至編輯器會出現紅色錯誤提示，等一下下一頁會列出完整的對應表給大家對照。
+最常見的錯誤，是漏掉其中一個模組，對應的標籤就不會生效，編輯器也會出現紅色的錯誤提示。
 -->
 
 ---
@@ -271,7 +267,9 @@ export class AppComponent {}
 </div>
 
 <!--
-這張表格幫大家把剛剛講的三個模組整理起來，一邊是套件路徑，一邊是它對應到畫面上的哪個標籤或指令，之後如果編輯器出現紅字，大家可以直接查這張表確認自己是不是漏 import 了。
+這張表把三個模組整理起來，包括套件路徑，以及對應到畫面上的哪個標籤或指令。
+
+之後如果編輯器出現紅字，可以查這張表，確認是不是漏了哪個模組。
 -->
 
 ---
@@ -287,7 +285,11 @@ export class AppComponent {}
 | 5 | 將三個模組加入元件的 `imports` 陣列 |
 
 <!--
-這張表把整個章節的步驟串起來，我們從 HTML 加上 mat-toolbar、放進標題跟按鈕，中間插入 spacer 把左右內容分開，CSS 設定 flex，最後別忘了在 TypeScript 裡把三個模組都 import 進來。照著這五步走一遍，一個標準的 Angular Material 頂部導覽列就完成了。
+這張表把整個流程串起來。
+
+在 HTML 加上 `mat-toolbar`，放進標題和圖示按鈕；插入一個空的 `span` 區隔左右內容；在 CSS 設定 `flex: 1 1 auto`；最後在 TypeScript 匯入三個模組，並加進 `imports` 陣列。
+
+照著這五步，一個標準的頂部導覽列就完成了。
 -->
 
 ---
@@ -299,7 +301,7 @@ class: flex flex-col justify-center items-center text-center
 # Dropdown Menu & Badge
 
 <!--
-Toolbar 除了標題跟圖示按鈕，業界實務上很常搭配兩個延伸元件：一個是點擊後彈出選單的 mat-menu，另一個是在圖示右上角顯示數字提示的 matBadge。這兩個接下來的練習會用到，我們先花兩頁把它們的基本用法搞懂。
+工具列常搭配兩個元件：下拉選單 `mat-menu`，以及顯示數字的角標 `matBadge`。
 -->
 
 ---
@@ -324,11 +326,11 @@ Toolbar 除了標題跟圖示按鈕，業界實務上很常搭配兩個延伸元
 </div>
 
 <!--
-mat-menu 平常是隱藏的，只有使用者點擊觸發它的按鈕時才會浮出來，這跟前面學過的 mat-drawer「常駐或手動收合」的行為不一樣，mat-menu 預設就是彈出式、點外面會自動關閉。
+`mat-menu` 是 Material 的下拉選單元件。平常是隱藏的，點擊觸發按鈕才會浮出來，點選單外面會自動關閉，常用在使用者頭像選單，或「更多操作」按鈕。
 
-大家看一下這段結構：觸發按鈕上用 [matMenuTriggerFor] 指向一個樣板變數，這個樣板變數要寫在 mat-menu 標籤上，並且一定要指定 ="matMenu"，這是固定寫法，代表這個變數代表的是「這一個 mat-menu 的控制器」。選單裡面的每個項目用 mat-menu-item，點下去可以搭配 (click) 執行動作，選單也會自動關閉。
+看結構：觸發按鈕上用中括號 `matMenuTriggerFor`，指向一個模板變數。這個模板變數寫在 `mat-menu` 上，而且一定要寫成井字號 menu 等於 matMenu，這是固定寫法。選單裡的每個項目用 `mat-menu-item`。
 
-⚠️ 易錯點：mat-menu 忘記加 ="matMenu"，或是 [matMenuTriggerFor] 指到錯的變數名稱，點擊按鈕都不會有反應，是初學者最常卡住的地方。
+最常卡住的地方，是忘了寫等於 matMenu，或 `matMenuTriggerFor` 指錯了名稱，點按鈕就不會有任何反應。
 -->
 
 ---
@@ -350,7 +352,9 @@ export class AppComponent {}
 ```
 
 <!--
-跟前面學過的每個 Material 元件一樣，用什麼標籤就要匯入對應模組，mat-menu 系列對應的是 MatMenuModule，套件路徑是 @angular/material/menu。忘記匯入的話，[matMenuTriggerFor] 這個綁定會直接報錯，找不到這個指令。
+跟其他 Material 元件一樣，用到 `mat-menu` 就要匯入對應的模組，也就是從 `@angular/material/menu` 匯入 `MatMenuModule`。
+
+忘記匯入的話，`matMenuTriggerFor` 會直接報錯，說找不到這個指令。
 -->
 
 ---
@@ -374,9 +378,11 @@ import { MatBadgeModule } from '@angular/material/badge';
 </div>
 
 <!--
-matBadge 用法很單純，不需要額外包裝元素，直接寫在要顯示角標的元素上就好，這裡示範的是通知圖示按鈕加上未讀數字 3，顏色用 warn（紅色）比較醒目。要用這個指令一樣要匯入對應的 MatBadgeModule，套件路徑是 @angular/material/badge。
+`matBadge` 是一個指令，可以直接加在任何元素上，在它的右上角顯示一個小圓形的數字或文字，常用來顯示未讀通知的數量。
 
-這兩個元件學完，我們就有足夠的工具可以把 Toolbar 做成業界常見、功能完整的頂部列了，接下來的練習就會同時用到 mat-menu 跟 matBadge。
+這裡在通知圖示的按鈕上，加了 `matBadge` 等於 3，`matBadgeColor` 設為 warn，也就是紅色，比較醒目。顏色可以是 primary、accent 或 warn。
+
+使用前要從 `@angular/material/badge` 匯入 `MatBadgeModule`。
 -->
 
 ---
@@ -408,9 +414,11 @@ layout: default
 </div>
 
 <!--
-這一題的重點是把這一章學到的 Spacer 技巧，跟 ch47 已經做好的 sidenav 整合成一個更完整、更接近真實專案的頂部列。大家平常用的後台系統，像 Gmail、雲端管理後台，幾乎都是這種「左邊選單開關 + 標題 + Spacer + 右側功能圖示 + 使用者選單」的組合，這一題就是把這個業界常見的版面實際做一次。
+我們來做一個練習。
 
-⚠️ 提醒同學，這一題不需要重寫 sidenav 的部分，drawer、pages、routerLink 這些都維持 ch47 寫好的樣子，只需要修改 mat-toolbar 裡面的內容。
+後台系統的頂部列，右側通常有帶未讀數字的通知鈴鐺，以及點擊後彈出選單的使用者頭像。這題延續上一章的 `sidenav-menu` 元件，只要擴充工具列的內容。
+
+限制是：用 Spacer 撐開左右，不能用 margin；角標用 `matBadge`；下拉選單用 `mat-menu`，不要自己寫顯示和隱藏的邏輯。
 -->
 
 ---
@@ -428,7 +436,11 @@ layout: default
 7. 在 `.scss` 中為 `.toolbar-spacer` 設定 `flex: 1 1 auto`
 
 <!--
-大家可以先自己動手寫寫看。重點是想清楚 Spacer 只是一個「空 span + flex CSS」，不用想得太複雜；mat-menu 則是獨立寫在 mat-toolbar 外面的一個區塊，靠樣板變數 #userMenu 跟按鈕上的 [matMenuTriggerFor] 連結起來，兩者不需要巢狀包在一起。卡住的地方沒關係，下一頁有提示。
+任務有七個步驟。
+
+第一，在 `imports` 新增 `MatMenuModule` 和 `MatBadgeModule`。第二，在工具列的標題後面加一個空的 Spacer。第三，Spacer 後面加上通知圖示按鈕，用 `matBadge` 顯示角標。第四，再加一個頭像圖示按鈕，用 `matMenuTriggerFor` 綁定選單。第五，在工具列外面加上 `mat-menu`，裡面有個人資料和登出兩個項目。第六，在 TypeScript 新增 `logout` 方法，綁定到登出項目。第七，在 SCSS 設定 Spacer 的 `flex`。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -444,7 +456,11 @@ layout: default
 5. `.toolbar-spacer` 的效果跟 ch48 教過的 `example-spacer`完全相同，只是換了 class 名稱
 
 <!--
-对照一下大家的答案，最容易漏掉的地方是 mat-menu 忘記加 #userMenu="matMenu"，這時候 [matMenuTriggerFor] 會抓不到目標，點擊沒有任何反應。另一個常見疏漏是把 mat-menu 寫在 mat-toolbar 裡面，其實它應該是 mat-toolbar 的同層級元素，因為 mat-menu 本身是一個浮動的選單面板，不是版面排列的一部分。下一頁看完整解答。
+我們來看解題提示。
+
+第一，`mat-menu` 一定要有模板變數，並寫成等於 matMenu，才能被 `matMenuTriggerFor` 引用。第二，`matBadge` 直接寫在要顯示角標的元素上。第三，`mat-menu-item` 裡可以同時放圖示和文字。第四，兩個模組的套件路徑分別是 menu 和 badge。第五，`.toolbar-spacer` 跟剛才的 `example-spacer` 效果完全一樣，只是換了名稱。
+
+另外，`mat-menu` 要和工具列放在同一層，而不是包在工具列裡面，因為它是一個浮動的面板。
 -->
 
 ---
@@ -471,7 +487,9 @@ export class SidenavMenuComponent {
 ```
 
 <!--
-這裡只列出跟 ch47 版本的差異：多 import 了 MatMenuModule、MatBadgeModule，並記得把它們加進 imports 陣列。新增一個 logout() 方法，這一題先用 console.log 模擬登出動作，實務上這裡通常會呼叫認證服務清除 token、導回登入頁，概念上是一樣的，只是先用最簡單的方式示範綁定邏輯。
+我們看完整的解答，先看 TypeScript 新增的部分。
+
+匯入 `MatMenuModule` 和 `MatBadgeModule`，並加進 `imports` 陣列。新增一個 `logout` 方法，這裡先用 `console.log` 模擬登出。實務上，這裡通常會清除登入的資訊，並導回登入頁。
 -->
 
 ---
@@ -503,7 +521,9 @@ layout: default
 ```
 
 <!--
-這一題不動 mat-drawer 裡面的側邊選單內容，也不動 mat-drawer-content 裡的 router-outlet，唯一要修改的地方就是 mat-toolbar 裡面的內容，位置在 mat-drawer-content 開頭、router-outlet 的上面。下一頁把 mat-toolbar 裡面放大來看完整內容。
+這頁是 HTML 的整體結構。
+
+側邊選單的 `mat-drawer`，以及主要內容裡的 `router-outlet`，都維持上一章的寫法。唯一要修改的，是 `mat-drawer-content` 開頭、`router-outlet` 上方的 `mat-toolbar`。下一頁把它放大來看。
 -->
 
 ---
@@ -534,7 +554,11 @@ layout: default
 ```
 
 <!--
-前半段的漢堡按鈕跟標題完全沿用 ch47，沒有變動。重點看後半段：toolbar-spacer 這個空 span 把標題跟右側按鈕撐開；notifications 圖示按鈕加了 matBadge="3"，畫面上會自動在圖示右上角顯示一個紅色角標數字 3；最後 account_circle 圖示按鈕用 [matMenuTriggerFor]="userMenu" 指向下一頁定義的選單。
+這頁是工具列的內容。
+
+前面的選單按鈕和標題沿用上一章，沒有改動。接著是 `toolbar-spacer`，把標題和右側的按鈕撐開。
+
+通知圖示按鈕加上 `matBadge` 等於 3，畫面上會在圖示右上角顯示紅色的數字 3。最後的頭像圖示按鈕，用 `matMenuTriggerFor` 指向 `userMenu`，也就是下一頁定義的選單。
 -->
 
 ---
@@ -565,9 +589,13 @@ layout: default
 </div>
 
 <!--
-mat-menu 本身不是排版用的元素，而是一個浮動面板，所以不需要跟 mat-toolbar 巢狀寫在一起。這裡刻意標出 </mat-drawer-container>，就是要提醒大家 mat-menu 是放在整個容器外面、跟 mat-drawer-container 平行的位置，Angular Material 會在使用者點擊觸發按鈕時自動運算位置、浮出選單，不受它寫在 HTML 哪個位置影響。
+這頁是使用者選單。
 
-兩個 mat-menu-item 都是圖示加文字的組合，登出項目多綁了 (click)="logout()"，點擊後會執行上一頁定義的方法，同時選單會自動收合，這是 mat-menu-item 內建的行為，不需要額外寫程式碼去關閉選單。
+`mat-menu` 寫在 `mat-drawer-container` 的外面，是整份模板最外層的元素。它是浮動的面板，Angular Material 會在點擊時自動計算位置，所以不受它寫在哪裡影響。
+
+模板變數是井字號 userMenu 等於 matMenu。裡面有兩個項目，各自有圖示和文字，登出項目用小括號 `click` 綁定 `logout`。
+
+驗證的方式是：點擊頭像會彈出選單；點擊登出，Console 會印出訊息，選單也會自動關閉，這是 `mat-menu-item` 內建的行為。
 -->
 
 ---
@@ -583,9 +611,11 @@ layout: default
 ```
 
 <!--
-這一行 CSS 跟這一章前面教的 example-spacer 原理完全相同：flex: 1 1 auto 讓這個空的 span 盡量撐大，把左邊的標題跟右邊的通知、使用者按鈕推開，達到「標題靠左、功能按鈕靠右」的效果。mat-toolbar 預設就是 flex 容器，所以不需要額外設定 display: flex，直接在子元素上調整 flex 屬性就能生效。
+最後是 SCSS 裡的 Spacer。
 
-這一題做完，就是把 ch47 的側邊導覽跟這一章的 Toolbar、Spacer 技巧整合成一個完整的頂部列，加上通知角標跟使用者選單，已經很接近業界後台系統的標準版面了。
+`.toolbar-spacer` 設定 `flex: 1 1 auto`，原理和前面的 `example-spacer` 完全一樣，讓這個空的 `span` 撐開空間，把標題留在左邊，通知和頭像推到右邊。`mat-toolbar` 本身就是 flex 容器，所以不用另外設定 `display: flex`。
+
+做完這題，就把側邊導覽、工具列、Spacer、角標和使用者選單整合起來，已經很接近業界後台系統的標準版面了。
 -->
 
 ---
@@ -596,6 +626,8 @@ layout: end
 ### 善用 mat-toolbar 與 Spacer 技巧，打造整齊美觀的 Angular 頂部導覽列
 
 <!--
-這一章我們學會了用 mat-toolbar 做出頂部工具列，也搞懂了 Spacer 這個左右對齊的排版技巧，還有背後要 import 哪些模組。下次大家在專案裡要做導覽列的時候，就可以直接套用今天教的這套流程。辛苦大家了！
+這一章我們學了 `mat-toolbar`。用它包住標題和圖示按鈕，再用一個設定 `flex: 1 1 auto` 的空 `span` 當作 Spacer，就能讓內容左右分開。記得匯入 Toolbar、Icon 和 Button 三個模組。另外，`mat-menu` 用模板變數和 `matMenuTriggerFor` 做出下拉選單，`matBadge` 則在圖示上顯示角標。
+
+下一章，我們會學習 Material 的單選框和勾選框。我們下一章見。
 -->
 

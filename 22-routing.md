@@ -46,12 +46,11 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎來到「路由（Routing）」的主題！
-之前我們把網頁拆成一個個積木，也在同個頁面玩了半天等級計算機。
-但這就像是你買了一間透天厝，結果你所有的活動、睡覺、廚房、衛浴，通通都塞在客廳，這像話嗎？
-我們當然要上樓去房間、去廚房啊！
-今天，我們就要來學習 Angular 路由系統。
-它是我們網頁的「傳送門與隔間設計圖」，有了它，你的網頁才能在多個頁面之間自由穿梭！
+前面我們學會把網頁拆成元件，也學會了各種資料繫結。但到目前為止，所有內容都擠在同一個頁面裡。
+
+就像一間房子，客廳、廚房、臥室都要有各自的空間。網站也一樣，需要有首頁、商品頁、會員頁，而且能在這些頁面之間切換。
+
+這一章，我們要學習 Angular 的路由。它就像網站的導覽地圖，讓我們能在不同頁面之間自由移動。
 -->
 
 ---
@@ -69,11 +68,7 @@ layout: default
 - **實作練習**
 
 <!--
-今天我們的傳送作戰計畫如下：
-先了解什麼是單頁應用（SPA）與傳統多頁網頁的對決。
-接著學會怎麼在專案裡設定路由表，並且定義我們的「路線地圖」，包含處理找不到路時的 404 頁面與子路徑嵌套。
-隨後，我們學習在 HTML 和 TS 代碼裡呼叫傳送門的方法。
-最後，看看怎麼透過網址偷偷帶小抄（傳遞資料）到下一頁，並完成基本路由與嵌套路由的實戰練習！
+這一章會先說明什麼是路由，以及單頁應用和傳統網站的差別。接著設定路由，定義路線，包括錯誤頁面、重新導向和子路由。然後學習在 HTML 和 TypeScript 裡切換頁面。再來看怎麼透過網址把資料帶到下一頁。最後做基本路由和子路由兩個練習。
 -->
 
 ---
@@ -85,7 +80,7 @@ class: flex flex-col justify-center items-center text-center
 # What is Routing?
 
 <!--
-第一站，我們先來戳破傳統換頁的騙局，看看為什麼現代網頁切換速度可以這麼快。
+我們先來看，現代網頁切換頁面為什麼可以這麼快。
 -->
 
 ---
@@ -104,11 +99,11 @@ class: flex flex-col justify-center items-center text-center
 每次換頁都需要向伺服器請求新的 HTML，整頁重新載入。
 
 <!--
-你想看，以前讀大學的時候，點進某些傳統選課網站，點一個按鈕，整個網頁就「白畫面」一下，轉圈圈轉了三秒鐘才出現新網頁。
-這就是「傳統瀏覽器的換頁流程」。
-你每次點個連結，瀏覽器就像個外送員一樣，重新跑去伺服器下載整套 HTML，再全部重新渲染。
-這不僅浪費後端頻寬，使用者的體驗也差到極限。
-要是搶課搶不到，真的會讓人想砸螢幕！
+先看傳統瀏覽器的流程。
+
+使用者輸入網址，瀏覽器向伺服器發送 HTTP 請求，伺服器回傳一份 HTML，瀏覽器再把它渲染成畫面。
+
+問題在於，每次換頁都要重複這整個流程，向伺服器重新要一份完整的 HTML，整頁重新載入。所以我們常會看到點一個連結，畫面先變白，等一下才出現新頁面。這不只浪費資源，使用體驗也不好。
 -->
 
 ---
@@ -126,12 +121,13 @@ class: flex flex-col justify-center items-center text-center
 Angular Router 透過**解讀瀏覽器 URL** 來決定顯示哪個元件。
 
 <!--
-而 Angular 採用的是「SPA（單頁應用程式）」的架構。
-這就像是我們去逛大型百貨公司。
-我們只需要「開門走進來一次」（載入一次 index.html）。
-之後想看服飾、想吃美食，我們不用重新進百貨公司大門，我們只需要坐電梯到對應的樓層（切換 Component 顯示）就行了！
-網頁的網址會變，但其實背後根本沒有換檔案，只是 Angular 在悄悄把舊積木收起來、把新積木擺出來。
-這切換速度簡直是瞬移，使用者體驗無痛升級！
+Angular 採用的是「單頁應用程式」的架構，英文縮寫是 SPA。
+
+它的做法是，HTML 只載入一次。之後換頁時，不再向伺服器要新的頁面，而是透過顯示或隱藏特定的元件，來改變使用者看到的內容。
+
+就像逛百貨公司，只需要從大門進來一次，之後想去哪個樓層，搭電梯就好，不用每次都重新走出大門再進來。
+
+看表格，網址雖然會改變，但只有元件在切換，畫面局部更新，所以速度快很多。Angular Router 就是透過解讀網址，來決定要顯示哪個元件。
 -->
 
 ---
@@ -143,7 +139,7 @@ class: flex flex-col justify-center items-center text-center
 # Setup Routing
 
 <!--
-那我們要怎麼在 Angular 裡把這張百貨公司的樓層地圖（路由）設定好呢？
+接下來，我們看怎麼在 Angular 裡設定路由。
 -->
 
 ---
@@ -170,10 +166,11 @@ export const routes: Routes = [];
 ```
 
 <!--
-當我們用 CLI 建立專案時，如果加上了 `--routing` 參數，它就會自動幫我們生出 `app.routes.ts` 路由表檔案。
-為了說明，我們用 CLI 產生兩個新積木：`first` 和 `second`。
-然後，打開 `app.routes.ts`，把這兩個元件 import 進來。
-接下來，我們就可以準備在空空的 `routes` 陣列裡，為他們指引明路了。
+建立專案時加上 `--routing`，CLI 就會自動產生路由設定檔 `app.routes.ts`。
+
+為了示範，我們用 CLI 新增兩個元件，`first` 和 `second`。
+
+接著打開 `app.routes.ts`，把這兩個元件引入進來。現在 `routes` 陣列還是空的，下一步就要在裡面定義路線。
 -->
 
 ---
@@ -200,11 +197,11 @@ export const appConfig: ApplicationConfig = {
 </div>
 
 <!--
-在出發定義路線之前，大叔先帶大家做個安檢：
-去打開 `app.config.ts`。
-看看 providers 陣列裡面，有沒有一行 `provideRouter(routes)`？
-這行代碼就是在告訴 Angular 引擎：「請把我們剛剛寫的路由地圖，灌進整個系統的血管裡！」
-一般 CLI 會幫你寫好，但如果你之後手動寫路由遇到奇怪的紅字，記得先來這裡檢查這條神經有沒有接通！
+定義路線之前，先確認一件事：打開 `app.config.ts`，看看 `providers` 裡有沒有 `provideRouter(routes)`。
+
+這行的作用，是把我們在 `app.routes.ts` 定義的路由，提供給整個應用程式使用。
+
+用 CLI 建立的專案會自動設定好。但如果之後遇到路由沒有作用的問題，可以先回來檢查這一行。
 -->
 
 ---
@@ -216,7 +213,7 @@ class: flex flex-col justify-center items-center text-center
 # Define Routes
 
 <!--
-好，神經接通了，我們馬上來畫路線圖！
+設定都確認好了，接下來開始定義路線。
 -->
 
 ---
@@ -240,12 +237,11 @@ export const routes: Routes = [
 ```
 
 <!--
-定義路線的寫法非常直覺：
-在 `routes` 陣列中塞入一個個大括號的物件。
-裡面包含兩個主要鑰匙：
-`path` 指的是網址後面的名字，比如 `/first`、`/second`，**注意這裡不要寫斜線 `/` 喔，直接寫字串就行了**。
-`component` 則是指當使用者切到這個網址時，你要把哪一個積木呈現在畫面上。
-設定完這兩行，地圖的主幹線就拉好了！
+路由設定由三個部分組成：設定路線陣列，CLI 已經幫我們建好了；在陣列中定義路線；最後在 HTML 或 TypeScript 裡使用路由切換頁面。
+
+定義路線的寫法很直覺。在 `routes` 陣列裡放入物件，每個物件有兩個屬性：`path` 是網址的路徑，`component` 是要顯示的元件。
+
+這裡設定了 `first` 對應 `FirstComponent`，`second` 對應 `SecondComponent`。注意 `path` 前面不用加斜線，直接寫名稱就好。
 -->
 
 ---
@@ -270,14 +266,11 @@ export const routes: Routes = [
 </div>
 
 <!--
-「大叔，那要是使用者在網址列亂打，打了一個我們根本沒設定過的路徑呢？」
-這時候如果什麼都沒寫，網頁就會顯示一片空白，或者是 console 瘋狂噴錯。
-所以，我們必須做防呆！
-我們在路由表的最後一行，加上一個 `path: '**'`（雙星號）。
-這個雙星號在路由裡代表「萬用字元（任何路徑）」。
-只要前面沒有人匹配成功的，通通都會被這顆網民黑洞吸進來，送到 `NotFoundComponent`（錯誤頁）。
-大叔千叮嚀萬交代：**這個雙星號萬用路由，一定要寫在整個 routes 陣列的最尾巴**！
-如果你把它寫在最上面，因為它匹配任何路徑，後面的 `first`、`second` 就永遠都不會被匹配到，所有人一點進來都直接被送去 404 頁面，那就太悲劇了！
+如果使用者在網址列輸入了一個我們沒有定義的路徑，會發生什麼事？如果沒有處理，畫面可能會一片空白。
+
+所以我們要設定一個錯誤頁面。在陣列最後加上一條路線，`path` 寫兩個星號，代表「任何路徑」，對應到 `NotFoundComponent`。前面的路線都沒有符合的話，就會顯示這個錯誤頁。
+
+這裡要特別注意：兩個星號這條一定要放在陣列的最後面。路由是由上往下比對的，如果把它放在最前面，因為它符合任何路徑，後面的路線就永遠不會被比對到，所有頁面都會變成錯誤頁。
 -->
 
 ---
@@ -301,12 +294,11 @@ export const routes: Routes = [
 ```
 
 <!--
-「大叔，那如果使用者一開點進來只輸入域名，後面空空的（根路徑），我該讓他看什麼？」
-這時候我們就需要用「重新導向（Redirect）」。
-我們寫 `path: ''`（空字串路徑），然後設定 `redirectTo: '/first'`，也就是當他一進來，我們立刻把他傳送到 `/first` 頁面。
-後面還要加上一個 `pathMatch: 'full'`。
-這是在告訴 Angular：「必須是網址完全空空如也時才觸發重新導向，不能只是開頭是空字串就觸發。」
-這樣寫，可以避免系統陷入無限跳轉的鬼打牆狀態！
+那如果使用者只輸入網域，後面沒有任何路徑，要顯示什麼呢？這時候可以用「重新導向」。
+
+看程式碼第一條路線，`path` 是空字串，代表根路徑；`redirectTo` 設定成 `/first`，意思是一進來就自動跳到第一頁。
+
+後面還要加上 `pathMatch`。看表格，`full` 代表網址要和 `path` 完全一致才導向；`prefix` 則是網址只要以 `path` 開頭就導向。因為每個網址都可以算是「以空字串開頭」，所以根路徑的重新導向一定要用 `full`，否則所有網址都會被導向。
 -->
 
 ---
@@ -336,12 +328,13 @@ export const routes: Routes = [
 </div>
 
 <!--
-更高級的玩法是「嵌套路由（子路由）」。
-這就像是：點進「會員專區（/first）」，裡面又分「基本資料（/child-a）」和「修改密碼」。
-這時候我們不用在頂層寫好幾條長路徑。
-我們可以直接在 `first` 的路徑大括號裡，加開一個 `children: []` 陣列！
-在裡面繼續定義子路徑。
-注意喔！子路由的 `path` 只需要寫最後的名字（比如 `child-a`），不用重複寫 `first/child-a`，Angular 會非常聰明地幫你拼接！
+有時候，我們希望某個頁面裡面還有下一層的頁面。例如會員專區裡，再分成基本資料和修改密碼。這就要用到「子路由」，也叫嵌套路由。
+
+寫法是在父路線的物件裡，加上 `children` 陣列，在裡面定義子路線。這裡在 `first` 底下，加了一條 `child-a`。
+
+注意子路由的 `path` 只要寫最後一段，也就是 `child-a`，Angular 會自動接在父路徑後面，變成 `/first/child-a`。
+
+另外，子路由的 `router-outlet` 要放在父元件的 HTML 裡，下一頁會詳細說明。
 -->
 
 ---
@@ -373,10 +366,13 @@ layout: default
 </div>
 
 <!--
-根元件有一個 router-outlet，負責渲染 first、second 這層。
-first.component.html 裡面必須再放一個 router-outlet，負責渲染 child-a 這層。
-如果忘記在父元件放 router-outlet，子路由切換後什麼都不會出現，而且 console 也不會報錯，很難找到原因。
-導航連結要寫完整路徑 /first/child-a，不能只寫 /child-a。
+我們看父子元件的 HTML 怎麼寫。
+
+根元件有一個 `router-outlet`，負責顯示 `first`、`second` 這一層。而父元件 `first.component.html` 裡，還要再放一個 `router-outlet`，負責顯示子路由 `child-a` 的內容。
+
+導覽連結要寫完整的路徑，也就是 `/first/child-a`。
+
+這裡有一個很容易踩到的問題：如果忘了在父元件放 `router-outlet`，切換到子路由時畫面會一片空白，而且 Console 不會出現任何錯誤，很難找到原因。
 -->
 
 ---
@@ -405,8 +401,11 @@ export class FirstComponent {}
 </div>
 
 <!--
-這是 Standalone Component 架構最容易誤解的地方：以為根元件 import 了就全局生效。
-實際上每個元件都是獨立的，用到 RouterOutlet 就要自己 import，用到 RouterLink 也要自己 import。
+父元件的 HTML 用了 `routerLink` 和 `router-outlet`，所以父元件的 TypeScript 也要引入對應的模組。
+
+在 `first.component.ts` 的 `imports` 陣列裡，加入 `RouterOutlet` 和 `RouterLink`，缺少的話 HTML 就會報錯。
+
+這是獨立元件架構很容易誤解的地方。根元件引入了 `RouterOutlet`，不代表其他元件也能用。每個獨立元件都是各自獨立的，用到什麼，就要自己引入什麼。
 -->
 
 ---
@@ -436,7 +435,13 @@ export const routes: Routes = [
 ```
 
 <!--
-考察 redirectTo/pathMatch、children 子路由、** 萬用路由順序、父元件必須放 router-outlet 四個重點。
+我們用一個小練習，把定義路線的觀念整理一遍。
+
+請依照規格補完路由：根路徑重新導向到 `/home`；`/home` 對應首頁元件，底下有一條子路由 `/home/news`；`/about` 對應關於我們；其他沒有定義的路徑顯示錯誤頁。另外，還要補完首頁元件的 HTML。
+
+想一想，錯誤頁的路線要放在哪裡？子路由的 `router-outlet` 又該放在哪個檔案？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -472,7 +477,13 @@ export const routes: Routes = [
 </div>
 
 <!--
-兩個常見錯誤：子路由 path 寫成 '/news' 加了斜線會找不到；忘記在 home.component.html 加 router-outlet 導致子頁面空白但 console 不報錯。
+我們來看答案。
+
+第一條是根路徑的重新導向，加上 `pathMatch: 'full'`。`home` 路線裡用 `children` 定義 `news`，注意是寫 `news`，前面不加斜線。接著是 `about`，最後才是兩個星號的錯誤頁。
+
+首頁的 HTML 裡，連結用 `routerLink` 寫完整路徑 `/home/news`，下方放上 `router-outlet`，子頁面的內容才有地方顯示。
+
+最常見的兩個錯誤是：子路由的 `path` 加了斜線，以及忘了在首頁元件放 `router-outlet`。
 -->
 
 ---
@@ -484,7 +495,7 @@ class: flex flex-col justify-center items-center text-center
 # Navigation
 
 <!--
-地圖畫好了，接下來我們要來做 HTML 畫面上的導航連結，讓使用者可以用滑鼠點點點來換頁。
+路線定義好了，接下來我們在 HTML 加上導覽連結，讓使用者可以點擊切換頁面。
 -->
 
 ---
@@ -511,12 +522,11 @@ export class AppComponent {}
 ```
 
 <!--
-在 HTML 寫導航之前，因為新版 Angular 是 Standalone Component。
-所以，你必須在你元件的 `imports` 陣列中，把路由的三大金剛匯進來：
-`RouterOutlet`：用來開天窗顯示畫面的。
-`RouterLink`：用來設定跳轉網址的。
-`RouterLinkActive`：用來做選單高亮效果的。
-漏了任何一個，你的 HTML 就會直接裝死給你看喔！
+在 HTML 使用路由之前，要先把三個模組加進元件的 `imports`。
+
+`RouterOutlet` 讓我們能使用 `router-outlet` 標籤，顯示路由的內容。`RouterLink` 讓我們能用 `routerLink` 設定連結的路徑。`RouterLinkActive` 讓我們能用 `routerLinkActive`，替目前所在頁面的連結加上樣式。
+
+少了任何一個，對應的功能就沒辦法使用。
 -->
 
 ---
@@ -537,12 +547,11 @@ export class AppComponent {}
 ```
 
 <!--
-第一個是 `<router-outlet>`。
-大叔把它生動地比喻成「天窗」。
-你在 `app.component.html` 裡擺了這行標籤。
-當使用者切換到 `/first` 時，`FirstComponent` 的內容就會從這個天窗降落、塞進這個位置。
-切換到 `/second` 時，舊內容會飛走，新內容又會降落。
-所以，沒有這個天窗，你的元件是根本沒有地方顯示的喔！
+第一個是 `router-outlet`，它是路由的顯示容器。
+
+我們可以把它想成一個舞台。在 `app.component.html` 放上這個標籤之後，切換到 `/first`，第一頁元件的內容就會顯示在這個位置；切換到 `/second`，舊的內容會被換掉，改成顯示第二頁。
+
+上方的導覽列會一直保留，只有 `router-outlet` 的內容在切換。如果沒有放 `router-outlet`，路由切換了也看不到任何內容。
 -->
 
 ---
@@ -567,13 +576,13 @@ export class AppComponent {}
 </div>
 
 <!--
-第二個是 `routerLink`。
-在 SPA 網頁中，我們**絕對不要用原生的 `<a href="...">`**！
-因為 `href` 會強迫瀏覽器重新載入整頁，直接摧毀 SPA 的秒切優勢。
-我們一律要把 `href` 改寫成 `routerLink`！
-它可用於 `<a>` 標籤、也可寫在 `<button>` 上。
-如果是要傳變數的動態路徑，我們就用中括號 `[routerLink]="['/first', userId]"`。
-這樣一來，Angular 就會接管點擊事件，在不重載網頁的前提下，優雅地換頁。
+第二個是 `routerLink`，用來指定點擊後要切換到哪個路徑。它可以用在任何標籤上，例如 `a`、`button`。
+
+在單頁應用裡，不要用原生的 `href` 來切換頁面。因為 `href` 會讓瀏覽器重新載入整個頁面，失去單頁應用快速切換的優點。改用 `routerLink`，Angular 就會接手處理點擊，在不重新載入的情況下切換頁面。
+
+如果路徑裡要帶入變數，可以用中括號 `routerLink`，傳入一個陣列。
+
+選擇標籤的原則是：導覽連結用 `a`，觸發動作用 `button`。
 -->
 
 ---
@@ -600,12 +609,12 @@ export class AppComponent {}
 
 <!--
 第三個是 `routerLinkActive`。
-你看很多網站，當你點進「首頁」時，首頁按鈕會變綠色或加底線，這叫選單高亮。
-Angular 幫我們寫好這個高難度功能了！
-我們在 HTML 寫上 `routerLinkActive="active-link"`。
-只要網址匹配到這個連結，Angular 就會自動在這個標籤上追加 `active-link` 這個 CSS class。
-我們只要在 CSS 裡給這個 class 寫好顏色，高亮效果就自動完成了！
-省下了我們自己用 JS 判定網址的麻煩，非常香！
+
+很多網站在我們進入某個頁面時，導覽列上對應的連結會變色或加上底線，讓使用者知道自己在哪一頁。
+
+只要在連結加上 `routerLinkActive` 等於 `active-link`，當目前的網址和這個連結的路徑相符時，Angular 就會自動幫它加上 `active-link` 這個 class。
+
+我們只要在 CSS 裡定義 `.active-link` 的樣式，這裡是綠色、粗體加上底線，就完成了選單高亮的效果，不用自己寫程式判斷網址。
 -->
 
 ---
@@ -627,7 +636,11 @@ layout: default
 ```
 
 <!--
-考察 routerLink、routerLinkActive、router-outlet 三個指令的語法與位置。
+我們用一個小練習熟悉這三個指令。
+
+請補完導覽列：讓首頁和關於我們兩個連結，在被選中時自動套用 `active` 這個 class，並在下方加上路由內容的顯示容器。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -650,7 +663,11 @@ layout: default
 </div>
 
 <!--
-三個缺一不可：routerLink 控制跳轉、routerLinkActive 控制高亮、router-outlet 決定渲染位置。
+我們來看答案。
+
+兩個連結分別用 `routerLink` 指定 `/home` 和 `/about`，再用 `routerLinkActive` 指定 `active`。下方放上 `router-outlet`。
+
+三個缺一不可：`routerLink` 負責切換頁面，`routerLinkActive` 負責高亮目前的連結，`router-outlet` 決定內容顯示在哪裡。
 -->
 
 ---
@@ -678,11 +695,11 @@ export class AppComponent {
 </div>
 
 <!--
-「大叔，那如果我是要在按鈕按下後，先做 API 檢查，檢查通過才跳轉，這就不能在 HTML 寫死 routerLink 了吧？」
-沒錯！這時候我們就必須在 TypeScript 大腦裡用寫程式的方式切換。
-第一步：在 constructor 裡「注入 Router 服務」。Angular 的 DI 系統會自動把 Router 的實例塞進來，我們只需要用 private router: Router 宣告就好。
-接著在方法內部呼叫 this.router.navigate(...)。
-這樣你就能在程式碼跑完任何判斷邏輯後，隨心所欲地控制跳轉了！
+有時候換頁需要先經過邏輯判斷，例如登入成功之後才跳到後台。這種情況就不能在 HTML 直接寫死 `routerLink`，而要在 TypeScript 裡用程式切換頁面。
+
+第一步，在 `constructor` 注入 `Router` 服務。這就是之前在生命週期提到的相依注入，Angular 會自動把 `Router` 交給我們。
+
+注入之後，整個元件都可以用 `this.router` 呼叫路由的方法。例如在 `goToFirst` 裡，呼叫 `this.router.navigate`，就會切換到 `/first`。
 -->
 
 ---
@@ -704,8 +721,9 @@ export const routes: Routes = [
 ```
 
 <!--
-在看元件程式碼之前，先確認路由表有把 login 和 dashboard 都設定好。
-login 是入口頁，dashboard 是登入成功後的目標頁，根路徑重新導向到 login。
+我們用一個登入的例子，完整看一次程式導航。先看路由設定。
+
+在 `app.routes.ts` 裡定義兩條路線：`login` 是登入頁，`dashboard` 是登入成功後要去的後台頁。根路徑則重新導向到登入頁。
 -->
 
 ---
@@ -734,9 +752,11 @@ export class LoginComponent {
 ```
 
 <!--
-來看一個實際情境：登入頁面。
-使用者輸入密碼，點下登入按鈕，我們先做驗證，通過才跳轉，失敗就顯示錯誤訊息。
-這頁先看元件設定：imports 要加 FormsModule 才能用 ngModel；Router 從 constructor 注入，整個元件都可以用 this.router。
+接著看登入元件的設定。
+
+因為要用 `ngModel` 綁定密碼輸入框，所以 `imports` 加入了 `FormsModule`。
+
+元件有兩個變數：`password` 綁定輸入框，`error` 控制錯誤訊息要不要顯示。最後在 `constructor` 注入 `Router`。
 -->
 
 ---
@@ -764,9 +784,11 @@ export class LoginComponent {
 </div>
 
 <!--
-這就是程式導航最關鍵的地方：login() 方法裡先做 if 判斷。
-通過就呼叫 this.router.navigate(['/dashboard'])；失敗就把 error 設為 true，讓畫面顯示錯誤提示。
-先跑邏輯、再決定去哪，這個概念就是 TS 導航的精華。
+再來是 `login` 方法，這是程式導航的關鍵。
+
+方法裡先用 if 判斷密碼是不是 1234。正確的話，就呼叫 `this.router.navigate`，跳到 `/dashboard`；錯誤的話，就把 `error` 設成 true，讓畫面顯示錯誤訊息。
+
+先執行邏輯判斷，再決定要不要跳轉，這是 `routerLink` 做不到的。
 -->
 
 ---
@@ -784,8 +806,9 @@ export class LoginComponent {
 ```
 
 <!--
-HTML 這頁很簡單，三行而已。
-ngModel 綁定輸入框，click 觸發 login()，@if 控制錯誤訊息顯示。
+登入頁的 HTML 很簡單。
+
+輸入框用 `ngModel` 綁定 `password`，按鈕用小括號 `click` 呼叫 `login`。下方用 `@if` 判斷 `error`，只有密碼錯誤時才顯示提示文字。`@if` 是 Angular 的條件判斷語法，之後的章節會詳細介紹。
 -->
 
 ---
@@ -806,8 +829,11 @@ ngModel 綁定輸入框，click 觸發 login()，@if 控制錯誤訊息顯示。
 </div>
 
 <!--
-重點是執行流程要說清楚：click 觸發 login()，login() 先判斷，判斷完才決定要跳還是顯示錯誤。
-這個「先判斷再跳」的思路，才是學程式導航最重要的觀念。
+我們把點擊按鈕後的流程整理一次。
+
+使用者輸入密碼、按下登入，觸發 `login` 方法。方法先判斷密碼是否正確。正確的話，用 `navigate` 跳到後台頁；錯誤的話，把 `error` 設為 true，畫面顯示錯誤訊息。
+
+這就是程式導航的核心：「先跑邏輯，再決定要不要跳、要跳去哪裡」。
 -->
 
 ---
@@ -828,11 +854,11 @@ this.router.navigateByUrl('/second');
 ```
 
 <!--
-用程式碼導航，有兩種常用寫法：
-第一種是 `this.router.navigate(['/second'])`，裡面傳的是陣列。
-第二種是 `this.router.navigateByUrl('/second')`，直接傳字串網址。
-兩者效果完全相同，看你個人的習慣。
-大叔自己比較喜歡第一種，因為如果有要帶動態參數，陣列寫法會比較清晰好維護。
+用程式切換頁面，有兩個常用的方法。
+
+`navigate` 傳入一個陣列，`navigateByUrl` 則直接傳入一個字串路徑。兩種寫法的效果一樣。
+
+如果路徑裡要帶入變數，陣列的寫法會比較清楚，所以實務上 `navigate` 比較常用。
 -->
 
 ---
@@ -844,7 +870,7 @@ class: flex flex-col justify-center items-center text-center
 # Route Parameters
 
 <!--
-接下來，我們來看看怎麼在跳轉時，像夾帶小抄一樣把資料帶到下一頁去。
+接下來，我們看怎麼在切換頁面時，透過網址把資料帶到下一頁。
 -->
 
 ---
@@ -861,12 +887,11 @@ class: flex flex-col justify-center items-center text-center
 兩種方式都不需透過 Service 傳遞，但不適合傳遞大量或複雜的資料。
 
 <!--
-網址帶值，江湖上有兩大流派：
-第一流派叫 `Route Params`（路徑參數）：
-網址長成像 `/list/Allen` 這樣，參數變成了網址路徑的一部分。這需要去路由表設定變數。
-第二流派叫 `Query Params`（查詢參數）：
-網址後面掛個問號 `?name=Allen`。這不需要改路由表，隨插即用。
-這兩招都很適合傳遞簡單的 ID 或搜尋關鍵字，但如果是複雜的大資料，記得不要塞在網址裡，網址是會長度爆炸的喔！
+把資料放進網址有兩種方式。
+
+第一種是 Route Params，路徑參數，網址長得像 `/list/Allen`，資料直接成為路徑的一部分，需要先在路由裡設定。第二種是 Query Params，查詢參數，網址後面加上問號，例如 `?name=Allen`，不需要修改路由設定。
+
+這兩種方式都很適合傳遞 ID、名稱這類簡單的值。但如果資料量大或結構複雜，就不適合放在網址裡，之後我們會學其他傳遞資料的方式。
 -->
 
 ---
@@ -892,12 +917,11 @@ this.router.navigate(['/list', 'Allen']);
 ```
 
 <!--
-我們先看 `Route Params` 的玩法。
-首先，在 `app.routes.ts` 裡，路徑後面加上一個冒號 `/:name`。
-這個冒號就是「預留坑位」的意思。
-當我們呼叫 `navigate(['/list', 'Allen'])` 時。
-Allen 這個字串就會自動塞進 `:name` 這個坑位，網址就會變成 `/list/Allen`。
-你也可以預留多個坑位，比如 `/:name/:age`，用起來非常靈活。
+先看 Route Params 的設定。
+
+在 `app.routes.ts` 的路徑後面加上冒號和參數名稱，例如 `list/:name`。冒號代表「這裡是一個預留的位置」。也可以設定多個參數，例如 `/:name/:age`。
+
+切換頁面時，在 `navigate` 的陣列裡依序放入路徑和值。這裡放入 `/list` 和 Allen，Allen 就會填進 `:name` 的位置，網址變成 `/list/Allen`。
 -->
 
 ---
@@ -924,12 +948,11 @@ export class ListComponent {
 ```
 
 <!--
-資料帶過去了，下一頁要怎麼把小抄打開？
-首先，在下一頁元件的建構式裡注入 `ActivatedRoute`。
-這個服務可以用來取得當前路線的狀態。
-接著，我們呼叫 `this.route.snapshot.paramMap.get('name')`。
-這行落落長的指令，就是「在這一瞬間的路徑地圖快照裡，把叫 name 的變數值拔出來」！
-這樣我們就能在畫面上顯示出「使用者名稱：Allen」囉！
+資料帶過去之後，下一頁要怎麼取出來？
+
+在目標元件的 `constructor` 注入 `ActivatedRoute`，它可以取得目前路由的資訊。接著用 `this.route.snapshot.paramMap.get('name')`，意思是「從目前路由的快照裡，取出叫做 name 的參數」。
+
+取出來之後存進 `name` 變數，畫面上就能顯示「使用者名稱：Allen」。注意取出來的值可能是 null，所以變數的型別寫成字串或 null。
 -->
 
 ---
@@ -955,12 +978,13 @@ this.router.navigate(['/list'], {
 </div>
 
 <!--
-再來是 `Query Params` 問號流派。
-這招不需要去改 `app.routes.ts`。
-我們直接在 `navigate` 時，傳入第二個參數物件，在裡面寫 `queryParams: { name: 'Allen', age: 12 }`。
-網址就會被自動組合成 `?name=Allen&age=12`。
-如果在 HTML 裡，就寫成 `[queryParams]="{ name: 'Allen' }"`。
-這招非常適合用在商品列表的「篩選器」或者「搜尋框」跳轉！
+再來是 Query Params，它不需要修改 `app.routes.ts`。
+
+在 TypeScript 裡，`navigate` 的第二個參數傳入一個物件，裡面的 `queryParams` 放要帶的值。這裡帶了名字和年齡，網址就會變成 `/list?name=Allen&age=12`，多個值用 `&` 符號連接。
+
+在 HTML 裡，則用中括號 `queryParams` 搭配 `routerLink`。
+
+要注意，從網址取出來的值都是字串，即使原本是數字，使用時也要自己轉換型別。查詢參數很常用在搜尋和篩選的情境。
 -->
 
 ---
@@ -985,12 +1009,11 @@ constructor(private route: ActivatedRoute) {
 | 值的型別 | string | string |
 
 <!--
-Query Params 的取值方式大同小異，一樣是用 `ActivatedRoute`。
-只是把指令改成了 `snapshot.queryParamMap.get('name')`，多了一個 `query` 字樣！
-我們把這兩大流派放在這個表格裡做個世紀對決。
-通常，如果是定位特定資源的（比如看特定 ID 的會員資料），我們用 Route Params；
-如果是做輔助篩選的（比如排序、分頁、搜尋），我們就用 Query Params。
-把這兩招學起來，你網址帶值的能力就滿分了！
+Query Params 的取值方式也差不多，一樣注入 `ActivatedRoute`，只是改用 `snapshot.queryParamMap.get()`，多了 query 這個字。
+
+我們用表格比較兩種方式。Route Params 需要修改路由設定，網址是斜線的形式，用 `paramMap` 取值；Query Params 不用修改路由，網址是問號的形式，用 `queryParamMap` 取值。兩者取出來的都是字串。
+
+實務上，如果是指定某個特定資源，例如某位會員的資料，通常用 Route Params；如果是排序、分頁、搜尋這類輔助條件，通常用 Query Params。
 -->
 
 ---
@@ -1018,7 +1041,11 @@ constructor(private route: ActivatedRoute) {
 ```
 
 <!--
-考察 navigate 帶 queryParams 物件的寫法，以及在目標頁用 queryParamMap.get() 取值。
+我們用一個小練習熟悉 Query Params。
+
+A 頁面點擊按鈕時，帶著 `keyword` 等於 Angular，跳到 `/result`。B 頁面在 `constructor` 裡讀取這個值，並用 `console.log` 印出來。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -1046,7 +1073,13 @@ constructor(private route: ActivatedRoute) {
 </div>
 
 <!--
-與 Route Params 最大的差異：Query Params 不需要修改 routes，直接在 navigate 的第二個參數物件中帶值。
+我們來看答案。
+
+A 頁面在 `navigate` 的第一個參數放 `/result`，第二個參數放 `queryParams`，裡面是 `keyword` 等於 Angular。
+
+B 頁面用 `queryParamMap.get('keyword')` 取出值，印出 Angular。
+
+跟 Route Params 最大的差別是，Query Params 不用修改路由設定，直接在 `navigate` 的第二個參數帶值就好。
 -->
 
 ---
@@ -1058,7 +1091,7 @@ class: flex flex-col justify-center items-center text-center
 # Practice
 
 <!--
-好，路由學完了，我們馬上來拼裝傳送門！
+路由的觀念都介紹完了，接下來我們動手做練習。
 -->
 
 ---
@@ -1081,12 +1114,11 @@ layout: two-cols
 </div>
 
 <!--
-第一個是基本路由任務：
-請新增 `first` 與 `second` 元件。
-在 `app.routes.ts` 設定這兩條路線。
-在根元件放上導航按鈕，並加上 `<router-outlet>` 天窗。
-最後，利用重新導向，讓使用者一打開網頁，就自動瞬移到 `/first` 頁面！
-動手寫寫看，體驗一下 SPA 不換頁跳轉的快感！
+第一個練習是基本路由。
+
+請新增 `first` 和 `second` 兩個元件，在 `app.routes.ts` 定義兩條路線。接著在根元件的 HTML 加上導覽按鈕，並放上 `router-outlet` 顯示內容。最後設定根路徑，自動重新導向到 `/first`。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -1109,11 +1141,11 @@ layout: default
 </div>
 
 <!--
-如果有點小迷路，請看這裡：
-記得去 `app.component.ts` 的 `imports` 陣列補上三個金剛：`RouterOutlet, RouterLink, RouterLinkActive`。
-在 `routes` 陣列裡加好那三條路，包含 `pathMatch: 'full'` 的空路由重新導向。
-然後在 HTML 裡加上 `<router-outlet></router-outlet>`。
-儲存後，看看是不是一打開網頁，網址就自動跳去 `/first`，而且點按鈕畫面能秒切了？
+我們來看解題提示。
+
+第一，在根元件的 `imports` 加入 `RouterOutlet`、`RouterLink` 和 `RouterLinkActive`。第二，在 `app.routes.ts` 加入三條路線：`first`、`second`，以及根路徑的重新導向，記得加上 `pathMatch: 'full'`。第三，HTML 的按鈕加上 `routerLink`。第四，放上 `router-outlet`。
+
+存檔之後，打開網頁應該會自動跳到 `/first`，點擊按鈕就能在兩個頁面之間快速切換。
 -->
 
 ---
@@ -1136,11 +1168,13 @@ layout: two-cols
 </div>
 
 <!--
-第二關是「子路由進階練習」：
-請在 first 底下，建一個子元件 `child-a`。
-並在 `app.routes.ts` 裡面用 `children: []` 來嵌套這條路線。
-最後，在 `first.component.html` 裡面加開一個「子天窗」，並寫好導航連結去觸發它！
-這題要特別注意「天窗開在哪裡」跟「路徑是拼接的」這兩個細節喔！
+第二個練習是子路由。
+
+請在 `first` 底下新增一個子元件 `child-a`，在 `app.routes.ts` 設定子路由，並在 `first.component.html` 加上 `router-outlet`。接著加上導覽按鈕，切換到子路由頁面，並在子頁面顯示自訂的內容。
+
+這題要特別注意兩件事：`router-outlet` 放在哪裡，以及導覽連結的路徑怎麼寫。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -1164,13 +1198,13 @@ layout: default
 </div>
 
 <!--
-大叔給大家指點迷津：
-首先，在 terminal 執行 `ng g c first/child-a` 產生子元件。
-接著，在路由表中，把 `child-a` 的 path 寫在 `FirstComponent` 的 `children` 裡面。
-最關鍵的一步：**你必須去 `first.component.html`（也就是父元件的 HTML）裡放上 `<router-outlet>` 天窗**！
-如果你把天窗放錯地方放去根元件，子路由的內容就長不出來了。
-最後，導航連結要寫完整路徑 `/first/child-a`！
-這關能順利通過，你的路由基本功就通關了！
+我們來看解題提示。
+
+先執行 `ng g c first/child-a` 建立子元件。接著在 `app.routes.ts` 的 `first` 路線裡，用 `children` 加入 `child-a`。
+
+最關鍵的一步，是在父元件 `first.component.html` 裡放上 `router-outlet`，而不是放在根元件。也記得在 `first.component.ts` 引入需要的路由模組。
+
+最後，導覽連結要寫完整路徑 `/first/child-a`。
 -->
 
 ---
@@ -1181,8 +1215,7 @@ layout: end
 ### 掌握路由，打造多頁面的 SPA 應用
 
 <!--
-恭喜大家！成功征服了 Angular 路由系統！
-現在的你，已經能把本來黏在一起的大網頁，隔成一間間有規律、有門牌號碼的公寓了。
-回去把這幾招多練幾遍，特別是網址傳值和子路由。
-下一堂課，我們要迎來非常經典的主題——「元件之間的資料傳遞（Input / Output）」，去看看不能通過網址傳遞的複雜資料，是怎麼在積木與積木之間互相傳遞的！大家休息一下，我們等一下見！
+這一章我們學了 Angular 的路由。單頁應用只載入一次 HTML，透過切換元件來換頁。路線在 `app.routes.ts` 定義，用兩個星號設定錯誤頁並放在最後，用 `redirectTo` 搭配 `pathMatch: 'full'` 做重新導向，用 `children` 設定子路由。HTML 用 `routerLink`、`routerLinkActive` 和 `router-outlet` 切換頁面，TypeScript 則注入 `Router` 用 `navigate` 切換。網址帶值可以用 Route Params 或 Query Params。
+
+下一章，我們會學習元件之間怎麼傳遞資料。我們下一章見。
 -->

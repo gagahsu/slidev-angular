@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章是 ch32 到 ch39 的綜合練習，獨立成一個章節，讓大家可以專心把這八章學過的東西全部組裝在一起。
+這一章是綜合練習，要把表格、圖示、日期選擇器、DatePipe、JsonPipe、即時搜尋、ngClass 和 Tabs 這八個主題組裝在一起。
 
-這八章分別是：mat-table、mat-icon、mat-datepicker、DatePipe、JsonPipe、即時搜尋、ngClass、Tabs。單獨看每一個都不難，但業界實務上的頁面幾乎不會只用到一種技巧，通常是好幾個功能疊在一起運作。這個練習就是要模擬這種情境，做一個「員工管理系統」：用頁籤切換「員工列表」跟「已封存員工」，列表裡有搜尋、日期篩選、薪水高亮、檢視／封存／復原的操作。
-
-學完並做完這個練習，大家應該能夠很有信心地說，這八章的內容我不只學過，而且真的組裝起來用過一次。
+實務上的頁面，很少只用到一種技巧。這個練習要做一個員工管理系統：用頁籤切換員工列表和已封存員工，列表裡有搜尋、日期篩選、薪水高亮，以及檢視、封存和復原的操作。
 -->
 
 ---
@@ -67,7 +65,7 @@ layout: default
 - **完整解答：SCSS** — 薪水高亮與版面樣式
 
 <!--
-這張投影片先讓大家看一下今天的路線圖。我們會先看完整需求，再看一眼完成後的畫面，接著給大家解題提示，最後才公布完整的 TypeScript、HTML、SCSS 解答。建議大家先看完需求跟提示，自己動手做過一次，再回來對照解答。
+這一章的順序是：先看完整的需求，再看完成後的畫面，接著是解題提示，最後公布完整的 TypeScript、HTML 和 SCSS 解答。建議先看完需求和提示，自己動手做一次，再回來對照解答。
 -->
 
 ---
@@ -79,7 +77,7 @@ class: flex flex-col justify-center items-center text-center
 # Requirements
 
 <!--
-先把需求講清楚，這是這次練習最重要的一步，因為功能一多，最容易漏掉的就是某個小細節沒串好。
+我們先把需求說清楚。功能一多，最容易漏掉的就是某個小細節沒有串好。
 -->
 
 ---
@@ -95,9 +93,9 @@ layout: default
 2. 用 `mat-tab-group` 建立兩個頁籤：「員工列表」與「已封存員工」
 
 <!--
-這個練習把 ch32 到 ch39 全部用上一次：mat-table 負責顯示跟分頁，mat-icon 負責操作按鈕，mat-datepicker 負責日期篩選，DatePipe 負責日期排版，JsonPipe 負責顯示明細，即時搜尋負責姓名過濾，ngClass 負責薪水高亮，Tabs 負責切換「員工列表」跟「已封存員工」兩個視圖。
+這個練習會把八個主題各用一次：`mat-table` 顯示資料和分頁，`mat-icon` 做操作按鈕，`mat-datepicker` 篩選日期，DatePipe 排版日期，JsonPipe 顯示明細，即時搜尋過濾姓名，`ngClass` 高亮薪水，Tabs 切換兩個視圖。
 
-先定義好資料型別跟假資料，接著用 mat-tab-group 搭出兩個頁籤的骨架，下一頁再看每個頁籤裡實際要放什麼內容。
+第一步，定義 `EmployeeData` interface，包含 id、姓名、部門、到職日和薪水，到職日是 Date 型別，並準備至少 6 筆假資料。第二步，用 `mat-tab-group` 建立兩個頁籤：員工列表和已封存員工。
 -->
 
 ---
@@ -115,9 +113,13 @@ layout: default
 4. **已封存員工**頁籤：顯示被封存的員工姓名與部門，每筆有 `restore` icon，點擊後將該員工移回「員工列表」
 
 <!--
-員工列表頁籤是這次練習的主體，把搜尋、日期篩選、表格、薪水高亮、檢視、封存全部包在一起。已封存員工頁籤則相對單純，只需要顯示清單跟一個復原按鈕。
+接著是兩個頁籤的內容。
 
-大家可以先自己動手做做看，做不出來再往下看畫面預覽跟提示。
+員工列表有姓名搜尋和到職日篩選。表格的到職日用 DatePipe 格式化，薪水大於等於 60000 時用 `ngClass` 高亮。操作欄可以檢視，用 JsonPipe 顯示明細；也可以封存，把員工移到另一個頁籤。表格搭配分頁器。
+
+已封存頁籤顯示姓名和部門，每筆都有復原圖示。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -155,7 +157,11 @@ layout: default
 </div>
 
 <!--
-大家先看一下完成之後畫面大概長什麼樣子。上方是頁籤，切到「員工列表」會看到搜尋框跟日期篩選欄，表格裡薪水超過門檻的兩筆用了不同底色標示出來，這就是 ngClass 物件語法搭配條件判斷的效果。封存某個員工之後，畫面上這筆資料會從列表消失，改到「已封存員工」頁籤出現，點 restore 又能移回來。
+先看看完成後的畫面。
+
+上方是兩個頁籤，員工列表裡有搜尋框和日期篩選欄。表格中，薪水 65000 和 70000 這兩筆超過門檻，底色被 `ngClass` 套上了高亮的樣式。
+
+封存某一筆之後，它會從列表消失，切換到已封存員工頁籤就能看到，點擊復原又會移回來。
 -->
 
 ---
@@ -181,9 +187,11 @@ layout: default
 </div>
 
 <!--
-這是切到「已封存員工」頁籤之後看到的畫面，張雅婷剛被封存，所以出現在這裡，只留姓名跟部門，旁邊一個 restore icon，點下去就會呼叫 restore() 移回「員工列表」。這個頁籤刻意做得比較陽春，不用 mat-table，凸顯出「不是所有清單都要用同一套重量級元件」的取捨。
+這是已封存員工頁籤的畫面。
 
-如果 archivedEmployees 是空陣列，畫面會顯示 @empty 區塊寫的提示文字，而不是空白一片，這是 ch25 教過的 @for 搭配 @empty 語法。
+張雅婷剛被封存，所以出現在這裡，只顯示姓名和部門，旁邊有一個復原圖示。這個頁籤沒有用 `mat-table`，只是一個簡單的 `@for` 清單。不是所有清單都需要用比較重的元件。
+
+如果沒有任何封存的員工，畫面會顯示 `@empty` 區塊的提示文字，而不是一片空白。
 -->
 
 ---
@@ -199,11 +207,13 @@ layout: default
 4. 頁籤用最基本的 `mat-tab-group` + `mat-tab label="..."` 靜態寫法即可，兩個頁籤內容各自獨立，不需要跟路由整合（ch39 重點）
 
 <!--
-這幾點是這次練習最容易卡住的地方，我們先看前四點。
+我們來看解題提示的前半部。
 
-⚠️ 第 1 點是最關鍵的設計決定：因為現在有「員工列表」跟「已封存員工」兩個視圖，如果只有一個陣列、靠某個布林值切換顯示，封存跟復原的邏輯會變得很難維護。用兩個獨立陣列各自代表「真正在哪裡」，過濾跟顯示都只是從這兩個陣列「算出來」的結果，這是資料驅動畫面很重要的設計原則。
+第一，`employees` 和 `archivedEmployees` 是兩個獨立的陣列，都是真正的資料來源。表格的 `dataSource.data`，是從 `employees` 篩選後算出來的結果，不要直接對它新增或刪除。用兩個陣列分別代表資料實際在哪裡，封存和復原的邏輯會清楚很多。
 
-⚠️ 第 2 點也很多同學會漏掉：姓名搜尋跟日期篩選是兩個不同的輸入來源，但畫面最終只能有一份 dataSource.data，所以一定要把兩個條件寫在同一個方法裡一起套用，不能分開寫兩個各自賦值的方法，不然後寫的會蓋掉先寫的結果。
+第二，搜尋框和日期篩選共用同一個 `applyFilters` 方法，姓名用 `keyup` 觸發，日期用 `dateChange` 觸發。兩個條件要在同一次過濾中一起套用，否則後執行的會蓋掉先執行的結果。
+
+第三，薪水的 `ngClass` 綁在 `td` 上，用物件寫法。第四，頁籤用最基本的 `mat-tab-group` 就好，不需要和路由整合。
 -->
 
 ---
@@ -218,9 +228,11 @@ layout: default
 7. `mat-datepicker` 記得加 `provideNativeDateAdapter()`；`mat-icon` 名稱要跟 Google Fonts Icons 網站查到的一致（ch33、ch34 重點）
 
 <!--
-接續前四點，第 5 點是封存／復原的核心邏輯：archive() 跟 restore() 都要同時處理兩個陣列的增減，並且重新套用過濾條件，缺一步都會讓畫面跟資料狀態不同步。
+解題提示的後半部。
 
-第 6、7 點是延續 ch36、ch33、ch34 教過的既有重點，這次練習沒有改變寫法，只是提醒大家不要漏掉。
+第五，`archive` 要同時做兩件事：把員工從 `employees` 移除，再加進 `archivedEmployees`；`restore` 則相反。兩個方法做完，都要重新呼叫 `applyFilters`，讓表格保持同步。
+
+第六，`selectedEmployee` 初始值是 null，用 `@if` 包住顯示明細的 `pre` 區塊。第七，日期選擇器記得加上 `provideNativeDateAdapter`，圖示名稱要和 Google Fonts Icons 查到的一致。
 -->
 
 ---
@@ -231,7 +243,7 @@ class: flex flex-col justify-center items-center text-center
 # 完整解答：TypeScript
 
 <!--
-先看 TypeScript 這一側，我們會照順序看過資料型別、假資料、模組匯入、元件設定、屬性宣告，最後是方法實作。
+接下來是完整解答，先看 TypeScript，依序是資料型別、假資料、匯入、元件設定、屬性和方法。
 -->
 
 ---
@@ -260,7 +272,9 @@ const EMPLOYEE_DATA: EmployeeData[] = [
 ```
 
 <!--
-Interface 跟假資料沿用原本 ch32 到 ch36 練習的設計，hireDate 是 Date 物件，方便搭配 mat-datepicker 跟 DatePipe。這裡故意保留兩筆薪水超過 60000（林大偉 65000、李志豪 70000），等一下 ngClass 高亮的效果才看得出來。
+這是 interface 和假資料。
+
+`hireDate` 是 Date 物件，方便搭配日期選擇器和 DatePipe。資料裡刻意有兩筆薪水超過 60000，林大偉 65000 和李志豪 70000，等一下高亮的效果才看得出來。
 -->
 
 ---
@@ -276,7 +290,9 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 ```
 
 <!--
-CommonModule 是 JsonPipe、DatePipe 這些管道需要的，FormsModule 是 ngModel 雙向綁定需要的（搜尋框跟日期篩選欄都會用到），@if、@for 是 Angular 內建語法不需額外 import。後兩行是 mat-table 系列，跟 ch32 教的一樣。
+這是匯入的前半部。
+
+`CommonModule` 提供 DatePipe 和 JsonPipe，`FormsModule` 提供 `ngModel`，搜尋框和日期欄都會用到。後兩行是表格和分頁器相關的模組。`@if` 和 `@for` 是內建語法，不需要另外匯入。
 -->
 
 ---
@@ -293,7 +309,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 ```
 
 <!--
-前五個對應 mat-icon（ch33）跟 mat-datepicker（ch34），provideNativeDateAdapter 千萬不能漏。最後多的 MatTabsModule 是這次新增的重點，ch39 教過，忘記匯入的話 `<mat-tab-group>` 會直接報錯。
+匯入的後半部。
+
+`MatIconModule` 對應圖示，`MatFormFieldModule`、`MatInputModule`、`MatDatepickerModule` 和 `provideNativeDateAdapter` 對應日期選擇器，`provideNativeDateAdapter` 千萬不能漏。最後的 `MatTabsModule` 對應頁籤，忘記匯入的話，`mat-tab-group` 會直接報錯。
 -->
 
 ---
@@ -313,7 +331,9 @@ export class EmployeeManagementComponent implements AfterViewInit {
 ```
 
 <!--
-imports 陣列把前面兩頁匯入的模組全部集合起來，一個都不能少，這次比原本的員工資料表多了 MatTabsModule。providers 裡加上 provideNativeDateAdapter()，是 mat-datepicker 能運作的必要設定，跟頁籤沒有關係，仍然要留著。
+這是元件的設定。
+
+`imports` 陣列把前面匯入的模組全部放進來，一個都不能少。`providers` 裡加上 `provideNativeDateAdapter()`，這是日期選擇器運作的必要設定。
 -->
 
 ---
@@ -336,7 +356,11 @@ imports 陣列把前面兩頁匯入的模組全部集合起來，一個都不能
 ```
 
 <!--
-這是這次練習的核心設計：employees 是目前「在架」的員工，archivedEmployees 是被封存的員工，兩個都是各自的真實資料來源。dataSource.data 之後會依 nameFilter、filterDate 兩個條件從 employees 重新算出來。nameFilter 是這次新增的搜尋關鍵字變數，minDate、maxDate 的算法跟原本一樣，動態取得所有員工最早到職日跟今天。
+這是元件的屬性，也是這個練習的核心設計。
+
+`employees` 是目前在職的員工，`archivedEmployees` 是被封存的員工，兩者都是真實的資料來源。`dataSource` 一開始用 `employees` 建立，之後會依照條件重新計算。
+
+`selectedEmployee` 存放要檢視的員工，`nameFilter` 是搜尋關鍵字，`filterDate` 是篩選日期。`minDate` 用 `Math.min` 和展開運算子，找出所有員工中最早的到職日，`maxDate` 是今天。
 -->
 
 ---
@@ -354,7 +378,9 @@ imports 陣列把前面兩頁匯入的模組全部集合起來，一個都不能
 ```
 
 <!--
-ngAfterViewInit 裡把 paginator 接上 dataSource，這是 ch32 教過的必要步驟，跟原本員工資料表練習完全相同。view() 方法把使用者點的那筆員工存進 selectedEmployee，畫面下方的 JsonPipe 就會顯示這筆資料，這兩個方法都沒有新增內容。
+`ngAfterViewInit` 把分頁器接到 `dataSource`，這是之前學表格時的必要步驟。
+
+`view` 方法把使用者點擊的員工存進 `selectedEmployee`，畫面下方就會用 JsonPipe 顯示這筆資料。
 -->
 
 ---
@@ -377,9 +403,11 @@ ngAfterViewInit 裡把 paginator 接上 dataSource，這是 ch32 教過的必要
 ```
 
 <!--
-這是這次整合最關鍵的方法：把即時搜尋跟日期篩選合併成同一個過濾管線。先從 employees 這份完整的「在架員工」資料開始，如果 nameFilter 有值，就用 ch37 教過的 indexOf 判斷姓名有沒有包含關鍵字；如果 filterDate 有值，再用 ch36 練習教過的日期比對，篩出到職日晚於（含等於）filterDate 的員工。兩個條件都是「有值才篩選」，可以同時套用、也可以只套用其中一個，最後才把結果指派給 dataSource.data。
+這是整合最關鍵的方法：`applyFilters`，把搜尋和日期篩選合併成同一個過濾流程。
 
-⚠️ 這裡故意不寫成兩個各自獨立、互相覆蓋的方法，而是統一由 applyFilters() 一次處理完，這樣不管使用者是先打字搜尋還是先選日期，兩個條件都會同時生效，不會有「選了日期之後搜尋失效」這種問題。
+先從完整的 `employees` 開始。如果 `nameFilter` 有值，就用 `indexOf` 判斷姓名是否包含關鍵字；如果 `filterDate` 有值，再篩出到職日在這天以後的員工。兩個條件都是有值才篩選，可以同時套用，也可以只套用一個。最後把結果指定給 `dataSource.data`。
+
+因為統一由這個方法處理，不管使用者先搜尋還是先選日期，兩個條件都會同時生效。
 -->
 
 ---
@@ -402,9 +430,11 @@ ngAfterViewInit 裡把 paginator 接上 dataSource，這是 ch32 教過的必要
 ```
 
 <!--
-archive() 把該筆員工從 employees 濾掉，同時用展開運算子把它加進 archivedEmployees，最後呼叫 applyFilters() 讓「員工列表」頁籤的表格重新算出正確的顯示內容。restore() 的邏輯完全相反：從 archivedEmployees 濾掉，加回 employees，一樣要呼叫 applyFilters()。
+這是封存和復原的方法。
 
-⚠️ 大家可以對照一下，跟原本員工資料表練習的 remove() 相比，這裡多了「移到另一個陣列」這一步，而不是單純丟棄。兩個方法結尾都呼叫 applyFilters()，是因為封存或復原都可能影響到目前搜尋、篩選之後應該顯示的結果，這一步不能省略。
+`archive` 用 `filter` 把這位員工從 `employees` 移除，再用展開運算子把他加進 `archivedEmployees`，最後呼叫 `applyFilters` 更新表格。`restore` 的邏輯完全相反。
+
+這裡不是單純刪除，而是把資料移到另一個陣列。兩個方法最後都要呼叫 `applyFilters`，因為封存或復原都會影響搜尋和篩選後應該顯示的結果。
 -->
 
 ---
@@ -415,7 +445,7 @@ class: flex flex-col justify-center items-center text-center
 # 完整解答：HTML
 
 <!--
-TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過頁籤外層、搜尋列與篩選欄、表格欄位、已封存員工頁籤。
+TypeScript 看完了，接下來看 HTML，依序是頁籤、搜尋列、表格欄位，以及已封存頁籤。
 -->
 
 ---
@@ -439,9 +469,11 @@ TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過頁籤
 ```
 
 <!--
-這是 ch39 教過的 mat-tab-group 最基本靜態寫法：用 mat-tab-group 包住兩個 mat-tab，各自的 label 屬性就是頁籤標題。因為這兩個頁籤內容都是固定在同一個元件裡切換，不需要跟路由整合，所以不用 mat-tab-nav-bar，用最簡單的 mat-tab-group 就夠了。
+這是頁籤的外層。
 
-接下來兩頁，我們把「員工列表」頁籤裡的內容補齊。
+用 `mat-tab-group` 包住兩個 `mat-tab`，`label` 就是頁籤的標題。兩個頁籤的內容都在同一個元件裡切換，不需要路由，所以用最簡單的 `mat-tab-group` 就夠了。
+
+接下來補齊員工列表頁籤裡的內容。
 -->
 
 ---
@@ -471,9 +503,11 @@ TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過頁籤
 ```
 
 <!--
-搜尋框用的是 ch37 教過的寫法：(keyup) 觸發過濾、[(ngModel)] 保存輸入值，跟原本用 (input) 不同，(keyup) 對中文輸入法比較穩定。日期篩選欄沿用 ch34、ch36 教過的 mat-datepicker 結構，min、max 綁的是 TS 裡動態算出來的 Date 物件。
+這是搜尋列和日期篩選欄。
 
-⚠️ 兩個輸入元件都呼叫同一個 applyFilters()，這是刻意的設計，跟上一段 TypeScript 提到的「合併過濾管線」互相呼應——不管使用者先動哪一個輸入框，觸發的都是同一個會同時考慮兩個條件的方法。
+搜尋框用小括號 `keyup` 觸發過濾，`ngModel` 保存輸入的關鍵字，用 `keyup` 對中文輸入比較穩定。日期篩選沿用日期選擇器的結構，中括號 `min` 和 `max` 綁定 TypeScript 算出來的日期，選擇日期時用 `dateChange` 觸發過濾。
+
+注意兩個輸入框都呼叫同一個 `applyFilters`，不管使用者先操作哪一個，都會同時考慮兩個條件。
 -->
 
 ---
@@ -501,7 +535,9 @@ TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過頁籤
 ```
 
 <!--
-表格外層跟前三欄的寫法跟 ch32、ch36 練習完全一樣，id、name、department 都是單純的內嵌繫結，沒有新增任何邏輯。
+這是表格的外層和前三欄。
+
+ID、姓名和部門都是單純的雙大括號顯示，寫法和之前學表格時完全一樣。
 -->
 
 ---
@@ -527,9 +563,11 @@ TypeScript 準備好了，接下來看 HTML 這一側，會照順序看過頁籤
 </div>
 
 <!--
-hireDate 欄還是 ch35 教過的 DatePipe 用法，把 Date 物件排版成 yyyy/MM/dd。重點在 salary 欄的 <td>，這裡多綁了 [ngClass]="{ 'salary-high': e.salary >= 60000 }"，就是 ch38 教過的物件條件語法：e.salary 大於等於 60000 這個條件成立時，套上 salary-high 這個 class，樣式會在等一下的 SCSS 那一段定義。
+接著是到職日和薪水。
 
-⚠️ 提醒大家，ngClass 綁在哪個標籤上，就是哪個標籤會被加 class，這裡是綁在 <td> 本身，所以高亮效果只會出現在薪水那一格，不會影響整列。
+到職日用 DatePipe 格式化成年、月、日。薪水欄的 `td` 上，用中括號 `ngClass` 綁定物件：薪水大於等於 60000 時，套上 `salary-high`。這裡的 e 是 `matCellDef` 帶出來的這一列資料。
+
+`ngClass` 綁在哪個標籤上，就是哪個標籤被加上 class。這裡綁在 `td`，所以高亮只會出現在薪水這一格，不會影響整列。
 -->
 
 ---
@@ -558,9 +596,11 @@ hireDate 欄還是 ch35 教過的 DatePipe 用法，把 Date 物件排版成 yyy
 ```
 
 <!--
-操作欄跟原本員工資料表練習的差異，是把 delete icon 換成 archive icon，呼叫的方法也從 remove() 換成 archive()，行為上不是刪除、而是移到另一個頁籤。tr、mat-paginator、@if 搭配 JsonPipe 這幾段都沿用 ch32、ch36 教過的寫法，沒有變動。
+接著是操作欄和表格的收尾。
 
-到這裡「員工列表」頁籤的內容就結束了，下一頁我們看「已封存員工」頁籤要放什麼。
+操作欄有兩個圖示：visibility 呼叫 `view`，archive 呼叫 `archive`，把員工移到另一個頁籤。下面的兩個 `tr` 和分頁器，寫法都和之前一樣，分頁可以選擇每頁 3、5 或 10 筆。
+
+最下方用 `@if` 判斷 `selectedEmployee`，有資料時才用 JsonPipe 顯示明細。
 -->
 
 ---
@@ -585,9 +625,11 @@ hireDate 欄還是 ch35 教過的 DatePipe 用法，把 Date 物件排版成 yyy
 ```
 
 <!--
-已封存員工這個頁籤沒有用 mat-table，只用簡單的 @for 迴圈跑過 archivedEmployees，每筆顯示姓名跟部門，旁邊放一個 restore 的 mat-icon，點擊呼叫 TS 的 restore() 方法，把該筆資料移回 employees。
+這是已封存員工頁籤。
 
-@for 搭配 @empty 是 ch25 就教過的語法，archivedEmployees 一開始是空陣列，@empty 區塊會顯示提示文字，等到有員工被封存之後才會換成清單。這一頁刻意示範「同樣的資料操作，不一定要每次都用 mat-table」，簡單的清單搭配 @for 加 mat-icon 就足夠了。
+這裡沒有使用 `mat-table`，只用 `@for` 走過 `archivedEmployees`，每筆顯示姓名和部門，旁邊的 restore 圖示點擊時呼叫 `restore`，把員工移回列表。
+
+`@for` 搭配 `@empty`，一開始陣列是空的，會顯示「目前沒有已封存的員工」，有員工被封存之後才會換成清單。
 -->
 
 ---
@@ -598,7 +640,7 @@ class: flex flex-col justify-center items-center text-center
 # 完整解答：SCSS
 
 <!--
-最後補上讓畫面看起來正確的樣式，重點是薪水高亮跟頁籤內容的排版。
+最後補上 SCSS，重點是薪水的高亮和頁籤內容的排版。
 -->
 
 ---
@@ -624,9 +666,9 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-ngClass 只負責「加不加這個 class」，class 實際長怎樣還是要靠 CSS 定義，這是 ch38 就強調過的分工。.tab-content 給每個頁籤內容一點上下留白，.filters 讓搜尋框跟日期篩選欄並排顯示，.salary-high 則給薪水欄位一個黃底深字的高亮效果，跟畫面預覽那張投影片看到的一致。
+`ngClass` 只負責決定要不要加上 class，class 的樣子還是要靠 SCSS 定義。
 
-下一頁繼續看已封存員工清單的樣式。
+`.tab-content` 讓每個頁籤的內容上下留一點空間。`.filters` 用 flex 讓搜尋框和日期欄並排。`.salary-high` 則是黃底、深色、粗體的高亮樣式，跟畫面預覽一致。
 -->
 
 ---
@@ -654,9 +696,11 @@ layout: default
 ```
 
 <!--
-.archived-list 系列是已封存清單的排版，把預設的項目符號拿掉，改成每筆一列、左右對齊、外面加邊框圓角，讓它看起來像一份清爽的名單，跟畫面預覽那張投影片一致，而不是瀏覽器預設的項目符號清單。
+最後是已封存清單的樣式。
 
-到這裡整個綜合練習的完整解答就講完了，大家可以對照自己寫的版本，看看 Tabs、搜尋、篩選、ngClass、封存／復原這五個部分有沒有都串起來。
+`.archived-list` 拿掉預設的項目符號，改成直向排列，每筆之間留一點間距。每個 `li` 用 flex 左右對齊，左邊是姓名和部門，右邊是復原圖示，外面加上邊框和圓角。
+
+到這裡完整解答就講完了，可以對照自己的版本，檢查頁籤、搜尋、篩選、`ngClass`，以及封存和復原有沒有都串起來。
 -->
 
 ---
@@ -667,7 +711,7 @@ layout: end
 ### 把 mat-table、mat-icon、mat-datepicker、DatePipe、JsonPipe、即時搜尋、ngClass、Tabs 八個主題整合成一個真實可用的頁面
 
 <!--
-這一章的練習到這裡就結束了。我們把 ch32 到 ch39 的八個主題全部組裝在一起：頁籤切換兩個視圖，列表裡有即時搜尋、日期篩選、薪水高亮，操作欄能檢視明細、封存、復原，資料狀態用兩個獨立陣列清楚管理。
+這個綜合練習，把八個主題組裝成一個完整的頁面：頁籤切換兩個視圖，列表有即時搜尋、日期篩選和薪水高亮，操作欄可以檢視明細、封存和復原，資料狀態則用兩個獨立的陣列清楚管理。
 
-業界實務上的頁面很少只用單一技巧，通常都是這樣把好幾個功能疊在一起。如果大家能獨立做完這個練習，代表這幾章的內容已經真正吸收，不只是看得懂投影片而已。恭喜大家完成這一階段的學習。
+如果能獨立完成這個練習，代表這些內容已經真正吸收了，而不只是看得懂。恭喜大家完成了這個階段的學習。
 -->

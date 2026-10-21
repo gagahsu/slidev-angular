@@ -46,11 +46,9 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們要來學 ngClass。
+上一章我們做出了即時搜尋。這一章要深入學習 `ngClass`。
 
-之前我們寫 CSS class 都是寫死在 HTML 裡，但實際開發時常常會遇到「這個 class 要不要出現，得看某個條件」的情境，像是按鈕在選取的時候要變色、表單有錯誤要顯示紅框。如果每次都要手動判斷再拼字串，會很麻煩又容易出錯。ngClass 就是 Angular 幫我們解決這個問題的內建指令。
-
-學完這一章，大家會知道怎麼用 ngClass 做靜態、條件式、甚至用方法回傳的方式來動態控制 class。
+實務上常會遇到「這個 class 要不要出現，要看某個條件」的情況，例如選取時變色、錯誤時顯示紅框。學完這一章，我們會用 `ngClass` 的靜態寫法、條件寫法，以及方法回傳的方式來控制 class。
 -->
 
 ---
@@ -65,7 +63,7 @@ layout: default
 - **方法回傳** — 將複雜邏輯封裝在 TypeScript 方法中
 
 <!--
-這張投影片先讓大家看一下今天的路線圖：我們會先介紹 ngClass 是什麼、使用前要匯入什麼模組，接著看最簡單的靜態用法，再進到大家最常用的動態條件綁定，最後看邏輯比較複雜時怎麼用方法回傳來處理。
+這一章會先介紹 `ngClass` 是什麼，以及使用前要匯入的模組。接著看最簡單的靜態用法，再來是最常用的動態條件綁定，然後是邏輯比較複雜時，用方法回傳的寫法。最後用一個訂單狀態標籤的練習，把三種用法串起來。
 -->
 
 ---
@@ -77,7 +75,7 @@ class: flex flex-col justify-center items-center text-center
 # What is ngClass
 
 <!--
-我們先來看 ngClass 到底是什麼，為什麼會需要它。這一段會建立大家對 ngClass 的基本認識，之後的範例都會建立在這個概念上。
+我們先來認識 `ngClass` 是什麼，以及為什麼需要它。
 -->
 
 ---
@@ -97,11 +95,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-ngClass 是 Angular 內建的一個指令，白話來說就是「幫我們動態加或拿掉 CSS class」。
+`ngClass` 是 Angular 的內建指令，用來「動態地加上或移除元素的 CSS class」。
 
-大家可以把它想成衣櫃裡的標籤貼紙——今天天氣冷就貼上「保暖」標籤，天氣熱就撕掉，衣服本身沒變，但標籤（也就是 class）會依情況變動。這在實務上非常常用，像是表單驗證錯誤要加紅框、按鈕被選取要變色，都是靠 ngClass 做到的。
+我們可以把它想成衣服上的標籤貼紙：天氣冷就貼上「保暖」，天氣熱就撕掉。衣服本身沒有變，但標籤，也就是 class，會依照情況改變。
 
-⚠️ 提醒大家，使用 ngClass 之前有個前置作業：一定要先在元件的 .ts 裡匯入 CommonModule，不然模板裡的 [ngClass] 會直接報錯，這是新手很容易漏掉的一步。
+看表格，它可以依照變數或條件決定套用哪些 class，也可以用來取代一般的 `class` 屬性。
+
+使用之前，要先在元件的 TypeScript 匯入 `CommonModule`，否則模板裡的 `ngClass` 會直接報錯。
 -->
 
 ---
@@ -124,13 +124,11 @@ export class QuestionnaireComponent {}
 ```
 
 <!--
-這段範例的目的是讓大家看到匯入 CommonModule 的實際寫法，因為前一頁只是提醒，這裡我們實際帶著大家看程式碼。
+我們看匯入的實際寫法。
 
-大家可以看到，重點就是 import 那一行，還有下面 imports 陣列裡要把 CommonModule 加進去，跟我們平常匯入其他模組的方式是一樣的套路。
+從 `@angular/common` 引入 `CommonModule`，再加進 `@Component` 的 `imports` 陣列。
 
-⚠️ 易錯點是很多同學會忘記把它加進 imports 陣列，只 import 進來但沒放進陣列，這樣還是不會生效，記得兩個步驟都要做。
-
-執行後，這個元件就具備使用 [ngClass] 的能力了，接下來我們就可以在模板裡開始寫語法。
+跟其他模組一樣，只寫 `import` 不會生效，一定要加進 `imports` 陣列。完成之後，這個元件就可以在模板裡使用 `ngClass` 了。
 -->
 
 ---
@@ -142,7 +140,7 @@ class: flex flex-col justify-center items-center text-center
 # Static Class Binding
 
 <!--
-接下來我們從最簡單的用法開始，看 ngClass 怎麼當作一般 class 屬性的替代寫法。這一段還沒有牽涉到動態邏輯，主要是讓大家熟悉語法長什麼樣子。
+我們從最簡單的用法開始，看看 `ngClass` 怎麼取代一般的 `class` 屬性。
 -->
 
 ---
@@ -165,11 +163,11 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-這段範例的目的是讓大家對照一般 class 屬性跟 ngClass 靜態寫法的差異，其實效果完全一樣，只是把字串包進 [ngClass] 的中括號綁定語法而已。
+匯入 `CommonModule` 之後，就可以在模板裡使用中括號 `ngClass`。
 
-大家可以看到，這裡傳進去的是一個字串字面值 'test'，跟原生 class="test" 效果一模一樣，還沒有用到任何動態邏輯。
+這裡傳入的是一個字串 test，注意外面是雙引號，裡面還有一組單引號，代表這是一段文字。效果跟直接寫 `class` 等於 test 完全一樣。
 
-預期結果就是這個 h3 元素會套上 test 這個 class，畫面上看不出跟原生寫法有任何差別。那大家可能會想，那我幹嘛不直接用 class 就好？沒錯，靜態情境確實用原生 class 就夠了，ngClass 真正厲害的地方在下一段動態條件綁定，我們接著看。
+既然效果一樣，為什麼不直接寫 `class` 就好？沒錯，固定不變的 class，用原生的 `class` 屬性就夠了。`ngClass` 真正的價值，在下一段的動態條件綁定。
 -->
 
 ---
@@ -181,7 +179,7 @@ class: flex flex-col justify-center items-center text-center
 # Conditional Class Binding
 
 <!--
-這一段才是 ngClass 真正發揮作用的地方。我們要來看怎麼用物件語法，依照條件動態決定 class 要不要套用，這也是大家實務上最常用到的寫法。
+接下來是 `ngClass` 真正發揮作用的地方：用物件的寫法，依照條件決定 class 要不要套用。這也是實務上最常用的寫法。
 -->
 
 ---
@@ -205,13 +203,11 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-這段範例的目的是介紹 ngClass 最常見也最實用的物件語法，大家可以把它想成一份「檢查清單」——每個 key 是 class 名稱，value 是條件，條件成立就打勾套用，不成立就不套用。
+物件寫法的格式是：左邊放 class 名稱，右邊放條件。條件成立，就套用這個 class；不成立，就不套用。可以把它想成一份檢查清單，條件成立就打勾。
 
-大家看第一個例子，[ngClass]="{ 'test': ngclassBoolean == true }"，意思是當 ngclassBoolean 是 true 的時候，就套用 test 這個 class。第二個例子則是同時檢查兩個條件，可以一次控制多個 class，彼此互不影響。
+第一個範例，當 `ngclassBoolean` 等於 true 時，就套用 test。第二個範例同時寫了兩個 class，各自有自己的條件，可以一次控制多個 class，彼此互不影響。
 
-⚠️ 易錯點是大括號裡的 key 記得要用引號包起來，因為 class 名稱可能包含連字號等特殊字元，這跟我們寫一般物件字面值的規則是一樣的。
-
-接下來我們看看這個布林變數 ngclassBoolean 是從哪裡來的。
+左邊的 class 名稱要用引號包起來，因為 class 名稱裡可能有連字號這類特殊字元。
 -->
 
 ---
@@ -234,13 +230,11 @@ export class QuestionnaireComponent {
 - 當 `ngclassBoolean` 為 `false` → `test` class 被移除
 
 <!--
-這段範例的目的是讓大家看到條件綁定的資料來源，也就是元件 .ts 裡宣告的布林變數 ngclassBoolean。
+這個條件用到的 `ngclassBoolean`，是元件的 TypeScript 裡宣告的布林變數。
 
-大家可以看到，模板裡的 ngClass 綁定和 TypeScript 裡的變數是連動的，只要這個變數的值改變，畫面上的 class 就會跟著即時更新，這就是 Angular 資料綁定的威力，我們不用手動去操作 DOM 加減 class。
+模板裡的 `ngClass` 和這個變數是連動的。當它是 true，`h3` 就會套用 test；如果程式把它改成 false，test 就會自動被移除。我們不需要自己去操作畫面加減 class。
 
-預期結果是，當 ngclassBoolean 是 true，h3 元素會有 test 這個 class；如果程式邏輯把它改成 false，test class 就會自動被拿掉，完全不需要我們手動處理。
-
-⚠️ 提醒大家，這裡的條件不一定要寫成 == true 這種寫法，直接寫變數本身（比如 { 'test': ngclassBoolean }）也可以，只是這裡為了讓初學者看清楚條件判斷的邏輯，才刻意寫出完整的比較式。
+另外，條件不一定要寫成「等於 true」，直接寫變數本身也可以。這裡寫出完整的比較式，是為了讓判斷邏輯更清楚。
 -->
 
 ---
@@ -252,7 +246,7 @@ class: flex flex-col justify-center items-center text-center
 # Method-based Class Binding
 
 <!--
-最後我們來看第三種用法，如果判斷邏輯變得比較複雜，直接寫在模板裡會很亂，這時候我們可以把邏輯包裝成方法，讓 ngClass 呼叫這個方法拿到結果。
+最後是第三種用法。如果判斷的邏輯比較複雜，全部寫在模板裡會很亂，這時候可以把邏輯包成一個方法。
 -->
 
 ---
@@ -277,13 +271,11 @@ getClassCss(): string {
 ```
 
 <!--
-這段範例的目的是示範當判斷邏輯太複雜、不適合寫在模板裡的時候，怎麼把邏輯搬到 TypeScript 方法裡。大家可以想像成外送 App 判斷「今天要不要顯示折扣標籤」，如果條件一大堆（會員等級、時段、庫存），寫在畫面上會很亂，不如寫成一個函式，畫面只要呼叫它、拿結果就好。
+當判斷邏輯較複雜時，可以寫一個 TypeScript 方法，由方法回傳要套用的 class。
 
-模板裡只要寫 [ngClass]="getClassCss()"，方法回傳字串或物件都可以，Angular 會自動判斷回傳的型別去套用對應的 class。
+模板裡寫中括號 `ngClass` 等於 `getClassCss()`，方法可以回傳 class 名稱的字串，也可以回傳物件，Angular 都能處理。這裡的方法回傳 test，所以 `h3` 會套用 test。
 
-⚠️ 易錯點是這個方法會在每次變更偵測（change detection）時被呼叫，所以裡面不建議放太複雜或耗效能的運算，這跟我們之前提過方法綁定的效能考量是同一個道理。
-
-執行後畫面上會套用 test 這個 class，效果跟前面條件綁定一樣，只是邏輯換了個地方存放。
+要注意，這個方法在 Angular 每次檢查畫面變化時都會被呼叫，所以裡面不要放太複雜或耗效能的運算。
 -->
 
 ---
@@ -301,11 +293,11 @@ getClassCss(): string {
 </div>
 
 <!--
-我們用一張表把今天學的三種用法整理起來，幫大家做個總結。
+我們把三種用法整理成一張表。
 
-靜態字串適合完全不會變的 class；物件條件是我們最常用的寫法，一個或多個布林條件都能處理；方法回傳則是留給邏輯比較複雜、需要額外運算的情境。
+靜態字串適合完全不會變的 class。物件條件是最常用的寫法，可以依一個或多個布林條件切換。方法回傳則適合判斷邏輯比較複雜、需要封裝在 TypeScript 裡的情況。
 
-💡 我這邊給大家一個實務建議：預設優先用物件條件語法，因為它最直覺、可讀性也好；只有當條件超過兩個、或需要做額外運算時，才考慮抽成方法，不要一開始就把邏輯都寫進方法裡，反而會失去 Angular 模板語法的簡潔性。
+實務上的建議是：優先使用物件條件的寫法，最直覺，可讀性也好。只有條件很多、或需要額外運算時，才改用方法回傳。
 -->
 
 ---
@@ -317,7 +309,7 @@ class: flex flex-col justify-center items-center text-center
 # Practice Exercise
 
 <!--
-三種用法都學完了，接下來用一個實務情境把它們串在一起：訂單清單依狀態顯示不同顏色標籤。
+三種用法都學完了，接下來用一個實務情境把它們串起來：依照訂單狀態，顯示不同顏色的標籤。
 -->
 
 ---
@@ -336,9 +328,11 @@ layout: default
 5. 寫一個方法 `getRowClass(order)`，若訂單狀態為 `cancelled` 就回傳 `'row-cancelled'`，否則回傳空字串，並用**方法回傳**語法綁在整個 `<li>` 上
 
 <!--
-這個練習把三種用法各用一次：物件語法處理狀態顏色跟逾期提示，方法回傳處理「整列要不要變灰階」這種稍微複雜一點的邏輯。
+這個練習要做一個訂單清單，把三種 `ngClass` 用法都用上。
 
-大家可以先自己動手做做看，做不出來再往下看提示。
+第一，定義 `Order` interface，包含 id、客戶名稱、狀態和是否逾期。第二，準備至少 5 筆資料，用 `@for` 顯示。第三，狀態標籤用物件寫法套上對應的顏色。第四，逾期標籤是另一個獨立的元素，用物件寫法決定要不要顯示。第五，寫 `getRowClass` 方法，取消的訂單回傳 `row-cancelled`，綁在整個 `li` 上。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -382,9 +376,9 @@ layout: default
 </div>
 
 <!--
-先讓大家看一下做完之後畫面長什麼樣子，再回頭寫程式會比較有方向感。
+先看看做完之後畫面的樣子。
 
-大家可以看到第 2 筆跟第 5 筆，狀態標籤旁邊多了一個紅色的 overdue 標籤，這就是物件語法裡兩個條件同時成立的效果：一個管狀態顏色，一個管逾期提示，彼此互不干擾。第 4 筆整列變成半透明加刪除線，這個效果不是物件語法做的，是掛在 `<li>` 上的 getRowClass() 方法回傳的 row-cancelled class 造成的。
+第 2 筆和第 5 筆，狀態標籤旁邊多了一個紅色的 overdue 標籤，這是逾期標籤的條件成立了。第 4 筆是取消的訂單，整列變成半透明，還加上刪除線，這不是物件寫法做的，而是 `li` 上的 `getRowClass` 回傳了 `row-cancelled`。
 -->
 
 ---
@@ -401,9 +395,9 @@ layout: default
 5. `badge-*` 這些 class 的 CSS 樣式本身（顏色、底色）不是這次練習重點，可以先用簡單顏色隨意定義，重點是 class 有沒有正確被套上去
 
 <!--
-提示的順序照著任務說明的步驟走，卡住的時候可以回頭對照對應那一段的投影片。
+我們來看解題提示。
 
-⚠️ 大家很容易漏掉的地方是 status 明明已經確定只有四種值，物件語法卻還在寫 `order.status == 'pending'` 這種字串比對沒問題，但如果打錯字（例如打成 'pending'），因為型別是聯合型別，TypeScript 編譯期就會抓出來，這也是為什麼建議一開始就把型別定義清楚。
+第一，狀態的型別用聯合型別宣告，只允許四種字串，打錯字 TypeScript 會直接標示出來。第二，四個狀態 class 同一時間只會成立一個，所以放在同一個 `ngClass` 物件裡沒問題。但逾期標籤要是另一個獨立的元素，如果跟狀態標籤擠在同一個元素上，兩個 class 都設定了背景色，畫面上只會剩下後面那個顏色。第三，`@for` 別忘了 `track`，這裡可以用 `order.id`。第四，`getRowClass` 綁的是方法呼叫，不是物件。最後，標籤的顏色樣式不是這次的重點，可以先簡單定義。
 -->
 
 ---
@@ -425,9 +419,11 @@ export class OrderStatusComponent {
 ```
 
 <!--
-先看 import 跟 @Component 設定。CommonModule 一定要匯入並加進 imports 陣列，這是 ch38 一開始就強調過的前置作業，[ngClass] 沒有這個模組會直接報錯；@for 是 Angular 17+ 內建語法，不需要另外 import。
+我們來看完整的解答，先看匯入和 `@Component` 設定。
 
-這裡故意留著最後一行 export class OrderStatusComponent { 的左大括號沒收尾，接下來幾張投影片都是這個類別裡面的內容，最後才會看到收尾的右大括號。
+`CommonModule` 一定要匯入，並加進 `imports` 陣列，否則 `ngClass` 會報錯。`@for` 是 Angular 內建的語法，不需要另外匯入。
+
+注意最後一行 class 的左大括號還沒結束，接下來幾頁都是這個 class 裡面的內容。
 -->
 
 ---
@@ -451,9 +447,11 @@ export interface Order {
 ```
 
 <!--
-Order 這個 interface 定義在類別外面，status 用聯合型別限制只能是這四種字串，isOverdue 是布林值，代表這筆訂單是否逾期。
+接著是 interface 和假資料。
 
-orders 這個屬性接續上一張還沒收尾的類別，先放三筆示範資料，下一張會補齊剩下兩筆。
+`Order` 這個 interface 定義在 class 外面。`status` 用聯合型別，只能是四種字串之一；`isOverdue` 是布林值，代表訂單是否逾期。
+
+下面的 `orders` 是 class 裡的屬性，這頁先放了三筆資料，下一頁補齊剩下的兩筆。
 -->
 
 ---
@@ -472,9 +470,11 @@ orders 這個屬性接續上一張還沒收尾的類別，先放三筆示範資�
 ```
 
 <!--
-補齊剩下兩筆資料，第 4 筆是 cancelled 狀態，第 5 筆是 pending 但 isOverdue 為 true，等一下畫面上這一筆會同時看到 pending 狀態標籤跟另一個獨立的 overdue 標籤。
+補齊剩下兩筆資料。第 4 筆是取消的訂單，第 5 筆是待處理而且已經逾期。
 
-getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態是 cancelled 就回傳 row-cancelled 這個 class 名稱，其他狀態一律回傳空字串，讓 [ngClass] 什麼都不加。最後這個右大括號才是真正把 OrderStatusComponent 這個類別收尾。
+接著是 `getRowClass` 方法，這就是方法回傳的範例。狀態是 cancelled，就回傳 `row-cancelled`；其他狀態一律回傳空字串，不加任何 class。
+
+最後的右大括號，才是整個 class 的結尾。
 -->
 
 ---
@@ -509,9 +509,11 @@ getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態
 </div>
 
 <!--
-外層用 @for 搭配 track order.id 跑過整個 orders 陣列，這是 ch25 教過的語法，忘記 track 會直接編譯錯誤。<li> 上綁的是 getRowClass(order) 這個方法呼叫，狀態是 cancelled 的那一筆會多一個 row-cancelled class。
+最後是 HTML。
 
-重點是後面兩個 <span>：第一個負責狀態顏色，四個 class 只會有一個成立；第二個是完全獨立的元素，專門顯示 overdue，用 [ngClass] 的物件語法控制的是 hidden 這個 class——isOverdue 為 false 的時候套上 hidden 讓它整個消失，isOverdue 為 true 的時候 hidden 不會套用，畫面上就會看到 badge-overdue 這個底色跟樣式，跟前面的狀態標籤並排顯示，而不是疊在同一個元素上互搶顏色。
+外層用 `@for` 走過 `orders`，並用 `order.id` 當作 `track`。`li` 上用 `ngClass` 綁定 `getRowClass(order)`，取消的那一筆就會多一個 `row-cancelled`。
+
+裡面有兩個 `span`。第一個負責狀態顏色，四個條件裡只會有一個成立。第二個是獨立的逾期標籤，用物件寫法控制 `hidden`：沒有逾期時，套上 `hidden` 讓它隱藏；逾期時，`hidden` 不會套用，標籤就顯示出來，和狀態標籤並排，而不是在同一個元素上互相搶顏色。
 -->
 
 ---
@@ -539,9 +541,11 @@ getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態
 ```
 
 <!--
-這頁先補上清單本身的排版樣式。.order-list 把預設的項目符號拿掉，改成上下排列、每列間留一點間距；.order-list li 則是把每一列排成左右兩端對齊，左邊放名字、右邊放標籤群組，外面再加一圈邊框跟圓角。
+`ngClass` 只負責決定「要不要加上這個 class」，class 實際長什麼樣子，還是要靠 SCSS 定義。這頁是清單的版面。
 
-⚠️ 這是這次練習最容易做錯畫面的地方：如果沒加這兩段樣式，畫面就會變成瀏覽器預設的項目符號清單，跟畫面預覽那張投影片呈現的效果差很多。下一頁繼續看 badge 顏色跟狀態相關的樣式。
+`.order-list` 拿掉預設的項目符號，改成直向的 flex 排列，每列之間留一點間距。每個 `li` 則用 flex 讓內容左右兩端對齊，左邊是名稱，右邊是標籤，外面加上邊框和圓角。
+
+如果沒有這兩段樣式，畫面就會是瀏覽器預設的清單樣式，跟預覽的效果差很多。
 -->
 
 ---
@@ -574,11 +578,13 @@ getRowClass() 就是這次練習的方法回傳範例，邏輯很單純：狀態
 ```
 
 <!--
-.badge 這個共用樣式（圓角、padding、字級）要單獨拉出來，跟顏色的 badge-pending、badge-shipped 這些分開寫，因為 HTML 裡每個狀態標籤都同時掛著 class="badge" 跟 [ngClass] 動態的顏色 class，兩者要疊加使用。而 badge-overdue 是靠 hidden 這個 class 切換顯示或隱藏，不是跟狀態標籤共用同一顆 badge。
+最後是顏色和狀態的樣式。
 
-row-cancelled 就是 getRowClass() 回傳的那個 class，opacity 讓整列變淡，text-decoration: line-through 加上刪除線。
+`.badge` 是共用的標籤樣式，包括內距、膠囊形的圓角和字體大小。它和各個顏色的 class 分開寫，因為每個標籤都同時有 `badge` 和 `ngClass` 加上的顏色 class，兩者疊加使用。
 
-到這裡練習的完整解答就講完了，大家可以對照自己寫的版本，看看 import、@Component、物件語法、方法回傳、SCSS 這五個部分有沒有都對上。
+`.hidden` 設定 `display: none`，用來隱藏逾期標籤。`.row-cancelled` 則用 `opacity` 讓整列變淡，再加上刪除線。
+
+到這裡完整解答就講完了，可以對照自己的版本，檢查匯入、物件寫法、方法回傳和 SCSS 有沒有都對上。
 -->
 
 ---
@@ -589,8 +595,8 @@ layout: end
 ### 透過 ngClass 可依條件動態控制元素的 CSS class，讓樣式管理更靈活。
 
 <!--
-好，這一章 ngClass 就到這邊告一個段落。我們從最簡單的靜態用法，一路學到動態條件綁定，最後看了邏輯複雜時怎麼用方法回傳來處理。
+這一章我們學了 `ngClass` 的三種用法。使用前要匯入 `CommonModule`。靜態字串可以取代一般的 `class`；物件寫法用條件決定 class 要不要套用，是最常用的方式；方法回傳則適合比較複雜的判斷邏輯，但要注意效能。
 
-大家現在應該已經能夠說出「我學會了 ngClass」——知道怎麼依條件動態控制元素的 class，讓樣式管理更有彈性，也知道什麼情境該用哪一種寫法。下一章我們會繼續往下學新的內容，大家休息一下。
+下一章，我們會學習 Material 的分頁標籤元件 Tabs。我們下一章見。
 -->
 

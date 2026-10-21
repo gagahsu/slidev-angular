@@ -46,12 +46,11 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎來到「串接 API」的主題！
-這堂課是整個前端工程師修行之路的「分水嶺」！
-在今天之前，我們寫的資料不是寫死在變數裡，就是放在本機的 Storage 裡，這叫「單機版網頁」。
-但是，真實世界裡的網頁，是要能夠看最新的天氣預報、查即時的火車時刻表、或是跟國外的伺服器通訊。
-這就像是，你的電腦插上了網路線，準備跟全世界連線！
-今天，我們就要來學習如何利用 `HttpClient`，讓你的 Angular 網頁直接去跟遠端的伺服器「對話、拿資料」！
+上一章我們學了 `@switch`。到目前為止，我們的資料不是寫死在變數裡，就是存在瀏覽器裡。
+
+但真實的網頁，需要顯示最新的天氣預報、即時的交通資訊，或是跟遠端的伺服器交換資料。這一章，我們要學習串接 API，用 Angular 的 `HttpClient` 和後端伺服器溝通，把真實的資料拿到網頁上。
+
+這是前端開發非常關鍵的一步。
 -->
 
 ---
@@ -70,13 +69,7 @@ layout: default
 - **練習** — 串接氣象開放資料 API 並呈現在畫面上
 
 <!--
-今天我們的 API 登陸作戰計畫如下：
-首先，用最接地氣的比喻搞懂什麼是 API。
-接著，拆解在 Angular 裡呼叫 API 的黃金三步驟。
-第一步，在 `app.config.ts` 裡接通 HttpClient 全域大動脈。
-第二步，親手撰寫 `http-client.service.ts` 文件，把四大 HTTP 方法封裝起來。
-第三步，在元件內部用 `subscribe` 訂閱法術把資料召喚出來。
-最後，介紹免費的 API 測試資源，並交給大家一項任務——串接「中央氣象署」的實時天氣 API，設計出一個氣象卡片網頁！
+這一章會先說明什麼是 API，接著介紹在 Angular 裡呼叫 API 的三個步驟：在 `app.config.ts` 註冊 `HttpClient`，建立一個 Service 封裝四種 HTTP 方法，最後在元件裡呼叫方法並用 `subscribe` 接收資料。我們也會看 post 和 put 怎麼帶資料，介紹幾個免費的練習用 API，最後串接中央氣象署的天氣資料。
 -->
 
 ---
@@ -88,7 +81,7 @@ class: flex flex-col justify-center items-center text-center
 # What is an API?
 
 <!--
-第一站，我們先來戳破 API 這三個英文大寫字母的恐怖面紗，其實它非常親切！
+我們先來了解，API 到底是什麼。
 -->
 
 ---
@@ -104,14 +97,11 @@ API（Application Programming Interface），中文叫**應用程式介面**，�
 </div>
 
 <!--
-API 的全名是「應用程式介面」。
-聽起來很像教科書上的催眠術語，對吧？
-簡單來說，API 就是「不同軟體系統之間約定好的溝通規則」。
-這就像是，你在家裡想用吹風機，你不需要自己去接電線、蓋發電廠。
-你只需要把吹風機的插頭，插進牆壁上的「插座」就行了。
-那個牆壁上的「插座」，就是電力系統提供給你的「API 介面」！
-你按照插座的規格（兩孔、110V）去插，電就會源源不絕地送過來。
-在前端開發裡，API 就是後端工程師在伺服器上留給我們的「數據插座」。
+API 的全名是 Application Programming Interface，中文是「應用程式介面」。簡單來說，它是「不同軟體系統之間約定好的溝通規則」。
+
+就像家裡的插座。我們想用吹風機，不需要自己接電線、蓋發電廠，只要按照插座的規格把插頭插進去，電就會送過來。插座就是電力系統提供給我們的介面。
+
+在前端開發裡，API 就像後端提供給我們的資料插座。我們照著約定好的規則發出請求，就能取得或傳送資料。
 -->
 
 ---
@@ -142,15 +132,13 @@ API 的全名是「應用程式介面」。
 </div>
 
 <!--
-大叔再給大家講一個經典的「餐廳點餐比喻」。
-你（使用者）坐在餐桌前，想要吃椒麻雞。
-後台的廚房（資料庫與後端伺服器）會做椒麻雞，但你不能直接跑進人家的廚房裡伸手去拿，那樣會被廚師用菜刀砸。
-這時候，你需要一位「服務生（API）」。
-你跟服務生說：「我要一份椒麻雞（發送 API 請求）」。
-服務生把菜單傳給廚房（把參數丟給後端）。
-廚房做好了，再由服務生把熱騰騰的雞肉端到你桌上（回傳 API 資料）。
-這就是 API 的運作邏輯！
-不管你是去 ATM 提款、還是在網路上用 LINE 登入，背後整個數據交換，全部都是這套服務生體制在運作。
+我們再用兩個生活例子來看 API 的運作。
+
+第一個是餐廳。我們想點餐，但不能直接走進廚房拿菜。我們把需求告訴服務生，服務生把點單交給廚師，廚師做好之後，再由服務生端回來。這裡的服務生，就是 API。
+
+第二個是提款機。我們操作提款機，提款機連線到銀行，銀行處理帳戶資料後，再把結果傳回提款機。提款機就是我們和銀行系統之間的 API。
+
+前端和後端也是一樣，前端透過 API 發出請求，後端處理完再把資料回傳。
 -->
 
 ---
@@ -162,7 +150,7 @@ class: flex flex-col justify-center items-center text-center
 # How to Use an API?
 
 <!--
-了解了服務生的概念，我們馬上來看看在 Angular 專案裡，要怎麼把這套 HttpClient 傳送機制給搭建起來。
+了解 API 的概念之後，我們來看在 Angular 專案裡怎麼呼叫 API。
 -->
 
 ---
@@ -180,10 +168,11 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-簡而言之就是三步：
-第一步，先配電，把 HttpClient 大動脈接入全域。
-第二步，建文件，把 HttpClient Service 給寫好包起來。
-第三步，按開關，在你的元件裡呼叫方法並 subscribe 倒出資料！
+在 Angular 裡呼叫 API，需要完成三個步驟。
+
+第一步，在全域註冊 `HttpClient`，讓它可以被注入。第二步，建立一個 Service，把呼叫 API 的方法集中寫在裡面。第三步，在元件裡注入這個 Service，呼叫方法，並用 `subscribe` 接收回傳的資料。
+
+接下來我們一步一步看。
 -->
 
 ---
@@ -195,7 +184,7 @@ class: flex flex-col justify-center items-center text-center
 # Register HttpClient via DI
 
 <!--
-大招起手式：我們先去把 Angular 內建的網路傳送引擎給啟動！
+第一步，我們先把 Angular 內建的 `HttpClient` 啟用。
 -->
 
 ---
@@ -223,11 +212,11 @@ export const appConfig: ApplicationConfig = {
 </div>
 
 <!--
-在新版的 Standalone Angular 專案中，網路通訊引擎預設是關閉的。
-所以我們第一步，必須打開全域設定檔 `app.config.ts`。
-在 providers 陣列中，塞入一行 `provideHttpClient()`。
-這就像是在專案的總配電盤上，合上「網路通訊」的無熔絲開關。
-如果不做這一步，你等一下在任何地方使用 HTTP，專案一啟動就會當場噴出 `No provider for HttpClient` 的世紀大紅字，請一定要記住這個起手式！
+打開 `app.config.ts`，先從 `@angular/common/http` 引入 `provideHttpClient`，再把它加進 `providers` 陣列。
+
+這樣做是告訴 Angular 的相依注入系統：「`HttpClient` 可以被注入使用」。就像在總電源箱打開網路的開關。
+
+如果忘了這一步，之後在任何地方注入 `HttpClient`，都會出現找不到提供者的錯誤。
 -->
 
 ---
@@ -239,7 +228,7 @@ class: flex flex-col justify-center items-center text-center
 # Write HttpClient Service
 
 <!--
-開關合上了，接著第二步：我們建一個專屬的「物流小幫手（Service）」來統一處理網路封包。
+`HttpClient` 啟用之後，第二步是建立一個專門處理 API 的 Service。
 -->
 
 ---
@@ -259,12 +248,11 @@ app/
 ```
 
 <!--
-大叔又要來耳提面命了：
-**千萬不要在每個元件（Component）裡直接呼叫原生的 HttpClient**！
-因為如果你的 API 網址改了，或者要加上統一的身分驗證 header，你如果寫在幾十個元件裡，你就要改幾十次，會改到吐血。
-我們一律要建一個叫 `HttpClientService` 的服務。
-把所有的 API 傳送工作，通通集中在這個轉運中心裡進行。
-這才是業界大廠的標準架構！
+我們建立一個 Service 檔案，把所有呼叫 API 的方法集中在這裡管理。
+
+為什麼不直接在每個元件裡使用 `HttpClient`？因為如果 API 的網址或驗證方式改了，寫在幾十個元件裡就得改幾十次。集中在一個 Service，只要改一個地方。
+
+畫面上是建議的資料夾結構，在 `app` 底下建立一個資料夾，專門放這類 Service。
 -->
 
 ---
@@ -285,9 +273,11 @@ export class HttpClientService {
 ```
 
 <!--
-我們可以用 CLI 指令 產生服務。
-在這個 TS 檔裡，我們保留 `@Injectable({ providedIn: 'root' })`。
-這樣全專案的元件，都能隨時呼叫我們這台唯一的 API 傳送中心，不需要你手動去 `new` 一個。
+在 Service 檔案裡，先寫上基本的結構。
+
+上方的 `@Injectable`，加上 `providedIn: 'root'`，跟上一章一樣，代表這個 Service 在整個應用程式裡只有一個實例，Angular 會自動建立，不需要我們手動 `new`。
+
+也可以用 `ng g s` 指令產生這個檔案。
 -->
 
 ---
@@ -305,8 +295,9 @@ export class HttpClientService {
 ```
 
 <!--
-接著在 constructor 的括號裡，寫上 `private http: HttpClient`。
-這代表我們把剛才配電盤開通的 `HttpClient` 引擎，正式引流到這個 Service 的體內。
+接著在 `constructor` 注入 `HttpClient`。
+
+引入 `HttpClient` 之後，在 `constructor` 的參數寫 `private http: HttpClient`。這樣在 Service 裡，就可以透過 `this.http` 呼叫各種 HTTP 方法了。
 -->
 
 ---
@@ -338,13 +329,13 @@ delApi(url: string) {
 ```
 
 <!--
-接下來，我們在這個 Service 裡，把 HTTP 最常用的四大神功封裝好：
-`getApi`：去跟後端「拿資料」（GET）。
-`postApi`：去跟後端「新增資料」，需要帶上要打包的 `postData`（POST）。
-`putApi`：去跟後端「更新舊資料」，需要帶上要修改的 `putData`（PUT）。
-`delApi`：去跟後端「刪除資料」（DELETE）。
-這四個方法寫好後，它們都會把 `this.http.xxx` 的成果「Return（回傳）」出去。
-這台 API 轉運車就組裝完成，隨時可以載客出發了！
+接下來，我們在 Service 裡封裝四種最常用的 HTTP 方法。
+
+`getApi` 用來取得資料，對應 GET；`postApi` 用來新增資料，對應 POST；`putApi` 用來更新資料，對應 PUT；`delApi` 用來刪除資料，對應 DELETE。
+
+每個方法的第一個參數都是 API 的網址。post 和 put 因為要把資料送給後端，所以多了第二個參數，也就是要送出的內容。
+
+注意每個方法都直接 `return` `this.http` 的結果，讓呼叫的人自己決定怎麼處理回傳的資料。
 -->
 
 ---
@@ -363,7 +354,13 @@ layout: default
 6. 撰寫 `delApi(url: string)`，回傳 DELETE 請求
 
 <!--
-考察 HttpClient 四大方法的封裝寫法，getApi/delApi 只需 url，postApi/putApi 需額外帶 body 參數。改為需求描述題，讓學員自行從零建立 Service 檔案與方法。
+我們用一個小練習，自己把這個 Service 建立起來。
+
+請建立 `HttpClientService`，加上 `@Injectable` 和 `providedIn: 'root'`，在 `constructor` 注入 `HttpClient`，再寫出 `getApi`、`postApi`、`putApi` 和 `delApi` 四個方法。
+
+想一想，哪兩個方法需要第二個參數？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -395,7 +392,11 @@ delApi(url: string) {
 </div>
 
 <!--
-所有方法都直接 return this.http.xxx()，讓呼叫方決定如何 subscribe 處理回傳值，這是業界標準的 Service 封裝方式。
+我們來看答案。
+
+四個方法都直接 `return` `this.http` 對應的方法。`getApi` 和 `delApi` 只需要網址一個參數；`postApi` 和 `putApi` 則要帶第二個參數，作為送給後端的資料。即使沒有資料要送，也要傳入一個空物件。
+
+把結果 `return` 出去，讓呼叫的地方再決定怎麼處理，是實務上封裝 Service 的標準做法。
 -->
 
 ---
@@ -407,7 +408,7 @@ class: flex flex-col justify-center items-center text-center
 # Calling the Methods
 
 <!--
-最後一步，也是最興奮的一步：我們要在畫面上呼叫 Service，把資料拉下來！
+最後一步，我們在元件裡呼叫 Service，把資料拿回來。
 -->
 
 ---
@@ -426,9 +427,9 @@ constructor(private http: HttpClientService) {}
 ```
 
 <!--
-我們隨便打開一個要串資料的元件（比如 AppComponent）。
-在建構子 constructor 括號裡，注入剛寫好的 `private http: HttpClientService`。
-拿到這台轉運車的鑰匙後，我們就能在元件的大腦裡隨時發號施令了。
+在要使用 API 的元件裡，先引入 `HttpClientService`，然後在 `constructor` 注入它，寫成 `private http: HttpClientService`。
+
+注入之後，就可以在元件裡透過 `this.http` 呼叫剛才寫好的四個方法了。
 -->
 
 ---
@@ -449,17 +450,13 @@ ngOnInit(): void {
 </div>
 
 <!--
-大家看這段 ngOnInit 裡面的代碼。
-我們呼叫 `this.http.getApi(免費 API 網址)`。
-這時候，**最後面一定要加上一個 `.subscribe()`**！
-這個 subscribe 在 RxJS 裡叫做「訂閱」。
-大叔把它比喻成「訂閱 YouTube 頻道」或者是「點外送」。
-Angular 的 HttpClient 回傳的是一個「神奇的預約信封（Observable）」。
-如果你只是寫了 getApi 而不加上 subscribe。
-這就像是你在外送 App 上把雞排點進了購物車，卻從來沒有按「送出訂單」一樣。
-外送員（瀏覽器）是死活都不會幫你出餐發送請求的！
-只有當你呼叫了 `.subscribe((res) => { ... })`，訂單才會正式送出，當資料送回來時，就會灌進 `res` 變數裡，讓你可以在裡面印 log 或是指派給變數。
-這顆 subscribe 鈕，是新手漏寫率高達 99% 的超級地雷，請大家一定要牢牢記住！
+我們在 `ngOnInit` 裡呼叫 `getApi`，傳入一個免費的 API 網址，後面接上 `.subscribe()`。
+
+這個 `.subscribe()` 非常重要。`HttpClient` 回傳的是一個 Observable，可以把它想成一張「預約單」。只呼叫 `getApi` 而不 `subscribe`，就像在外送平台把餐點加進購物車，卻沒有按下送出，請求根本不會發出去。
+
+只有呼叫了 `subscribe`，請求才會真的送出。資料回來之後，會放進 `res` 這個參數，我們就可以印出來，或存進變數裡。忘記寫 `subscribe` 是初學者最常犯的錯誤。
+
+`subscribe` 是 RxJS 的觀念，之後的章節會再深入介紹。
 -->
 
 ---
@@ -485,7 +482,11 @@ ngOnInit(): void {
 ```
 
 <!--
-考察 Service 注入 + getApi 呼叫 + subscribe 訂閱三步驟的完整寫法。
+我們用一個小練習熟悉呼叫 API 的流程。
+
+請在 `ngOnInit` 裡，透過注入的 `HttpClientService`，呼叫畫面上這個 GET API，並用 `console.log` 印出回傳的結果。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -508,7 +509,11 @@ ngOnInit(): void {
 </div>
 
 <!--
-subscribe 的回呼函式參數 res 可自行命名，習慣上用 res（response 縮寫）代表伺服器回傳的整個回應物件。
+我們來看答案。
+
+`this.http.getApi` 傳入網址，後面接 `.subscribe`，在裡面把 `res` 印出來。打開 Console，就能看到 API 回傳的使用者資料。
+
+`res` 這個名稱可以自己取，習慣上用 `res`，也就是 response 的縮寫，代表伺服器回傳的內容。
 -->
 
 ---
@@ -536,12 +541,11 @@ ngOnInit(): void {
 ```
 
 <!--
-如果是要送資料給後端的 post / put 請求呢？
-在發送之前，我們得先把我們的貨物「裝箱（打包成 JSON 物件）」。
-比如寫一個 `let postData = { userName: 'Allen', userAge: 18 }`。
-然後呼叫 `postApi` 時，把這個 `postData` 當作第二個參數塞進去。
-這樣網路封包在發送時，就會把這箱貨物塞進 HTTP Request 的 Body 裡，整箱運送給後端。
-一樣，最後一定要 subscribe 才會出發喔！
+如果要用 post 或 put 把資料送給後端，呼叫之前要先把資料打包成物件。
+
+這裡先宣告 `postData`，裡面有使用者名稱和年齡。接著呼叫 `postApi`，第一個參數是 API 網址，第二個參數就是 `postData`。這份資料會放在請求的內容裡送給後端。
+
+最後一樣要接上 `.subscribe()`，請求才會真的送出。
 -->
 
 ---
@@ -573,11 +577,11 @@ ngOnInit(): void {
 </div>
 
 <!--
-這裏再看一遍 post 請求的完整範例。
-如果後端收到了，通常會回傳一個 `res`，裡面寫著「新增成功」或是新增好的資料 ID。
-大叔特別叮嚀：
-就算你發送的 post 請求不需要傳遞任何值給後端，
-你也必須在第二個參數塞一個空的 `{}`，因為我們的 `postApi(url, postData)` 宣告了兩個必填參數，漏寫了編譯器是會直接對你亮紅牌的！
+這是 post 請求的完整範例，使用的是一個免費的測試 API。
+
+後端收到之後，通常會回傳一個結果，例如新增成功的訊息，或是新資料的編號。只要在 Console 看到 `res`，就代表請求成功了。
+
+要注意，post 一定要帶第二個參數。就算真的沒有資料要送，也要傳入一個空物件，因為我們的 `postApi` 定義了兩個必填的參數，少了會報錯。
 -->
 
 ---
@@ -589,8 +593,7 @@ class: flex flex-col justify-center items-center text-center
 # Free API Resources
 
 <!--
-「大叔，那如果我的後端同事還在寫扣、或者我根本沒有後端，我該去哪裡找 API 來練手呢？」
-這裡大叔幫大家整理了幾個免費的網路公共資源。
+如果後端還沒做好，或是我們只是想練習，要去哪裡找 API 呢？這裡整理了幾個免費的資源。
 -->
 
 ---
@@ -617,10 +620,9 @@ layout: two-cols
 </div>
 
 <!--
-畫面上這個 `freeapi.app` 或者是投影片中的 Hashnode API 文件。
-它提供了一大堆隨機產生使用者、隨機產品、隨機貓咪圖的免費 GET 與 POST API。
-大家在練習時，不用註冊、不用付錢，直接把裡面的 API 網址拷貝下來貼進你的程式碼裡，就能拿到非常豐富的 JSON 資料。
-寫程式沒有捷徑，今天晚上回家，就拿這幾條隨機使用者網址來回呼叫十遍，練練手感！
+畫面上是 freeapi 的文件網址，它提供很多免費的 API，包括取得隨機使用者、隨機資料、圖片等 GET 類型，以及 POST 和 DELETE 類型。
+
+不用註冊，也不用付費，把文件裡的網址複製到程式裡，就能拿到 JSON 資料，很適合用來練習串接。
 -->
 
 ---
@@ -645,14 +647,15 @@ https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-065?Authorization=CWA-
 </div>
 
 <!--
-好了，大道理都講完了。
-現在我們來進行今天的終極大作戰——「串接中央氣象署的實時天氣 API」！
-這是一個真實的、會因為台北現在有沒有下雨而隨時變動的政府公開數據。
-請大家使用 `HttpClientService` 呼叫黃色框框裡的氣象 API 網址。
-把台北市的天氣資料拉下來。
-最關鍵的是：**不准只給我用 console.log 印出來，也不准在 HTML 裡只塞一行 JSON**！
-請各位發揮你們高尚的工程師美學，用我們之前學過的 CSS 或者卡片版面，把台北市的氣溫、濕度、降雨機率，設計成一張漂亮的天氣卡片！
-這題我們會給大家 20 分鐘時間，開始這場跟真實世界數據的連線對話吧！
+接下來是這一章的練習：串接中央氣象署的開放資料 API。
+
+這是真實的政府公開資料，內容會隨著天氣即時變動。請用 `HttpClientService` 的 `getApi` 呼叫畫面上的網址，在 `ngOnInit` 裡發送請求並 `subscribe` 取得資料，再把氣象資料呈現在畫面上。
+
+這題的重點是畫面設計，不要只用 `console.log` 印出來，也不要在 HTML 裡直接顯示一整串 JSON。可以用卡片、表格這類有設計感的版面，把溫度、降雨機率這些資訊呈現出來。
+
+我們先暫停一下，自己動手試試看。
+
+【講師】給大家 20 分鐘左右。回傳的 JSON 層級較深，可先引導學生在 Console 觀察資料結構。
 -->
 
 ---
@@ -663,9 +666,9 @@ layout: end
 ### 學會串接 API，讓 Angular 應用與後端真正連線！
 
 <!--
-恭喜大家！成功跨過了前端開發最關鍵的一道分水嶺！
-從今天開始，你再也不是寫單機版網頁了。你已經掌握了跟全世界任何伺服器通訊的 HttpClient 密碼。
-不管是天氣預報、新聞、還是串接 OpenAI，對你來說都只是改個網址而已！
-把這段 API 串接流程反覆敲打，特別是 `subscribe` 的觀念。
-下一堂課，我們要挑戰更高級的玩法——「串接 OpenAI API」，親手在我們的 Angular 網頁裡做出一隻聰明的人工智慧聊天機器人！大家休息一下，我們等一下見！
+這一章我們學會了串接 API。API 是系統之間溝通的規則。在 Angular 裡呼叫 API 有三個步驟：在 `app.config.ts` 加入 `provideHttpClient`；建立 Service 封裝 get、post、put、delete 四個方法；在元件注入 Service，呼叫方法並用 `subscribe` 接收資料。post 和 put 要帶第二個參數，沒有資料時也要傳空物件。
+
+從現在開始，我們的網頁已經可以和真實的伺服器溝通了。
+
+下一章，我們會學習用 interface 定義 API 回傳資料的型別。我們下一章見。
 -->

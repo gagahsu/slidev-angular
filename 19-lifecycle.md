@@ -46,12 +46,9 @@ style: |
 </div>
 
 <!--
-各位學員，歡迎回來！
-我們之前學會了怎麼寫畫面、宣告變數、還有寫方法來處理點擊事件。
-但是，在 Angular 專案裡，有一個非常關鍵的問答題：
-「你的元件是什麼時候被生出來的？它在畫面上消失的時候，記憶體裡的資料清乾淨了嗎？你在呼叫 API 撈取資料時，畫面真的已經準備好了嗎？」
-為了解答這些問題，今天我們就要來學習 Angular 元件的「出生與死亡歷程」——也就是「生命週期（Lifecycle）」。
-掌握生命週期，你才能讓你的程式碼，在「對的時間點，做對的事情」！
+在 Angular 裡，有幾個關鍵的問題：元件是什麼時候建立的？呼叫 API 時，畫面準備好了嗎？元件消失時，資源有沒有清乾淨？
+
+要回答這些問題，就要認識元件從建立到銷毀的過程，也就是「生命週期」。學完這一章，我們就能讓程式「在對的時間點，做對的事情」。
 -->
 
 ---
@@ -67,12 +64,7 @@ layout: default
 - **引用多個生命週期** — 同時使用多個 Hooks
 
 <!--
-今天我們的作戰計畫如下：
-我們會先快速瀏覽 Angular 所有的生命週期關卡與執行順序。
-接著，我們會分析最早觸發的 `constructor` 建構式。
-再來是實務開發中，90% 的時間都會用到的兩大黃金 Hooks：`ngOnInit` 與 `ngAfterViewInit`。
-隨後，我們會把其餘六個稍微進階的 Hooks 一起掃描一遍。
-最後，我們會看看要在 TS 裡同時引用多個生命週期的正確寫法。
+這一章會先看所有生命週期的執行順序，接著介紹最早執行的 `constructor`。然後是實務上最常用的兩個：`ngOnInit` 和 `ngAfterViewInit`。接下來把其餘六個 Hook 都看過一遍，最後學習怎麼在一個元件裡同時使用多個生命週期。
 -->
 
 ---
@@ -84,7 +76,7 @@ class: flex flex-col justify-center items-center text-center
 # Lifecycle Overview
 
 <!--
-第一站，我們先來拉高視野，看看元件的一生會經歷哪些關卡。
+我們先拉高視野，看看一個元件從建立到銷毀，會經歷哪些階段。
 -->
 
 ---
@@ -100,13 +92,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-這張圖是 Angular 生命週期的「官方巡邏路線圖」。
-你可以把元件想像成一個「剛蓋好、啟用、最後拆除的大樓」。
-最頂端的 `constructor` 藍色區塊是第一關。
-接著是粉紅色的核心初始化關卡。
-再來是黃綠色的子元件與視圖渲染關卡。
-最後是元件準備拆除時的 OnDestroy 銷毀關卡。
-這個順序是定死的，誰也不能插隊，我們必須牢記這個執行脈絡。
+這張圖是 Angular 生命週期的執行順序。
+
+我們可以把元件想成一棟大樓，從動工、啟用，到最後拆除。
+
+最上面藍色的 `constructor` 是第一個執行的階段。接著是粉紅色的核心階段，然後是黃綠色、跟內容投影和畫面組裝相關的階段，最後是元件要被移除時的銷毀階段。
+
+這個順序是固定的，不會改變。接下來兩頁，我們用表格把每個階段整理一遍。
 -->
 
 ---
@@ -124,11 +116,11 @@ Angular 提供 **8 個 Lifecycle Hooks**，加上 `constructor` 共 **9 個執�
 | `ngAfterContentInit` | `ng-content` 初始化後 | 一次 | ✅ |
 
 <!--
-在 Angular 的世界裡，總共提供了「8 個 Hooks」加上 1 個「constructor 建構式」，總共 9 個執行階段。
-我們這頁先列出前五個。
-`constructor` 最先執行，但大叔再次強調，它其實是 TypeScript 類別的本能特性，不屬於 Angular 的官方 Hook 喔。
-其餘的像是 `ngOnChanges`、`ngOnInit`，都是由 Angular 框架自動在特定時機幫你觸發的。
-這其中，有些 Hooks 會執行「多次」，比如 Input 屬性只要一有變化，`ngOnChanges` 就會一直觸發，像是在做保全巡邏一樣。
+Angular 提供了 8 個生命週期 Hook，再加上 `constructor`，一共 9 個執行階段。
+
+要注意，`constructor` 其實是 TypeScript class 本身的特性，不是 Angular 管理的 Hook。其他的，則是 Angular 在特定時機自動幫我們呼叫的。
+
+這頁先看前五個。看執行次數這一欄，有些只執行一次，例如 `ngOnInit`；有些會執行很多次，例如 `ngOnChanges`，只要外部傳進來的值有變化，它就會再觸發一次。
 -->
 
 ---
@@ -147,12 +139,9 @@ Angular 提供 **8 個 Lifecycle Hooks**，加上 `constructor` 共 **9 個執�
 </div>
 
 <!--
-這頁是後面的四個 Hooks。
-其中最重要的就是 `ngAfterViewInit` 視圖組裝完成，和 `ngOnDestroy` 元件銷毀。
-大叔特別提醒一下：
-那些會執行「多次」的 Hooks，因為只要畫面稍微動一下、資料變一下，它們就會瘋狂地被重複呼叫。
-所以，千萬不要把耗費效能的計算，或是呼叫 API 的動作塞在裡面！
-否則你的網頁會直接卡成 PPT，肝的代價可就大了！
+這頁是後面四個 Hook。其中最重要的，是畫面組裝完成時的 `ngAfterViewInit`，以及元件銷毀前的 `ngOnDestroy`。
+
+這裡要特別提醒，執行次數是「多次」的 Hook，只要資料一變動、或 Angular 做一次檢查，就會被呼叫。所以不要在裡面放耗費效能的計算，或是呼叫 API，否則網頁會變得很慢。
 -->
 
 ---
@@ -164,7 +153,7 @@ class: flex flex-col justify-center items-center text-center
 # Before Everything Starts
 
 <!--
-好，我們接著來看生命週期的起點——Constructor 建構式。
+接下來，我們看生命週期的起點：`constructor`。
 -->
 
 ---
@@ -185,13 +174,13 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-`constructor` 是大樓奠基的第一塊磚。
-它的特色是執行次數只有「一次」。
-但是在這個階段，元件其實「還沒真正出生完畢」，也就是 HTML 畫面 DOM 根本還沒被瀏覽器畫出來。
-所以，你絕對不能在這個時候跑去存取畫面上的按鈕、或是去做 API 撈取！
-否則編譯器當場就會賞你一個 undefined 報錯。
-那麼 `constructor` 在 Angular 裡到底能幹嘛呢？
-它唯一的、也是最重要的任務，就是進行「相依注入（Dependency Injection）」，把我們要用的服務、工具先宣告並拉進來！
+`constructor` 是最早執行的階段，只執行一次。但它是 TypeScript class 的特性，Angular 沒辦法控制它。
+
+在這個階段，元件還沒有完成初始化，畫面也還沒建立，所以沒辦法存取畫面上的元素。
+
+那 `constructor` 在 Angular 裡主要用來做什麼？答案是「相依注入」，英文是 Dependency Injection，也就是把元件需要用到的服務或工具先準備好。
+
+因為元件還沒準備好，我們幾乎不會在這裡寫業務邏輯。
 -->
 
 ---
@@ -216,11 +205,11 @@ export class DemoComponent {
 ```
 
 <!--
-你看這個程式碼範例。
-我們在 `constructor` 的小括號裡寫了 `private myService: MyService`。
-這就是在做相依注入，告訴 Angular：「等一下元件跑起來時，把 `MyService` 這個服務灌給我用！」
-但大括號裡面我們留空，不寫任何呼叫 API 的邏輯。
-這才是最正規體面的 Angular 寫法！
+我們看相依注入的寫法。
+
+在 `constructor` 的小括號裡，寫了 `private myService: MyService`。意思是告訴 Angular：「建立這個元件時，請把 `MyService` 這個服務交給我使用」。
+
+注意大括號裡面是空的。註解也寫得很清楚：適合在這裡注入服務，不適合存取畫面元素或呼叫 API。
 -->
 
 ---
@@ -232,7 +221,7 @@ class: flex flex-col justify-center items-center text-center
 # Most Used Hooks
 
 <!--
-接下來，我們要介紹實務開發中，出鏡率高達 90% 的兩個黃金 Hooks！
+接下來，我們介紹實務上最常用的兩個生命週期。
 -->
 
 ---
@@ -248,12 +237,11 @@ class: flex flex-col justify-center items-center text-center
 | 適合用途 | 呼叫 API、設定初始資料、訂閱 Observable |
 
 <!--
-第一個是 `ngOnInit`。
-這可以說是 Angular 開發者的「起跑點」。
-當元件的所有屬性、相依注入都準備妥當，元件「正式誕生」的那一刻，Angular 就會自動呼叫 `ngOnInit`。
-它也只執行「一次」。
-所以，**這裡就是你發送 API 請求、設定變數初始資料、或是做資料初始化最完美、最安全的黃金位置**！
-幾乎每個 Angular 元件都會寫到它。
+第一個是 `ngOnInit`，它是最常用的生命週期。
+
+當元件的屬性和注入的服務都準備好，也就是元件完成初始化的時候，Angular 就會自動呼叫 `ngOnInit`，而且只呼叫一次。
+
+所以，呼叫 API 取得資料、設定變數的初始值，都很適合放在這裡。幾乎每個 Angular 元件都會用到它。
 -->
 
 ---
@@ -275,11 +263,11 @@ export class DemoComponent implements OnInit {
 ```
 
 <!--
-我們看範例。
-要使用 `ngOnInit`，我們要在 class 後面寫 `implements OnInit`，這代表我們承諾會實作這個介面。
-然後在 class 內部寫 `ngOnInit() { ... }`。
-在裡面我們可以直接給 `data` 陣列塞初始資料，或是發送 API。
-代碼看起來乾淨俐落！
+我們看 `ngOnInit` 的寫法。
+
+先從 `@angular/core` 引入 `OnInit`，然後在 class 後面加上 `implements OnInit`，代表這個元件會實作這個生命週期。
+
+接著在 class 裡寫 `ngOnInit` 方法。這裡我們在裡面替 `data` 陣列設定了三筆初始資料。實務上，通常就是在這個位置呼叫 API，再把回傳的資料存進變數裡。
 -->
 
 ---
@@ -294,7 +282,11 @@ layout: default
 - `viewCount` 設定為 `1024`
 
 <!--
-模擬從後端 API 取回資料後，在 ngOnInit 中賦值給變數的標準流程。
+我們用一個小練習熟悉 `ngOnInit`。
+
+請宣告兩個變數，`announcement` 預設是空字串，`viewCount` 預設是 0。然後在 `ngOnInit` 裡，把公告內容設成「歡迎來到 Angular 學習平台」，瀏覽次數設成 1024，並在 HTML 顯示出來。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -324,7 +316,11 @@ export class DemoComponent implements OnInit {
 ```
 
 <!--
-變數先宣告為空值，ngOnInit 觸發後才賦予真實資料——這是日後呼叫 API 並把回傳結果存入變數的標準樣板。
+我們來看答案。
+
+class 實作 `OnInit`，變數先宣告成空值。在 `ngOnInit` 裡，用 `this.` 把公告和瀏覽次數設成實際的值。HTML 再用雙大括號把它們顯示出來。
+
+這個「先宣告空值，再在 `ngOnInit` 裡設定資料」的寫法，就是之後呼叫 API、把回傳結果存進變數的標準寫法。
 -->
 
 ---
@@ -344,13 +340,13 @@ export class DemoComponent implements OnInit {
 </div>
 
 <!--
-第二個黃金 Hook 叫 `ngAfterViewInit`。
-這個階段，元件的 HTML 畫面已經被瀏覽器「完全畫出來了」，連裡面的子元件也全都排好了。
-這代表什麼？
-這代表你終於可以動手去操作 DOM 元素了！
-如果你在專案裡需要用 `@ViewChild` 抓取某個 input 輸入框，並且在載入時自動聚焦（focus）。
-你就必須把這個聚焦的指令寫在 `ngAfterViewInit` 裡。
-如果寫在前面的 `ngOnInit`，因為當時畫面根本還沒畫好，你的程式就會直接爆掉喔！
+第二個常用的是 `ngAfterViewInit`。
+
+它在元件的畫面，包含裡面的子元件，都組裝完成之後才觸發，而且只執行一次。
+
+這代表到了這個階段，我們終於可以操作畫面上的元素了。例如用 `@ViewChild` 抓到某個輸入框，讓它在頁面載入時自動取得焦點，這段程式就要寫在 `ngAfterViewInit` 裡。
+
+如果寫在 `ngOnInit`，畫面可能還沒建立好，就會拿到 undefined。
 -->
 
 ---
@@ -372,12 +368,13 @@ export class DemoComponent implements AfterViewInit {
 ```
 
 <!--
-看程式碼。
-我們用 `@ViewChild('myInput')` 宣告了一個對 HTML 裡面 myInput 元素折射的變數。
-然後在 `ngAfterViewInit()` 裡面，
-寫了 `this.inputRef.nativeElement.focus()`。
-這樣當網頁一打開，游標就會自動閃爍在輸入框內。
-記住，操作 DOM 一律寫在 AfterViewInit，這是前端開發的安防準則！
+我們看 `ngAfterViewInit` 的範例。
+
+`@ViewChild('myInput')` 會到 HTML 裡找到標記為 `myInput` 的元素，存進 `inputRef` 這個變數。注意這裡用了驚嘆號，因為元素要等畫面建立後才會有值。
+
+在 `ngAfterViewInit` 裡，呼叫 `nativeElement.focus()`，讓輸入框取得焦點。結果是網頁一打開，游標就會停在這個輸入框裡。
+
+記住一個原則：要操作畫面元素，就寫在 `ngAfterViewInit`。
 -->
 
 ---
@@ -393,7 +390,11 @@ layout: default
 ```
 
 <!--
-ngAfterViewInit 最常見的應用：頁面載入後自動聚焦輸入框，提升使用者體驗。
+我們用一個小練習熟悉 `ngAfterViewInit`。
+
+在 HTML 加上一個輸入框，並用井字號 `searchBox` 標記它。接著用 `@ViewChild` 取得這個元素，在 `ngAfterViewInit` 裡讓它自動取得焦點。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -420,7 +421,11 @@ export class DemoComponent implements AfterViewInit {
 ```
 
 <!--
-模板變數 #searchBox 標記 DOM 元素；@ViewChild 取得 ElementRef；AfterViewInit 確保 DOM 已渲染才呼叫 focus()。
+我們來看答案。
+
+HTML 裡的井字號 `searchBox` 叫做模板變數，用來標記這個元素。TypeScript 裡用 `@ViewChild('searchBox')` 取得它，存進 `searchRef`。
+
+在 `ngAfterViewInit` 裡呼叫 `focus()`，因為這時候畫面已經建立完成，所以能正確取得輸入框。頁面載入後，游標就會自動出現在搜尋框裡，使用者可以直接輸入。
 -->
 
 ---
@@ -432,7 +437,7 @@ class: flex flex-col justify-center items-center text-center
 # The Other Six Hooks
 
 <!--
-接下來，我們把剩下的六個進階 Hooks 也做個走馬看花，不用死記，但腦袋裡一定要有概念。
+接下來，我們把剩下的六個 Hook 看過一遍。不需要死背，但要有基本的概念。
 -->
 
 ---
@@ -451,10 +456,11 @@ class: flex flex-col justify-center items-center text-center
 | `ngOnDestroy` | 一次 |
 
 <!--
-這六個 Hook 包含多次執行的 `ngOnChanges`、`ngDoCheck`，
-Content 系列（也就是透過 ng-content 投影進來的內容）的初始化與檢查，
-視圖更新後的 `ngAfterViewChecked`，以及元件要銷毀前的 `ngOnDestroy`。
-我們來一一看他們的應用場景。
+`ngOnInit` 和 `ngAfterViewInit` 已經介紹過了，剩下的六個整理在這張表裡。
+
+其中 `ngOnChanges`、`ngDoCheck`、`ngAfterContentChecked` 和 `ngAfterViewChecked` 會執行多次，`ngAfterContentInit` 和 `ngOnDestroy` 只執行一次。
+
+接下來我們一個一個看它們的使用時機。
 -->
 
 ---
@@ -481,10 +487,11 @@ export class ChildComponent implements OnChanges {
 | 執行次數 | 多次（每次 Input 變化都會觸發） |
 
 <!--
-首先是 `ngOnChanges`。
-當父元件傳遞資料（也就是我們宣告的 `@Input` 屬性）給子元件時，只要父元件的值一改變，子元件的 `ngOnChanges` 就會立刻觸發，並且會貼心地把「舊的值」跟「新的值」包在 `changes` 變數裡給你。
-它的順序甚至比 `ngOnInit` 還要早！
-所以，如果你想在子元件收到新參數時，立刻做一些資料轉換，寫在 `ngOnChanges` 裡就對了。
+第一個是 `ngOnChanges`。
+
+當父元件透過 `@Input` 傳資料給子元件，只要這個值改變，子元件的 `ngOnChanges` 就會觸發。它還會把變化的內容，包括舊值和新值，放在 `changes` 參數裡交給我們。
+
+要注意，它的執行順序比 `ngOnInit` 還早，而且每次值改變都會再觸發。如果子元件收到新的資料後，需要馬上做一些轉換，就可以寫在這裡。`@Input` 的用法，我們之後在資料傳遞的章節會詳細介紹。
 -->
 
 ---
@@ -510,13 +517,13 @@ export class DemoComponent implements DoCheck {
 ```
 
 <!--
-第二個是 `ngDoCheck`。
-這是一個「手動偵測器」。
-有時候，父元件傳過來的是一個「物件（Object）」。
-如果父元件只改了物件內部的某個屬性，但物件本身的記憶體參考位置（Reference）沒有變。
-這時候，`ngOnChanges` 是偵測不到的。
-但 `ngDoCheck` 不管三七二十一，只要 Angular 開始做髒檢查，它就會被呼叫。
-你可以在這裡手動比對資料的變化，不過因為它觸發頻率極高，寫起來要非常小心效能問題！
+第二個是 `ngDoCheck`，它可以用來手動偵測變化。
+
+有時候父元件傳進來的是一個物件。如果只修改了物件裡的某個屬性，物件本身還是同一個，`ngOnChanges` 就偵測不到這個變化。
+
+但 `ngDoCheck` 不一樣，只要 Angular 進行一次變更檢查，它就會被呼叫。所以我們可以在這裡自己比對資料有沒有改變。
+
+不過它觸發的頻率非常高，寫在裡面的程式要特別注意效能。
 -->
 
 ---
@@ -529,12 +536,13 @@ export class DemoComponent implements DoCheck {
 | `ngAfterContentChecked` | 每次 `ngDoCheck` 後完成 `ng-content` 的變更檢測後 | 多次 |
 
 <!--
-接下來是 Content 系列。
-這是跟 Angular 的「內容投影（ng-content）」技術相關的。
-當你用投影把一段外部 HTML 塞進元件內部時，
-投影內容初始化完畢會觸發 `ngAfterContentInit`，
-每次檢測完投影內容會觸發 `ngAfterContentChecked`。
-這在我們自己封裝高級 UI 元件（如 Tabs、Modal）時才會用到，先知道有這兩個東西就行了。
+接下來是 Content 系列的兩個 Hook，它們跟「內容投影」有關。
+
+內容投影是指，把一段外部的 HTML 塞進元件裡顯示，用的是 `ng-content` 這個標籤。
+
+投影的內容初始化完成後，會觸發一次 `ngAfterContentInit`；之後每次檢查完投影內容，都會觸發 `ngAfterContentChecked`。
+
+這兩個通常在自己封裝分頁、對話框這類可重複使用的元件時才會用到，先知道有它們就好。
 -->
 
 ---
@@ -561,7 +569,10 @@ export class DemoComponent implements AfterContentInit, AfterContentChecked {
 
 <!--
 這是 Content 系列的範例。
-通常只有在你的組件 template 裡面有寫 `<ng-content></ng-content>` 時，這兩個 Hooks 才會有發揮的舞台喔。
+
+注意元件的 template 裡寫了 `ng-content`，代表這裡會顯示外部投影進來的內容。class 實作了兩個介面，分別在投影內容初始化完成，以及每次檢查完成時印出訊息。
+
+只有元件裡有用到 `ng-content`，這兩個 Hook 才有意義。
 -->
 
 ---
@@ -574,13 +585,13 @@ export class DemoComponent implements AfterContentInit, AfterContentChecked {
 | `ngOnDestroy` | 元件從 DOM 銷毀前 | 一次 |
 
 <!--
-再來是 `ngAfterViewChecked` 和 `ngOnDestroy`。
-其中，`ngOnDestroy` 是大樓拆除的最後一步！
-當使用者切換頁面，原來的元件要從網頁上消失（被銷毀）時，`ngOnDestroy` 就會被觸發。
-這就像是你在走人之前要打掃戰場。
-**你必須在這裡做「資源回收」**，比如取消訂閱 Observable、清空 timer 計時器。
-如果你不清理，這些訂閱會一直掛在記憶體裡，時間久了，網頁就會越來越卡，這就叫「記憶體洩漏（Memory Leak）」！
-所以，`ngOnDestroy` 扮演的是非常重要的「清道夫」角色！
+最後是 `ngAfterViewChecked` 和 `ngOnDestroy`。
+
+`ngAfterViewChecked` 在每次畫面更新後都會觸發。
+
+`ngOnDestroy` 則是元件要從畫面上移除之前，最後一個執行的階段，例如使用者切換到別的頁面時。
+
+它的任務是「清理資源」，就像離開之前要把場地打掃乾淨。例如取消訂閱、清除計時器。如果不清理，這些東西會一直留在記憶體裡，網頁就會越來越慢，這叫做「記憶體洩漏」。
 -->
 
 ---
@@ -606,10 +617,11 @@ export class DemoComponent implements AfterViewChecked, OnDestroy {
 ```
 
 <!--
-看程式碼。
-在 `ngOnDestroy()` 裡面，我們呼叫了 `this.sub.unsubscribe()`。
-這就是典型的清道夫工作，把 RxJS 的訂閱親手掐斷，防止記憶體洩漏。
-這是一個專業 Angular 工程師必須具備的高尚品德！
+我們看範例。
+
+在 `ngOnDestroy` 裡，呼叫了 `this.sub.unsubscribe()`，把訂閱取消掉，避免記憶體洩漏。訂閱是 RxJS 的觀念，之後的章節會詳細介紹，這裡先記得：元件銷毀前，要把它清掉。
+
+`ngAfterViewChecked` 則只是在每次畫面更新後印出訊息。
 -->
 
 ---
@@ -635,7 +647,13 @@ ngOnDestroy() {
 ```
 
 <!--
-考察 ngOnDestroy 最典型的用途：清除計時器。未清除的 setInterval 在元件銷毀後仍會持續執行，造成記憶體洩漏。
+我們用一個小練習熟悉 `ngOnDestroy`。
+
+在 `ngOnInit` 裡用 `setInterval` 啟動一個計時器，每秒印出一次「計時中」，並把計時器的 ID 存進 `timer`。然後在 `ngOnDestroy` 裡把計時器清除。
+
+想一想，如果不清除，元件被移除之後，計時器會怎麼樣？
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -664,7 +682,11 @@ export class DemoComponent implements OnInit, OnDestroy {
 ```
 
 <!--
-setInterval 回傳一個 ID，clearInterval(this.timer) 用此 ID 清除。元件銷毀後若不清除，計時器持續佔用記憶體直到瀏覽器關閉。
+我們來看答案。
+
+`setInterval` 會回傳一個 ID，我們把它存在 `this.timer`。在 `ngOnDestroy` 裡，呼叫 `clearInterval`，並傳入這個 ID，就能把計時器清除。
+
+回答剛才的問題，如果不清除，就算元件已經從畫面上移除，計時器還是會每秒繼續執行，一直佔用資源，直到瀏覽器關閉為止。
 -->
 
 ---
@@ -676,7 +698,7 @@ class: flex flex-col justify-center items-center text-center
 # Using Multiple Hooks
 
 <!--
-最後，我們來看看在 TypeScript 的 class 裡，如果我想同時使用多個 Hooks，要怎麼寫才符合規範。
+最後，我們看如果一個元件要同時使用多個生命週期，該怎麼寫。
 -->
 
 ---
@@ -709,11 +731,9 @@ export class DemoComponent implements OnInit, AfterViewInit, OnDestroy {
 ```
 
 <!--
-寫法其實很直覺。
-在 `export class` 後面的 `implements` 關鍵字後面，用「逗號」把你想用的介面通通列出來！
-比如 `implements OnInit, AfterViewInit, OnDestroy`。
-然後，在 class 內部，乖乖把這三個對應的方法寫出來。
-這樣一來，Angular 就會在這三個不同人生階段，自動進來執行你寫的邏輯。
+寫法很直覺：在 `implements` 後面，用逗號把要用的介面全部列出來，例如 `OnInit`、`AfterViewInit` 和 `OnDestroy`。
+
+然後在 class 裡，把對應的三個方法都寫出來。Angular 就會在元件的不同階段，自動執行各自的內容：初始化時印出「元件初始化」，畫面載入後印出「視圖載入完成」，銷毀前印出「清理資源」。
 -->
 
 ---
@@ -745,10 +765,11 @@ export class AllHooksComponent implements OnChanges, OnInit, DoCheck,
 </div>
 
 <!--
-這是把 8 個 Hook 全都實作出來的終極測試範例。
-大家如果有空，可以在專案裡複製這段 code 跑跑看，打開瀏覽器 Console。
-你會親眼看到這 8 個 Hook 是怎麼像機器人排隊一樣，一步步在 Console 裡印出 `1. ngOnChanges`、`2. ngOnInit` 到 `8. ngOnDestroy` 的。
-不過在實際專案裡，**沒用到的 Hook 千萬不要硬塞進去**，免得造成編譯器多餘的效能開銷喔！
+這是把 8 個 Hook 全部實作出來的範例，每個方法都印出自己的編號。
+
+有時間的話，可以把這段程式放進專案裡執行，打開 Console，就能看到它們依照 1 到 8 的順序印出來，親眼確認生命週期的執行順序。
+
+不過在實際專案裡，只要實作需要用到的 Hook 就好，沒用到的不要加進去，避免不必要的效能負擔。
 -->
 
 ---
@@ -769,9 +790,13 @@ layout: default
 **打開 F12 → Console，確認三個 log 依序出現；確認變數雖無初始值，畫面仍正確顯示訊息。**
 
 <!--
-這道練習有兩個核心目標：
-第一，親眼確認 constructor → ngOnInit → ngAfterViewInit 的觸發順序。
-第二，體驗把變數初始化邏輯放在 ngOnInit 中的「Angular 標準做法」——日後呼叫 API、把回傳資料塞進變數，都是這樣寫的！
+我們來做這一章的練習，觀察生命週期的順序，並用 `ngOnInit` 初始化資料。
+
+請宣告一個變數 `welcomeMessage`，用驚嘆號，不給初始值。在 `constructor`、`ngOnInit` 和 `ngAfterViewInit` 裡各自印出一行訊息，並在 `ngOnInit` 裡設定 `welcomeMessage` 的內容。最後在 HTML 顯示這個訊息。
+
+完成之後，打開 Console 確認三行訊息出現的順序，也確認畫面有正確顯示文字。
+
+我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -810,10 +835,13 @@ export class AppComponent implements OnInit, AfterViewInit {
 3. 儲存後開啟 F12 → Console，確認順序：`1. constructor 執行` → `2. ngOnInit 執行` → `3. ngAfterViewInit 執行`
 
 <!--
-最重要的驗收點有兩個：
-一、Console 裡三個 log 依照固定順序出現，不會亂掉。
-二、雖然 welcomeMessage 宣告時沒有給值，但 ngOnInit 在元件渲染時就設好了，所以畫面不會出現空白。
-這就是日後呼叫 API 的標準樣板：在 ngOnInit 裡呼叫 API，把回傳資料賦值給全域變數！
+我們來看解題步驟。
+
+在 `app.component.ts` 引入 `OnInit` 和 `AfterViewInit`，並在 class 後面實作這兩個介面。`welcomeMessage` 用驚嘆號宣告。三個階段各自印出 1、2、3 的訊息，並在 `ngOnInit` 裡設定歡迎文字。
+
+存檔之後打開 Console，會看到 constructor、ngOnInit、ngAfterViewInit 依序出現。雖然變數宣告時沒有值，但 `ngOnInit` 在畫面顯示前就設定好了，所以畫面會正確顯示歡迎訊息。
+
+這就是之後呼叫 API 的標準寫法：在 `ngOnInit` 呼叫 API，再把結果存進變數。
 -->
 
 ---
@@ -824,8 +852,7 @@ layout: end
 ### 掌握生命週期，讓元件在對的時機做對的事
 
 <!--
-恭喜大家！完成了 Angular 生命週期的全面巡禮！
-現在的你，不僅知道怎麼寫方法、宣告變數，還知道怎麼精準控制這些程式碼在元件「誕生、成長、老化到死亡」的各個節點上執行了。
-回去把 ngOnInit、ngAfterViewInit 和 ngOnDestroy 這三個最常用的 Hooks 多練幾遍。
-下一堂課，我們要迎來元件化開發的終極奧義——「元件拆解與通訊（Components）」，也就是把大網頁拆成一個個小零件的拼圖遊戲！大家大腦充飽電，我們等一下見！
+這一章我們認識了 Angular 的生命週期。`constructor` 最早執行，主要用來注入服務。`ngOnInit` 在元件初始化時執行一次，適合呼叫 API 和設定初始資料。`ngAfterViewInit` 在畫面組裝完成後執行，適合操作畫面元素。`ngOnDestroy` 在元件銷毀前執行，用來清理訂閱和計時器。執行多次的 Hook，要特別注意效能。
+
+下一章，我們會學習怎麼建立和拆分元件。我們下一章見。
 -->

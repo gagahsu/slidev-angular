@@ -46,11 +46,11 @@ style: |
 </div>
 
 <!--
-大家好，這一章我們來學 Angular Material 的圖示元件 mat-icon。
+上一章我們用 `mat-table` 做出了表格。這一章，我們要學 Angular Material 的圖示元件：`mat-icon`。
 
-想像一下，介面上如果只有純文字按鈕，使用者要花更多時間理解每個按鈕的功能，加上一個清楚的圖示，像放大鏡代表搜尋、垃圾桶代表刪除，會讓操作直覺很多。mat-icon 就是 Angular Material 提供的元件，讓我們可以輕鬆在畫面上插入 Google 準備好的大量圖示。
+如果介面上只有文字按鈕，使用者要花比較多時間理解每個按鈕的功能。加上清楚的圖示，例如放大鏡代表搜尋、垃圾桶代表刪除，操作就直覺很多。
 
-學完這一章，大家會知道怎麼安裝跟使用 mat-icon，也知道去哪裡找想要的圖示、怎麼換成自己想要的樣式。
+學完這一章，我們會知道怎麼使用 `mat-icon`，去哪裡找想要的圖示，以及怎麼替換成其他圖示。
 -->
 
 ---
@@ -66,7 +66,7 @@ layout: default
 - **切換 icon** — 修改 fontIcon 屬性更換圖示
 
 <!--
-這張投影片先給大家看一下整章的順序：先講什麼是 icon，接著實際使用 mat-icon，中間會處理模組匯入的問題，然後帶大家去 Google Fonts Icons 網站挑圖示，最後示範怎麼把 icon 換成我們想要的樣子。
+這一章會先說明什麼是 icon，接著實際使用 `mat-icon`，處理模組的匯入。然後到 Google Fonts Icons 網站挑選圖示，最後示範怎麼把圖示換成我們想要的樣子。
 -->
 
 ---
@@ -78,7 +78,7 @@ class: flex flex-col justify-center items-center text-center
 # What Is an Icon?
 
 <!--
-先問問大家，平常在用 App 或網站的時候，是不是很少直接讀文字，反而先看圖示就知道這個按鈕在做什麼？這就是 icon 的作用，接下來我們看看 Angular Material 怎麼幫我們處理這件事。
+我們常常先看圖示，就知道按鈕在做什麼，這就是 icon 的作用。
 -->
 
 ---
@@ -92,7 +92,9 @@ Icon（圖示）是用來指示操作的視覺符號。Angular Material 提供 `
 </div>
 
 <!--
-Icon（圖示）就是用一個簡單的符號去代表一個操作或概念，比如齒輪代表設定、信封代表訊息。Angular Material 提供 `<mat-icon>` 這個元件，讓我們可以直接用它插入 Google Material Icons 這個現成的圖示庫，不用自己去找圖片素材、切圖、調整大小。
+Icon，也就是圖示，是用來指示操作的視覺符號，例如齒輪代表設定、信封代表訊息。
+
+Angular Material 提供了 `mat-icon` 元件，可以直接插入 Google Material Icons 這套現成的圖示庫，不用自己找圖片、切圖或調整大小。
 -->
 
 ---
@@ -104,7 +106,7 @@ class: flex flex-col justify-center items-center text-center
 # Using Mat-icon
 
 <!--
-接下來我們就實際動手把 mat-icon 用起來，會從官方文件看範例開始，一步一步加到我們的專案裡。
+接下來我們實際動手，從官方文件的範例開始，一步一步把 `mat-icon` 加到專案裡。
 -->
 
 ---
@@ -121,9 +123,9 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <!--
-要用 mat-icon，第一步一樣是先去官方文件看範例，這是我們之後遇到不會用的元件時，很好的查資料習慣。
+要使用 `mat-icon`，第一步是到 Angular Material 的官方文件查看範例，網址就在畫面上。
 
-大家可以打開 material.angular.io/components/icon/overview 這個網址，上面會列出各種基本用法的程式碼範例，我們直接照著抄就好。
+這是一個很好的習慣：之後遇到不熟悉的元件，先去官方文件看範例，照著範例寫，通常就能快速上手。
 -->
 
 ---
@@ -137,9 +139,9 @@ class: flex flex-col justify-center items-center text-center
 ```
 
 <!--
-照著官方範例，我們在 HTML 裡加上一段 `<mat-icon>` 標籤，這裡用 fontIcon="home" 代表要顯示的是「home」這個圖示。
+照著官方範例，在 HTML 加上 `mat-icon` 標籤。這裡的 `fontIcon` 等於 home，代表要顯示的是首頁的圖示。另外兩個 `aria` 開頭的屬性，是給螢幕報讀軟體使用的無障礙設定。
 
-⚠️ 貼上去之後編輯器會顯示紅色錯誤，先不要緊張，這是正常的，因為我們還沒有在 TypeScript 那邊匯入 MatIconModule，Angular 還不認識 mat-icon 這個標籤，下一步我們就來處理。
+貼上之後，編輯器會出現紅色的錯誤。這是正常的，因為我們還沒在 TypeScript 匯入 `MatIconModule`，Angular 還不認識 `mat-icon` 這個標籤。
 -->
 
 ---
@@ -162,9 +164,9 @@ export class AppComponent {}
 ```
 
 <!--
-解決剛剛紅字錯誤的方法很簡單，就是把 MatIconModule 從 @angular/material/icon 匯入進來，再加到 @Component 的 imports 陣列裡。
+解決方法是從 `@angular/material/icon` 引入 `MatIconModule`，並加進 `@Component` 的 `imports` 陣列。
 
-⚠️ 提醒大家，跟前面學過的元件一樣，只有 import 陳述式是不夠的，一定要記得也加進 imports 陣列，standalone component 這兩步缺一不可。加好之後，編輯器的錯誤就會消失，畫面上也會出現一個 home 圖示。
+跟前面學過的元件一樣，只寫 `import` 是不夠的，一定要加進 `imports` 陣列。加好之後，錯誤就會消失，畫面上也會出現一個首頁的圖示。
 -->
 
 ---
@@ -180,9 +182,9 @@ export class AppComponent {}
 </div>
 
 <!--
-現在 icon 已經可以正常顯示了，但如果我們想要的不是 home，而是別的圖示呢？
+圖示可以正常顯示了。但如果想要的不是首頁圖示，而是其他圖示呢？
 
-這時候可以到 fonts.google.com/icons 這個網站，上面有非常多現成的 Material Icon 可以搜尋跟預覽，大家可以打開這個網站，輸入關鍵字，像是 search、delete、menu，看看有哪些圖示可以用。
+這時候可以到畫面上的 Google Fonts Icons 網站，裡面有非常多 Material 圖示可以搜尋和預覽。輸入關鍵字，例如 search、delete、menu，就能找到對應的圖示。
 -->
 
 ---
@@ -209,9 +211,11 @@ layout: two-cols
 </div>
 
 <!--
-找到喜歡的圖示之後，怎麼換到我們的畫面上呢？很簡單，只要把 `<mat-icon>` 的 fontIcon 屬性值改成那個圖示的名稱就好。
+找到想要的圖示之後，只要把 `mat-icon` 的 `fontIcon` 屬性，改成那個圖示的名稱就好。
 
-⚠️ 這裡要注意一個小細節：Google Fonts Icons 網站上顯示的名稱通常是「Menu」這種大寫開頭、單字之間有空格的形式，但實際要填進 fontIcon 的值，要全部改成小寫，空格則改成底線，例如 Arrow Back 要寫成 arrow_back。大家可以看範例裡 Menu 對應到 fontIcon="menu"。
+這裡有一個小細節要注意：網站上顯示的名稱，通常是大寫開頭、單字之間有空格，例如 Arrow Back。但填進 `fontIcon` 時，要全部改成小寫，空格改成底線，寫成 arrow_back。
+
+所以在網站上找到 Menu，`fontIcon` 就填入小寫的 menu，右邊就是顯示出來的選單圖示。
 -->
 
 ---
@@ -227,7 +231,11 @@ layout: two-cols
 | 5 | 將 `fontIcon` 的值改為目標 icon 名稱（全小寫、空格改底線） |
 
 <!--
-這張投影片幫大家把整個流程整理成一張表，從查官方文件、寫 HTML、匯入模組、上網找圖示，到最後修改 fontIcon 換圖示，五個步驟一次看完。大家以後要用新的 icon，照這張表操作一次就可以了。
+這張表把整個使用流程整理成五個步驟。
+
+第一，到官方文件查看範例。第二，在 HTML 加上 `mat-icon` 標籤。第三，在 TypeScript 引入 `MatIconModule`，並加進 `imports`。第四，到 Google Fonts Icons 搜尋想要的圖示。第五，把 `fontIcon` 改成圖示名稱，記得全小寫、空格改底線。
+
+之後要使用新的圖示，照著這張表做就可以了。
 -->
 
 ---
@@ -238,5 +246,7 @@ layout: end
 ### 善用 Mat-icon，讓你的 Angular 介面更直覺、更美觀
 
 <!--
-這一章我們學會了怎麼用 mat-icon 在 Angular 專案裡加上圖示，也知道去哪裡找更多圖示、怎麼替換。到這邊 Angular Material 系列的內容我們也告一段落，辛苦大家了！
+這一章我們學會了用 `mat-icon` 加入圖示。在 HTML 使用 `mat-icon` 標籤，用 `fontIcon` 指定圖示名稱，並在 TypeScript 匯入 `MatIconModule`。想換圖示，就到 Google Fonts Icons 搜尋，把名稱改成小寫，空格換成底線。
+
+下一章，我們會學習 Material 的日期選擇器。我們下一章見。
 -->
