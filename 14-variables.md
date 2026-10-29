@@ -485,6 +485,77 @@ layout: default
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：插值與屬性綁定
+
+**練習 1：個人檔案動態卡片**
+
+在 `app.component.ts` 宣告 `userName`（字串）與 `userAge`（數字），在 HTML 用 `{{ }}` 把資料呈現出來。
+
+**練習 2：超連結動態切換**
+
+1. 在 TS 宣告字串變數 `targetUrl`，放入 Google 的網址
+2. 在 HTML 建立 `<a>` 標籤，用中括號 `[href]` 綁定該變數
+3. 點擊網頁上的連結，測試是否能成功跳轉
+
+<!--
+接下來兩題補充練習。
+
+第一題，在 TS 宣告名字和年齡，用雙大括號顯示在畫面上。
+
+第二題，把超連結的網址也交給變數控制：在 TS 宣告 `targetUrl`，在 HTML 用中括號 `href` 綁定它。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+export class AppComponent {
+  userName: string = 'Allen';
+  userAge: number = 30;
+  targetUrl: string = 'https://www.google.com';
+}
+```
+
+```html
+<h2>姓名：{{ userName }}</h2>
+<p>年齡：{{ userAge }} 歲</p>
+
+<a [href]="targetUrl" target="_blank">前往 Google</a>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 標籤之間的文字用 <code>&#123;&#123; &#125;&#125;</code>；標籤的屬性（如 <code>href</code>、<code>src</code>）則用中括號綁定
+</div>
+
+<!--
+我們來看答案。
+
+TS 裡宣告三個全域變數。HTML 裡，名字和年齡放在標籤中間，用雙大括號顯示。
+
+超連結的 `href` 是標籤的屬性，所以要用中括號綁定，中括號裡的 `targetUrl` 會被當成變數，而不是文字。記住這個分工：標籤中間的文字用雙大括號，標籤的屬性用中括號。
+-->
+
+---
 layout: end
 ---
 

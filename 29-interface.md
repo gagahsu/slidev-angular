@@ -466,6 +466,128 @@ interface UserArray {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：選填欄位 `?`
+
+1. 定義會員介面 `Member`：必填的 `email`（字串），以及選填的 `phone`（字串）
+2. 用問號修飾符 `phone?` 宣告選填
+3. 建立一個**只填寫 email** 的 `Member` 物件，確認編譯器沒有任何錯誤
+4. 試著拿掉 `?`，觀察 VS Code 的錯誤提示
+
+<!--
+第一題補充練習，練習選填欄位。
+
+定義 `Member` 介面，`email` 必填，`phone` 選填。建立一個只有 email 的物件，看看會不會報錯；再把問號拿掉，比較一下差別。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：選填欄位 — 參考答案
+
+```typescript
+interface Member {
+  email: string;
+  phone?: string;    // 選填
+}
+
+let member1: Member = { email: 'allen@test.com' };                         // ✅
+let member2: Member = { email: 'ben@test.com', phone: '0912345678' };      // ✅
+```
+
+```typescript
+interface Member {
+  email: string;
+  phone: string;     // 拿掉 ?
+}
+let member1: Member = { email: 'allen@test.com' };
+// ❌ Property 'phone' is missing in type '{ email: string; }'
+```
+
+<!--
+我們來看答案。
+
+`phone` 後面加上問號，代表這個欄位可有可無。所以只填 email 的 `member1`，和兩個都填的 `member2`，都符合規格。
+
+拿掉問號之後，`phone` 就變成必填，`member1` 會被標紅，提示缺少 `phone` 屬性。實務上，像電話、備註這種使用者不一定會填的欄位，就適合宣告成選填。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：天氣 API 的 Interface
+
+從外部 API 取得大量資料時，建議為資料建立專屬的 interface。
+
+請根據上一章「政府天氣 API」回傳的資料，建立對應的 interface：
+
+- 至少涵蓋：地區名稱 `locationName`、天氣要素 `weatherElement`、時段 `time`（含 `startTime`、`endTime`、`parameter`）
+- 用 interface 取代 `any`，宣告 `weatherList`
+
+<!--
+第二題補充練習，幫上一章的天氣 API 建立 interface。
+
+先把 API 回傳的資料印出來，從最裡面的時段開始，一層一層往外定義。巢狀的部分，可以拆成好幾個 interface。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：天氣 API 的 Interface — 參考答案
+
+```typescript
+interface WeatherTime {
+  startTime: string;
+  endTime: string;
+  parameter: {
+    parameterName: string;
+    parameterValue?: string;
+  };
+}
+
+interface WeatherElement {
+  elementName: string;          // Wx、PoP、MinT…
+  time: WeatherTime[];
+}
+
+interface WeatherLocation {
+  locationName: string;
+  weatherElement: WeatherElement[];
+}
+
+weatherList: WeatherTime[] = [];
+```
+
+<!--
+我們來看答案。
+
+從最內層開始拆：每個時段是 `WeatherTime`，有開始時間、結束時間和 `parameter`。`parameterValue` 不是每種天氣要素都有，所以宣告成選填。
+
+往外一層，`WeatherElement` 有要素名稱和時段陣列；再往外，`WeatherLocation` 有地區名稱和天氣要素陣列。最後 `weatherList` 就可以用 `WeatherTime` 陣列取代 `any`，打點的時候編輯器也會自動提示欄位名稱。
+-->
+
+---
 layout: end
 ---
 

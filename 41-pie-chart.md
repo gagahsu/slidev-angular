@@ -627,6 +627,126 @@ export class ExpensePieChartComponent implements AfterViewInit {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：切換成環狀圖
+
+1. 沿用本章的圓餅圖範例程式碼
+2. 找到 `new Chart` 內的 `type: 'pie'`
+3. 將它改為 `'doughnut'`
+4. 重新整理網頁，確認圓餅圖變成中間空心的「環狀圖」
+
+<!--
+第一題補充練習很簡單，只要改一個字。
+
+把 `new Chart` 裡的 `type` 從 pie 改成 doughnut，看看圖表會變成什麼樣子。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：切換成環狀圖 — 參考答案
+
+```typescript
+new Chart(ctx, {
+  type: 'doughnut',   // 原本是 'pie'
+  data: data,
+});
+```
+
+| `type` | 圖表 |
+| --- | --- |
+| `'pie'` | 圓餅圖 |
+| `'doughnut'` | 環狀圖 |
+| `'bar'` | 長條圖 |
+| `'line'` | 折線圖 |
+
+<!--
+我們來看答案。
+
+只要把 `type` 改成 doughnut，同樣的資料就會畫成中間空心的環狀圖。Chart.js 的圖表種類都是靠 `type` 切換，表格列出幾個常用的，可以換換看。
+
+要注意，長條圖和折線圖適合呈現數量比較和趨勢，資料格式一樣，但呈現的意義不同。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：用 @for 呈現多張圖表
+
+1. 在 TS 準備一個陣列，存放多筆圖表資料（例如三個月份的支出）
+2. 在 HTML 用 `@for` 產生多個 `<canvas>`，每個給不同的 `id`
+3. 在 `ngAfterViewInit()` 中，依序取得每個 canvas 並建立圖表
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ canvas 要等畫面產生後才抓得到，所以建立圖表要寫在 <code>ngAfterViewInit</code>，不能寫在 <code>ngOnInit</code>
+</div>
+
+<!--
+第二題補充練習，一次畫出好幾張圖表。
+
+資料放在陣列裡，HTML 用 `@for` 產生多個 canvas，每個 canvas 的 id 要不一樣。最後在 `ngAfterViewInit` 裡，一個一個抓出來建立圖表。
+
+為什麼要在 `ngAfterViewInit`？因為 `ngOnInit` 執行時，`@for` 還沒把 canvas 放到畫面上，抓不到元素。我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：用 @for 呈現多張圖表 — 參考答案
+
+```typescript
+chartList = [
+  { title: '一月', data: [2000, 3000, 9000] },
+  { title: '二月', data: [2500, 2800, 9000] },
+  { title: '三月', data: [1800, 3200, 9000] },
+];
+
+ngAfterViewInit() {
+  this.chartList.forEach((item, index) => {
+    const ctx = document.getElementById('chart-' + index) as HTMLCanvasElement;
+    new Chart(ctx, {
+      type: 'pie',
+      data: { labels: ['餐費', '交通費', '租金'], datasets: [{ data: item.data }] },
+    });
+  });
+}
+```
+
+```html
+@for (item of chartList; track item.title) {
+  <h3>{{ item.title }}</h3>
+  <canvas [id]="'chart-' + $index"></canvas>
+}
+```
+
+<!--
+我們來看答案。
+
+HTML 用 `@for` 跑 `chartList`，`$index` 是目前第幾筆，把它接在 `chart-` 後面當作 id，三個 canvas 就分別是 chart-0、chart-1、chart-2。
+
+TS 在 `ngAfterViewInit` 裡用 `forEach` 跑同一個陣列，用相同規則組出 id，抓到 canvas 後各自建立圖表。
+-->
+
+---
 layout: end
 ---
 

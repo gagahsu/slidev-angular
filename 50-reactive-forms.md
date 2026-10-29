@@ -567,6 +567,142 @@ Reactive Forms **不使用** `[(ngModel)]` 做雙向繫結，改用 `formControl
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：商品成分清單
+
+用 Reactive Forms 做一個可以動態增減的商品成分表：
+
+1. 建立 `form`，包含 `productName` 控制項與 `ingredients` 陣列（`FormArray`）
+2. 撰寫 `addIngredient()`，每次向陣列加入一組 `{ name, mg }`（成分名稱、毫克數）
+3. 撰寫 `removeIngredient(index)`，刪除指定的成分
+4. 在 HTML 用 `@for` 把成分表渲染出來，每一列都有刪除按鈕
+5. 新增與刪除幾筆，確認畫面與 `form.value` 同步變化
+
+<!--
+第一題補充練習，用本章的問卷結構，改做一個商品成分表。
+
+`productName` 是固定欄位，`ingredients` 是可以增減的 FormArray，每一筆有成分名稱和毫克數。結構和問卷的題目清單幾乎一樣，可以對照本章的範例來寫。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：商品成分清單 — 參考答案
+
+```typescript
+fb = inject(FormBuilder);
+
+form = this.fb.group({
+  productName: [''],
+  ingredients: this.fb.array([])
+});
+
+get ingredientsArray(): FormArray {
+  return this.form.get('ingredients') as FormArray;
+}
+
+addIngredient() {
+  this.ingredientsArray.push(this.fb.group({ name: [''], mg: [0] }));
+}
+
+removeIngredient(index: number) {
+  this.ingredientsArray.removeAt(index);
+}
+```
+
+```html
+<form [formGroup]="form">
+  <input formControlName="productName" placeholder="商品名稱">
+  <div formArrayName="ingredients">
+    @for (item of ingredientsArray.controls; track $index) {
+      <div [formGroupName]="$index">
+        <input formControlName="name" placeholder="成分">
+        <input formControlName="mg" type="number">
+        <button type="button" (click)="removeIngredient($index)">刪除</button>
+      </div>
+    }
+  </div>
+  <button type="button" (click)="addIngredient()">新增成分</button>
+</form>
+```
+
+<!--
+我們來看答案。
+
+TS 的部分和問卷範例一樣：`fb.group` 定義結構，用 getter 把 `ingredients` 轉成 FormArray，`push` 新增一組，`removeAt` 刪除指定位置。
+
+HTML 用 `formArrayName` 對應陣列，`@for` 跑過 `controls`，每一列用 `formGroupName` 綁定索引，裡面的輸入框再用 `formControlName` 對應 `name` 和 `mg`。按鈕記得加 `type="button"`，不然會被當成送出表單。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：忘記匯入 ReactiveFormsModule
+
+1. 在 HTML 中保留標準的 `[formGroup]="form"` 結構
+2. 打開 `.ts`，故意把 `imports` 陣列中的 `ReactiveFormsModule` 刪除
+3. 存檔，觀察瀏覽器拋出的錯誤
+4. 補回匯入，確認錯誤消失
+
+<!--
+第二題補充練習，又是一個除錯實驗。
+
+把 `ReactiveFormsModule` 拿掉，看看 `formGroup` 會出現什麼錯誤。前幾章我們已經看過好幾次類似的訊息，試著自己先判斷原因。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：忘記匯入 ReactiveFormsModule — 參考答案
+
+```text
+❌ Can't bind to 'formGroup' since it isn't a known property of 'form'.
+```
+
+```typescript
+import { ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  imports: [ReactiveFormsModule],
+  templateUrl: './app.component.html',
+})
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>[(ngModel)]</code> 需要 <code>FormsModule</code>；<code>[formGroup]</code>、<code>formControlName</code> 需要 <code>ReactiveFormsModule</code>，兩者不要搞混
+</div>
+
+<!--
+我們來看答案。
+
+錯誤訊息是「無法綁定 formGroup，因為它不是 form 已知的屬性」，跟之前少了 `CommonModule`、`FormsModule` 時的訊息是同一類。
+
+要特別分清楚：`ngModel` 用的是 `FormsModule`，`formGroup` 這類 Reactive Forms 的語法，用的是 `ReactiveFormsModule`。
+-->
+
+---
 layout: end
 ---
 

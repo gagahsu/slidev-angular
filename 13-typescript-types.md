@@ -444,6 +444,113 @@ Type 'number' is not assignable to type 'boolean'
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：學生成績陣列
+
+請建立一個用來儲存班級學生成績的陣列：
+
+1. 使用**數字陣列**（`number[]`）的語法宣告
+2. 陣列中放入 5 個學生的分數
+
+**思考題：** 如果不小心把字串 `'一百分'` 塞進這個陣列，編輯器會發生什麼事？
+
+<!--
+第一題補充練習，請用 `number[]` 宣告一個成績陣列，放入五個學生的分數。
+
+宣告好之後，試著把一個字串塞進去，看看編輯器會怎麼反應。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：學生成績陣列 — 參考答案
+
+```typescript
+scores: number[] = [85, 92, 78, 60, 99];
+```
+
+```typescript
+scores: number[] = [85, 92, 78, 60, '一百分'];
+// ❌ Type 'string' is not assignable to type 'number'.
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 宣告成 <code>number[]</code> 之後，陣列裡每一個元素都必須是數字，TypeScript 會在存檔前就幫你抓出型別錯誤
+</div>
+
+<!--
+我們來看答案。
+
+型別寫 `number` 加上中括號，就代表這是一個只能放數字的陣列。
+
+如果塞進字串，編輯器馬上出現紅線，訊息是字串型別不能指派給數字型別。這就是 TypeScript 的好處：錯誤在寫程式的當下就被抓出來，不用等到執行時才發現。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：使用者座標元組（Tuple）
+
+開發地圖功能時，常需要記錄使用者的「名字」與「經緯度座標」：
+
+1. 宣告一個名為 `userLocation` 的元組（Tuple）
+2. 內部依序只能放入：使用者名字（字串）、經度（數字）、緯度（數字）
+3. 正確賦值，並用 `console.log()` 印出來
+
+<!--
+第二題補充練習，我們用元組來記錄使用者的位置。
+
+元組跟陣列很像，但它規定了每一個位置要放什麼型別。這題要求第一個是名字字串，第二個是經度數字，第三個是緯度數字。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：使用者座標元組 — 參考答案
+
+```typescript
+userLocation: [string, number, number] = ['Allen', 120.3014, 22.6273];
+
+ngOnInit() {
+  console.log(this.userLocation);
+}
+```
+
+```typescript
+userLocation: [string, number, number] = [120.3014, 'Allen', 22.6273];
+// ❌ 順序錯誤，TypeScript 會報錯
+```
+
+<!--
+我們來看答案。
+
+元組的型別寫法，是在中括號裡依序寫出每個位置的型別：字串、數字、數字。賦值時，順序也必須完全一樣。
+
+如果把名字和經度的位置對調，TypeScript 就會報錯。這就是元組和一般陣列最大的不同：元組連「順序」和「數量」都有規定。
+-->
+
+---
 layout: end
 ---
 

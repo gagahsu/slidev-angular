@@ -647,6 +647,71 @@ SCSS 的第二部分。
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：Mode 切換與除錯實驗
+
+**練習 1：三種顯示模式**
+
+1. 依本章架構建立一組 `mat-drawer` 選單
+2. 把 `mode="side"` 依序改成 `"over"`、`"push"`
+3. 點擊按鈕開關選單，比較主內容在三種模式下的變化
+
+**練習 2：忘記匯入 MatListModule**
+
+1. 在選單內使用 `<mat-list>` 與 `<mat-list-item>`
+2. 故意把 `imports` 陣列中的 `MatListModule` 刪除
+3. 觀察 VS Code 與 Console 的錯誤訊息，再補回來
+
+<!--
+接下來兩題補充練習。
+
+第一題，把 `mode` 分別改成 side、over、push，開關選單，比較主內容的位置和外觀有什麼不同。
+
+第二題是除錯實驗：把 `MatListModule` 拿掉，看看會出現什麼錯誤。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+| `mode` | 選單展開時，主內容會… |
+| --- | --- |
+| `side` | 與選單並排，主內容寬度自動縮減 |
+| `over` | 不動，選單浮在上方並加上半透明遮罩 |
+| `push` | 被選單往右推開，並加上遮罩 |
+
+```text
+❌ 'mat-list-item' is not a known element:
+   1. If 'mat-list-item' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+```
+
+<!--
+我們來看答案。
+
+`side` 模式，選單和主內容並排，主內容會變窄。`over` 模式，主內容不動，選單直接蓋在上面，並出現半透明遮罩。`push` 模式，主內容會被選單往右推開。
+
+拿掉 `MatListModule` 之後，`mat-list-item` 會被當成不認識的元素。用到 Material 的哪個元件，就要匯入它對應的模組。
+-->
+
+---
 layout: end
 ---
 

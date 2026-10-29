@@ -682,6 +682,79 @@ layout: default
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：同步與非同步的執行順序
+
+**練習 1：同步執行**
+
+在 `ngOnInit()` 中依序寫入：
+
+```typescript
+console.log('A');
+console.log('B');
+console.log('C');
+```
+
+打開 F12，確認輸出順序是否為 A → B → C。
+
+**練習 2：0 毫秒的 setTimeout**
+
+在同一個區塊混合寫入以下三行，先**預測**輸出順序，再存檔驗證：
+
+```typescript
+console.log('開始');
+setTimeout(() => { console.log('內層'); }, 0);
+console.log('結束');
+```
+
+<!--
+接下來兩題補充練習，觀察程式的執行順序。
+
+第一題，三行 `console.log` 依序執行，結果應該很好猜。
+
+第二題比較有趣：中間的 `setTimeout` 延遲設成 0 毫秒。請先在心裡預測一下，三行會用什麼順序印出來，再存檔驗證。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```text
+練習 1 輸出：A → B → C
+練習 2 輸出：開始 → 結束 → 內層
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>setTimeout</code> 是非同步任務，即使延遲 0 毫秒，也要等目前這一段同步程式碼全部執行完，才會輪到它
+</div>
+
+<!--
+我們來看答案。
+
+練習一是同步執行，一行跑完才跑下一行，所以是 A、B、C。
+
+練習二的結果是開始、結束、內層。`setTimeout` 不會立刻執行，而是先被放到一旁排隊，就算延遲是 0 毫秒，也要等目前的程式碼全部跑完，才輪到它。這就是非同步：先登記，晚點再執行。
+-->
+
+---
 layout: end
 ---
 

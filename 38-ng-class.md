@@ -588,6 +588,135 @@ export interface Order {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：開關樣式與除錯實驗
+
+**練習 1：高亮開關**
+
+1. 在 TS 宣告 `isActive: boolean = false;`，並建立點擊方法把它反轉（`!this.isActive`）
+2. 在 SCSS 定義 `.active-style { background-color: #0ea5e9; color: white; }`
+3. 在 HTML 的區塊上綁定 `[ngClass]="{'active-style': isActive}"`
+4. 點擊按鈕，確認背景色隨開關切換
+
+**練習 2：忘記匯入 CommonModule**
+
+故意從 `imports` 陣列移除 `CommonModule`，觀察錯誤訊息，再補回來。
+
+<!--
+接下來兩題補充練習。
+
+第一題，用一個布林值控制 `active-style` 要不要套用，點按鈕切換開關，看背景色有沒有跟著改變。
+
+第二題是除錯實驗：把 `CommonModule` 拿掉，看看 `ngClass` 會出現什麼錯誤。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+isActive: boolean = false;
+
+toggle() {
+  this.isActive = !this.isActive;
+}
+```
+
+```html
+<div [ngClass]="{'active-style': isActive}">警報燈</div>
+<button (click)="toggle()">開關</button>
+```
+
+```text
+❌ Can't bind to 'ngClass' since it isn't a known property of 'div'.
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 看到「Can't bind to 'xxx' since it isn't a known property」，通常就是對應的模組沒有加進 <code>imports</code>
+</div>
+
+<!--
+我們來看答案。
+
+`toggle` 把 `isActive` 反轉。`ngClass` 的物件寫法，key 是 class 名稱，值是條件：`isActive` 為 true 時套用 `active-style`，false 時移除。
+
+拿掉 `CommonModule` 之後，會出現「無法綁定 ngClass，因為它不是 div 已知的屬性」。這類訊息之後在 `ngModel`、`formGroup` 也會看到，意思都是：用到的功能所屬的模組，沒有匯入。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：依分數回傳樣式
+
+依據分數狀態，用方法回傳對應的 class：
+
+1. 在 SCSS 撰寫兩組選擇器：`.pass`（綠色）與 `.fail`（紅色）
+2. 在 TS 宣告 `myScore: number = 55;`
+3. 撰寫方法：大於等於 60 分 `return 'pass'`，否則 `return 'fail'`
+4. 在 HTML 用 `ngClass` 綁定此方法，確認 55 分時字體呈現紅色
+
+<!--
+第三題補充練習，用方法決定要套用哪個 class。
+
+寫一個方法判斷分數，及格回傳 `pass`，不及格回傳 `fail`，再讓 `ngClass` 綁定這個方法的回傳值。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：依分數回傳樣式 — 參考答案
+
+```scss
+.pass { color: green; }
+.fail { color: red; }
+```
+
+```typescript
+myScore: number = 55;
+
+getScoreClass(): string {
+  if (this.myScore >= 60) {
+    return 'pass';
+  }
+  return 'fail';
+}
+```
+
+```html
+<p [ngClass]="getScoreClass()">分數：{{ myScore }}</p>
+```
+
+<!--
+我們來看答案。
+
+`getScoreClass` 依照分數回傳 class 名稱的字串，`ngClass` 會把回傳的字串當作 class 套用上去。55 分不到 60，回傳 `fail`，文字就是紅色。
+
+試著把分數改成 80，文字就會變成綠色。判斷邏輯比較複雜時，把它寫成方法，HTML 會乾淨很多。
+-->
+
+---
 layout: end
 ---
 

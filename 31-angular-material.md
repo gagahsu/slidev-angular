@@ -293,6 +293,74 @@ UPDATE src/styles.scss (181 bytes)
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：手動更換主題配色
+
+如果安裝時選錯了主題顏色，不需要移除重裝，直接修改設定檔即可：
+
+1. 打開專案根目錄的 `angular.json`
+2. 用 VS Code 搜尋 `"styles"`，找到樣式陣列
+3. 觀察裡面引入的主題 CSS 路徑，把 `azure-blue.css` 改成 `magenta-violet.css`
+4. 修改後在終端機按 `Ctrl + C` 停止，再重新執行 `ng serve`
+5. 觀察 Material 元件（如按鈕）的主色是否從藍色變成紫色
+
+<!--
+這題補充練習，模擬安裝時選錯主題的情況。
+
+不需要重新安裝，只要打開 `angular.json`，找到 `styles` 陣列，把主題 CSS 的檔名換掉就好。
+
+要特別注意，改完 `angular.json` 一定要重新啟動 `ng serve`。我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：手動更換主題配色 — 參考答案
+
+```json
+"styles": [
+  "@angular/material/prebuilt-themes/magenta-violet.css",
+  "src/styles.scss"
+]
+```
+
+可用的內建主題檔：
+
+| 檔名 | 色系 |
+| --- | --- |
+| `azure-blue.css` | 藍色系 |
+| `rose-red.css` | 紅色系 |
+| `magenta-violet.css` | 紫色系 |
+| `cyan-orange.css` | 青橙色系 |
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ <code>ng serve</code> 只在啟動時讀取 <code>angular.json</code>，修改後不重啟，畫面不會有任何變化
+</div>
+
+<!--
+我們來看答案。
+
+`styles` 陣列裡，第一行就是 Material 的內建主題檔，把檔名換成 `magenta-violet.css` 就完成了。表格列出四個內建主題，可以每個都換換看。
+
+`angular.json` 是專案的設定檔，`ng serve` 只有在啟動時才會讀取，所以一定要重新啟動才會生效。
+-->
+
+---
 layout: end
 ---
 

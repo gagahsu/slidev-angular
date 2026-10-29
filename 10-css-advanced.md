@@ -1229,6 +1229,82 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：Flex 絕對置中
+
+「如何把一個方塊精準地放在正中間？」這是前端面試很常考的題目，用 Flexbox 就能做到：
+
+1. 建立一個父層 `<div>`，給予固定的寬高（例如 `height: 300px`）與外框線
+2. 將父層設定為 `display: flex`
+3. 使用 `justify-content: center` 讓子層**水平置中**
+4. 使用 `align-items: center` 讓子層**垂直置中**
+5. 在裡面放一個有顏色的子層方塊，看看結果
+
+```html
+<div class="parent">
+  <div class="child">絕對置中</div>
+</div>
+```
+
+<!--
+這題補充練習是前端面試的經典題：怎麼把一個方塊放在正中間？
+
+父層給固定的寬高和外框線，設定 `display: flex`，再用 `justify-content` 和 `align-items` 分別處理水平和垂直置中。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：Flex 絕對置中 — 參考答案
+
+```scss
+.parent {
+  width: 500px;
+  height: 300px;
+  border: 2px solid #333;
+  display: flex;
+  justify-content: center;  // 主軸（水平）置中
+  align-items: center;      // 次軸（垂直）置中
+}
+
+.child {
+  width: 120px;
+  height: 120px;
+  background-color: #0ea5e9;
+  color: white;
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>justify-content</code> 控制主軸、<code>align-items</code> 控制次軸；預設主軸是水平方向，兩個都設 <code>center</code> 就是正中間
+</div>
+
+<!--
+我們來看答案。
+
+父層設定 `display: flex` 之後，`justify-content: center` 讓子層在主軸，也就是水平方向置中；`align-items: center` 讓子層在次軸，也就是垂直方向置中。兩個加在一起，子層方塊就會停在正中間。
+
+要注意，父層一定要有高度，垂直置中才看得出效果。
+-->
+
+---
 layout: end
 ---
 

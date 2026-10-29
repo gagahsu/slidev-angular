@@ -1278,6 +1278,116 @@ console.log(s.slice(start, start + 5));  // Allen
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：JSON 物件序列化與還原
+
+模擬實務上傳送與接收後台資料時的格式互轉：
+
+1. 建立物件 `{ course: 'Angular', isLTS: true }`
+2. 用 `JSON.stringify()` 將它轉成 JSON 字串，模擬存到後台
+3. 再用 `JSON.parse()` 將字串還原為物件
+4. 用 `alert()` 顯示還原後物件的 `course` 屬性
+
+<!--
+第一題補充練習，我們把物件轉成 JSON 字串，再轉回來。
+
+先用 `JSON.stringify` 把物件變成字串，接著用 `JSON.parse` 把字串還原成物件，最後印出它的 `course` 屬性，確認真的還原成功。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：JSON 序列化與還原 — 參考答案
+
+```typescript
+let obj = { course: 'Angular', isLTS: true };
+
+// 物件 → JSON 字串
+let jsonStr = JSON.stringify(obj);
+console.log(jsonStr);          // '{"course":"Angular","isLTS":true}'
+console.log(typeof jsonStr);   // 'string'
+
+// JSON 字串 → 物件
+let backObj = JSON.parse(jsonStr);
+alert(backObj.course);         // Angular
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>stringify</code> 用在「送出 / 儲存」前，<code>parse</code> 用在「收到 / 讀取」後；字串沒辦法用 <code>.course</code> 取值，一定要先 parse
+</div>
+
+<!--
+我們來看答案。
+
+`JSON.stringify` 把物件轉成一串文字，用 `typeof` 檢查會是 string。這種格式方便傳送和儲存。
+
+要使用裡面的資料時，再用 `JSON.parse` 把字串轉回物件，這樣才能用 `.course` 取出值。之後學到網頁儲存和 API 時，這兩個方法會一直用到。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：push 與 for...of 累加
+
+1. 宣告數字陣列 `let scores = [10, 20, 30];`
+2. 用 `push(40)` 在尾端加入新數字
+3. 用 `for...of` 依序取出每個分數，**只累加大於 15 的分數**
+4. 最後印出加總結果
+
+<!--
+第二題補充練習，結合陣列方法和迴圈。
+
+先用 `push` 把 40 加到陣列最後面，接著用 `for of` 一個一個取出分數，只把大於 15 的加起來，最後印出總和。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：push 與 for...of 累加 — 參考答案
+
+```typescript
+let scores = [10, 20, 30];
+scores.push(40);              // [10, 20, 30, 40]
+
+let total = 0;
+for (let score of scores) {
+  if (score > 15) {
+    total += score;           // 20 + 30 + 40
+  }
+}
+console.log(total);           // 90
+```
+
+<!--
+我們來看答案。
+
+`push` 之後，陣列變成 10、20、30、40。
+
+先宣告 `total` 等於 0，用來存加總。`for of` 每一輪會把一個分數放進 `score`，用 `if` 判斷大於 15 才加進 `total`。10 不符合條件，被跳過，所以結果是 20 加 30 加 40，等於 90。
+-->
+
+---
 layout: end
 ---
 

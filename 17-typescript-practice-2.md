@@ -689,6 +689,169 @@ calculateBMI(height: number, weight: number) {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：入場資格判斷
+
+1. 宣告 `let age = 20;` 與 `let hasTicket = true;`
+2. 撰寫判斷式：當「年齡大於等於 18 歲」**而且**「擁有門票」時，印出 `'允許入場'`
+3. 否則印出 `'拒絕入場'`
+4. 試著修改兩個變數的值，觀察結果變化
+
+<!--
+第一題補充練習，用 if 判斷一個人能不能入場。
+
+條件有兩個：年齡要大於等於 18，而且要有門票，兩個都成立才能入場。想一想，兩個條件同時成立要用哪個邏輯運算符？
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：入場資格判斷 — 參考答案
+
+```typescript
+let age = 20;
+let hasTicket = true;
+
+if (age >= 18 && hasTicket) {
+  console.log('允許入場');
+} else {
+  console.log('拒絕入場');
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>&&</code>（而且）兩邊都要成立；<code>||</code>（或者）只要一邊成立即可。<code>hasTicket</code> 本身就是布林值，不需要寫成 <code>hasTicket === true</code>
+</div>
+
+<!--
+我們來看答案。
+
+兩個條件都要成立，所以用 `&&` 串起來。`hasTicket` 本身就是布林值，直接放進條件即可。
+
+試著把 `age` 改成 16，或把 `hasTicket` 改成 false，只要有一個條件不成立，就會印出拒絕入場。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：活動過期檢查
+
+1. 宣告活動截止日：`let deadline = new Date('2026/12/31');`
+2. 宣告目前時間：`let now = new Date();`
+3. 利用 `.getTime()` 取得兩者的毫秒數，用 `if` 判斷現在時間是否大於截止日
+4. 若已過期，用 `alert()` 顯示 `'警告：活動已過期！'`
+
+<!--
+第二題補充練習，比較兩個日期。
+
+宣告活動截止日和現在時間，用 `getTime` 把兩個日期都換成毫秒數，再比較大小。如果現在已經超過截止日，就跳出警告。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：活動過期檢查 — 參考答案
+
+```typescript
+let deadline = new Date('2026/12/31');
+let now = new Date();
+
+if (now.getTime() > deadline.getTime()) {
+  alert('警告：活動已過期！');
+} else {
+  console.log('活動進行中');
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>getTime()</code> 回傳從 1970/1/1 起算的毫秒數，數字越大代表時間越晚；比較日期時先轉成數字最保險
+</div>
+
+<!--
+我們來看答案。
+
+`getTime` 會把日期轉成一個很大的數字，代表從 1970 年 1 月 1 日到這個時間經過了多少毫秒。時間越晚，數字越大。
+
+所以只要比較兩個數字：現在的毫秒數大於截止日的毫秒數，就代表已經過期。可以把截止日改成過去的日期，測試警告會不會跳出來。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：API 商品欄位重組
+
+後端傳來的資料 `backendProducts` 格式如下：
+
+```typescript
+let backendProducts = [
+  { prod_id: 101, title: '滑鼠' },
+  { prod_id: 102, title: '鍵盤' }
+];
+```
+
+**任務：**
+
+1. 用 `.map()` 建立一個全新的前端專用陣列
+2. 重組後的屬性必須改為：`id`（承接 `prod_id`）以及 `name`（承接 `title`）
+3. 用 `console.log()` 印出新陣列
+
+<!--
+第三題補充練習，模擬串接 API 時最常遇到的情況：後端給的欄位名稱，跟前端想用的不一樣。
+
+請用 `map` 把每一筆商品轉成新的格式，`prod_id` 改叫 `id`，`title` 改叫 `name`。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：API 商品欄位重組 — 參考答案
+
+```typescript
+let frontendProducts = backendProducts.map((item) => {
+  return {
+    id: item.prod_id,
+    name: item.title
+  };
+});
+
+console.log(frontendProducts);
+// [ { id: 101, name: '滑鼠' }, { id: 102, name: '鍵盤' } ]
+```
+
+<!--
+我們來看答案。
+
+`map` 會走過陣列的每一筆資料，把每一筆交給小括號裡的方法處理，再把每次 `return` 的結果收集成一個全新的陣列。
+
+這裡每一筆都回傳一個新物件，`id` 拿 `prod_id` 的值，`name` 拿 `title` 的值。原本的 `backendProducts` 不會被改動，新的格式存在 `frontendProducts` 裡。
+-->
+
+---
 layout: end
 ---
 

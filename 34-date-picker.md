@@ -543,6 +543,137 @@ constructor() {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：雙向綁定與除錯實驗
+
+**練習 1：訂單日期雙向綁定**
+
+1. 在 HTML 建立 `type="date"` 的原生輸入框
+2. 用 `[(ngModel)]="orderDate"` 綁定變數
+3. 在下方寫 `<p>您選擇的出貨日期為：{{ orderDate }}</p>`
+4. 隨意更換日期，確認文字即時連動
+
+**練習 2：忘記 DateAdapter 的錯誤**
+
+1. 在專案中貼上標準的 `mat-datepicker` 程式碼
+2. 打開 `.ts`，故意把 `providers` 中的 `provideNativeDateAdapter()` 刪除
+3. 觀察 Console 拋出的錯誤，再補回來
+
+<!--
+接下來兩題補充練習。
+
+第一題，用原生的日期輸入框搭配 `ngModel`，把選到的日期即時顯示在下方。
+
+第二題是除錯實驗：把 `provideNativeDateAdapter` 刪掉，看看 Material 日期選擇器會出現什麼錯誤訊息，記住它，之後遇到就知道怎麼處理。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+orderDate: string = '';
+```
+
+```html
+<input type="date" [(ngModel)]="orderDate">
+<p>您選擇的出貨日期為：{{ orderDate }}</p>
+```
+
+```typescript
+@Component({
+  selector: 'app-root',
+  // providers: [provideNativeDateAdapter()],   ← 刪掉這行
+  ...
+})
+// ❌ Console：Error: MatDatepicker: No provider found for DateAdapter.
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 原生 <code>type="date"</code> 綁定的值是 <code>'2026-10-29'</code> 這種字串；Material 日期選擇器則需要 DateAdapter 負責日期的解析與格式化
+</div>
+
+<!--
+我們來看答案。
+
+第一題，原生日期輸入框綁定的值，會是「年-月-日」格式的字串，選好日期，下方文字立刻跟著改變。記得匯入 `FormsModule`。
+
+第二題，刪掉 `provideNativeDateAdapter` 之後，打開日曆時 Console 會出現找不到 DateAdapter 的錯誤。DateAdapter 負責讓日期選擇器看懂日期，看到這個訊息，就回去檢查 `providers` 有沒有設定。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：限制可預約日期
+
+預約系統不希望使用者選到「過去的時間」或「太久以後的未來」：
+
+1. 在 TS 用 `Date` 物件計算「明天」與「一週後」兩個日期
+2. 把它們分別綁定到 `mat-datepicker` 輸入框的 `[min]` 與 `[max]`
+3. 打開日曆，確認只有明天起 7 天內可以點選，其餘日期全部變灰
+
+<!--
+第三題補充練習，限制可以選的日期範圍。
+
+用 `Date` 物件算出明天和一週後，綁定到日期輸入框的 `min` 和 `max`。想一想，要怎麼從今天的日期，算出明天的日期？
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：限制可預約日期 — 參考答案
+
+```typescript
+minDate: Date;
+maxDate: Date;
+
+constructor() {
+  const today = new Date();
+  this.minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  this.maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+}
+```
+
+```html
+<mat-form-field>
+  <mat-label>預約日期</mat-label>
+  <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate">
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+```
+
+<!--
+我們來看答案。
+
+先取得今天的日期，再用年、月、日重新建立一個日期，日加 1 就是明天，日加 7 就是一週後。如果剛好遇到月底，`Date` 會自動進位到下個月，不用自己處理。
+
+HTML 的輸入框加上中括號 `min` 和 `max`，綁定這兩個日期，日曆上超出範圍的日期就會變灰，無法點選。
+-->
+
+---
 layout: end
 ---
 

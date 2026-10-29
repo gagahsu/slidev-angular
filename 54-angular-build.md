@@ -62,9 +62,10 @@ layout: default
 - **處理 Bundle Budget 錯誤**
 - **`ng build` 輸出結果解讀**
 - **dist 資料夾結構與部署方式**
+- **為什麼直接開 index.html 會白屏**
 
 <!--
-這一章會先說明為什麼需要包版，接著實際執行 `ng build`，並看懂建置完成後的輸出資訊。然後處理檔案太大被擋下來的 Bundle Budget 錯誤，最後看 `dist` 資料夾的結構，以及部署時要注意的地方。
+這一章會先說明為什麼需要包版，接著實際執行 `ng build`，並看懂建置完成後的輸出資訊。然後處理檔案太大被擋下來的 Bundle Budget 錯誤，最後看 `dist` 資料夾的結構，以及部署時要注意的地方，包括為什麼直接打開 index.html 會白屏。
 -->
 
 ---
@@ -316,6 +317,103 @@ The dist Folder and Deployment
 正確的做法，是把 `dist`、專案名稱、`browser` 底下的所有檔案，上傳到 Apache、Nginx 或 IIS 這類網頁伺服器。而且伺服器要設定成，不管使用者輸入什麼路徑，都導回 `index.html`，Angular 的路由才能正常運作，否則重新整理頁面就會出現 404。
 
 最常見的錯誤，是直接在電腦上雙擊打開 `index.html`。因為瀏覽器對本機檔案有安全限制，頁面會無法正常顯示，一定要透過網頁伺服器。如果只想在本機快速測試，可以用 `npx http-server` 啟動一個簡單的靜態伺服器。
+-->
+
+---
+
+# 為什麼直接開 index.html 會白屏？
+
+直接雙擊 `dist/<專案名稱>/browser/index.html`，網址列會是 `file:///...`，畫面一片空白。打開 F12 可以看到錯誤：
+
+```text
+Access to script at 'file:///C:/main-XXXX.js' from origin 'null'
+has been blocked by CORS policy
+```
+
+| 原因 | 說明 |
+| --- | --- |
+| JS 以模組載入 | 打包後的 `index.html` 用 `<script type="module">` 載入 JS，瀏覽器禁止從 `file://` 載入模組 |
+| `<base href="/">` | 檔案路徑會從**磁碟根目錄**開始找，例如 `C:/main-XXXX.js`，根本找不到檔案 |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 解法：一定要透過網頁伺服器（<code>http://</code>）開啟，本機測試可用 <code>npx http-server</code> 或 VS Code 的 Live Server
+</div>
+
+<!--
+上一頁提到，直接雙擊 `index.html` 會無法正常顯示，這頁說明原因。
+
+用雙擊的方式打開，網址列會是 `file` 開頭，代表瀏覽器是用讀取本機檔案的方式開啟，而不是向伺服器要資料。這時打開 F12，會看到 JS 檔案被 CORS 政策擋下來的錯誤。
+
+原因有兩個。第一，Angular 打包後的 `index.html` 是用模組的方式載入 JavaScript，瀏覽器為了安全，不允許從本機檔案載入模組。第二，`index.html` 裡有一行 `base href` 等於斜線，代表所有檔案路徑都從根目錄開始找；用本機檔案開啟時，根目錄變成磁碟的根目錄，例如 C 槽，當然找不到 JS 檔。
+
+JS 載入失敗，Angular 就沒有機會執行，畫面自然一片空白。解法只有一個：透過網頁伺服器開啟。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：在本機預覽打包結果
+
+直接點開 `index.html` 會白屏，要用本機伺服器才能正確預覽：
+
+1. 執行 `ng build`，確認產生 `dist/<專案名稱>/browser/`
+2. **方法一：** 如果有安裝 VS Code 的 Live Server 擴充套件，在 `browser` 資料夾按右鍵，選「Open with Live Server」
+3. **方法二：** 在終端機切換到 `browser` 目錄，執行 `npx http-server`
+4. 打開終端機顯示的網址，確認網頁能正常顯示
+
+<!--
+這題補充練習，用本機伺服器預覽打包後的網站。
+
+打包完的網站，直接雙擊 `index.html` 會一片白，因為瀏覽器用檔案的方式打開時，載入 JS 檔的路徑會出問題。要用伺服器來開，才會跟真正上線時一樣。
+
+可以用 VS Code 的 Live Server，或在終端機用 `npx http-server`。我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：在本機預覽打包結果 — 參考答案
+
+```bash
+# 1. 在專案根目錄打包
+ng build
+
+# 2. 切換到 browser 目錄（請換成自己的專案名稱）
+cd dist/dynamic-questionnaire/browser
+
+# 3. 啟動本機伺服器
+npx http-server
+```
+
+```text
+Available on:
+  http://127.0.0.1:8080
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>npx</code> 會暫時下載並執行套件，不需要全域安裝；結束預覽時在終端機按 <code>Ctrl + C</code>
+</div>
+
+<!--
+我們來看答案。
+
+先 `ng build`，再用 `cd` 進到 `dist`、專案名稱、`browser` 這個資料夾，執行 `npx http-server`。終端機會顯示一個本機網址，打開它，網站就能正常運作了。
+
+用這個方式確認打包結果沒問題，再部署到雲端，可以少踩很多坑。
 -->
 
 ---

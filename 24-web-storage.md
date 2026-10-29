@@ -466,6 +466,129 @@ console.log(parsed.name, parsed.level);  // Allen 5
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：記住使用者名稱
+
+1. 在 HTML 建立輸入框 `[(ngModel)]="userName"` 與「儲存」按鈕
+2. 點選按鈕時執行：`localStorage.setItem('cached_user', this.userName);`
+3. 在 `ngOnInit()` 中讀取：`this.displayTitle = localStorage.getItem('cached_user') || '訪客';`
+4. 畫面顯示「歡迎，`{{ displayTitle }}`」
+5. 輸入名字儲存後重新整理網頁，確認歡迎詞是否記住你的名字
+
+<!--
+第一題補充練習，用 localStorage 記住使用者的名字。
+
+輸入名字、按下儲存，就存進 localStorage。網頁一載入，也就是 `ngOnInit` 的時候，再把它讀出來顯示。如果還沒存過，就顯示訪客。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：記住使用者名稱 — 參考答案
+
+```typescript
+userName: string = '';
+displayTitle: string = '';
+
+ngOnInit(): void {
+  this.displayTitle = localStorage.getItem('cached_user') || '訪客';
+}
+
+save() {
+  localStorage.setItem('cached_user', this.userName);
+  this.displayTitle = this.userName;
+}
+```
+
+```html
+<h2>歡迎，{{ displayTitle }}</h2>
+<input [(ngModel)]="userName">
+<button (click)="save()">儲存</button>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>getItem</code> 找不到資料時回傳 <code>null</code>，用 <code>|| '訪客'</code> 提供預設值；使用 <code>ngModel</code> 記得匯入 <code>FormsModule</code>
+</div>
+
+<!--
+我們來看答案。
+
+`save` 方法把輸入的名字存進 localStorage，同時更新畫面上的歡迎詞。`ngOnInit` 在網頁一打開時讀取，如果還沒存過，`getItem` 會回傳 null，這時 `||` 後面的訪客就會成為預設值。
+
+重新整理網頁，歡迎詞仍然是你的名字，因為 localStorage 的資料會一直保存在瀏覽器裡。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：localStorage vs sessionStorage
+
+親手體會兩種 Storage 的差異：
+
+1. 在同一個點擊事件中同時執行以下兩行：
+
+```typescript
+localStorage.setItem('local_key', '我還在');
+sessionStorage.setItem('session_key', '要消失了');
+```
+
+2. 打開 F12 → Application，確認兩筆資料都已存入
+3. **直接關閉這個分頁**，再開一個新分頁貼上網址
+4. 回到 Application 檢查：哪一筆還在？哪一筆消失了？
+
+<!--
+第二題補充練習，親手比較 localStorage 和 sessionStorage。
+
+按一個按鈕，同時存入兩筆資料，先到開發者工具的 Application 確認都存進去了。接著把分頁整個關掉，再開一個新分頁回來，看看哪一筆還在。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：localStorage vs sessionStorage — 參考答案
+
+```typescript
+saveBoth() {
+  localStorage.setItem('local_key', '我還在');
+  sessionStorage.setItem('session_key', '要消失了');
+}
+```
+
+| 儲存方式 | 關閉分頁後重新開啟 |
+| --- | --- |
+| `localStorage` | ✅ `local_key` 仍然存在 |
+| `sessionStorage` | ❌ `session_key` 已被清除 |
+
+<!--
+我們來看答案。
+
+重新開啟分頁後，只剩下 `local_key`。localStorage 的資料會一直存在，除非手動清除；sessionStorage 的資料只活在這個分頁裡，分頁一關就清掉。
+
+所以「記住我」這類要長期保存的資料，用 localStorage；只在這次瀏覽暫時需要的資料，例如填到一半的表單，用 sessionStorage。
+-->
+
+---
 layout: end
 ---
 

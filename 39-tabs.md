@@ -474,6 +474,134 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：擴充頁籤與除錯實驗
+
+**練習 1：新增第四個頁籤**
+
+打開 TS 的 `links` 陣列，新增第四個項目：
+
+```typescript
+{ path: '/profile', name: '個人帳戶設定' }
+```
+
+存檔，確認不用修改任何一行 HTML，畫面就自動多出第四個頁籤。
+
+**練習 2：忘記匯入 MatTabsModule**
+
+故意把 `imports` 陣列中的 `MatTabsModule` 刪除，觀察錯誤訊息，再補回來。
+
+<!--
+接下來兩題補充練習。
+
+第一題，在 `links` 陣列多加一筆資料，看看畫面會不會自動多一個頁籤。
+
+第二題是除錯實驗：把 `MatTabsModule` 拿掉，看看會出現什麼錯誤。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+links = [
+  { path: '/test/test1', name: 'TEST'  },
+  { path: '/test/test2', name: 'TEST2' },
+  { path: '/test/test3', name: 'TEST3' },
+  { path: '/profile',    name: '個人帳戶設定' },   // 新增
+];
+```
+
+```text
+❌ 'mat-tab-group' is not a known element:
+   1. If 'mat-tab-group' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+```
+
+<!--
+我們來看答案。
+
+頁籤是用 `@for` 跑 `links` 陣列產生的，所以只要陣列多一筆，畫面就自動多一個頁籤，HTML 完全不用改。記得也要在 `app.routes.ts` 加上 `/profile` 的路由，點下去才有頁面可以顯示。
+
+拿掉 `MatTabsModule` 之後，會出現「不是已知的元素」的錯誤，錯誤訊息也提示了解法：確認它有沒有加進元件的 `imports`。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：依權限停用頁籤
+
+針對沒有管理員權限的使用者，把部分頁籤設為停用：
+
+1. 在 TS 宣告 `isAdmin: boolean = false;`
+2. 在 `links` 中為「後台管理」頁籤加上 `adminOnly: true`
+3. 在 HTML 用屬性繫結 `[disabled]`：該頁籤為 `adminOnly` 且不是管理員時停用
+4. 確認頁籤變灰無法點選；把 `isAdmin` 改為 `true`，確認恢復可點選
+
+<!--
+第三題補充練習，依照使用者權限停用頁籤。
+
+在資料裡標記哪些頁籤只有管理員能用，再用中括號 `disabled` 綁定判斷式：只限管理員，而且目前不是管理員，就停用。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：依權限停用頁籤 — 參考答案
+
+```typescript
+isAdmin: boolean = false;
+
+links = [
+  { path: '/test/test1', name: 'TEST'  },
+  { path: '/test/test2', name: 'TEST2' },
+  { path: '/admin',      name: '後台管理', adminOnly: true },
+];
+```
+
+```html
+<nav mat-tab-nav-bar [tabPanel]="tabPanel">
+  @for (link of links; track link) {
+    <a mat-tab-link
+       [routerLink]="link.path"
+       (click)="activeLink = link.name"
+       [active]="activeLink == link.name"
+       [disabled]="link.adminOnly && !isAdmin"> {{ link.name }} </a>
+  }
+</nav>
+<mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+```
+
+<!--
+我們來看答案。
+
+`links` 裡，後台管理這一筆多了 `adminOnly: true`，其他筆沒有這個屬性，取值會是 undefined，條件就不成立。
+
+`disabled` 的判斷式是「只限管理員」而且「不是管理員」，兩個都成立時停用。`isAdmin` 是 false，後台管理就變灰；改成 true，條件不成立，頁籤就恢復可點選。
+-->
+
+---
 layout: end
 ---
 

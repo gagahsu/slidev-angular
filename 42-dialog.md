@@ -722,6 +722,146 @@ HTML 裡的按鈕用小括號 `click` 呼叫 `showDialog`。
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：確認刪除彈窗與寬度設定
+
+**練習 1：確認刪除彈窗**
+
+1. 建立新元件 `ConfirmDialog`
+2. 標題 `mat-dialog-title` 為「警告」，內容為「您確定要永久刪除此筆寵物資料嗎？」
+3. 「取消」按鈕執行 `this.dialogRef.close(false)`，「確定」按鈕執行 `this.dialogRef.close(true)`
+4. 從主頁面開啟它，在 `afterClosed()` 的訂閱中判斷：`result === true` 時 `alert('資料已刪除')`
+
+**練習 2：沒有設定寬度會怎樣？**
+
+在彈窗內容塞入一長串文字，開啟時故意不傳第二個參數（不給 `width`），觀察畫面；再加上 `width: '600px'` 比較差異。
+
+<!--
+接下來兩題補充練習。
+
+第一題，做一個確認刪除的彈窗：按取消回傳 false，按確定回傳 true，主頁面依照回傳值決定要不要刪除。
+
+第二題，比較有沒有設定 `width` 的差別。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```html
+<!-- confirm-dialog.component.html -->
+<h2 mat-dialog-title>警告</h2>
+<mat-dialog-content>您確定要永久刪除此筆寵物資料嗎？</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close(false)">取消</button>
+  <button mat-button (click)="dialogRef.close(true)">確定</button>
+</mat-dialog-actions>
+```
+
+```typescript
+// 主頁面
+openConfirm() {
+  const dialogRef = this.dialog.open(ConfirmDialog, { width: '600px' });
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result === true) {
+      alert('資料已刪除');
+    }
+  });
+}
+```
+
+<!--
+我們來看答案。
+
+彈窗的兩個按鈕，都是呼叫 `dialogRef.close`，只是帶回的值不同。主頁面訂閱 `afterClosed`，拿到的 `result` 就是這個值，等於 true 才執行刪除。如果使用者按 Esc 或點背景關閉，`result` 會是 undefined，同樣不會刪除。
+
+第二題，沒有設定寬度時，彈窗的寬度由內容決定，長文字可能讓版面很難閱讀。加上 `width` 之後，就能固定彈窗的寬度。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：彈窗修改庫存數量
+
+實作「點擊彈窗更新欄位資料」的功能：
+
+1. 主頁面用 `this.dialog.open` 開啟彈窗，透過 `data: { count: 50 }` 傳入目前庫存
+2. 彈窗用 `inject(MAT_DIALOG_DATA)` 接收資料
+3. 彈窗 HTML 建立數字輸入框：`<input type="number" [(ngModel)]="data.count">`
+4. 點「確定」時執行 `this.dialogRef.close(this.data.count)`
+5. 主頁面在 `afterClosed()` 中，把畫面上的庫存更新為回傳的數字
+
+<!--
+第三題補充練習，把資料傳進彈窗、修改後再傳回來。
+
+主頁面開啟時，用 `data` 把庫存量傳進去；彈窗裡用輸入框修改；按確定時，把新的數字透過 `close` 傳回主頁面，主頁面再更新畫面。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：彈窗修改庫存數量 — 參考答案
+
+```typescript
+// stock-dialog.component.ts
+readonly dialogRef = inject(MatDialogRef<StockDialog>);
+readonly data = inject<{ count: number }>(MAT_DIALOG_DATA);
+
+confirm() {
+  this.dialogRef.close(this.data.count);
+}
+```
+
+```html
+<input type="number" [(ngModel)]="data.count">
+<button mat-button (click)="confirm()">確定</button>
+```
+
+```typescript
+// 主頁面
+stock: number = 50;
+
+openStock() {
+  const dialogRef = this.dialog.open(StockDialog, { data: { count: this.stock } });
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result !== undefined) {
+      this.stock = result;
+    }
+  });
+}
+```
+
+<!--
+我們來看答案。
+
+彈窗用 `inject` 取得 `dialogRef` 和 `data`，輸入框用 `ngModel` 直接綁定 `data.count`，`confirm` 把修改後的數字傳回去。
+
+主頁面在 `afterClosed` 拿到結果後更新 `stock`。這裡多判斷了 `result` 不是 undefined，因為使用者如果沒按確定、直接關掉彈窗，就不會帶回數字，庫存應該維持原樣。
+-->
+
+---
 layout: end
 ---
 

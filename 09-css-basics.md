@@ -1026,6 +1026,137 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：盒模型推擠（Margin）
+
+請建立兩個 `<div>` 區塊，並利用 `margin` 將它們推開，感受外距的實際效果：
+
+1. 建立兩個正方形區塊，寬高各 `100px`
+2. 分別給予不同的背景顏色
+3. 使用 `margin-bottom`（或縮寫），讓兩個方塊上下之間產生 `30px` 的距離
+
+```html
+<div class="box box-1">方塊 1</div>
+<div class="box box-2">方塊 2</div>
+```
+
+<!--
+第一題補充練習，我們來感受 margin 的效果。
+
+請建立兩個寬高各 100px 的方塊，給它們不同的背景顏色，然後用 margin，讓兩個方塊上下之間空出 30px。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：盒模型推擠 — 參考答案
+
+```css
+.box {
+  width: 100px;
+  height: 100px;
+}
+
+.box-1 {
+  background-color: #f7b977;
+  margin-bottom: 30px;   /* 把下方的方塊往下推 30px */
+}
+
+.box-2 {
+  background-color: #028760;
+}
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 也可以寫在方塊 2 的 <code>margin-top: 30px</code>，效果相同；縮寫 <code>margin: 0 0 30px 0</code> 的順序是「上、右、下、左」
+</div>
+
+<!--
+我們來看答案。
+
+兩個方塊共用 `box` 這個 class，設定寬高各 100px。接著在方塊 1 加上 `margin-bottom: 30px`，它的下方就會多出 30px 的外距，把方塊 2 往下推開。
+
+也可以反過來，在方塊 2 寫 `margin-top: 30px`，效果一樣。如果用縮寫，順序是上、右、下、左，也就是 `margin: 0 0 30px 0`。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：個人名片上色
+
+將 HTML 章節完成的「個人名片」套用 CSS，讓它看起來像一張真正的卡片：
+
+| 需求 | 寫法 |
+| --- | --- |
+| 卡片總寬度 | `width: 400px` |
+| 卡片背景色 | 淺色系或自訂 |
+| 內距，讓文字不貼齊邊緣 | `padding: 25px` |
+| 圓角與陰影 | `border-radius`、`box-shadow` |
+| 標題文字置中 | `text-align: center` |
+
+<!--
+第二題補充練習，我們要把 HTML 章節做好的個人名片，用 CSS 打扮成一張卡片。
+
+卡片寬度 400px，背景用淺色系，加上 25px 的內距，讓文字不要貼著邊緣。再加上圓角和陰影，最後讓標題置中。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：個人名片上色 — 參考答案
+
+```html
+<div class="card">
+  <h2 class="card-title">王小明</h2>
+  <p>嗨，我是一個前端新手！</p>
+  <p>技能清單：HTML, CSS</p>
+</div>
+```
+
+```css
+.card {
+  width: 400px;
+  background-color: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  text-align: center;
+}
+```
+
+<!--
+我們來看答案。
+
+最外層用一個 `div` 包住整張名片，加上 `card` 這個 class。寬度 400px、淺灰色背景、25px 的內距。`border-radius` 讓四個角變圓，`box-shadow` 加上陰影，讓卡片看起來浮在畫面上。
+
+標題另外給一個 class，設定 `text-align: center`，讓名字置中。
+-->
+
+---
 layout: end
 ---
 

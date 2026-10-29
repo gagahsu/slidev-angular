@@ -1065,6 +1065,82 @@ layout: default
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：Service 全域購物車
+
+模擬電商系統：在「商品頁」點擊加入購物車時，其他頁面的「購物車件數」也要同步（即使屬於不同路由頁面）：
+
+1. 用 CLI 建立共享服務：`ng g s @services/cart`
+2. 在 `cart.service.ts` 宣告 `cartCount: number = 0;`
+3. 在「商品頁元件」注入此服務，做一個按鈕，點擊時執行 `this.cartService.cartCount++`
+4. 切換到另一個路由頁面，同樣注入此服務，在 HTML 用 `{{ cartService.cartCount }}` 印出
+5. 確認資料有沒有跨路由被記住並共享
+
+<!--
+這題補充練習，用 Service 做一個跨頁面的購物車數量。
+
+建立 `CartService`，裡面放一個 `cartCount`。商品頁按一次按鈕就加一，接著切換到另一個頁面，也注入同一個 Service，把數量印出來。
+
+想一想，為什麼切換頁面之後，數字不會歸零？
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：Service 全域購物車 — 參考答案
+
+```typescript
+// cart.service.ts
+@Injectable({ providedIn: 'root' })
+export class CartService {
+  cartCount: number = 0;
+}
+```
+
+```typescript
+// product.component.ts
+constructor(public cartService: CartService) {}
+
+addToCart() {
+  this.cartService.cartCount++;
+}
+```
+
+```html
+<!-- 另一個頁面的 HTML（建構式同樣注入 public cartService） -->
+<p>購物車件數：{{ cartService.cartCount }}</p>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>providedIn: 'root'</code> 讓整個專案共用<b>同一個</b> Service 實例；要在 HTML 直接讀取，注入時須宣告為 <code>public</code>
+</div>
+
+<!--
+我們來看答案。
+
+`CartService` 用 `providedIn: 'root'`，整個專案只會有一個實例，不管哪個頁面注入，拿到的都是同一個。所以商品頁加上去的數字，切換到別的頁面時還在。
+
+要注意，想在 HTML 直接寫 `cartService.cartCount`，注入時要宣告成 `public`；如果是 `private`，就只能在 TS 裡使用。
+-->
+
+---
 layout: end
 ---
 

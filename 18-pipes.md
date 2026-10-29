@@ -63,10 +63,11 @@ layout: default
 - **步驟一：思考畫面設計** — 讓 HTML 能隨資料動態成長
 - **步驟二：思考畫面需要什麼內容** — UI/UX 需求分析
 - **步驟三：設計資料格式** — Array、JSON 的應用
+- **進階：分類對應的資料模型** — 用 key 對應資料的 Dictionary 結構
 - **實作練習**
 
 <!--
-這一章會先說明為什麼要學資料轉換，接著依序走過三個步驟：思考畫面設計、分析畫面需要的內容，以及設計資料格式。最後用一個電商畫面做實作練習。
+這一章會先說明為什麼要學資料轉換，接著依序走過三個步驟：思考畫面設計、分析畫面需要的內容，以及設計資料格式，再看一種點選分類、切換商品的進階資料結構。最後用一個電商畫面做實作練習。
 -->
 
 ---
@@ -178,6 +179,81 @@ const questions = [
 看程式碼，`questions` 是一個陣列，裡面每個元素都是物件。而物件裡的 `options` 因為有多個選項，所以又是一個陣列。
 
 這種「陣列包物件，物件裡再包陣列」的結構，在實務上非常常見。
+-->
+
+---
+
+# 進階：分類對應的資料模型
+
+電商首頁常見的設計：點選上方的**分類**，下方的**商品清單**跟著切換。
+
+<div class="grid grid-cols-2 gap-4 my-3">
+<div>
+
+**畫面拆解**
+
+- **分類選單：** 多個分類 → Array，每個分類有 `key` 與顯示名稱
+- **商品清單：** 每個分類都有**自己的**一組商品
+- **目前選取：** 需要一個變數記錄現在選到哪個分類
+
+</div>
+<div>
+
+**資料設計**
+
+- 商品不是放在同一個大陣列
+- 而是用**物件**，以分類的 `key` 當作屬性名稱，值是該分類的商品陣列
+- 這種「用 key 對應資料」的結構，稱為 **Dictionary / Map**
+
+</div>
+</div>
+
+<!--
+前面的口訣可以處理大部分的畫面。這裡再看一種實務上很常見的情況：點選分類，下方的商品跟著切換。
+
+拆解畫面：分類選單有很多個分類，用陣列；每個分類都有自己的一組商品；另外還需要一個變數，記錄目前選到哪個分類。
+
+商品的資料，與其全部放在一個大陣列、每次再篩選，不如用物件來存：分類的 key 當作屬性名稱，值就是這個分類的商品陣列。這種用 key 去對應資料的結構，叫做 Dictionary，也常被稱為 Map。
+-->
+
+---
+
+# 進階：分類對應的資料模型 — 範例
+
+```typescript
+// 1. 分類選單
+menuCategories = [
+  { key: 'accessories', name: '辦公配件' },
+  { key: 'printer',     name: '印表機' }
+];
+
+// 2. 每個分類 key 擁有自己的商品陣列
+productDataMap: any = {
+  accessories: [
+    { id: 'acc-01', title: 'AI 智能會議筆記本', price: 16840 },
+    { id: 'acc-02', title: 'USB-C 7 合 1 集線器', price: 1130 }
+  ],
+  printer: [
+    { id: 'prt-01', title: '噴墨多功能複合式印表機', price: 4990 }
+  ]
+};
+
+// 3. 目前選取的分類
+currentCategory = 'accessories';
+```
+
+```html
+@for (product of productDataMap[currentCategory]; track product.id) {
+  <p>{{ product.title }}：${{ product.price }}</p>
+}
+```
+
+<!--
+看範例。`menuCategories` 是分類選單，每個分類有 key 和名稱。`productDataMap` 的屬性名稱就是分類的 key，值是這個分類的商品陣列。`currentCategory` 記錄目前選到的分類，預設是辦公配件。
+
+HTML 只要寫 `productDataMap` 中括號 `currentCategory`，就能取出目前分類的商品。點選分類時，只要把 `currentCategory` 改成另一個 key，下方的商品就會自動換掉，不需要重新篩選資料。
+
+這裡 `productDataMap` 先用 `any` 型別，之後學到 interface，就可以替它定義更精確的型別。
 -->
 
 ---
@@ -571,6 +647,116 @@ layout: default
 圖片設定 `aspect-ratio: 1 / 1`，強制維持正方形的比例，再搭配 `object-fit: contain`，讓圖片完整縮放，不會被裁切或變形。
 
 商品名稱用稍小的字體，上下留一點間距。價格則用 `.price` 設定紅色粗體，讓它更醒目。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：寵物補給品分類資料
+
+為寵物商城規劃「大分類對應子商品」的資料模型：
+
+1. 在 TS 中宣告一個 `supplementsMap` 物件
+2. 規劃兩個分類 key：貓咪化毛膏（`hairball`）與關節保健（`joint`）
+3. 在每個分類底下放入商品陣列，每個商品包含 `id`、`name`、`price`
+4. 存檔確認編譯成功
+
+<!--
+第一題補充練習，練習設計「分類對應商品」的資料結構。
+
+外層是一個物件，key 是分類名稱 `hairball` 和 `joint`，每個 key 底下放一個商品陣列，陣列裡每個商品都有 id、名稱和價格。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：寵物補給品分類資料 — 參考答案
+
+```typescript
+supplementsMap = {
+  hairball: [
+    { id: 'h-01', name: '鮭魚化毛膏', price: 320 },
+    { id: 'h-02', name: '麥芽化毛膏', price: 280 }
+  ],
+  joint: [
+    { id: 'j-01', name: '葡萄糖胺粉', price: 650 },
+    { id: 'j-02', name: '綠唇貽貝錠', price: 890 }
+  ]
+};
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 用分類當 key，之後只要用 <code>supplementsMap['hairball']</code> 就能一次取出該分類的所有商品
+</div>
+
+<!--
+我們來看答案。
+
+`supplementsMap` 的兩個 key 是分類名稱，值是商品陣列。這樣設計的好處是，切換分類時，只要用分類名稱當 key，就能直接取出那一類的全部商品，不用一筆一筆篩選。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：點擊切換分類
+
+1. 在 TS 宣告控制變數：`currentType: string = 'A';`
+2. 在 HTML 做出兩個按鈕：「分類 A」與「分類 B」
+3. 點選時分別把 `currentType` 改成 `'A'` 與 `'B'`
+4. 在下方用 `{{ currentType }}` 印出，確認點擊時是否正確切換
+
+<!--
+第二題補充練習，做一個切換分類的開關。
+
+宣告 `currentType` 記錄目前選到哪一類，兩個按鈕各自把它改成 A 或 B，再用雙大括號把它顯示出來，確認切換有沒有成功。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：點擊切換分類 — 參考答案
+
+```typescript
+currentType: string = 'A';
+
+changeType(type: string) {
+  this.currentType = type;
+}
+```
+
+```html
+<button (click)="changeType('A')">分類 A</button>
+<button (click)="changeType('B')">分類 B</button>
+
+<p>目前分類：{{ currentType }}</p>
+```
+
+<!--
+我們來看答案。
+
+寫一個 `changeType` 方法，接收一個分類參數，把它存進 `currentType`。兩個按鈕呼叫同一個方法，只是帶入的參數不同。
+
+點下按鈕，下方的文字立刻跟著改變。如果把兩個按鈕帶入的值改成 `hairball` 和 `joint`，再用 `currentType` 去上一題的 `supplementsMap` 取出商品，就能做出點擊分類、切換商品清單的效果。
 -->
 
 ---

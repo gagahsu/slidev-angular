@@ -496,6 +496,60 @@ userArray = [
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：篩選奇數價格
+
+1. 宣告商品價格陣列：`[11, 24, 35, 48, 57]`
+2. 用 `for...of` 搭配餘數運算符（`item % 2 !== 0`）過濾
+3. 把篩選出來的所有「奇數價格」依序印在 Console
+
+<!--
+這題補充練習，從價格陣列裡挑出奇數。
+
+用 `for of` 一筆一筆取出價格，用餘數判斷：除以 2 的餘數不等於 0，就是奇數，把它印出來。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：篩選奇數價格 — 參考答案
+
+```typescript
+let prices = [11, 24, 35, 48, 57];
+
+for (let item of prices) {
+  if (item % 2 !== 0) {
+    console.log(item);   // 11、35、57
+  }
+}
+```
+
+<!--
+我們來看答案。
+
+`%` 是取餘數。奇數除以 2 一定餘 1，所以 `item % 2 !== 0` 成立的就是奇數。
+
+`for of` 依序取出 11、24、35、48、57，符合條件的 11、35、57 會被印出來。
+-->
+
+---
 layout: end
 ---
 

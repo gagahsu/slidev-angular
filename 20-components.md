@@ -621,6 +621,71 @@ export class AppComponent {}
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：自訂 Selector 標籤名稱
+
+探索 `@Component` 裝飾器的設定彈性：
+
+1. 打開一個新建立元件的 `.ts` 檔案（例如 `roles.component.ts`）
+2. 把 `selector` 原本預設的字串（如 `'app-roles'`）手動修改為 `'captain-hairball'`
+3. 回到父層 HTML，改用新名字 `<captain-hairball></captain-hairball>` 呼叫
+4. 觀察畫面是否依然能正常顯示
+
+<!--
+這題補充練習，我們來實驗 `selector` 的作用。
+
+把元件的 `selector` 從預設的名字，改成自己取的 `captain-hairball`，再回到父層 HTML，用新的標籤名稱呼叫它，看看畫面還能不能正常顯示。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：自訂 Selector — 參考答案
+
+```typescript
+@Component({
+  selector: 'captain-hairball',      // 原本是 'app-roles'
+  templateUrl: './roles.component.html',
+  styleUrl: './roles.component.scss'
+})
+export class RolesComponent {}
+```
+
+```html
+<!-- app.component.html -->
+<captain-hairball></captain-hairball>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>selector</code> 就是元件在 HTML 中的「標籤名稱」，改了之後父層也要跟著改；舊的 <code>&lt;app-roles&gt;</code> 會變成 Angular 不認識的標籤而報錯
+</div>
+
+<!--
+我們來看答案。
+
+`selector` 決定了這個元件在 HTML 裡要用什麼標籤呼叫。改成 `captain-hairball` 之後，父層就要用 `captain-hairball` 標籤，畫面一樣能正常顯示。
+
+如果父層還留著舊的 `app-roles`，Angular 會說不認識這個標籤。實務上習慣保留 `app-` 開頭，方便一眼看出這是自己專案的元件。
+-->
+
+---
 layout: end
 ---
 

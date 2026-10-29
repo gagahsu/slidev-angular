@@ -437,6 +437,148 @@ layout: default
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：switch 基本配對
+
+**練習 1：星期看板（數字比對）**
+
+宣告 `let day: number = 3;`，撰寫 `switch (day)`：
+
+- `case 1`：印出 `'星期一：認真上課'`
+- `case 3`：印出 `'星期三：期中進度追蹤'`
+- `default`：印出 `'其他日子：持續寫程式'`
+
+**練習 2：會員折扣（字串比對）**
+
+宣告 `let role: string = 'VIP';`，撰寫 `switch (role)`：
+
+- `'VIP'`：`alert('尊榮貴賓：享全面 8 折！')`
+- `'Member'`：`alert('一般會員：享全面 9 折！')`
+- `default`：`alert('訪客：維持原價。')`
+
+<!--
+接下來兩題補充練習，練習在 TS 裡寫 switch。
+
+第一題比對數字，依照星期幾印出不同的訊息。第二題比對字串，依照會員等級跳出不同的折扣。
+
+記得每個分支都要加上 `break`。我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+let day: number = 3;
+
+switch (day) {
+  case 1:
+    console.log('星期一：認真上課');
+    break;
+  case 3:
+    console.log('星期三：期中進度追蹤');
+    break;
+  default:
+    console.log('其他日子：持續寫程式');
+}
+```
+
+```typescript
+let role: string = 'VIP';
+
+switch (role) {
+  case 'VIP':
+    alert('尊榮貴賓：享全面 8 折！');
+    break;
+  case 'Member':
+    alert('一般會員：享全面 9 折！');
+    break;
+  default:
+    alert('訪客：維持原價。');
+}
+```
+
+<!--
+我們來看答案。
+
+兩題的結構完全一樣，只是比對的值一個是數字、一個是字串。字串比對要注意大小寫，`'vip'` 和 `'VIP'` 會被當成不同的值。
+
+`default` 是最後一個分支，後面沒有其他分支了，所以不寫 `break` 也可以。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：故意漏寫 break
+
+親手體驗 `break` 的重要性：
+
+1. 宣告 `let code: number = 1;`
+2. 撰寫 `switch (code)`
+3. 在 `case 1:` 寫入 `console.log('執行分支 1');`，**故意不寫 `break;`**
+4. 在 `case 2:` 寫入 `console.log('執行分支 2');`，正常補上 `break;`
+5. 執行程式，觀察 Console：明明 `code` 只有 1，為什麼分支 2 的訊息也印出來了？
+
+<!--
+第三題補充練習，是一個除錯實驗。
+
+請故意在 `case 1` 漏掉 `break`，然後觀察 Console 印出了什麼。明明 `code` 是 1，結果會讓你很意外。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：故意漏寫 break — 參考答案
+
+```typescript
+let code: number = 1;
+
+switch (code) {
+  case 1:
+    console.log('執行分支 1');
+    // 忘記寫 break！
+  case 2:
+    console.log('執行分支 2');
+    break;
+}
+// Console 輸出：
+// 執行分支 1
+// 執行分支 2   ← 不該出現卻出現了
+```
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 這個現象叫做<b>貫穿（fall-through）</b>：沒有 <code>break</code>，程式會一路往下執行下一個 case，直到遇到 <code>break</code> 或 switch 結束
+</div>
+
+<!--
+我們來看答案。
+
+`code` 是 1，所以從 `case 1` 開始執行。但 `case 1` 沒有 `break`，程式不會跳出 switch，而是繼續往下，把 `case 2` 的內容也執行了，直到遇到 `break` 才停。
+
+這種現象叫做貫穿。它不會報錯，所以很難發現，養成每個 case 都寫 `break` 的習慣，就能避免這種問題。
+-->
+
+---
 layout: end
 ---
 

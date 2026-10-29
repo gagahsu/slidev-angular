@@ -239,6 +239,129 @@ layout: two-cols
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：註冊模組與常用圖示
+
+**練習 1：**
+
+1. 在 `app.component.ts` 的 `imports` 陣列補上 `MatIconModule`
+2. 在 HTML 加入 `<mat-icon fontIcon="home"></mat-icon>`
+3. 確認畫面上出現房子圖示
+
+**練習 2：**
+
+前往 Google Fonts 的 Material Symbols 網站，在 HTML 並排顯示以下 4 個常用圖示：
+
+- `search`（搜尋）　- `settings`（設定）　- `delete`（刪除）　- `favorite`（收藏）
+
+<!--
+接下來兩題補充練習。
+
+第一題，把 `MatIconModule` 註冊好，顯示一個房子圖示。第二題，到 Google Fonts 查詢圖示名稱，把搜尋、設定、刪除、收藏這四個常用圖示並排顯示出來。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+import { MatIconModule } from '@angular/material/icon';
+
+@Component({
+  selector: 'app-root',
+  imports: [MatIconModule],
+  templateUrl: './app.component.html',
+})
+export class AppComponent {}
+```
+
+```html
+<mat-icon fontIcon="home"></mat-icon>
+
+<mat-icon fontIcon="search"></mat-icon>
+<mat-icon fontIcon="settings"></mat-icon>
+<mat-icon fontIcon="delete"></mat-icon>
+<mat-icon fontIcon="favorite"></mat-icon>
+```
+
+<!--
+我們來看答案。
+
+先從 `@angular/material/icon` 匯入 `MatIconModule`，加進 `imports` 陣列，HTML 才認得 `mat-icon` 標籤。
+
+要換圖示，只要改 `fontIcon` 的值。圖示名稱可以在 Google Fonts 的 Material Symbols 搜尋，點選圖示後就能看到它的名稱。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：點擊切換愛心圖示
+
+結合「屬性繫結」與 `mat-icon`，做出點擊後「空心變實心」的愛心：
+
+1. 在 TS 宣告 `myCurrentIcon: string = 'favorite_border';`（空心愛心）
+2. 撰寫方法 `changeMyIcon()`，點擊後改成 `'favorite'`（實心愛心）
+3. 用 `[fontIcon]="myCurrentIcon"` 綁定圖示，並綁定 `(click)="changeMyIcon()"`
+4. 點擊網頁上的愛心，觀察外觀是否切換
+
+<!--
+第三題補充練習，做一個可以點擊的愛心。
+
+把圖示名稱放進變數 `myCurrentIcon`，用中括號 `fontIcon` 綁定它；點擊時把變數換成實心愛心的名稱，圖示就會跟著改變。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：點擊切換愛心圖示 — 參考答案
+
+```typescript
+myCurrentIcon: string = 'favorite_border';
+
+changeMyIcon() {
+  this.myCurrentIcon = 'favorite';
+}
+```
+
+```html
+<mat-icon [fontIcon]="myCurrentIcon" (click)="changeMyIcon()"></mat-icon>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 進階：改成 <code>this.myCurrentIcon = this.myCurrentIcon === 'favorite' ? 'favorite_border' : 'favorite';</code>，就能來回切換
+</div>
+
+<!--
+我們來看答案。
+
+`fontIcon` 加上中括號，就變成屬性繫結，值會從 TS 的 `myCurrentIcon` 讀取。點擊時 `changeMyIcon` 把變數改成 `favorite`，畫面就從空心愛心變成實心愛心。
+
+如果想要再點一次變回空心，可以用三元運算子判斷目前的值，來回切換。
+-->
+
+---
 layout: end
 ---
 

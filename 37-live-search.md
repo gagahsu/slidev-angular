@@ -507,6 +507,134 @@ export class AppComponent implements AfterViewInit {
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：事件監聽與不分大小寫
+
+**練習 1：即時印出輸入值**
+
+1. 在 HTML 建立搜尋 `input`，綁定 `(keyup)="myTest($event)"`
+2. 在 TS 撰寫 `myTest(event: Event)`，用 `console.log()` 即時印出輸入值
+3. 打開 F12，確認打字或刪除時 Console 立即反應
+
+**練習 2：不分大小寫搜尋**
+
+原範例輸入小寫 `h` 時，會因為 `Hydrogen` 字首大寫而找不到。請在 `indexOf` 比較前，把兩邊都轉成小寫：
+
+```typescript
+res.name.toLowerCase().indexOf(keyword.toLowerCase())
+```
+
+測試輸入小寫 `h`，確認大寫開頭的項目也能被篩選出來。
+
+<!--
+接下來兩題補充練習。
+
+第一題，綁定 `keyup` 事件，把每次輸入的值印到 Console，確認事件有沒有被觸發。
+
+第二題，改良本章的搜尋：目前輸入小寫 h 找不到 Hydrogen，因為大小寫不同。請用 `toLowerCase`，把兩邊都轉成小寫再比較。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+myTest(event: Event) {
+  console.log((event.target as HTMLInputElement).value);
+}
+```
+
+```typescript
+changeData(event: Event) {
+  const keyword = (event.target as HTMLInputElement).value;
+  let tidyData: PeriodicElement[] = [];
+  ELEMENT_DATA.forEach((res) => {
+    if (res.name.toLowerCase().indexOf(keyword.toLowerCase()) != -1) {
+      tidyData.push(res);
+    }
+  });
+  this.dataSource.data = tidyData;
+}
+```
+
+<!--
+我們來看答案。
+
+第一題，`event.target` 就是觸發事件的輸入框，轉型成 `HTMLInputElement` 之後，就能取出 `value`。
+
+第二題，在比較之前，把資料的名稱和關鍵字都轉成小寫。這樣不管使用者輸入大寫還是小寫，`hydrogen` 和 `h` 都能比對成功。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：一鍵重置搜尋
+
+點擊重置按鈕，要清空搜尋框，並讓表格恢復完整資料：
+
+1. HTML：在輸入框右側新增「重置」按鈕並綁定點擊事件
+2. TS：把綁定輸入框的變數清空
+3. TS：把原始、未過濾的完整陣列重新指派給表格
+4. 測試：輸入關鍵字讓表格變少，點選重置，確認是否恢復全部資料
+
+<!--
+第三題補充練習，加上一個重置按鈕。
+
+重置要做兩件事：清空搜尋框，以及讓表格回到完整的資料。想一想，搜尋框綁定的是哪個變數？完整的資料又存在哪裡？
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：一鍵重置搜尋 — 參考答案
+
+```html
+<input (keyup)="changeData($event)" [(ngModel)]="inputData">
+<button (click)="reset()">重置</button>
+```
+
+```typescript
+reset() {
+  this.inputData = '';                  // 清空搜尋框
+  this.dataSource.data = ELEMENT_DATA;  // 還原完整資料
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 過濾時一律從原始的 <code>ELEMENT_DATA</code> 篩選、只改 <code>dataSource.data</code>，原始資料才不會被覆蓋，重置時才拿得回來
+</div>
+
+<!--
+我們來看答案。
+
+搜尋框用 `ngModel` 綁定 `inputData`，所以把 `inputData` 設成空字串，輸入框就清空了。接著把原始的 `ELEMENT_DATA` 指派回 `dataSource.data`，表格就恢復完整。
+
+能這樣做的關鍵是，過濾時我們從來沒有改動 `ELEMENT_DATA`，只是把篩選結果放進 `dataSource`，所以完整的資料一直都在。
+-->
+
+---
 layout: end
 ---
 

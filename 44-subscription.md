@@ -816,6 +816,128 @@ export class AppComponent { }
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：誤用唯讀資料流
+
+體驗為什麼外部元件不能直接改 Service 的資料：
+
+1. 在外部元件中，故意繞過 Service 的方法，直接執行：
+
+```typescript
+this.loadingService._loading$.next(true);
+```
+
+2. 存檔，觀察 TypeScript 的錯誤訊息
+3. 思考：`asObservable()` 為什麼能防止外部修改資料？
+
+<!--
+第一題補充練習，是一個除錯實驗。
+
+`_loading$` 是 Service 對外公開、用 `asObservable` 轉換過的版本。請在元件裡直接對它呼叫 `next`，看看會發生什麼事。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：誤用唯讀資料流 — 參考答案
+
+```typescript
+this.loadingService._loading$.next(true);
+// ❌ Property 'next' does not exist on type 'Observable<boolean>'.
+```
+
+```typescript
+// ✅ 正確做法：透過 Service 提供的方法修改
+this.loadingService.show();
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>asObservable()</code> 把 Subject 轉成只能 <code>subscribe</code> 的 Observable，沒有 <code>next</code> 方法；外部只能監聽，只有 Service 內部能修改
+</div>
+
+<!--
+我們來看答案。
+
+編輯器會說，`Observable` 型別上不存在 `next` 這個屬性。因為 `asObservable` 轉換後的物件，只能訂閱，不能發送新值。
+
+這是刻意的設計：資料只能透過 Service 自己提供的方法修改，所有的修改都集中在同一個地方，出問題時比較好追查。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：Subject vs BehaviorSubject
+
+在 Service 中並列宣告兩個主體，比較它們在「剛訂閱時」的差異：
+
+```typescript
+private loading$  = new BehaviorSubject<boolean>(false);   // 有初始值
+private loading2$ = new Subject<boolean>();                 // 沒有初始值
+_loading$  = this.loading$.asObservable();
+_loading2$ = this.loading2$.asObservable();
+```
+
+1. 在元件的 `ngOnInit()` 同時訂閱 `_loading$` 與 `_loading2$`
+2. 兩個訂閱內分別印出 `'A 收到'` 與 `'B 收到'`
+3. 重新整理網頁，**不要點任何按鈕**，觀察 Console 印出了什麼
+
+<!--
+第二題補充練習，是面試很常考的觀念。
+
+Service 裡同時宣告一個 BehaviorSubject 和一個普通的 Subject。元件一載入就同時訂閱這兩個，然後什麼都不要做，看看 Console 印出了哪些訊息。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：Subject vs BehaviorSubject — 參考答案
+
+```typescript
+ngOnInit() {
+  this.loadingService._loading$.subscribe((val) => {
+    console.log('A 收到', val);    // ✅ 立刻印出：A 收到 false
+  });
+  this.loadingService._loading2$.subscribe((val) => {
+    console.log('B 收到', val);    // ❌ 沒有任何輸出，直到有人呼叫 next()
+  });
+}
+```
+
+| | 有初始值 | 訂閱時立刻收到值 |
+| --- | --- | --- |
+| `BehaviorSubject` | ✅ | ✅ 收到目前的值 |
+| `Subject` | ❌ | ❌ 只收到訂閱之後發送的值 |
+
+<!--
+我們來看答案。
+
+一打開網頁，Console 只印出「A 收到 false」。BehaviorSubject 會記住目前的值，任何人一訂閱，就立刻把這個值交給他。普通的 Subject 不會記住任何值，只會傳送訂閱之後才發生的新值，所以 B 什麼都收不到。
+
+所以像登入狀態、購物車數量這種「隨時都要知道目前是多少」的資料，適合用 BehaviorSubject。
+-->
+
+---
 layout: end
 ---
 

@@ -60,12 +60,12 @@ layout: default
 - **JavaScript 是什麼？**
 - **TypeScript 是什麼？**
 - **TypeScript VS JavaScript**
-- **JavaScript 實例**
+- **JavaScript 實例** — 按鈕互動、用 `.value` / `.innerText` 讀取畫面內容
 - **TypeScript 在 Angular 中** — 元件結構、`@Component` 裝飾器
 - **實作練習**
 
 <!--
-這一章的路線是這樣的。先認識 JavaScript 和 TypeScript 各是什麼，再比較兩者的差別。接著用一個按鈕的小例子，看 HTML、CSS 和 JavaScript 怎麼一起運作。然後看 TypeScript 在 Angular 元件裡的寫法。最後有兩個練習，分別針對 TypeScript 和 JavaScript。
+這一章的路線是這樣的。先認識 JavaScript 和 TypeScript 各是什麼，再比較兩者的差別。接著用一個按鈕的小例子，看 HTML、CSS 和 JavaScript 怎麼一起運作，並學會讀取輸入框和標籤裡的內容。然後看 TypeScript 在 Angular 元件裡的寫法。最後有兩個練習，分別針對 TypeScript 和 JavaScript。
 -->
 
 ---
@@ -302,6 +302,81 @@ class: flex flex-col justify-center items-center text-center
 三個部分合在一起之後，使用者點擊按鈕，就會觸發 `onclick`，執行 `clickBnt`，畫面上跳出「你按按鈕了」的訊息框。
 
 這就是網頁互動最基本的運作方式：HTML 提供元素，CSS 提供外觀，JavaScript 提供反應。
+-->
+
+---
+
+# 讀取畫面內容 — 輸入框用 .value
+
+想拿到使用者在輸入框打的字，先用 `id` 找到標籤，再讀取它的 `.value`：
+
+```html
+<input id="userBox" type="text">
+<button onclick="readInput()">讀取</button>
+
+<script>
+  function readInput() {
+    let res = document.getElementById('userBox').value;
+    console.log(res);
+  }
+</script>
+```
+
+| 語法 | 說明 |
+| --- | --- |
+| `document.getElementById('userBox')` | 用 `id` 在整個網頁中找到對應的標籤 |
+| `.value` | 取得表單元素目前的值 |
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <b>規則：</b> 使用者可以輸入或選取的表單元素（<code>input</code>、<code>select</code>、<code>textarea</code>），一律用 <code>.value</code> 取值
+</div>
+
+<!--
+剛才的例子只是跳出訊息，接下來看怎麼讀取畫面上的內容。
+
+`document` 代表整個網頁。`getElementById` 會用 id 去網頁裡找標籤，所以 HTML 的輸入框要先設定 `id="userBox"`。找到輸入框之後，讀取它的 `value`，就是使用者目前輸入的文字。
+
+記住一個規則：只要是使用者可以輸入或選取的表單元素，像是 `input`、`select`、`textarea`，都用 `value` 取值。
+
+要注意，`value` 拿到的一定是字串。就算使用者輸入的是數字，要拿來計算前，也要先用 `Number` 轉換。
+-->
+
+---
+
+# 讀取畫面內容 — 一般標籤用 .innerText
+
+如果目標不是輸入框，而是 `<p>`、`<div>`、`<span>` 這類包住文字的標籤，就改用 `.innerText`：
+
+```html
+<p id="news">最新消息：今日停班停課</p>
+<button onclick="readText()">讀取內文</button>
+
+<script>
+  function readText() {
+    let txt = document.getElementById('news').innerText;   // 讀取
+    alert(txt);
+    document.getElementById('news').innerText = '消息已讀取';  // 改寫
+  }
+</script>
+```
+
+| 目標 | 使用屬性 |
+| --- | --- |
+| 輸入框、下拉選單等表單元素 | `.value` |
+| 標籤包住的文字 | `.innerText` |
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 用錯屬性會拿到空值，例如對 <code>&lt;p&gt;</code> 讀 <code>.value</code> 會得到 <code>undefined</code>
+</div>
+
+<!--
+一般的文字標籤，像段落、`div`，裡面的文字要用 `innerText` 讀取。
+
+`innerText` 除了讀取，還可以改寫：在等號左邊放 `innerText`，右邊放新的文字，畫面上的內容就會立刻換掉。
+
+整理一下：表單元素用 `value`，一般標籤包住的文字用 `innerText`。用錯屬性就拿不到資料，例如對段落讀 `value`，會得到 undefined。
+
+這是原生 JavaScript 操作畫面的方式。之後在 Angular 裡，我們會改用資料繫結，讓變數和畫面自動同步，就很少需要自己去找標籤了。
 -->
 
 ---
@@ -558,6 +633,153 @@ layout: default
 function 的名稱要跟 `onclick` 裡寫的完全一樣，三個部分才會接起來。
 
 另外提醒一下，這裡是純 JavaScript，不是 Angular，所以不需要 class，直接宣告 function 就可以了。存檔後用瀏覽器打開，點兩個按鈕，就會跳出各自的訊息。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：Console 輸出與點擊改寫文字
+
+**練習 1：** 在 HTML 的 `<script>` 中宣告兩個變數，並在 Console 組裝印出訊息：
+
+```html
+<script>
+  let name = '練習生';
+  let days = 30;
+  // 印出：練習生已經學習了 30 天
+</script>
+```
+
+**練習 2：** 建立一個按鈕，點擊後把指定段落的文字改寫：
+
+```html
+<p id="status">原本的狀態：等待點擊</p>
+<button onclick="update()">變更</button>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>document.getElementById('id')</code> 可以用 id 抓到 HTML 標籤；標籤的 <code>.innerText</code> 就是它裡面的文字
+</div>
+
+<!--
+接下來是兩題補充練習。
+
+第一題，在 `script` 裡宣告 `name` 和 `days` 兩個變數，用 `console.log` 組合成一句話印出來。
+
+第二題，畫面上有一個段落和一個按鈕，點擊按鈕後要把段落的文字換掉。這裡會用到一個新工具：`document.getElementById`，它可以用 id 找到 HTML 標籤；找到之後，改它的 `innerText`，就能換掉裡面的文字。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```html
+<script>
+  let name = '練習生';
+  let days = 30;
+  console.log(name + '已經學習了 ' + days + ' 天');
+</script>
+```
+
+```html
+<p id="status">原本的狀態：等待點擊</p>
+<button onclick="update()">變更</button>
+
+<script>
+  function update() {
+    document.getElementById('status').innerText = '狀態已更新！';
+  }
+</script>
+```
+
+<!--
+我們來看答案。
+
+第一題用加號把字串和變數串起來，再用 `console.log` 印出，打開 F12 的 Console 就能看到。
+
+第二題先寫一個 `update` 方法，按鈕的 `onclick` 呼叫它。方法裡用 `getElementById('status')` 找到段落，再把新的文字指定給 `innerText`。點下按鈕，段落的文字就會立刻換掉。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3–4：撈取輸入框與標籤內容
+
+**練習 3：雙數加總計算器**
+
+建立兩個輸入框與一個按鈕，點擊時把兩個輸入框的值（`.value`）相加，用 `alert()` 顯示結果。
+
+<div class="mt-2 mb-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 輸入框撈出來的值是<b>字串</b>，記得先用 <code>Number()</code> 轉成數字再相加
+</div>
+
+**練習 4：DOM 文字複製器**
+
+建立一個 `<h3 id="source">` 內含任意文字，以及一個原本空白的 `<div>`。點擊按鈕時，用 `.innerText` 撈出 `<h3>` 的內容，指派給 `<div>`。
+
+<!--
+再來兩題，練習從畫面上把資料撈出來。
+
+第三題，畫面上有兩個輸入框，點按鈕時把兩個值相加，用 `alert` 顯示。輸入框要用 `.value` 取值。要注意，撈出來的值是字串，直接相加會變成字串接在一起，例如 1 加 2 會變成 12，記得先轉成數字。
+
+第四題，用 `.innerText` 撈出 `h3` 的文字，再指派給另一個空白的 `div`。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3–4 — 參考答案
+
+```html
+<input id="num1" type="number">
+<input id="num2" type="number">
+<button onclick="sum()">加總</button>
+
+<h3 id="source">我是要被複製的文字</h3>
+<div id="target"></div>
+<button onclick="copyText()">複製</button>
+
+<script>
+  function sum() {
+    let num1 = Number(document.getElementById('num1').value);
+    let num2 = Number(document.getElementById('num2').value);
+    alert('加總結果：' + (num1 + num2));
+  }
+
+  function copyText() {
+    let text = document.getElementById('source').innerText;
+    document.getElementById('target').innerText = text;
+  }
+</script>
+```
+
+<!--
+我們來看答案。
+
+`sum` 方法裡，先用 `getElementById` 找到兩個輸入框，取出 `.value`，再用 `Number` 轉成數字，最後相加後用 `alert` 顯示。注意加總那裡要用小括號包起來，不然會先跟前面的字串接在一起。
+
+`copyText` 方法先撈出 `source` 的 `innerText`，再把它指派給 `target` 的 `innerText`，空白的 `div` 就會出現同樣的文字。
 -->
 
 ---

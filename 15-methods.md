@@ -65,10 +65,11 @@ layout: default
 - **TS 中方法呼叫方法**
 - **呼叫方法帶入值**
 - **多個參數與預設值**
+- **回傳值（return）**
 - **實作練習**
 
 <!--
-這一章會先說明什麼是方法，以及一個方法由哪些部分組成。接著看在 Angular 裡怎麼從 HTML 呼叫方法，以及方法之間怎麼互相呼叫。然後學習怎麼在呼叫時帶入資料，包括多個參數和預設值。最後用一個練習把觀念串起來。
+這一章會先說明什麼是方法，以及一個方法由哪些部分組成。接著看在 Angular 裡怎麼從 HTML 呼叫方法，以及方法之間怎麼互相呼叫。然後學習怎麼在呼叫時帶入資料，包括多個參數和預設值，以及怎麼用 return 把結果回傳出來。最後用一個練習把觀念串起來。
 -->
 
 ---
@@ -371,6 +372,62 @@ introduce(name: string, age: number = 18) {
 -->
 
 ---
+
+# 回傳值（return）
+
+方法就像一台自動販賣機：投入代幣（**參數**），執行內部邏輯後，吐出飲料（**回傳值**）。
+
+| 語法 | 說明 |
+| --- | --- |
+| `(a: number, b: number): number` | 小括號後的 `: number` 是**回傳值的型別** |
+| `return 結果;` | 把結果交回呼叫的地方，並結束方法 |
+| `res = this.addMoney(10, 20);` | 用變數接住回傳的結果 |
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 沒有 <code>return</code> 的方法，只是「做一件事」；有 <code>return</code> 的方法，會「算出一個結果交給你」
+</div>
+
+<!--
+前面的方法，都是在方法裡直接 `alert` 或 `console.log`，做完就結束了。但很多時候，我們希望方法算出一個結果，交回給呼叫它的地方，讓程式繼續使用，這就需要回傳值。
+
+可以把方法想成一台自動販賣機：參數是投進去的代幣，回傳值是掉出來的飲料。
+
+寫法有兩個重點：第一，小括號後面加上冒號和型別，代表這個方法會回傳什麼型別的資料。第二，在方法裡用 `return` 把結果交出去，執行到 `return`，方法就會結束。
+-->
+
+---
+
+# 回傳值（return）— 範例
+
+```typescript
+// 小括號後的 : number 表示這個方法會回傳數字
+addMoney(price1: number, price2: number): number {
+  return price1 + price2;
+}
+
+showTotal() {
+  const res = this.addMoney(10, 20);   // res 得到 30
+  alert('總金額：' + res);
+}
+```
+
+```typescript
+addMoney(price1: number, price2: number): number {
+  return 'total';   // ❌ Type 'string' is not assignable to type 'number'.
+}
+```
+
+<!--
+我們看範例。
+
+`addMoney` 接收兩個價格，用 `return` 回傳兩者相加的結果。小括號後面的 `number` 規定了回傳值一定要是數字。
+
+`showTotal` 呼叫 `this.addMoney(10, 20)`，回傳的 30 就存進 `res`，接著可以拿去顯示或做其他計算。
+
+如果回傳值的型別跟宣告的不一樣，例如回傳字串，TypeScript 就會報錯，幫我們提早發現問題。
+-->
+
+---
 layout: default
 ---
 
@@ -423,6 +480,72 @@ layout: default
 第二步，在 TypeScript 的 class 裡定義三個方法。`showMessage` 先跳出訊息，再用 `this.logDone()` 呼叫第二個方法，這就是剛才問題的答案，要加 `this.`。`greet` 接收名字並顯示 Hello。`logDone` 則用 `console.log` 印出「完成」。
 
 存檔之後點擊按鈕，再按 F12 打開開發者工具，切換到 Console 頁籤，就能看到「完成」被印出來。
+-->
+
+---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：正方形面積計算器（return）
+
+請撰寫一個有「回傳值」的方法，計算正方形的面積：
+
+1. 在 TS 建立方法 `getArea(side: number): number`
+2. 方法內使用 `return` 回傳 `side * side` 的計算結果
+3. 建立另一個方法 `showArea()`，在內部宣告一個區域常數接收 `getArea()` 的結果，並用 `alert()` 顯示
+4. 在 HTML 建立按鈕，點擊時呼叫 `showArea()`
+
+<!--
+這題補充練習要用到 `return`。
+
+`getArea` 接收邊長，用 `return` 把面積回傳出去。`showArea` 呼叫 `getArea`，把結果存進一個常數，再用 `alert` 顯示。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：正方形面積計算器 — 參考答案
+
+```typescript
+getArea(side: number): number {
+  return side * side;
+}
+
+showArea() {
+  const area = this.getArea(5);
+  alert('正方形面積為：' + area);
+}
+```
+
+```html
+<button (click)="showArea()">計算面積</button>
+```
+
+<div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 小括號後的 <code>: number</code> 是「回傳值的型別」；方法執行到 <code>return</code> 就會把結果交回呼叫的地方，並結束方法
+</div>
+
+<!--
+我們來看答案。
+
+`getArea` 的小括號後面寫 `: number`，代表這個方法會回傳一個數字。裡面只有一行，用 `return` 把邊長乘以邊長的結果交出去。
+
+`showArea` 用 `this.getArea(5)` 呼叫它，回傳的 25 會存進 `area` 這個常數，最後用 `alert` 顯示。`return` 就像把計算結果交回給呼叫它的人，讓別的方法可以接著使用。
 -->
 
 ---

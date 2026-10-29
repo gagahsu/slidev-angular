@@ -416,6 +416,135 @@ layout: two-cols
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：原生選單與除錯實驗
+
+**練習 1：寵物補給品選單**
+
+1. 建立原生 `<select>`，綁定 `[(ngModel)]="petChoice"`
+2. 選項：貓咪主食罐（`cat-can`）、離乳營養膏（`nutri-paste`）
+3. 在下方用 `{{ petChoice }}` 即時印出
+4. 確認選取「貓咪主食罐」時，下方顯示 `cat-can`
+
+**練習 2：忘記匯入 FormsModule**
+
+故意把 `imports` 陣列中的 `FormsModule` 移除，觀察錯誤訊息，再補回來。
+
+<!--
+接下來兩題補充練習。
+
+第一題，做一個原生下拉選單，用 `ngModel` 綁定，下方即時顯示選到的值。注意顯示的是 `option` 的 `value`，不是選項文字。
+
+第二題是除錯實驗：把 `FormsModule` 拿掉，看看 `ngModel` 會出現什麼錯誤。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+petChoice: string = '';
+```
+
+```html
+<select [(ngModel)]="petChoice">
+  <option value="cat-can">貓咪主食罐</option>
+  <option value="nutri-paste">離乳營養膏</option>
+</select>
+<p>您選擇的是：{{ petChoice }}</p>
+```
+
+```text
+❌ Can't bind to 'ngModel' since it isn't a known property of 'select'.
+```
+
+<!--
+我們來看答案。
+
+`ngModel` 的值等於目前選中的 `option` 的 `value`，所以選貓咪主食罐，下方顯示的是 `cat-can`。
+
+拿掉 `FormsModule` 之後，會出現「無法綁定 ngModel」的錯誤，跟上一章 `ngClass` 少了模組時的訊息很像。看到這類錯誤，就去檢查 `imports`。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：用 @for 產生選項
+
+實務上，選單的選項通常來自後端資料，而不是寫死在 HTML：
+
+1. 在 TS 宣告陣列：
+
+```typescript
+catBreeds = [
+  { code: 'minuet',  name: '曼赤肯貓' },
+  { code: 'bsh',     name: '英國短毛貓' },
+  { code: 'persian', name: '波斯貓' }
+];
+```
+
+2. 在 `<select matNativeControl>` 內用 `@for` 跑過這個陣列
+3. `option` 的 `[value]` 綁定 `breed.code`，文字顯示 `{{ breed.name }}`
+4. 確認選單出現三種貓，且選取時能取得對應的代碼
+
+<!--
+第三題補充練習，用 `@for` 動態產生選項。
+
+選項資料放在 TS 的 `catBreeds` 陣列，HTML 用 `@for` 跑過它，每一筆產生一個 `option`：值是代碼，顯示的文字是品種名稱。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：用 @for 產生選項 — 參考答案
+
+```html
+<mat-form-field>
+  <mat-label>貓咪品種</mat-label>
+  <select matNativeControl [(ngModel)]="selectedBreed">
+    @for (breed of catBreeds; track breed.code) {
+      <option [value]="breed.code">{{ breed.name }}</option>
+    }
+  </select>
+</mat-form-field>
+<p>品種代碼：{{ selectedBreed }}</p>
+```
+
+```typescript
+selectedBreed: string = '';
+```
+
+<!--
+我們來看答案。
+
+`@for` 跑過 `catBreeds`，每一筆產生一個 `option`，中括號 `value` 綁定代碼，中間顯示品種名稱。`track` 用 `breed.code`，因為每個代碼都是唯一的。
+
+之後資料改成從 API 取得，只要把結果存進 `catBreeds`，選單就會自動更新，HTML 完全不用改。
+-->
+
+---
 layout: end
 ---
 

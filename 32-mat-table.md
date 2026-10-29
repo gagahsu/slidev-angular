@@ -479,6 +479,130 @@ HTML 裡寫了 `matColumnDef` 等於 position；TypeScript 的 `displayedColumns
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：欄位一致性與分頁選項
+
+**練習 1：欄位名稱打錯會怎樣？**
+
+1. 打開 `displayedColumns` 陣列，故意把 `'symbol'` 改成 `'sym-error'`
+2. 存檔，觀察 Console 拋出的錯誤
+3. 理解 `matColumnDef` 與 `displayedColumns` 欄位名稱必須一致，再修正回來
+
+**練習 2：每頁筆數選項**
+
+找到 `<mat-paginator>`，把 `[pageSizeOptions]` 改成 `[3, 6, 9, 12]`，點擊右下角選單確認選項是否改變。
+
+<!--
+接下來兩題補充練習。
+
+第一題是除錯實驗：故意把 `displayedColumns` 裡的欄位名稱打錯，看看會發生什麼事。
+
+第二題，把分頁器的每頁筆數選項改成 3、6、9、12。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+displayedColumns: string[] = ['position', 'name', 'weight', 'sym-error'];
+// ❌ Console：Error: Could not find column with id "sym-error".
+```
+
+```html
+<mat-paginator [pageSizeOptions]="[3, 6, 9, 12]"
+               showFirstLastButtons>
+</mat-paginator>
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>displayedColumns</code> 裡的每個名稱，都必須在 HTML 找到同名的 <code>matColumnDef</code>，否則整張表格無法顯示
+</div>
+
+<!--
+我們來看答案。
+
+欄位名稱打錯後，表格整個消失，Console 會說找不到 id 為 `sym-error` 的欄位。因為 `displayedColumns` 是用名字去 HTML 找對應的 `matColumnDef`，名字對不上就找不到。看到這個錯誤，第一步就是檢查兩邊的拼字。
+
+第二題只要改 `pageSizeOptions` 的陣列內容，右下角的下拉選單就會變成 3、6、9、12。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：新增「狀態」欄位
+
+在週期表中加入「狀態」欄位（例如 `Gas`、`Solid`）：
+
+1. 在 `PeriodicElement` interface 加上 `status: string`
+2. 在 `ELEMENT_DATA` 的每個物件中加上 `status: 'Gas'` 或 `status: 'Solid'`
+3. 在 HTML 新增 `status` 欄位，並加入 `displayedColumns`
+4. 打開網頁，確認表格右側出現新的狀態欄位
+
+<!--
+第三題補充練習，在現有的表格裡新增一個欄位。
+
+要動到三個地方：資料、HTML 的欄位定義，還有 `displayedColumns`。想一想，少改其中一個會怎樣？
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：新增「狀態」欄位 — 參考答案
+
+```typescript
+export interface PeriodicElement {
+  position: number; name: string; weight: number; symbol: string;
+  status: string;
+}
+
+const ELEMENT_DATA: PeriodicElement[] = [
+  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H', status: 'Gas' },
+  { position: 3, name: 'Lithium',  weight: 6.941,  symbol: 'Li', status: 'Solid' },
+  // ...其餘資料同樣補上 status
+];
+
+displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'status'];
+```
+
+```html
+<ng-container matColumnDef="status">
+  <th mat-header-cell *matHeaderCellDef> Status </th>
+  <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
+</ng-container>
+```
+
+<!--
+我們來看答案。
+
+第一，interface 加上 `status`，資料的每一筆也補上 `status`。第二，HTML 複製一個 `ng-container`，`matColumnDef` 命名為 `status`，儲存格顯示 `element.status`。第三，把 `status` 加進 `displayedColumns`。
+
+三個地方都改到，表格才會多出新欄位。新增欄位的順序，是由 `displayedColumns` 陣列的順序決定的。
+-->
+
+---
 layout: end
 ---
 

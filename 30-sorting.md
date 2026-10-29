@@ -316,6 +316,73 @@ ELEMENT_DATA = [
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：數字與文字排序
+
+**練習 1：數字升序**
+
+建立陣列 `let numbers = [50, 10, 5, 100, 32];`，將它由小到大排序，在 Console 確認結果為 `[5, 10, 32, 50, 100]`。
+
+**練習 2：英文符號降序（Z → A）**
+
+使用本章的 `ELEMENT_DATA`，針對 `symbol`（如 `'Ne'`、`'H'`、`'He'`）由大到小（降序）排序。
+
+<!--
+接下來兩題補充練習。
+
+第一題，把一個純數字陣列由小到大排好。第二題，用本章的元素資料，依照 `symbol` 由 Z 到 A 倒過來排。
+
+想一想，要讓順序反過來，比較方法的回傳值要怎麼改？我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+let numbers = [50, 10, 5, 100, 32];
+numbers.sort((a, b) => a - b);
+console.log(numbers);   // [5, 10, 32, 50, 100]
+```
+
+```typescript
+this.ELEMENT_DATA.sort((a, b) => {
+  if (a.symbol < b.symbol) return 1;    // 升序時是 -1，反過來
+  if (a.symbol > b.symbol) return -1;
+  return 0;
+});
+console.log(this.ELEMENT_DATA);
+```
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 數字不能只寫 <code>sort()</code>：預設會轉成字串比較，<code>[50, 10, 5, 100, 32]</code> 會排成 <code>[10, 100, 32, 5, 50]</code>
+</div>
+
+<!--
+我們來看答案。
+
+數字排序要傳入比較方法 `a - b`，結果是負數，`a` 就排前面，所以是由小到大。如果只寫 `sort()` 不帶參數，會被當成字串比較，100 會排在 32 前面，結果是錯的。
+
+文字降序，只要把升序的回傳值對調：`a` 比 `b` 小時回傳 1，讓 `a` 排到後面，就變成由 Z 到 A。
+-->
+
+---
 layout: end
 ---
 

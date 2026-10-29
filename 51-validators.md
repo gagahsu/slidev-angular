@@ -702,6 +702,129 @@ layout: default
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：即時錯誤提示
+
+在畫面上直接顯示欄位的驗證狀態：
+
+1. 在 `formControlName="surveyTitle"` 輸入框的正下方，加入一行警告：
+
+```html
+<p style="color: red">⚠️ 問卷名稱為必填，且長度不能超過 5 個字！</p>
+```
+
+2. 用 `@if (form.get('surveyTitle')?.invalid)` 控制這行警告的顯示
+3. 測試：輸入框為空、或字數超過 5 個字時，紅字警告是否自動出現
+
+<!--
+第一題補充練習，把驗證結果直接顯示在畫面上。
+
+在問卷名稱輸入框下方加一行紅字，用 `@if` 判斷這個欄位是不是無效，無效才顯示。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：即時錯誤提示 — 參考答案
+
+```typescript
+form = this.fb.group({
+  surveyTitle: ['', [Validators.required, Validators.maxLength(5)]],
+});
+```
+
+```html
+<input formControlName="surveyTitle">
+
+@if (form.get('surveyTitle')?.invalid) {
+  <p style="color: red">⚠️ 問卷名稱為必填，且長度不能超過 5 個字！</p>
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 一打開頁面欄位就是空的，警告會立刻出現；可改成 <code>invalid && touched</code>，等使用者碰過欄位後才提示
+</div>
+
+<!--
+我們來看答案。
+
+`form.get('surveyTitle')` 取得這個欄位，問號是避免取不到欄位時報錯，`invalid` 代表沒有通過驗證。必填沒填、或超過 5 個字，`invalid` 都會是 true，紅字就出現。
+
+你會發現，一打開頁面警告就出現了，因為欄位一開始是空的。實務上會再加上 `touched` 判斷，等使用者點過這個欄位才顯示，體驗比較好。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：用正規表達式限制純數字
+
+產品管理後台的「建議劑量（毫克）」欄位，只能輸入 1 到 4 位的純數字：
+
+1. 在 `form` 中新增 `mgDosage: ['', Validators.pattern(/^\d{1,4}$/)]`
+2. 理解 `^\d{1,4}$` 的意思：從頭到尾只能有 1 到 4 位數字
+3. 送出按鈕綁定 `[disabled]="form.invalid"`
+4. 測試：輸入 `100a` 或 `12345`，確認送出按鈕變灰
+
+<!--
+第二題補充練習，用正規表達式限制輸入格式。
+
+`pattern` 驗證器接收一個正規表達式。`^` 代表開頭，`$` 代表結尾，`\d` 是數字，大括號 1 逗號 4 代表出現 1 到 4 次。合起來就是：從頭到尾只能有 1 到 4 位數字。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：用正規表達式限制純數字 — 參考答案
+
+```typescript
+form = this.fb.group({
+  mgDosage: ['', Validators.pattern(/^\d{1,4}$/)],
+});
+```
+
+```html
+<form [formGroup]="form">
+  <input formControlName="mgDosage" placeholder="建議劑量（毫克）">
+  <button type="submit" [disabled]="form.invalid">送出</button>
+</form>
+```
+
+| 輸入 | 結果 |
+| --- | --- |
+| `500` | ✅ 通過 |
+| `100a` | ❌ 含有英文字母 |
+| `12345` | ❌ 超過 4 位數 |
+
+<!--
+我們來看答案。
+
+`mgDosage` 套上 `pattern` 驗證器，輸入內容不符合格式，整個表單就是 `invalid`，送出按鈕被停用。
+
+注意，`pattern` 不負責「必填」：空字串不會被它判定為錯誤。如果這個欄位也必填，要再加上 `Validators.required`，寫成陣列。
+-->
+
+---
 layout: end
 ---
 

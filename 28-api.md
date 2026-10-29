@@ -659,6 +659,133 @@ https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-D0047-065?Authorization=CWA-
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：API 錯誤攔截
+
+網路可能隨時斷線，API 網址也可能打錯。如果沒有錯誤處理，使用者完全不知道發生了什麼事：
+
+1. 故意呼叫一個無效網址：`https://api.freeapi.app/api/error-url`
+2. 把 `subscribe` 改寫成物件形式，同時宣告 `next` 與 `error` 兩個通道
+3. `next`：成功時 `console.log(res)`
+4. `error`：失敗時 `alert('伺服器故障，請稍後再試！')`
+5. 執行程式，確認網頁是否彈出警告
+
+<!--
+第一題補充練習，學習處理 API 失敗的情況。
+
+故意打一個錯誤的網址，把 `subscribe` 改成物件的寫法，裡面分成 `next` 和 `error` 兩條路：成功走 `next`，失敗走 `error`。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：API 錯誤攔截 — 參考答案
+
+```typescript
+constructor(private http: HttpClientService) {}
+
+ngOnInit(): void {
+  this.http.getApi('https://api.freeapi.app/api/error-url').subscribe({
+    next: (res) => {
+      console.log(res);                     // 成功時走這裡
+    },
+    error: (err) => {
+      console.log(err);
+      alert('伺服器故障，請稍後再試！');    // 失敗時走這裡
+    }
+  });
+}
+```
+
+<div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
+💡 <code>subscribe(res => ...)</code> 只處理成功；改成 <code>subscribe(&#123; next, error &#125;)</code> 才能同時處理成功與失敗
+</div>
+
+<!--
+我們來看答案。
+
+`subscribe` 小括號裡改放一個物件，`next` 是成功時要做的事，`error` 是失敗時要做的事。
+
+網址錯誤時，伺服器會回傳 404，程式就會走 `error`，跳出提示，讓使用者知道發生了什麼事。打開 Console，還可以看到 `err` 裡的狀態碼和錯誤訊息，方便除錯。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：政府天氣 API 網頁
+
+把 API 取得的資料，用學過的控制流呈現在畫面上：
+
+1. 到「中央氣象署 開放資料平臺」註冊會員
+2. 取得天氣 API 的授權碼（金鑰）
+3. 呼叫天氣 API（地區自選，例如今明 36 小時天氣預報）
+4. 在 HTML 用 `@for` 把該地區的氣象內容呈現出來
+
+```text
+https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=你的金鑰&locationName=高雄市
+```
+
+<!--
+第二題補充練習，串接真正的政府開放資料。
+
+先到中央氣象署開放資料平臺註冊，取得授權碼。接著呼叫今明 36 小時天氣預報的 API，網址後面帶上你的授權碼和想查詢的縣市名稱，再把資料用 `@for` 顯示在畫面上。
+
+建議先用 `console.log` 把回傳資料印出來，看清楚結構再開始寫畫面。我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 2：政府天氣 API — 參考答案
+
+```typescript
+weatherList: any[] = [];
+
+ngOnInit(): void {
+  const url = 'https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001'
+    + '?Authorization=你的金鑰&locationName=高雄市';
+  this.http.getApi(url).subscribe((res: any) => {
+    console.log(res);
+    // 天氣現象（Wx）的三個時段
+    this.weatherList = res.records.location[0].weatherElement[0].time;
+  });
+}
+```
+
+```html
+@for (item of weatherList; track item.startTime) {
+  <p>{{ item.startTime }} ～ {{ item.endTime }}：{{ item.parameter.parameterName }}</p>
+}
+```
+
+<!--
+我們來看答案。
+
+回傳資料的結構比較深：`records` 底下的 `location` 是地區陣列，第一筆就是高雄市；`weatherElement` 是各種天氣要素，第一個是天氣現象 Wx；`time` 是三個時段的預報。
+
+把 `time` 陣列存進 `weatherList`，HTML 再用 `@for` 依序顯示每個時段的開始、結束時間和天氣描述。實際的資料結構，以你 Console 印出來的為準。
+-->
+
+---
 layout: end
 ---
 

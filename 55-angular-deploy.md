@@ -514,6 +514,130 @@ Project Console 是 Firebase 的後台管理介面，可以在裡面查看流量
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：打包檢查與路徑錯誤除錯
+
+**練習 1：發布前打包**
+
+1. 在專案根目錄執行 `ng build`
+2. 確認專案中多出 `dist/` 資料夾
+3. 一路點到最內層，確認裡面有網站入口 `index.html`
+
+**練習 2：public 路徑設錯會怎樣？**
+
+1. 執行 `firebase init` 時，public 目錄的問題**故意直接按 Enter**，使用預設值 `public`
+2. 執行 `firebase deploy`，打開 Hosting 網址，觀察畫面
+3. 打開 `firebase.json`，把 `"public": "public"` 改成 `"dist/你的專案名稱/browser"`，重新部署
+
+<!--
+接下來兩題補充練習。
+
+第一題，部署前先確認打包結果：`dist` 資料夾裡有沒有 `index.html`。
+
+第二題是除錯實驗：初始化時故意不改 public 目錄，部署後看看網站變成什麼樣子，再從 `firebase.json` 修正回來。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```text
+dist/
+└── 你的專案名稱/
+    └── browser/
+        ├── index.html      ← 網站入口
+        ├── main-xxxx.js
+        └── styles-xxxx.css
+```
+
+```json
+{
+  "hosting": {
+    "public": "dist/quest/browser",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [{ "source": "**", "destination": "/index.html" }]
+  }
+}
+```
+
+<!--
+我們來看答案。
+
+`ng build` 之後，`index.html` 在 `dist`、專案名稱、`browser` 這一層，這就是要上傳到雲端的資料夾。
+
+如果 public 用預設值，Firebase 上傳的是空的 `public` 資料夾，網站就不會是你的專案，而是 Firebase 的預設頁面或錯誤頁面。只要把 `firebase.json` 的 `public` 改成正確的路徑，重新部署就好。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：修改後重新發布
+
+體驗網站修改後，如何重新發布、覆蓋舊版：
+
+1. 在 `app.component.html` 最上方加入：
+
+```html
+<h1 style="color: #0ea5e9">🎉 Allen 老師的動態商城正式上線！</h1>
+```
+
+2. 重新打包：`ng build`
+3. 重新發布：`firebase deploy`
+4. 打開 Hosting 網址確認更新；如果畫面還是舊的，按 `Ctrl + F5`（Mac：`Cmd + Shift + R`）強制重新整理
+
+<!--
+第三題補充練習，練習網站更新的流程。
+
+在首頁加一行標題，接著重新打包、重新部署，再打開網址確認有沒有更新。
+
+如果畫面還是舊的，可能是瀏覽器快取，用強制重新整理再看一次。我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 3：修改後重新發布 — 參考答案
+
+```bash
+# 每次修改程式碼後的上線三步驟
+ng build          # 1. 重新打包
+firebase deploy   # 2. 重新發布，覆蓋雲端上的舊版本
+                  # 3. 打開 Hosting 網址，必要時強制重新整理
+```
+
+<div class="mt-3 p-3 bg-yellow-50 border-l-4 border-yellow-400 text-gray-700 text-sm text-left">
+⚠️ 只執行 <code>firebase deploy</code> 而沒有先 <code>ng build</code>，上傳的仍然是舊的打包結果，網站不會更新
+</div>
+
+<!--
+我們來看答案。
+
+每次修改都是同樣的三個步驟：先 `ng build` 重新打包，再 `firebase deploy` 上傳，最後打開網址確認。
+
+最常見的錯誤是忘記先打包，直接部署。這時上傳的還是 `dist` 裡的舊檔案，網站當然不會變。記住順序：先打包，再部署。
+-->
+
+---
 layout: end
 ---
 

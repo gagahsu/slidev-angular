@@ -1208,6 +1208,85 @@ layout: default
 -->
 
 ---
+layout: section
+class: flex flex-col justify-center items-center text-center
+---
+
+# 補充練習
+# Extra Practice
+
+<!--
+接下來是幾題補充練習，把這一章學到的內容再動手練一次。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2：用程式跳轉頁面
+
+**練習 1：按鈕返回起始頁**
+
+1. 在 `second.component.html` 做出「返回起始頁」按鈕
+2. 在 `SecondComponent` 的建構式注入 `Router`
+3. 點擊時用 `this.router.navigateByUrl('/first')` 跳回首頁
+
+**練習 2：登入狀態導航**
+
+1. 在首頁 TS 宣告 `isLogin: boolean = true;`
+2. 撰寫方法 `checkUser()`：`isLogin` 為 `true` 時 `alert('登入成功！準備跳轉')` 並導航至 `/second`；否則 `alert('拒絕訪問')`
+3. 切換布林值，感受依邏輯換頁的效果
+
+<!--
+接下來兩題補充練習，都是用 TS 程式來切換頁面。
+
+第一題，在 second 頁面做一個返回按鈕，注入 `Router`，點擊時用 `navigateByUrl` 回到 first。
+
+第二題，在首頁加上判斷：已登入就跳到 second，沒登入就跳出拒絕訪問。
+
+我們先暫停一下，自己動手試試看。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1–2 — 參考答案
+
+```typescript
+// second.component.ts
+constructor(private router: Router) {}
+
+goBack() {
+  this.router.navigateByUrl('/first');
+}
+```
+
+```typescript
+// first.component.ts
+isLogin: boolean = true;
+
+constructor(private router: Router) {}
+
+checkUser() {
+  if (this.isLogin) {
+    alert('登入成功！準備跳轉');
+    this.router.navigateByUrl('/second');
+  } else {
+    alert('拒絕訪問');
+  }
+}
+```
+
+<!--
+我們來看答案。
+
+兩題都要先從 `@angular/router` 匯入 `Router`，在建構式注入。第一題的 `goBack` 只有一行，用 `navigateByUrl` 跳回 first。
+
+第二題的 `checkUser` 用 `if` 判斷 `isLogin`：成立就先跳提示，再導向 second；不成立就只跳出拒絕訪問，留在原頁。這就是程式導航比 `routerLink` 更有彈性的地方：可以先判斷條件，再決定要不要換頁。
+-->
+
+---
 layout: end
 ---
 
