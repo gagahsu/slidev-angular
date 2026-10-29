@@ -479,6 +479,7 @@ layout: default
 -->
 
 ---
+zoom: 0.88
 layout: default
 ---
 

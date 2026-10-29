@@ -979,6 +979,7 @@ TypeScript 的後半部。
 -->
 
 ---
+zoom: 0.9
 layout: default
 ---
 
@@ -1054,6 +1055,7 @@ HTML 的後半部。
 -->
 
 ---
+zoom: 0.92
 layout: default
 ---
 
@@ -1080,6 +1082,7 @@ layout: default
 -->
 
 ---
+zoom: 0.88
 layout: default
 ---
 

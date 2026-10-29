@@ -450,6 +450,8 @@ export class AppComponent implements AfterViewInit {
 -->
 
 ---
+zoom: 0.96
+---
 
 # 完整 HTML 範例（二）
 ### 表格欄位定義

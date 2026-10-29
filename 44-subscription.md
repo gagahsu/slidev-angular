@@ -660,6 +660,7 @@ layout: default
 -->
 
 ---
+zoom: 0.95
 layout: default
 ---
 
@@ -699,6 +700,7 @@ export class ProductListComponent {
 -->
 
 ---
+zoom: 0.95
 layout: default
 ---
 
@@ -784,6 +786,18 @@ export class AppComponent { }
 <app-product-list></app-product-list>
 ```
 
+<!--
+最後，把兩個元件放進 `app.component`。
+
+先在 `imports` 加入 `HeaderComponent` 和 `ProductListComponent`，HTML 裡才能直接使用它們的標籤。
+-->
+
+---
+layout: default
+---
+
+# 完整解答 — 兩元件的關係
+
 <div class="grid grid-cols-2 gap-4 my-3">
 <div>
 
@@ -808,9 +822,7 @@ export class AppComponent { }
 </div>
 
 <!--
-最後，把兩個元件放進 `app.component`。
-
-先在 `imports` 加入 `HeaderComponent` 和 `ProductListComponent`，HTML 裡才能直接使用它們的標籤。兩個元件在畫面上是平行的，彼此不認識，也沒有 `@Input` 或 `@Output`。
+兩個元件在畫面上是平行的，彼此不認識，也沒有 `@Input` 或 `@Output`。
 
 它們唯一的共同點，是都注入了同一個 `CartService`。商品列表呼叫 `addItem` 推送新數量，訂閱了 `_cartCount$` 的導覽列就會立刻收到並更新畫面。這就是訂閱最大的價值：讓沒有直接關係的元件，也能保持資料同步。
 -->

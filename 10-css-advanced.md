@@ -325,6 +325,8 @@ Flexbox 是怎麼運作的？我們先用一個比喻。
 -->
 
 ---
+zoom: 0.96
+---
 
 # flex-direction — 主軸方向
 
@@ -1035,10 +1037,15 @@ Tailwind 的 class 很多，但命名非常有規律，不用一個一個背。
 -->
 
 ---
+zoom: 0.95
+---
 
 # Tailwind 的 Flexbox class
 
 今天前半段學的 Flexbox，在 Tailwind 裡全部都有對應的 class：
+
+<div class="grid grid-cols-2 gap-6 items-center">
+<div>
 
 | CSS 寫法 | Tailwind class |
 | --- | --- |
@@ -1050,13 +1057,20 @@ Tailwind 的 class 很多，但命名非常有規律，不用一個一個背。
 | `flex: 1` | `flex-1` |
 | `gap: 8px` | `gap-2` |
 
+</div>
+<div>
+
 ```html
 <!-- 水平置中 + 垂直置中 + 間距 8px -->
-<div class="flex justify-center items-center gap-2">
+<div class="flex justify-center
+            items-center gap-2">
   <div class="flex-1">左</div>
   <div class="flex-1">右</div>
 </div>
 ```
+
+</div>
+</div>
 
 <!--
 剛才學的 Flexbox，在 Tailwind 裡都有對應的 class。
@@ -1066,6 +1080,8 @@ Tailwind 的 class 很多，但命名非常有規律，不用一個一個背。
 看得出來，Tailwind 的 class 幾乎就是 CSS 屬性的縮寫。所以要記住一件事：「Tailwind 不是新的語言，只是 CSS 的另一種寫法」。CSS 的基礎打穩了，Tailwind 很快就能上手；反過來，如果 CSS 不熟，Tailwind 的 class 就會很難看懂。
 -->
 
+---
+zoom: 0.94
 ---
 
 # Angular 專案安裝 Tailwind — 步驟

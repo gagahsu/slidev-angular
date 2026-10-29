@@ -213,7 +213,7 @@ export class AppComponent {
 
 <code>&lt;pre&gt;</code> 標籤會依照原始內容的空白與換行進行呈現，使 JSON 結構更易於閱讀。
 
-<pre class="bg-gray-100 rounded p-4 text-sm text-left leading-relaxed font-mono mt-4" style="width: fit-content; margin: 1rem auto;">
+<pre class="bg-gray-100 rounded p-4 text-sm text-left leading-relaxed font-mono mt-4" style="width: fit-content !important; margin: 1rem auto !important;">
 {
   "name": "John",
   "age": 30,

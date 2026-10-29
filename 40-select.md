@@ -256,6 +256,8 @@ Angular Material 提供兩種整合方式：`mat-select` 元件，以及在原�
 -->
 
 ---
+zoom: 0.89
+---
 
 # mat-select — 元件程式碼
 

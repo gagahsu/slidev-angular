@@ -1041,6 +1041,7 @@ export const appConfig: ApplicationConfig = {
 -->
 
 ---
+zoom: 0.95
 layout: default
 ---
 

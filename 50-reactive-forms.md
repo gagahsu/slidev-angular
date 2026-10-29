@@ -93,7 +93,7 @@ Reactive Forms（響應式表單）是 Angular 中以**模型驅動（Model-Driv
 - 易於單元測試
 
 <div class="flex justify-center mt-4">
-  <img src="/images/50-reactive-forms/angular-forms-overview.png" class="rounded shadow-md max-h-80" />
+  <img src="/images/50-reactive-forms/angular-forms-overview.png" class="rounded shadow-md max-h-48" />
 </div>
 
 <!--
@@ -604,7 +604,7 @@ layout: default
 layout: default
 ---
 
-# 補充練習 1：商品成分清單 — 參考答案
+# 補充練習 1：商品成分清單 — 參考答案（TS）
 
 ```typescript
 fb = inject(FormBuilder);
@@ -627,6 +627,18 @@ removeIngredient(index: number) {
 }
 ```
 
+<!--
+我們來看答案。
+
+TS 的部分和問卷範例一樣：`fb.group` 定義結構，用 getter 把 `ingredients` 轉成 FormArray，`push` 新增一組，`removeAt` 刪除指定位置。
+-->
+
+---
+layout: default
+---
+
+# 補充練習 1：商品成分清單 — 參考答案（HTML）
+
 ```html
 <form [formGroup]="form">
   <input formControlName="productName" placeholder="商品名稱">
@@ -644,10 +656,6 @@ removeIngredient(index: number) {
 ```
 
 <!--
-我們來看答案。
-
-TS 的部分和問卷範例一樣：`fb.group` 定義結構，用 getter 把 `ingredients` 轉成 FormArray，`push` 新增一組，`removeAt` 刪除指定位置。
-
 HTML 用 `formArrayName` 對應陣列，`@for` 跑過 `controls`，每一列用 `formGroupName` 綁定索引，裡面的輸入框再用 `formControlName` 對應 `name` 和 `mg`。按鈕記得加 `type="button"`，不然會被當成送出表單。
 -->
 

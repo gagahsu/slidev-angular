@@ -552,6 +552,7 @@ export class RegisterFormComponent {
 -->
 
 ---
+zoom: 0.86
 layout: default
 ---
 

@@ -442,7 +442,7 @@ layout: default
 不可以在 HTML 中直接寫死文字或網址，全部透過 TS 變數傳入。
 
 <div class="mt-3 flex justify-center">
-  <img src="/images/14-variables/practice-result.png" style="max-height: 220px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" />
+  <img src="/images/14-variables/practice-result.png" style="max-height: 160px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" />
 </div>
 
 <!--

@@ -580,6 +580,7 @@ layout: two-cols
 -->
 
 ---
+zoom: 0.95
 layout: default
 ---
 

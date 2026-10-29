@@ -156,6 +156,8 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+zoom: 0.92
+---
 
 # `ng g c` — 快速建立元件
 

@@ -73,6 +73,8 @@ layout: default
 -->
 
 ---
+zoom: 0.84
+---
 
 # 數據類型概覽
 

@@ -145,7 +145,7 @@ ng build
 
 建置完成後，Angular CLI 會輸出各 chunk 檔案的大小與壓縮後的傳輸大小，並在專案根目錄產生 `dist/` 資料夾。
 
-<div class="flex justify-center"><img src="/images/54-angular-build/ng-build-output.png" class="rounded shadow-md max-h-80" /></div>
+<div class="flex justify-center"><img src="/images/54-angular-build/ng-build-output.png" class="rounded shadow-md max-h-68" /></div>
 
 <!--
 在專案的根目錄執行 `ng build`，Angular CLI 就會開始編譯整個專案。
@@ -251,6 +251,8 @@ The dist Folder and Deployment
 -->
 
 ---
+zoom: 0.9
+---
 
 # dist 資料夾結構
 
@@ -270,7 +272,7 @@ The dist Folder and Deployment
 </div>
 <div>
 
-<img src="/images/54-angular-build/dist-folder-structure.png" class="rounded shadow-md w-full" />
+<img src="/images/54-angular-build/dist-folder-structure.png" class="rounded shadow-md max-h-80 mx-auto" />
 
 </div>
 </div>

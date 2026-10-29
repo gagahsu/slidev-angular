@@ -164,6 +164,7 @@ calc 最常見的用途就是混合 px 和 %。純 CSS 沒辦法說「我要整�
 -->
 
 ---
+zoom: 0.94
 layout: default
 ---
 
@@ -264,6 +265,7 @@ find 和 filter 的差別在於：filter 把所有符合條件的項目抓出來
 -->
 
 ---
+zoom: 0.96
 layout: default
 ---
 
@@ -296,6 +298,7 @@ sort 的回呼函數接收兩個比較元素 a 和 b。回傳負數代表 a 排�
 -->
 
 ---
+zoom: 0.92
 layout: default
 ---
 
@@ -2690,6 +2693,7 @@ layout: default
 -->
 
 ---
+zoom: 0.96
 layout: default
 ---
 

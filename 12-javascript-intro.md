@@ -305,6 +305,8 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+zoom: 0.97
+---
 
 # 讀取畫面內容 — 輸入框用 .value
 
@@ -341,6 +343,8 @@ class: flex flex-col justify-center items-center text-center
 要注意，`value` 拿到的一定是字串。就算使用者輸入的是數字，要拿來計算前，也要先用 `Number` 轉換。
 -->
 
+---
+zoom: 0.94
 ---
 
 # 讀取畫面內容 — 一般標籤用 .innerText

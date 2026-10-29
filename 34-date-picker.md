@@ -82,6 +82,8 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+zoom: 0.97
+---
 
 # 日期選擇器
 

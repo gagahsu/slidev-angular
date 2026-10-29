@@ -445,6 +445,7 @@ localeCompare 回傳正數、負數或 0，跟 sort 的比較函數邏輯完美�
 -->
 
 ---
+zoom: 0.96
 layout: default
 ---
 

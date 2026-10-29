@@ -478,6 +478,8 @@ export interface Order {
 -->
 
 ---
+zoom: 0.89
+---
 
 # 完整解答 — HTML
 
@@ -548,6 +550,8 @@ export interface Order {
 如果沒有這兩段樣式，畫面就會是瀏覽器預設的清單樣式，跟預覽的效果差很多。
 -->
 
+---
+zoom: 0.96
 ---
 
 # 完整解答 — SCSS（二）顏色與狀態

@@ -106,7 +106,7 @@ Dialog（對話框）用來提醒使用者執行特定操作，或顯示重要�
 </div>
 </div>
 
-<img src="/images/42-dialog/dialog-overview-example.png" class="rounded shadow-md max-h-80 mx-auto mt-2" />
+<img src="/images/42-dialog/dialog-overview-example.png" class="rounded shadow-md max-h-56 mx-auto mt-2" />
 
 <!--
 Dialog，也就是對話框，是一個蓋在畫面最上層的視窗，用來提醒使用者執行特定操作，或顯示重要的訊息。
@@ -819,6 +819,7 @@ layout: default
 -->
 
 ---
+zoom: 0.9
 layout: default
 ---
 

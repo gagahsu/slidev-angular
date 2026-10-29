@@ -268,6 +268,8 @@ HTML 表格的結構有嚴格的規定：`tr` 底下只能直接放 `th` 和 `td
 -->
 
 ---
+zoom: 0.96
+---
 
 # 使用 Mat-table
 ### HTML 結構（二）
@@ -390,6 +392,8 @@ dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 `paginator` 用 `@ViewChild` 取得畫面上分頁器的實例，下一步會用到它。
 -->
 
+---
+zoom: 0.95
 ---
 
 # 使用 Mat-table

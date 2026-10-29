@@ -399,6 +399,8 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+zoom: 0.96
+---
 
 # TypeScript Getter — 自動計算屬性
 

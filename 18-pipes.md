@@ -217,6 +217,8 @@ const questions = [
 -->
 
 ---
+zoom: 0.93
+---
 
 # 進階：分類對應的資料模型 — 範例
 
@@ -478,6 +480,7 @@ layout: default
 -->
 
 ---
+zoom: 0.96
 layout: default
 ---
 
@@ -578,6 +581,7 @@ layout: default
 -->
 
 ---
+zoom: 0.9
 layout: default
 ---
 

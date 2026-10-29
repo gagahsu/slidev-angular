@@ -107,7 +107,7 @@ class: flex flex-col justify-center items-center text-center
 </div>
 
 <div class="flex justify-center">
-  <img src="/images/47-sidenav/sidenav-concept-overview.png" class="rounded shadow-md max-h-80" />
+  <img src="/images/47-sidenav/sidenav-concept-overview.png" class="rounded shadow-md max-h-56" />
 </div>
 
 <!--
@@ -456,6 +456,7 @@ import { MatButtonModule } from '@angular/material/button';
 -->
 
 ---
+zoom: 0.94
 layout: default
 ---
 

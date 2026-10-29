@@ -290,6 +290,8 @@ HTML 的標籤有一百多個，不需要全部背起來，我們先認識最常
 -->
 
 ---
+zoom: 0.89
+---
 
 # 主要標籤（二）— 文字、連結與列表
 
@@ -315,6 +317,8 @@ HTML 的標籤有一百多個，不需要全部背起來，我們先認識最常
 最後是表格相關的 `table`、`tr`、`td`，後面會再詳細介紹。
 -->
 
+---
+zoom: 0.82
 ---
 
 # 主要標籤（三）— 表單與語義化
@@ -561,6 +565,8 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+zoom: 0.91
+---
 
 # HTML 常用標籤 — table（1/3）外層結構
 
@@ -597,6 +603,8 @@ class: flex flex-col justify-center items-center text-center
 不寫 `thead` 和 `tbody`，瀏覽器也能顯示表格，但加上去能讓結構更清楚，之後寫 CSS 也比較好指定樣式，是一個好習慣。
 -->
 
+---
+zoom: 0.96
 ---
 
 # HTML 常用標籤 — table（2/3）tr 與 th

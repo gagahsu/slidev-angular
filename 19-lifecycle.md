@@ -800,10 +800,11 @@ layout: default
 -->
 
 ---
+zoom: 0.94
 layout: default
 ---
 
-# 練習：解題提示
+# 練習：解題提示（1／2）
 ### 完成步驟
 
 1. 在 `app.component.ts` 引入並 `implements OnInit, AfterViewInit`：
@@ -830,14 +831,25 @@ export class AppComponent implements OnInit, AfterViewInit {
 }
 ```
 
+<!--
+我們來看解題步驟。
+
+在 `app.component.ts` 引入 `OnInit` 和 `AfterViewInit`，並在 class 後面實作這兩個介面。`welcomeMessage` 用驚嘆號宣告。三個階段各自印出 1、2、3 的訊息，並在 `ngOnInit` 裡設定歡迎文字。
+-->
+
+---
+layout: default
+---
+
+# 練習：解題提示（2／2）
+### 完成步驟
+
 2. 在 `app.component.html` 加入 `<p>{{ welcomeMessage }}</p>`
 
 3. 儲存後開啟 F12 → Console，確認順序：`1. constructor 執行` → `2. ngOnInit 執行` → `3. ngAfterViewInit 執行`
 
 <!--
-我們來看解題步驟。
-
-在 `app.component.ts` 引入 `OnInit` 和 `AfterViewInit`，並在 class 後面實作這兩個介面。`welcomeMessage` 用驚嘆號宣告。三個階段各自印出 1、2、3 的訊息，並在 `ngOnInit` 裡設定歡迎文字。
+接著在 HTML 用內嵌繫結顯示 `welcomeMessage`。
 
 存檔之後打開 Console，會看到 constructor、ngOnInit、ngAfterViewInit 依序出現。雖然變數宣告時沒有值，但 `ngOnInit` 在畫面顯示前就設定好了，所以畫面會正確顯示歡迎訊息。
 

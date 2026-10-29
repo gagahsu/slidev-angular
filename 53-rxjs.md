@@ -373,6 +373,8 @@ of(1, 2, 3)
 -->
 
 ---
+zoom: 0.87
+---
 
 # 建立運算子（Creation Operators）
 
@@ -403,6 +405,8 @@ observable.subscribe((x) => console.log(x));
 表格列了幾個常用的建立運算子：`of` 依序發出指定的值；`from` 把陣列或 Promise 轉成 Observable；`timer` 延遲一段時間後才開始；`fromEvent` 則把畫面上的事件，例如點擊，轉成 Observable。先有個印象，之後用到再回來查。
 -->
 
+---
+zoom: 0.92
 ---
 
 # 聯結建立運算子（Join Creation Operators）

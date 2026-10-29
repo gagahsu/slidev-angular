@@ -247,6 +247,8 @@ class: flex flex-col justify-center items-center text-center
 -->
 
 ---
+zoom: 0.96
+---
 
 # 完整解答 — Interface 與假資料
 

@@ -708,6 +708,7 @@ layout: default
 -->
 
 ---
+zoom: 0.96
 layout: default
 ---
 

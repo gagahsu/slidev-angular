@@ -17,6 +17,12 @@
   color: inherit !important;
 }
 
+/* penguin widens pre by 96px to the right; inside a 2-column grid it bleeds off the slide */
+.slidev-layout .grid-cols-2 pre.slidev-code {
+  width: auto !important;
+  margin-right: 0 !important;
+}
+
 /* Fix Slidev v52+ Presenter Mode Layout Overflow */
 .grid-container {
   width: 100vw !important;
