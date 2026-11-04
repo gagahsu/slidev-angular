@@ -1,10 +1,16 @@
-.spacer {
-  flex: 1 1 auto;
-}
+/* flex: 1 1 auto 會佔滿剩餘空間，把後面的內容推到右邊 */
+.example-spacer { flex: 1 1 auto; }
+.toolbar-spacer { flex: 1 1 auto; }
 
-.page-content {
-  max-width: 700px;
-  margin: 30px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+/* 投影片是 100vh；這裡放在區塊內，所以用固定高度 */
+.menu-container { height: 360px; }
+.menu-sidenav { width: 200px; }
+.menu-content { padding: 24px; }
+
+/* routerLinkActive 的 class 在 Material 元件上，要用 ::ng-deep 才吃得到樣式 */
+::ng-deep .active-link {
+  background: rgba(94, 173, 160, 0.12) !important;
+  color: #5eada0 !important;
+  font-weight: 600;
+  border-radius: 8px;
 }

@@ -1,30 +1,36 @@
 import { Component } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'app-ch47-sidenav',
-  templateUrl: './ch47-sidenav.html',
-  styleUrl: './ch47-sidenav.css',
-  standalone: true,
-  imports: [MatSidenavModule, MatListModule, MatIconModule, MatButtonModule, MatToolbarModule]
+  selector: 'app-ch47-sidenav',         // 這個元件在 HTML 中使用的標籤名稱
+  templateUrl: './ch47-sidenav.html',   // 這個元件使用的 HTML 檔案
+  styleUrl: './ch47-sidenav.css',       // 這個元件使用的 CSS 檔案
+  standalone: true,                     // 獨立元件
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
 })
 export class Ch47Sidenav {
-  currentMode: 'over' | 'push' | 'side' = 'over';
 
-  menuItems = [
-    { icon: 'home',     label: '首頁'   },
-    { icon: 'person',   label: '個人資料' },
-    { icon: 'settings', label: '設定'   },
-    { icon: 'help',     label: '說明'   }
+  // 路徑清單存成陣列，HTML 用 @for 產生選單
+  pages = [
+    { path: '/ch47/home', label: 'Home 首頁' },
+    { path: '/ch47/dashboard', label: 'Dashboard' },
+    { path: '/ch47/cart', label: 'Cart 購物車' },
   ];
 
-  activePage: string = '首頁';
-
-  selectPage(label: string): void {
-    this.activePage = label;
-  }
+  // 補充練習 1：目前的顯示模式
+  mode: 'side' | 'over' | 'push' = 'side';
 }

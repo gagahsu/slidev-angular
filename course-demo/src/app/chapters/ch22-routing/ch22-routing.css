@@ -1,0 +1,8 @@
+.nav-link { margin-right: 16px; color: #1a5c5c; }
+
+/* 目前頁面連結的樣式 */
+.active-link {
+  color: #5eada0;
+  font-weight: bold;
+  border-bottom: 2px solid #5eada0;
+}

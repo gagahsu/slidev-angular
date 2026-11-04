@@ -1,0 +1,102 @@
+<div class="chapter">
+  <h1>🗂️ 資料轉換與呈現</h1>
+
+  <!-- ① 動態問卷的資料格式 -->
+  <section class="demo-section">
+    <h2>① 設計資料格式：動態問卷</h2>
+    <!-- @for 跑過陣列，資料有幾筆，畫面就顯示幾筆 -->
+    @for (question of questions; track question.id) {
+      <p><strong>{{ question.title }}</strong></p>
+      <ul>
+        @for (option of question.options; track option) {
+          <li>{{ option }}</li>
+        }
+      </ul>
+    }
+  </section>
+
+  <!-- ② 進階：點分類，下方商品跟著切換 -->
+  <section class="demo-section">
+    <h2>② 進階：分類對應的資料模型</h2>
+    @for (category of menuCategories; track category.key) {
+      <!-- 點擊時直接把 currentCategory 改成這個分類的 key -->
+      <button (click)="currentCategory = category.key">{{ category.name }}</button>
+    }
+    <!-- 用 currentCategory 當 key，取出該分類的商品陣列 -->
+    @for (product of productDataMap[currentCategory]; track product.id) {
+      <p>{{ product.title }}：${{ product.price }}</p>
+    }
+  </section>
+
+  <!-- ③ 練習 2：用資料做出商城畫面 -->
+  <section class="demo-section">
+    <h2>③ 練習：商城畫面</h2>
+    <div class="shop-layout">
+      <!-- 左邊：廣告區 -->
+      <div class="ad-panel">
+        <!-- [src] 是屬性綁定：圖片網址來自 TS 變數 -->
+        <img [src]="ad.imageUrl" [alt]="ad.title">
+        <p>{{ ad.title }}</p>
+      </div>
+      <!-- 右邊：分類選單與商品列表 -->
+      <div class="main-panel">
+        <div class="category-menu">
+          <!-- 中括號裡的數字是索引，從 0 開始 -->
+          <button class="active">{{ categoryMenu[0] }}</button>
+          <button>{{ categoryMenu[1] }}</button>
+          <button>{{ categoryMenu[2] }}</button>
+          <button>{{ categoryMenu[3] }}</button>
+        </div>
+        <!-- 用索引取值是暫時做法，之後學到迴圈就能動態產生 -->
+        <div class="product-grid">
+          <div class="product-card">
+            <img [src]="products[0].imageUrl" [alt]="products[0].name">
+            <p>{{ products[0].name }}</p>
+            <p class="price">${{ products[0].price }}</p>
+          </div>
+          <div class="product-card">
+            <img [src]="products[1].imageUrl" [alt]="products[1].name">
+            <p>{{ products[1].name }}</p>
+            <p class="price">${{ products[1].price }}</p>
+          </div>
+          <div class="product-card">
+            <img [src]="products[2].imageUrl" [alt]="products[2].name">
+            <p>{{ products[2].name }}</p>
+            <p class="price">${{ products[2].price }}</p>
+          </div>
+          <div class="product-card">
+            <img [src]="products[3].imageUrl" [alt]="products[3].name">
+            <p>{{ products[3].name }}</p>
+            <p class="price">${{ products[3].price }}</p>
+          </div>
+          <div class="product-card">
+            <img [src]="products[4].imageUrl" [alt]="products[4].name">
+            <p>{{ products[4].name }}</p>
+            <p class="price">${{ products[4].price }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 補充練習 1 -->
+  <section class="demo-section">
+    <h2>④ 補充練習 1：寵物補給品分類資料</h2>
+    <h3>hairball（貓咪化毛膏）</h3>
+    @for (item of supplementsMap['hairball']; track item.id) {
+      <p>{{ item.name }}：${{ item.price }}</p>
+    }
+    <h3>joint（關節保健）</h3>
+    @for (item of supplementsMap['joint']; track item.id) {
+      <p>{{ item.name }}：${{ item.price }}</p>
+    }
+  </section>
+
+  <!-- ⑤ 補充練習 2 -->
+  <section class="demo-section">
+    <h2>⑤ 補充練習 2：點擊切換分類</h2>
+    <button (click)="changeType('A')">分類 A</button>
+    <button (click)="changeType('B')">分類 B</button>
+    <p>目前分類：{{ currentType }}</p>
+  </section>
+</div>

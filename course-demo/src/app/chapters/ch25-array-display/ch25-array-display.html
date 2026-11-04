@@ -1,0 +1,59 @@
+<div class="chapter">
+  <h1>📋 陣列顯示</h1>
+
+  <!-- ① 迴圈：結果印在 Console -->
+  <section class="demo-section">
+    <h2>① 迴圈（打開 F12 → Console 看結果）</h2>
+    <button (click)="forLoop()">for 迴圈</button>
+    <button (click)="forOfLoop()">for...of 迴圈</button>
+    <button (click)="nestedLoop()">巢狀迴圈</button>
+    <button (click)="findNine()">練習 1：找出 9 的位置</button>
+    <button (click)="filterOdd()">補充練習：篩選奇數價格</button>
+  </section>
+
+  <!-- ② @for：track 是必填，用來追蹤每筆資料 -->
+  <section class="demo-section">
+    <h2>② &#64;for</h2>
+    @for (data of arrayData; track data) {
+      <h3>{{ data }}</h3>
+    }
+    <h3>物件陣列</h3>
+    @for (data of arrayData2; track data.id) {
+      <p>{{ data.id }}：{{ data.name }}</p>
+    }
+  </section>
+
+  <!-- ③ 小節練習 -->
+  <section class="demo-section">
+    <h2>③ &#64;for 小節練習：城市名稱</h2>
+    @for (city of cities; track city) {
+      <p>{{ city }}</p>
+    }
+  </section>
+
+  <!-- ④ 巢狀 @for：外層跑 arrayData3，內層跑每筆資料的 userData -->
+  <section class="demo-section">
+    <h2>④ 巢狀 &#64;for</h2>
+    @for (data of arrayData3; track data.id) {
+      @for (user of data.userData; track user.userId) {
+        <h3>{{ user.userId }}</h3>
+      }
+    }
+  </section>
+
+  <!-- ⑤ 練習 2 -->
+  <section class="demo-section">
+    <h2>⑤ 練習 2：玩家陣列與道具顯示</h2>
+    @for (user of userArray; track user.userName) {
+      <div style="border: 1px solid #ccc; padding: 16px; margin: 8px;">
+        <h2>{{ user.userName }}</h2>
+        <p>擁有道具：</p>
+        <ul>
+          @for (prop of user.props; track prop.propsName) {
+            <li>{{ prop.propsName }} 數量：{{ prop.amount }}</li>
+          }
+        </ul>
+      </div>
+    }
+  </section>
+</div>

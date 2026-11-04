@@ -1,45 +1,43 @@
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 24px;
+/* 固定寬度：所有螢幕永遠顯示 300px */
+.box-fixed {
+  width: 300px;
+  background: #e0f2fe;
+  margin-bottom: 8px;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #1a5c5c;
-  color: white;
-  padding: 0 20px;
-  height: 60px;
+/* 相對寬度：佔父容器的 80% */
+.box-percent {
+  width: 80%;
+  background: #dcfce7;
+  margin-bottom: 8px;
 }
 
-.nav-links {
-  display: flex;
-  gap: 20px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+/* 視窗相對：佔視窗寬度 50%、高度 30% */
+.box-viewport {
+  width: 50vw;
+  height: 30vh;
+  background: #fef3c7;
 }
 
-.demo-box {
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  font-size: 1rem;
-  font-weight: bold;
-  background: #5eada0;
-  color: white;
+/* 預設（桌機）樣式 */
+.box {
+  width: 100%;
+  height: 200px;
+  background: lightblue;
 }
 
-@media (max-width: 1024px) and (min-width: 601px) {
-  .card-grid { grid-template-columns: repeat(2, 1fr); }
-  .demo-box { background: #f9a825; }
-}
-
+/* 手機版：視窗寬度 ≤ 600px */
 @media (max-width: 600px) {
-  .card-grid { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
-  .demo-box { background: #e53935; font-size: 0.9rem; }
+  .box {
+    width: 100%;
+    background: lightcoral;
+  }
+}
+
+/* 平板版：601px ≤ 視窗寬度 ≤ 768px */
+@media (max-width: 768px) and (min-width: 601px) {
+  .box {
+    width: 100%;
+    background: lightgreen;
+  }
 }

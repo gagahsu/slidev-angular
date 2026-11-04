@@ -1,0 +1,11 @@
+<h2>第一頁</h2>
+
+<!-- 進階練習：導航連結要寫完整路徑 -->
+<a routerLink="/ch22/first/child-a">前往 Child-A</a>
+<!-- 子路由的內容會顯示在父元件自己的 router-outlet -->
+<router-outlet></router-outlet>
+
+<h3>補充練習 2：登入狀態導航</h3>
+<p>isLogin = {{ isLogin }}</p>
+<button (click)="toggleLogin()">切換登入狀態</button>
+<button (click)="checkUser()">檢查使用者</button>

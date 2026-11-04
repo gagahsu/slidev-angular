@@ -1,0 +1,6 @@
+/* 限制圖表大小 */
+.chart-box { width: 300px; height: 300px; }
+
+/* 多張圖表橫向排列，放不下時換行 */
+.chart-row { display: flex; flex-wrap: wrap; gap: 16px; }
+.chart-small { width: 220px; }

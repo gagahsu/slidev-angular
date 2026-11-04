@@ -1,35 +1,57 @@
 <div class="chapter">
-  <h1>{{ title }}</h1>
+  <h1>🧩 變數使用</h1>
+
+  <!-- ① 全域變數與區域變數 -->
   <section class="demo-section">
-    <h2>① 插值顯示變數</h2>
-    <div class="info-card">
-      <p>姓名：<strong>{{ userName }}</strong></p>
-      <p>年齡：<strong>{{ age }}</strong>，明年：<strong>{{ age + 1 }}</strong></p>
-      <p>狀態：<strong>{{ statusLabel }}</strong></p>
-      <p>歡迎語（getter）：<strong>{{ welcomeMessage }}</strong></p>
-      <p>興趣：{{ hobbies.join('、') }}</p>
-    </div>
-    <button (click)="toggleStatus()">切換狀態</button>
-  </section>
-  <section class="demo-section">
-    <h2>② 計數器示範</h2>
-    <p class="hint">方法裡用 <code>this.count</code> 修改，畫面自動更新</p>
-    <div class="counter-row">
-      <button (click)="decrement()">－</button>
-      <span class="count-num">{{ count }}</span>
-      <button (click)="increment()">＋</button>
-      <button (click)="reset()">重置</button>
-    </div>
-  </section>
-  <section class="demo-section">
-    <h2>③ let / const / var 比較</h2>
-    <table class="compare-table">
-      <thead><tr><th>關鍵字</th><th>可改值？</th><th>建議</th></tr></thead>
+    <h2>① 全域變數 vs 區域變數</h2>
+    <!-- (click) 是事件綁定：點擊時呼叫 TS 的方法 -->
+    <button (click)="showTitle()">全域變數（this.title）</button>
+    <button (click)="showLocalTitle()">區域變數（let title）</button>
+    <table>
+      <thead>
+        <tr><th>關鍵字</th><th>說明</th><th>建議使用時機</th></tr>
+      </thead>
       <tbody>
-        <tr><td><code>const</code></td><td>❌</td><td>✅ 不變的值優先</td></tr>
-        <tr><td><code>let</code></td><td>✅</td><td>✅ 一般變數首選</td></tr>
-        <tr><td><code>var</code></td><td>✅</td><td>❌ 有 Hoisting，禁用</td></tr>
+        <tr><td><code>const</code></td><td>宣告後不能重新指定值</td><td>不會改變的固定值</td></tr>
+        <tr><td><code>let</code></td><td>可以被重新指定值</td><td>一般變數，最常用</td></tr>
+        <tr><td><code>var</code></td><td>有 hoisting 問題</td><td>不建議使用</td></tr>
       </tbody>
     </table>
+  </section>
+
+  <!-- ② 畫面呈現 -->
+  <section class="demo-section">
+    <h2>② 畫面呈現</h2>
+    <h3>字串插值</h3>
+    <!-- {{ }} 是字串插值：把 TS 變數的值顯示在畫面上 -->
+    {{ testTitle }}
+    <h3>搭配 HTML 標籤</h3>
+    <h1>{{ testTitle }}</h1>
+    <h3>屬性綁定</h3>
+    <button>{{ buttonText }}</button>
+    <!-- [src] 是屬性綁定：標籤的屬性要用中括號，不能用 {{ }} -->
+    <img [src]="demoImage" alt="示意圖" width="60">
+  </section>
+
+  <!-- ③ 練習：HTML 不寫死內容，全部來自 TS 變數 -->
+  <section class="demo-section">
+    <h2>③ 練習：HTML 全部改用變數顯示</h2>
+    <h1>{{ titleText }}</h1>
+    <h3>{{ contentText }}</h3>
+    <img [src]="imageSrc" alt="練習圖片" width="120">
+  </section>
+
+  <!-- ④ 補充練習 1 -->
+  <section class="demo-section">
+    <h2>④ 補充練習 1：個人檔案動態卡片</h2>
+    <h2>姓名：{{ userName }}</h2>
+    <p>年齡：{{ userAge }} 歲</p>
+  </section>
+
+  <!-- ⑤ 補充練習 2 -->
+  <section class="demo-section">
+    <h2>⑤ 補充練習 2：超連結動態切換</h2>
+    <!-- [href] 綁定 targetUrl；target="_blank" 代表開新分頁 -->
+    <a [href]="targetUrl" target="_blank">前往 Google</a>
   </section>
 </div>

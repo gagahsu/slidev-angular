@@ -1,0 +1,11 @@
+/* 補充練習的側邊欄：連結直向排列 */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 160px;
+  margin-top: 8px;
+  padding: 12px;
+  background: #f0f8f7;
+  border-radius: 6px;
+}

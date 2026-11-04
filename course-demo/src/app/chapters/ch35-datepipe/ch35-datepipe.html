@@ -1,68 +1,71 @@
-<div style="max-width: 700px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+<!-- 最外層容器：限制內容寬度並置中 -->
+<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
 
   <h1 style="color: #1a5c5c; text-align: center;">📆 DatePipe 日期格式化</h1>
 
-  <!-- ① 未格式化的原始輸出 -->
-  <div style="background: #ffcdd2; padding: 20px; border-radius: 10px; border: 2px solid #c62828; margin-bottom: 20px;">
-    <h2 style="color: #c62828; margin-top: 0;">❌ 未格式化（原始 Date 物件）</h2>
-    <p>直接用插值輸出 Date 物件，結果難以閱讀：</p>
-    <div style="background: #fff; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 0.95rem;">
-      {{ today }}
-    </div>
-    <p style="color: #888; font-size: 0.85rem; margin-top: 8px;">
-      這不是給使用者看的格式...
-    </p>
+  <!-- ① 直接顯示 Date 物件：又長又難讀 -->
+  <div style="background: #ffebee; padding: 20px; border-radius: 10px; border: 2px solid #c62828; margin-bottom: 20px;">
+    <h2 style="color: #c62828; margin-top: 0;">① 直接顯示 Date 物件（原始格式）</h2>
+    <!-- {{ }} 是插值語法：把變數目前的值顯示在畫面上 -->
+    <p style="margin-bottom: 0; font-family: monospace;">{{ today }}</p>
   </div>
 
-  <!-- ② 手動格式化（方法） -->
+  <!-- ② 方法一：手動轉換，先把年、月、日分別取出來 -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h2 style="color: #1565c0; margin-top: 0;">② 方法一：提取年、月、日</h2>
+    <p>getFullYear()：<strong>{{ today.getFullYear() }}</strong></p>
+    <!-- getMonth() 從 0 開始算，1 月是 0、12 月是 11，使用時要 +1 -->
+    <p>getMonth()：<strong>{{ today.getMonth() }}</strong>（從 0 起算，實際月份要 +1）</p>
+    <p style="margin-bottom: 0;">getDate()：<strong>{{ today.getDate() }}</strong></p>
+  </div>
+
+  <!-- ③ 方法一：呼叫 TS 的 tidyDate() 組合成 yyyy/MM/dd -->
   <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825; margin-bottom: 20px;">
-    <h2 style="color: #f57f17; margin-top: 0;">🔧 手動格式化（TypeScript 方法）</h2>
-    <p style="color: #555;">用 getFullYear() / getMonth() / getDate() 自己組字串：</p>
-    <div style="background: white; padding: 12px; border-radius: 8px;">
-      <p>日期：<strong>{{ tidyDate(today) }}</strong></p>
-      <p>日期時間：<strong>{{ tidyDateTime(today) }}</strong></p>
+    <h2 style="color: #f57f17; margin-top: 0;">③ 方法一：呼叫 tidyDate()</h2>
+    <p style="font-size: 1.5rem; font-family: monospace; color: #00695c;">{{ tidyDate(today) }}</p>
+    <!-- 想在畫面上顯示雙大括號本身，要把它寫成字串，否則 Angular 會直接執行裡面的程式 -->
+    <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; font-family: monospace; font-size: 0.9rem;">
+      {{ '{{' }} tidyDate(today) {{ '}}' }}
     </div>
-    <p style="color: #888; font-size: 0.85rem;">
-      → 可以做到，但程式碼冗長（要處理補零邏輯）
-    </p>
   </div>
 
-  <!-- ③ DatePipe（推薦方式） -->
-  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
-    <h2 style="color: #2e7d32; margin-top: 0;">✅ DatePipe（一行搞定）</h2>
-    <p style="color: #555;">語法：<code>{{ '{{' }} 日期 | date: '格式字串' {{ '}}' }}</code></p>
+  <!-- ④ 方法二：DatePipe，一行完成 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32;">
+    <h2 style="color: #2e7d32; margin-top: 0;">④ 方法二：DatePipe</h2>
+    <!-- 直線符號 | 就是管道：把 today 送進 date 管道加工，再輸出結果 -->
+    <p style="font-size: 1.5rem; font-family: monospace; color: #00695c;">{{ today | date: 'yyyy-MM-dd' }}</p>
+    <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; margin-bottom: 16px; font-family: monospace; font-size: 0.9rem;">
+      {{ '{{' }} today | date: 'yyyy-MM-dd' {{ '}}' }}
+    </div>
 
-    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-top: 12px;">
+    <!-- 想換格式，只要換掉冒號後面的格式字串 -->
+    <table style="width: 100%; border-collapse: collapse; background: white;">
       <thead>
-        <tr style="background: #2e7d32; color: white;">
-          <th style="padding: 10px; text-align: left;">格式字串</th>
-          <th style="padding: 10px; text-align: left;">輸出結果</th>
+        <tr>
+          <th style="border: 1px solid #c8e6c9; padding: 8px; text-align: left;">格式字串</th>
+          <th style="border: 1px solid #c8e6c9; padding: 8px; text-align: left;">輸出結果</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">'yyyy/MM/dd'</td>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold; color: #2e7d32;">{{ sampleDate | date: 'yyyy/MM/dd' }}</td>
-        </tr>
-        <tr style="background: #f9fafb;">
-          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">'yyyy-MM-dd'</td>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold; color: #2e7d32;">{{ sampleDate | date: 'yyyy-MM-dd' }}</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px; font-family: monospace;">'yyyy/MM/dd'</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px;">{{ today | date: 'yyyy/MM/dd' }}</td>
         </tr>
         <tr>
-          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">'MM/dd/yyyy'</td>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold; color: #2e7d32;">{{ sampleDate | date: 'MM/dd/yyyy' }}</td>
-        </tr>
-        <tr style="background: #f9fafb;">
-          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">'yyyy/MM/dd HH:mm:ss'</td>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold; color: #2e7d32;">{{ today | date: 'yyyy/MM/dd HH:mm:ss' }}</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px; font-family: monospace;">'yyyy-MM-dd'</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px;">{{ today | date: 'yyyy-MM-dd' }}</td>
         </tr>
         <tr>
-          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">'fullDate'</td>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold; color: #2e7d32;">{{ sampleDate | date: 'fullDate' }}</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px; font-family: monospace;">'MM/dd/yyyy'</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px;">{{ today | date: 'MM/dd/yyyy' }}</td>
         </tr>
-        <tr style="background: #f9fafb;">
-          <td style="padding: 10px; border: 1px solid #eee; font-family: monospace;">'shortDate'</td>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold; color: #2e7d32;">{{ sampleDate | date: 'shortDate' }}</td>
+        <tr>
+          <td style="border: 1px solid #c8e6c9; padding: 8px; font-family: monospace;">'fullDate'</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px;">{{ today | date: 'fullDate' }}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #c8e6c9; padding: 8px; font-family: monospace;">'shortDate'</td>
+          <td style="border: 1px solid #c8e6c9; padding: 8px;">{{ today | date: 'shortDate' }}</td>
         </tr>
       </tbody>
     </table>

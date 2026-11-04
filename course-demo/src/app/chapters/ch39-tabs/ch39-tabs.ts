@@ -1,27 +1,34 @@
 import { Component } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RouterOutlet, RouterLink } from '@angular/router';
+// [routerLink] 要匯入 RouterLink；<router-outlet> 要匯入 RouterOutlet
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-ch39-tabs',
-  templateUrl: './ch39-tabs.html',
-  styleUrl: './ch39-tabs.css',
-  standalone: true,
+  selector: 'app-ch39-tabs',         // 這個元件在 HTML 中使用的標籤名稱
+  templateUrl: './ch39-tabs.html',   // 這個元件使用的 HTML 檔案
+  styleUrl: './ch39-tabs.css',       // 這個元件使用的 CSS 檔案
+  standalone: true,                  // 獨立元件
   imports: [MatTabsModule, RouterOutlet, RouterLink]
 })
 export class Ch39Tabs {
-  staticTabs = [
-    { label: '首頁',   content: '歡迎來到首頁！這裡是首頁的內容。',     icon: '🏠' },
-    { label: '課程',   content: '共有 55 堂課程，從 HTML 到 Angular 全覆蓋。', icon: '📚' },
-    { label: '練習題', content: '每個章節都附有練習題，讓你動手實作。',  icon: '✏️' },
-    { label: '關於',   content: '本課程由 Angular 講師設計，適合初學者。', icon: '📌' }
-  ];
 
+  // 補充練習 3：是否為管理員
+  isAdmin: boolean = false;
+
+  // 每個頁籤的路徑與名稱；HTML 用 @for 產生，新增項目就會多一個頁籤
   links = [
-    { path: '/home',    name: '首頁'   },
-    { path: '/courses', name: '課程'   },
-    { path: '/about',   name: '關於'   }
+    { path: '/ch39/test1', name: 'TEST' },
+    { path: '/ch39/test2', name: 'TEST2' },
+    { path: '/ch39/test3', name: 'TEST3' },
+    { path: '/ch39/profile', name: '個人帳戶設定' },         // 補充練習 1
+    { path: '/ch39/admin', name: '後台管理', adminOnly: true },  // 補充練習 3
   ];
 
+  // 目前作用中的頁籤，初始值是第一個頁籤的名稱
   activeLink = this.links[0].name;
+
+  // 切換管理員身分，方便觀察頁籤停用的效果
+  toggleAdmin() {
+    this.isAdmin = !this.isAdmin;
+  }
 }

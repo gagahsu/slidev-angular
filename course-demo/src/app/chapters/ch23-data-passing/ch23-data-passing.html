@@ -1,0 +1,32 @@
+<div class="chapter">
+  <h1>📦 資料傳遞</h1>
+
+  <!-- ① Service：路由頁面之間傳遞資料 -->
+  <section class="demo-section">
+    <h2>① Service：頁面傳遞資料與全域購物車</h2>
+    <a routerLink="/ch23/page-a">A 頁面</a> ｜ <a routerLink="/ch23/page-b">B 頁面</a>
+    <router-outlet></router-outlet>
+  </section>
+
+  <!-- ② 練習 1：父 → 子 -->
+  <section class="demo-section">
+    <h2>② 練習 1：&#64;Input 練習</h2>
+    <h3>頁面A</h3>
+    使用者名稱：<input [(ngModel)]="userName"><br>
+    使用者Email：<input [(ngModel)]="userEmail"><br>
+    使用者地址：<input [(ngModel)]="userAddress">
+    <!-- [子元件的變數]="父元件的變數" -->
+    <app-input-child [userName]="userName" [userEmail]="userEmail" [userAddress]="userAddress"></app-input-child>
+  </section>
+
+  <!-- ③ 練習 2：子 → 父 -->
+  <section class="demo-section">
+    <h2>③ 練習 2：&#64;Output 練習</h2>
+    <h3>頁面A</h3>
+    使用者名稱：{{ receivedData.userName }}<br>
+    使用者Email：{{ receivedData.userEmail }}<br>
+    使用者地址：{{ receivedData.userAddress }}
+    <!-- (子元件的 output)="父元件的方法($event)" -->
+    <app-output-child (myOutput)="onReceive($event)"></app-output-child>
+  </section>
+</div>

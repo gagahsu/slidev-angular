@@ -1,0 +1,33 @@
+<div class="chapter">
+  <h1>🧪 TypeScript 練習（二）</h1>
+  <p class="hint">這一章的結果都印在 Console：先按 F12 打開 Console，再點下面的按鈕</p>
+
+  <!-- ① 小節練習：(click) 是事件綁定，點擊時呼叫 TS 的方法 -->
+  <section class="demo-section">
+    <h2>① 小節練習</h2>
+    <button (click)="dateSection()">Date 日期物件</button>
+    <button (click)="compareDate()">日期比較 getTime()</button>
+    <button (click)="restructureObject()">重組資料（物件）</button>
+    <button (click)="restructureArray()">重組資料（陣列）</button>
+    <!-- 呼叫方法時帶入半徑 5 -->
+    <button (click)="circleArea(5)">圓面積 circleArea(5)</button>
+  </section>
+
+  <!-- ② 實作練習 -->
+  <section class="demo-section">
+    <h2>② 實作練習</h2>
+    <button (click)="practice1()">練習 1：剩下多少錢</button>
+    <button (click)="practice2()">練習 2：九折後剩下多少錢</button>
+    <button (click)="practice3()">練習 3：VIP 資格判斷</button>
+    <!-- 帶入身高 170 公分、體重 65 公斤 -->
+    <button (click)="calculateBMI(170, 65)">練習 4：計算 BMI</button>
+  </section>
+
+  <!-- ③ 補充練習 -->
+  <section class="demo-section">
+    <h2>③ 補充練習</h2>
+    <button (click)="checkEntry()">1：入場資格判斷</button>
+    <button (click)="checkDeadline()">2：活動過期檢查</button>
+    <button (click)="mapProducts()">3：API 商品欄位重組</button>
+  </section>
+</div>

@@ -1,59 +1,64 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+// [formGroup]、formControlName 需要 ReactiveFormsModule
+import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-ch50-reactive-forms',
-  templateUrl: './ch50-reactive-forms.html',
-  styleUrl: './ch50-reactive-forms.css',
-  standalone: true,
-  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, JsonPipe]
+  selector: 'app-ch50-reactive-forms',         // 這個元件在 HTML 中使用的標籤名稱
+  templateUrl: './ch50-reactive-forms.html',   // 這個元件使用的 HTML 檔案
+  styleUrl: './ch50-reactive-forms.css',       // 這個元件使用的 CSS 檔案
+  standalone: true,                            // 獨立元件
+  imports: [ReactiveFormsModule]
 })
 export class Ch50ReactiveForms {
+
+  // 取得 FormBuilder，用來建立表單
   fb = inject(FormBuilder);
 
+  // 動態問卷：[初始值, 驗證規則]
   form = this.fb.group({
-    surveyTitle: ['', Validators.required],
-    authorName:  ['', Validators.required],
-    questions:   this.fb.array([])
+    surveyTitle: ['', Validators.required], // 問卷標題
+    questions: this.fb.array([])            // 題目空陣列
   });
 
+  // 補充練習 1：投影片也叫 form；同一個 class 不能重複，所以這裡叫 productForm
+  productForm = this.fb.group({
+    productName: [''],
+    ingredients: this.fb.array([])
+  });
+
+  // getter：把 form.get('questions') 轉型成 FormArray，方便使用
   get questionsArray(): FormArray {
     return this.form.get('questions') as FormArray;
   }
 
-  addQuestion(): void {
-    const questionGroup: FormGroup = this.fb.group({
-      qTitle: ['', Validators.required],
-      qType:  ['radio'],
-      need:   [false]
-    });
-    this.questionsArray.push(questionGroup);
+  get ingredientsArray(): FormArray {
+    return this.productForm.get('ingredients') as FormArray;
   }
 
-  removeQuestion(index: number): void {
+  // 新增題目：建立一組 FormGroup，推入陣列
+  addQuestion() {
+    const questionGroup = this.fb.group({
+      qTitle: ['', Validators.required], // 題目名稱
+      qType: ['M'],                      // 題目類型
+      need: [false]                      // 是否必填
+    });
+
+    this.questionsArray.push(questionGroup);
+    console.log(this.form.value);
+  }
+
+  // 刪除題目：依位置移除
+  removeQuestion(index: number) {
     this.questionsArray.removeAt(index);
   }
 
-  getQuestionGroup(index: number): FormGroup {
-    return this.questionsArray.at(index) as FormGroup;
+  // 補充練習 1：新增成分
+  addIngredient() {
+    this.ingredientsArray.push(this.fb.group({ name: [''], mg: [0] }));
   }
 
-  formResult: any = null;
-
-  onSubmit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.formResult = this.form.value;
-  }
-
-  resetForm(): void {
-    this.form.reset({ surveyTitle: '', authorName: '' });
-    this.questionsArray.clear();
-    this.formResult = null;
+  // 補充練習 1：刪除成分
+  removeIngredient(index: number) {
+    this.ingredientsArray.removeAt(index);
   }
 }

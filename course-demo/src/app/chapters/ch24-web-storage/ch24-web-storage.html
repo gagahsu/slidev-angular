@@ -1,0 +1,57 @@
+<div class="chapter">
+  <h1>🗄️ 網頁儲存</h1>
+
+  <!-- ① 三種儲存方式 -->
+  <section class="demo-section">
+    <h2>① 網頁儲存的三種方法</h2>
+    <table>
+      <thead>
+        <tr><th>方式</th><th>容量</th><th>主要用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Cookie</td><td>約 4KB</td><td>登入、跨域 Tracking、Session ID</td></tr>
+        <tr><td>localStorage</td><td>約 5–10MB</td><td>自訂資料，手動清除才消失</td></tr>
+        <tr><td>sessionStorage</td><td>約 5–10MB</td><td>自訂資料，分頁關閉即消失</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ② Cookie 要另外安裝套件，這個示範專案沒有安裝，所以只顯示程式碼 -->
+  <section class="demo-section">
+    <h2>② Cookie 小節練習（需安裝 ngx-cookie-service）</h2>
+    <p class="hint">這個示範專案沒有安裝 ngx-cookie-service，這裡只列出投影片的程式碼</p>
+    <div class="code-show">
+      // login.component.ts<br>
+      cookieService = inject(CookieService);<br>
+      onLoginSuccess() &#123; this.cookieService.set('theme', 'dark', 30); &#125;<br><br>
+      // dashboard.component.ts<br>
+      cookieService = inject(CookieService);<br>
+      constructor() &#123; console.log(this.cookieService.get('theme')); &#125;
+    </div>
+  </section>
+
+  <!-- ③ 儲存跟讀取 -->
+  <section class="demo-section">
+    <h2>③ localStorage 與 sessionStorage</h2>
+    <p class="hint">點完按鈕後，打開 F12 → Application 或 Console 查看</p>
+    <button (click)="saveName()">saveName()</button>
+    <button (click)="showName()">showName()</button>
+    <button (click)="saveUser()">小節練習：儲存並還原物件</button>
+  </section>
+
+  <!-- ④ 補充練習 1 -->
+  <section class="demo-section">
+    <h2>④ 補充練習 1：記住使用者名稱</h2>
+    <h2>歡迎，{{ displayTitle }}</h2>
+    <!-- [(ngModel)] 雙向綁定：輸入框和 userName 會同步 -->
+    <input [(ngModel)]="userName">
+    <button (click)="save()">儲存</button>
+  </section>
+
+  <!-- ⑤ 補充練習 2 -->
+  <section class="demo-section">
+    <h2>⑤ 補充練習 2：localStorage vs sessionStorage</h2>
+    <button (click)="saveBoth()">同時存入兩種 Storage</button>
+    <p>接著關閉這個分頁，再開新分頁貼上網址，到 F12 → Application 檢查哪一筆還在</p>
+  </section>
+</div>

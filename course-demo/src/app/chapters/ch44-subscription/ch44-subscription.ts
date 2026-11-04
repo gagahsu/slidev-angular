@@ -1,50 +1,42 @@
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Ch44LoadingService } from './ch44-loading.service';
+import { LoadingService } from './service/loading.service';
+import { HeaderComponent } from './header/header.component';
+import { ProductListComponent } from './product-list/product-list.component';
 
 @Component({
-  selector: 'app-ch44-subscription',
-  templateUrl: './ch44-subscription.html',
-  styleUrl: './ch44-subscription.css',
-  standalone: true,
-  imports: []
+  selector: 'app-ch44-subscription',         // 這個元件在 HTML 中使用的標籤名稱
+  templateUrl: './ch44-subscription.html',   // 這個元件使用的 HTML 檔案
+  styleUrl: './ch44-subscription.css',       // 這個元件使用的 CSS 檔案
+  standalone: true,                          // 獨立元件
+  imports: [HeaderComponent, ProductListComponent]
 })
 export class Ch44Subscription implements OnInit, OnDestroy {
-  private loadingService = inject(Ch44LoadingService);
 
-  isLoading: boolean = false;
-  eventLog: string[] = [];
+  // 用同一個 Subscription 管理多個訂閱
+  private subscription = new Subscription();
 
-  private loadingSubscription!: Subscription;
-  private dataUpdateSubscription!: Subscription;
+  // 注入 Service；public 代表 HTML 也可以呼叫它的方法
+  constructor(public loadingService: LoadingService) { }
 
   ngOnInit(): void {
-    this.loadingSubscription = this.loadingService.loading$.subscribe((isLoading) => {
-      this.isLoading = isLoading;
-      const time = new Date().toLocaleTimeString();
-      this.eventLog.unshift(`[${time}] loading 狀態變為：${isLoading}`);
-    });
+    // 補充練習 2：BehaviorSubject 訂閱時立刻收到目前的值
+    this.subscription.add(
+      this.loadingService._loading$.subscribe((val) => {
+        console.log('A 收到', val);
+      })
+    );
 
-    this.dataUpdateSubscription = this.loadingService.dataUpdated$.subscribe(() => {
-      const time = new Date().toLocaleTimeString();
-      this.eventLog.unshift(`[${time}] 收到「資料更新」通知`);
-    });
+    // 補充練習 2：Subject 訂閱時沒有輸出，要等到有人呼叫 next()
+    this.subscription.add(
+      this.loadingService._loading2$.subscribe((val) => {
+        console.log('B 收到', val);
+      })
+    );
   }
 
-  simulateApiCall(): void {
-    this.loadingService.show();
-    setTimeout(() => {
-      this.loadingService.hide();
-      this.loadingService.notifyDataUpdated();
-    }, 2000);
-  }
-
-  showLoading(): void  { this.loadingService.show(); }
-  hideLoading(): void  { this.loadingService.hide(); }
-  clearLog(): void     { this.eventLog = []; }
-
+  // 投影片沒有這段：這個示範專案會在章節之間切換，離開時要取消訂閱
   ngOnDestroy(): void {
-    this.loadingSubscription.unsubscribe();
-    this.dataUpdateSubscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }

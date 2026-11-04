@@ -1,0 +1,83 @@
+/* 整體左右版型 */
+.shop-layout {
+  display: flex;               /* 左右欄排列 */
+  gap: 1rem;                   /* 廣告區與商品區的間距 */
+  padding: 1.5rem;             /* 內容與外框的距離 */
+  border-radius: 12px;         /* 四個角變圓 */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* 浮雕陰影 */
+}
+
+/* 廣告區固定寬度，不隨畫面縮小 */
+.ad-panel {
+  width: 160px;           /* 固定寬度 */
+  flex-shrink: 0;         /* 禁止被 flex 壓縮 */
+  display: flex;          /* 讓子元素可用 flex 撐高 */
+  flex-direction: column; /* 子元素垂直排列 */
+}
+
+.ad-panel img {
+  width: 100%;            /* 圖片撐滿廣告區寬度 */
+  flex: 1;                /* 撐滿廣告區剩餘高度 */
+  object-fit: cover;      /* 填滿空間，超出部分裁切 */
+  border-radius: 8px;     /* 圖片四角圓角 */
+}
+
+/* 右側佔滿剩下的寬度 */
+.main-panel {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 分類選單靠右對齊，底部分隔線 */
+.category-menu {
+  display: flex;                     /* 按鈕橫向排列 */
+  justify-content: flex-end;         /* 靠右對齊 */
+  flex-wrap: wrap;                   /* 放不下時換行 */
+  gap: 0.5rem;                       /* 按鈕間距 */
+  padding-bottom: 0.75rem;           /* 分隔線上方的內距 */
+  margin-bottom: 1rem;               /* 分隔線與商品格的距離 */
+  border-bottom: 1px solid #e2e8f0;  /* 灰色分隔線 */
+}
+
+/* 分類按鈕：預設無底色、黑字 */
+.category-menu button {
+  padding: 4px 14px;         /* 上下 4px、左右 14px 內距 */
+  border: none;              /* 移除瀏覽器預設邊框 */
+  border-radius: 4px;        /* 輕微圓角 */
+  background: transparent;   /* 預設無底色 */
+  color: #333;               /* 深灰黑字 */
+  cursor: pointer;           /* 滑鼠移過去變手形 */
+  font-size: 0.9rem;         /* 字體略小 */
+}
+
+/* 選中狀態：藍色底色、白字 */
+.category-menu button.active {
+  background: #3b82f6;  /* 藍色底色 */
+  color: white;         /* 白字 */
+}
+
+/* 商品列表：平均分成 5 欄 */
+.product-grid {
+  display: grid;                         /* 啟用 Grid 排版 */
+  grid-template-columns: repeat(5, 1fr); /* 平均分成 5 欄 */
+  gap: 1rem;                             /* 欄與列的間距 */
+}
+
+/* 商品卡片圖片 */
+.product-card img {
+  width: 100%;           /* 撐滿卡片寬度 */
+  aspect-ratio: 1 / 1;   /* 強制正方形比例 */
+  object-fit: contain;   /* 圖片縮放不裁切、不變形 */
+}
+
+/* 商品名稱 */
+.product-card p {
+  font-size: 0.8rem;     /* 字體略小 */
+  margin: 0.25rem 0;     /* 上下留細間距 */
+}
+
+/* 價格紅字 */
+.product-card .price {
+  color: #e53e3e;        /* 紅色 */
+  font-weight: bold;     /* 粗體 */
+}

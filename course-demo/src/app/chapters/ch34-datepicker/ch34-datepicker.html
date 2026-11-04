@@ -1,95 +1,124 @@
-<div style="max-width: 700px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+<!-- 最外層容器：限制內容寬度並置中 -->
+<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
 
   <h1 style="color: #1a5c5c; text-align: center;">📅 日期選擇器示範</h1>
 
-  <!-- ① 原生 input type="date" -->
-  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 24px;">
-    <h2 style="color: #1565c0; margin-top: 0;">① 原生 HTML &lt;input type="date"&gt;</h2>
-    <p style="color: #555;">瀏覽器內建的日期選擇，不需要額外安裝套件。</p>
-
-    <div style="margin-bottom: 16px;">
-      <label style="font-weight: bold; display: block; margin-bottom: 6px;">選擇日期（有 min / max 限制）：</label>
-      <input
-        type="date"
-        [(ngModel)]="nativeDate"
-        [min]="minNative"
-        [max]="maxNative"
-        style="padding: 10px; border: 2px solid #1565c0; border-radius: 6px; font-size: 1rem;" />
-    </div>
-
-    <p>選取的值：<strong style="color: #1565c0;">{{ nativeDate }}</strong></p>
-    <p style="color: #777; font-size: 0.85rem;">格式：YYYY-MM-DD 字串，可直接存進 DB</p>
-
-    <div style="margin-top: 16px; padding: 12px; background: white; border-radius: 8px;">
-      <p style="font-weight: bold; margin: 0 0 10px;">其他 type 變體：</p>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <div><label style="display: inline-block; width: 140px; color: #555;">type="month"：</label>
-          <input type="month" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;" /></div>
-        <div><label style="display: inline-block; width: 140px; color: #555;">type="time"：</label>
-          <input type="time" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;" /></div>
-        <div><label style="display: inline-block; width: 140px; color: #555;">type="datetime-local"：</label>
-          <input type="datetime-local" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;" /></div>
-        <div><label style="display: inline-block; width: 140px; color: #555;">type="week"：</label>
-          <input type="week" style="padding: 6px; border: 1px solid #ccc; border-radius: 4px;" /></div>
-      </div>
+  <!-- ① 原生 input：切換 type，就會顯示不同的選擇介面 -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h2 style="color: #1565c0; margin-top: 0;">① input 的 type 類型</h2>
+    <div style="display: grid; grid-template-columns: 140px 1fr; gap: 12px; align-items: center;">
+      <!-- month：只選年份和月份 -->
+      <label for="demo-month">month</label>
+      <input id="demo-month" type="month" />
+      <!-- date：選年月日，最常用 -->
+      <label for="demo-date">date</label>
+      <input id="demo-date" type="date" />
+      <!-- time：只選時和分 -->
+      <label for="demo-time">time</label>
+      <input id="demo-time" type="time" />
+      <!-- datetime-local：同時選日期和時間 -->
+      <label for="demo-datetime">datetime-local</label>
+      <input id="demo-datetime" type="datetime-local" />
+      <!-- week：選年份和第幾週 -->
+      <label for="demo-week">week</label>
+      <input id="demo-week" type="week" />
     </div>
   </div>
 
-  <!-- ② Angular Material mat-datepicker -->
-  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 24px;">
-    <h2 style="color: #2e7d32; margin-top: 0;">② Angular Material mat-datepicker</h2>
-    <p style="color: #555;">美觀的月曆 UI，直接綁定 Date 物件，支援 min / max 限制。</p>
+  <!-- ② 原生 input date 搭配 ngModel -->
+  <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; border: 2px solid #6a1b9a; margin-bottom: 20px;">
+    <h2 style="color: #6a1b9a; margin-top: 0;">② input date — 以 ngModel 綁定日期</h2>
+    <!--
+      [(ngModel)]：雙向綁定，選了日期，TS 的 today 就會同步
+      min、max：限制可選範圍，格式是 yyyy-MM-dd
+    -->
+    <input type="date" [(ngModel)]="today" min="2024-11-05" max="2024-11-10" />
+    <p style="margin-bottom: 0;">today = <strong>{{ today }}</strong>（字串）</p>
+    <!-- 把程式碼顯示在畫面上：&lt; 和 &gt; 代表 < 和 >，這段只是文字 -->
+    <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; margin-top: 16px; font-family: monospace; font-size: 0.9rem;">
+      &lt;input type="date" [(ngModel)]="today" min="2024-11-05" max="2024-11-10"&gt;
+    </div>
+  </div>
 
-    <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-label>選擇日期</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        [(ngModel)]="selectedDate"
-        [min]="minDate"
-        [max]="maxDate" />
-      <mat-hint>限制範圍：2024/11/01 ~ 2024/12/31</mat-hint>
+  <!-- ③ mat-datepicker 的基本結構 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
+    <h2 style="color: #2e7d32; margin-top: 0;">③ mat-datepicker — HTML 結構</h2>
+    <!-- mat-form-field：最外層容器，套用 Material 統一的排版與樣式 -->
+    <mat-form-field>
+      <!-- mat-label：輸入框的提示標籤 -->
+      <mat-label>Choose a date</mat-label>
+      <!-- matInput 套用 Material 樣式；[matDatepicker] 指定要綁定哪一個日曆 -->
+      <input matInput [matDatepicker]="picker">
+      <!-- mat-hint：輸入框下方的提示文字 -->
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <!-- mat-datepicker-toggle：日曆圖示按鈕，matIconSuffix 代表放在輸入框後方 -->
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <!-- mat-datepicker：彈出的日曆面板，#picker 是它的名稱 -->
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-
-    <p style="margin-top: 8px;">
-      選取的值：<strong style="color: #2e7d32;">{{ formattedDate }}</strong>
-    </p>
-    <p style="color: #777; font-size: 0.85rem;">
-      TypeScript 中是 <code>Date</code> 物件，可直接使用 getFullYear()、getMonth() 等方法。
-    </p>
+    <p style="margin-bottom: 0; color: #555;">[matDatepicker]、[for]、#picker 三處名稱必須完全一致</p>
   </div>
 
-  <!-- 比較表 -->
-  <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825;">
-    <h2 style="color: #f57f17; margin-top: 0;">📊 兩種方式比較</h2>
-    <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
-      <thead>
-        <tr style="background: #f9a825; color: white;">
-          <th style="padding: 10px; text-align: left;"></th>
-          <th style="padding: 10px; text-align: left;">原生 input</th>
-          <th style="padding: 10px; text-align: left;">mat-datepicker</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">安裝</td>
-          <td style="padding: 10px; border: 1px solid #eee;">不需要</td>
-          <td style="padding: 10px; border: 1px solid #eee;">需要 Angular Material</td>
-        </tr>
-        <tr style="background: #fafafa;">
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">資料型別</td>
-          <td style="padding: 10px; border: 1px solid #eee;">字串（YYYY-MM-DD）</td>
-          <td style="padding: 10px; border: 1px solid #eee;">Date 物件</td>
-        </tr>
-        <tr>
-          <td style="padding: 10px; border: 1px solid #eee; font-weight: bold;">外觀</td>
-          <td style="padding: 10px; border: 1px solid #eee;">依瀏覽器而異</td>
-          <td style="padding: 10px; border: 1px solid #eee;">統一 Material 風格</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- ④ mat-datepicker 綁定初始值，並限制日期範圍 -->
+  <div style="background: #fff8e1; padding: 20px; border-radius: 10px; border: 2px solid #f9a825; margin-bottom: 20px;">
+    <h2 style="color: #f57f17; margin-top: 0;">④ mat-datepicker — ngModel 初始值與 min / max</h2>
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <!--
+        這個頁面有多個日曆，每個日曆的 # 名稱不能重複，所以這裡叫 picker2
+        [(ngModel)]：綁定選到的日期
+        [min]、[max]：超出範圍的日期會變灰，不能點選
+      -->
+      <input matInput [matDatepicker]="picker2" [min]="minDate" [max]="maxDate" [(ngModel)]="sDate">
+      <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+      <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+    <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; margin-top: 16px; font-family: monospace; font-size: 0.9rem;">
+      sDate = new Date('2024/11/8');<br>
+      minDate = new Date('2024/11/3');<br>
+      maxDate = new Date('2024/11/20');
+    </div>
+  </div>
+
+  <!-- ⑤ 補充：範圍跟著今天移動，不寫死日期 -->
+  <div style="background: #e0f7fa; padding: 20px; border-radius: 10px; border: 2px solid #00838f; margin-bottom: 20px;">
+    <h2 style="color: #00838f; margin-top: 0;">⑤ 補充：動態計算 min / max（前 7 天～後 90 天）</h2>
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input matInput [matDatepicker]="picker3" [min]="dynamicMinDate" [max]="dynamicMaxDate">
+      <mat-datepicker-toggle matIconSuffix [for]="picker3"></mat-datepicker-toggle>
+      <mat-datepicker #picker3></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <!-- 補充練習 1：原生日期框，選好後下方文字即時更新 -->
+  <div style="background: #fce4ec; padding: 20px; border-radius: 10px; border: 2px solid #c2185b; margin-bottom: 20px;">
+    <h2 style="color: #c2185b; margin-top: 0;">補充練習 1：訂單日期雙向綁定</h2>
+    <input type="date" [(ngModel)]="orderDate">
+    <!-- {{ }} 是插值語法：把變數目前的值顯示在畫面上 -->
+    <p style="margin-bottom: 0;">您選擇的出貨日期為：{{ orderDate | date:'MM/dd/yyyy' }}</p>
+  </div>
+
+  <!-- 補充練習 2：除錯實驗，要修改程式才看得到，所以這裡只列出步驟 -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #757575; margin-bottom: 20px;">
+    <h2 style="color: #616161; margin-top: 0;">補充練習 2：忘記 DateAdapter 的錯誤</h2>
+    <ol style="margin-bottom: 0;">
+      <li>打開 ch34-datepicker.ts，把 providers 中的 provideNativeDateAdapter() 刪除</li>
+      <li>觀察 Console 的錯誤：MatDatepicker: No provider found for DateAdapter.</li>
+      <li>記得補回來</li>
+    </ol>
+  </div>
+
+  <!-- 補充練習 3：只能選明天起 7 天內 -->
+  <div style="background: #ede7f6; padding: 20px; border-radius: 10px; border: 2px solid #4527a0;">
+    <h2 style="color: #4527a0; margin-top: 0;">補充練習 3：限制可預約日期</h2>
+    <mat-form-field>
+      <mat-label>預約日期</mat-label>
+      <input matInput [matDatepicker]="picker4" [min]="reserveMinDate" [max]="reserveMaxDate">
+      <mat-datepicker-toggle matIconSuffix [for]="picker4"></mat-datepicker-toggle>
+      <mat-datepicker #picker4></mat-datepicker>
+    </mat-form-field>
+    <p style="margin-bottom: 0; color: #555;">打開日曆，確認只有明天起 7 天內可以點選</p>
   </div>
 
 </div>

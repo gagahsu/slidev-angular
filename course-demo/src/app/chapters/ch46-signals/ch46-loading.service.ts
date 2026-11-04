@@ -1,10 +1,18 @@
 import { Injectable, signal } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
-export class Ch46LoadingService {
-  private _loading = signal<boolean>(false);
-  loading = this._loading.asReadonly();
+@Injectable({
+  providedIn: 'root'
+})
+export class LoadingService {
+  // Signal 必須提供初始值
+  loading = signal<boolean>(false);
 
-  show(): void { this._loading.set(true); }
-  hide(): void { this._loading.set(false); }
+  // 更新值用 .set()，取代 Observable 的 .next()
+  show() {
+    this.loading.set(true);
+  }
+
+  hide() {
+    this.loading.set(false);
+  }
 }

@@ -1,0 +1,22 @@
+<div class="chapter">
+  <h1>🧭 路由</h1>
+
+  <section class="demo-section">
+    <h2>導航列</h2>
+    <!-- routerLink 指定路徑，切換時不會重新載入整頁 -->
+    <!-- routerLinkActive：網址符合時，自動加上 active-link 這個 class -->
+    <nav>
+      <a class="nav-link" routerLink="/ch22/first" routerLinkActive="active-link">第一頁</a>
+      <a class="nav-link" routerLink="/ch22/second" routerLinkActive="active-link">第二頁</a>
+      <a class="nav-link" routerLink="/ch22/login" routerLinkActive="active-link">登入範例</a>
+      <!-- 這個路徑沒有定義，會顯示 404 頁面 -->
+      <a class="nav-link" routerLink="/ch22/abc" routerLinkActive="active-link">不存在的頁面</a>
+    </nav>
+  </section>
+
+  <section class="demo-section">
+    <h2>頁面內容</h2>
+    <!-- router-outlet 是顯示容器：目前頁面的元件會顯示在這裡 -->
+    <router-outlet></router-outlet>
+  </section>
+</div>

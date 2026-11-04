@@ -1,86 +1,66 @@
-<div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+<div class="chapter">
+  <h1>☑️ Radio 與 Checkbox</h1>
 
-  <h1 style="color: #1a5c5c; text-align: center;">☑️ Radio & Checkbox 示範</h1>
-
-  <!-- ① 原生 Radio -->
-  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #ccc; margin-bottom: 20px;">
-    <h2 style="margin-top: 0;">① 原生 HTML radio</h2>
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-      <label><input type="radio" name="native-gender" value="male"   (change)="nativeRadio='男'"> 男</label>
-      <label><input type="radio" name="native-gender" value="female" (change)="nativeRadio='女'"> 女</label>
-      <label><input type="radio" name="native-gender" value="other"  (change)="nativeRadio='不公開'"> 不公開</label>
-    </div>
-    <p style="margin-top: 10px;">選取值：<strong>{{ nativeRadio || '（未選）' }}</strong></p>
-  </div>
-
-  <!-- ② mat-radio-group -->
-  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
-    <h2 style="color: #1565c0; margin-top: 0;">② mat-radio-group（Material 單選）</h2>
-
-    <h4 style="margin-bottom: 8px;">性別：</h4>
-    <mat-radio-group [(ngModel)]="selectedGender" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px;">
-      <mat-radio-button value="male">男</mat-radio-button>
-      <mat-radio-button value="female">女</mat-radio-button>
-      <mat-radio-button value="other">不公開</mat-radio-button>
+  <!-- ① mat-radio-group 管理群組內只能選一個 -->
+  <section class="demo-section">
+    <h2>① mat-radio-group</h2>
+    <mat-radio-group>
+      <mat-radio-button value="1">Option 1</mat-radio-button>
+      <mat-radio-button value="2">Option 2</mat-radio-button>
     </mat-radio-group>
-    <p>選取值：<strong style="color: #1565c0;">{{ selectedGender || '（未選）' }}</strong></p>
+  </section>
 
-    <h4 style="margin-bottom: 8px;">喜歡的季節：</h4>
-    <mat-radio-group [(ngModel)]="selectedSeason" style="display: flex; gap: 20px; flex-wrap: wrap;">
-      @for (season of seasons; track season) {
-        <mat-radio-button [value]="season">{{ season }}</mat-radio-button>
-      }
-    </mat-radio-group>
-    <p>選取值：<strong style="color: #1565c0;">{{ selectedSeason || '（未選）' }}</strong></p>
-  </div>
+  <!-- ② 原生 radio：name 相同才是同一組 -->
+  <section class="demo-section">
+    <h2>② input radio</h2>
+    <h3>沒有 name：兩個都可以選</h3>
+    <input type="radio" value="1">Option 1
+    <input type="radio" value="2">Option 2
+    <h3>相同 name：只能選一個</h3>
+    <input type="radio" value="1" name="A">Option 1
+    <input type="radio" value="2" name="A">Option 2
+  </section>
 
-  <!-- ③ 原生 Checkbox -->
-  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #ccc; margin-bottom: 20px;">
-    <h2 style="margin-top: 0;">③ 原生 HTML checkbox</h2>
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-      <label><input type="checkbox" [(ngModel)]="nativeCheckA"> 選項 A</label>
-      <label><input type="checkbox" [(ngModel)]="nativeCheckB"> 選項 B</label>
-    </div>
-    <p style="margin-top: 10px;">A：{{ nativeCheckA }}，B：{{ nativeCheckB }}</p>
-  </div>
+  <!-- ③ 原生 checkbox -->
+  <section class="demo-section">
+    <h2>③ input checkbox</h2>
+    <input type="checkbox" [(ngModel)]="checkBoxData1">多選1
+    <input type="checkbox" [(ngModel)]="checkBoxData2">多選2
+    <p>{{ checkBoxData1 }}，{{ checkBoxData2 }}</p>
+  </section>
 
-  <!-- ④ mat-checkbox + 全選 -->
-  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
-    <h2 style="color: #2e7d32; margin-top: 0;">④ mat-checkbox + 全選</h2>
+  <!-- ④ mat-checkbox -->
+  <section class="demo-section">
+    <h2>④ mat-checkbox</h2>
+    <mat-checkbox [(ngModel)]="checkBoxData1">多選1</mat-checkbox>
+    <mat-checkbox [(ngModel)]="checkBoxData2">多選2</mat-checkbox>
+  </section>
 
-    <mat-checkbox
-      [checked]="allChecked"
-      [indeterminate]="someChecked"
-      (change)="toggleAll($event.checked)"
-      style="margin-bottom: 12px; font-weight: bold;">
-      全選
-    </mat-checkbox>
+  <!-- ⑤ 練習 -->
+  <section class="demo-section">
+    <h2>⑤ 練習：手搖飲點餐單</h2>
+    <div class="order-box">
+      <h3>甜度（單選）</h3>
+      <mat-radio-group [(ngModel)]="selectedSweetness">
+        @for (opt of sweetnessOptions; track opt.value) {
+          <!-- [value] 綁定陣列裡的值 -->
+          <mat-radio-button [value]="opt.value">
+            {{ opt.label }}
+          </mat-radio-button>
+        }
+      </mat-radio-group>
 
-    <div style="display: flex; flex-direction: column; gap: 8px; padding-left: 24px;">
-      @for (course of courses; track course.name) {
-        <mat-checkbox [(ngModel)]="course.checked">
-          {{ course.name }}
+      <h3>加料（可複選）</h3>
+      @for (topping of toppings; track topping.label) {
+        <!-- 綁定的是 checked 這個布林屬性 -->
+        <mat-checkbox [(ngModel)]="topping.checked">
+          {{ topping.label }}
         </mat-checkbox>
       }
+
+      <p class="summary">
+        你選的甜度：{{ selectedSweetness }}，加料：{{ selectedToppingsText }}
+      </p>
     </div>
-
-    @if (selectedCourses.length > 0) {
-      <div style="margin-top: 16px; background: #c8e6c9; padding: 12px; border-radius: 8px;">
-        已選：<strong>{{ selectedCourses.join('、') }}</strong>
-      </div>
-    }
-  </div>
-
-  <div style="text-align: center; margin-bottom: 20px;">
-    <button mat-raised-button color="primary" (click)="submit()" style="font-size: 1rem;">
-      送出表單
-    </button>
-  </div>
-
-  @if (submitResult) {
-    <div style="background: #e8f5e9; padding: 16px; border-radius: 10px; border: 2px solid #2e7d32; white-space: pre-line;">
-      <strong>送出結果：</strong><br>{{ submitResult }}
-    </div>
-  }
-
+  </section>
 </div>

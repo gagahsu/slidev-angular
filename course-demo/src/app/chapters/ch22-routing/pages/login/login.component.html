@@ -1,0 +1,7 @@
+<h2>登入（密碼是 1234）</h2>
+<input [(ngModel)]="password" placeholder="輸入密碼" />
+<button (click)="login()">登入</button>
+<!-- error 為 true 時才顯示 -->
+@if (error) {
+  <p>密碼錯誤，請再試一次</p>
+}

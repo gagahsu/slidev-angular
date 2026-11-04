@@ -1,56 +1,64 @@
+// 從 Angular 核心套件匯入 Component，用來宣告「這個 class 是一個元件」
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-ch15-methods',
-  imports: [],
-  templateUrl: './ch15-methods.html',
-  styleUrl: './ch15-methods.css',
+  selector: 'app-ch15-methods',        // 這個元件在 HTML 中使用的標籤名稱
+  imports: [],                         // 這一章不需要額外的模組
+  templateUrl: './ch15-methods.html',  // 這個元件使用的 HTML 檔案
+  styleUrl: './ch15-methods.css',      // 這個元件使用的 CSS 檔案
 })
 export class Ch15Methods {
-  title = '第15章 - 方法';
-  playerName = '勇者 Allen';
-  hp = 100;
-  mp = 50;
-  gold = 0;
-  message = '遊戲開始！選擇一個動作吧。';
-  log: string[] = [];
 
-  takeDamage(damage: number): void {
-    this.hp = Math.max(0, this.hp - damage);
-    this.addLog(`受到 ${damage} 傷害！HP：${this.hp}`);
+  // ② 方法中呼叫另一個方法，要用 this.方法名稱()
+  firstMethod() {
+    alert('我是第一個方法');
+    this.secondMethod();
   }
 
-  useMagic(): void {
-    const cost = 10;
-    if (this.mp >= cost) {
-      this.mp -= cost;
-      this.addLog(`施放魔法！MP：${this.mp}`);
-    } else {
-      this.addLog('MP 不足！');
-    }
+  secondMethod() {
+    alert('我是被呼叫的第二個方法');
   }
 
-  rest(): void {
-    this.hp = 100;
-    this.mp = 50;
-    this.addLog('充分休息，HP 和 MP 全回復！');
+  // ③ 參數有預設值：age 不填時自動用 18
+  // 有預設值的參數要放在最後面
+  introduce(name: string, age: number = 18) {
+    alert(name + ' 今年 ' + age + ' 歲');
   }
 
-  pickGold(amount: number): void {
-    this.gold += amount;
-    this.addLog(`撿到 ${amount} 金幣！共 ${this.gold} 元`);
+  // ④ 小括號後的 : number 代表這個方法會回傳數字
+  addMoney(price1: number, price2: number): number {
+    return price1 + price2;
   }
 
-  private addLog(msg: string): void {
-    this.message = msg;
-    this.log.unshift(`[${new Date().toLocaleTimeString()}] ${msg}`);
-    if (this.log.length > 5) this.log.pop();
+  showTotal() {
+    const res = this.addMoney(10, 20);   // res 得到 30
+    alert('總金額：' + res);
   }
 
-  get statusText(): string {
-    if (this.hp >= 80) return '💪 良好';
-    if (this.hp >= 40) return '😰 受傷';
-    if (this.hp > 0)   return '🤕 危險';
-    return '💀 倒下';
+  // ⑤ 練習：跳出訊息後，再呼叫 logDone()
+  showMessage() {
+    alert('訊息！');
+    this.logDone();
+  }
+
+  // ⑤ 練習：呼叫時帶入名字
+  greet(name: string) {
+    alert('Hello, ' + name);
+  }
+
+  // ⑤ 練習：印在 F12 的 Console
+  logDone() {
+    console.log('完成！');
+  }
+
+  // ⑥ 補充練習：回傳正方形面積
+  getArea(side: number): number {
+    return side * side;
+  }
+
+  // ⑥ 補充練習：用區域常數接住 getArea() 的結果
+  showArea() {
+    const area = this.getArea(5);
+    alert('正方形面積為：' + area);
   }
 }

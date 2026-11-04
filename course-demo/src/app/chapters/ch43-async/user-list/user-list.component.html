@@ -1,0 +1,12 @@
+<!-- 依三種狀態切換顯示的內容 -->
+@if (loading) {
+  <p>載入中...</p>
+} @else if (errorMessage) {
+  <p class="error">{{ errorMessage }}</p>
+} @else {
+  <ul>
+    @for (user of users; track user.id) {
+      <li>{{ user.name.first }} {{ user.name.last }}（{{ user.email }}）</li>
+    }
+  </ul>
+}

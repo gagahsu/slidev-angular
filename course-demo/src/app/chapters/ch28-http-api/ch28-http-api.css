@@ -1,0 +1,13 @@
+/* 卡片自動排列，放不下時換行 */
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.weather-card {
+  padding: 16px;
+  text-align: center;
+  background: #e0f7fa;
+  border-radius: 8px;
+}

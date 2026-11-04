@@ -1,26 +1,45 @@
 <div class="chapter">
-  <h1>{{ title }}</h1>
+  <h1>⚙️ 方法</h1>
+
+  <!-- ① HTML 呼叫方法：名稱要和 TS 的方法完全一致 -->
   <section class="demo-section">
-    <h2>⚔️ RPG 遊戲示範</h2>
-    <p class="hint"><code>(click)="方法名()"</code> 呼叫 TypeScript 的方法</p>
-    <div class="status-card">
-      <p>角色：<strong>{{ playerName }}</strong></p>
-      <p>HP：<strong>{{ hp }} / 100 {{ statusText }}</strong></p>
-      <p>MP：<strong>{{ mp }} / 50</strong></p>
-      <p>金幣：<strong>{{ gold }} 💰</strong></p>
-    </div>
-    <div class="message-box">📢 {{ message }}</div>
-    <div class="btn-row">
-      <button (click)="takeDamage(20)">受傷 -20</button>
-      <button (click)="takeDamage(50)">受傷 -50</button>
-      <button (click)="useMagic()">魔法 (-10MP)</button>
-      <button (click)="pickGold(50)">金幣 +50</button>
-      <button (click)="rest()">🛌 休息回復</button>
-    </div>
-    <div class="log-box">
-      @for (entry of log; track entry) {
-        <div>{{ entry }}</div>
-      }
-    </div>
+    <h2>① HTML 呼叫方法</h2>
+    <!-- (click) 是事件綁定：點擊時呼叫 TS 的方法 -->
+    <button (click)="showMessage()">點我</button>
+  </section>
+
+  <!-- ② TS 中方法呼叫方法 -->
+  <section class="demo-section">
+    <h2>② TS 中方法呼叫方法</h2>
+    <button (click)="firstMethod()">執行 firstMethod()</button>
+  </section>
+
+  <!-- ③ 呼叫方法帶入值 -->
+  <section class="demo-section">
+    <h2>③ 多個參數與預設值</h2>
+    <!-- 帶入兩個值 -->
+    <button (click)="introduce('Allen', 30)">introduce('Allen', 30)</button>
+    <!-- 只帶一個值，age 使用預設值 18 -->
+    <button (click)="introduce('Allen')">introduce('Allen')</button>
+  </section>
+
+  <!-- ④ 回傳值 -->
+  <section class="demo-section">
+    <h2>④ 回傳值（return）</h2>
+    <button (click)="showTotal()">計算總金額</button>
+  </section>
+
+  <!-- ⑤ 練習 -->
+  <section class="demo-section">
+    <h2>⑤ 練習：製作一個互動頁面</h2>
+    <button (click)="showMessage()">顯示訊息</button>
+    <button (click)="greet('Allen')">打招呼</button>
+    <p class="hint">點「顯示訊息」後，打開 F12 → Console，確認有印出「完成！」</p>
+  </section>
+
+  <!-- ⑥ 補充練習 -->
+  <section class="demo-section">
+    <h2>⑥ 補充練習：正方形面積計算器</h2>
+    <button (click)="showArea()">計算面積</button>
   </section>
 </div>

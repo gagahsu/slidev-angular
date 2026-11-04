@@ -1,0 +1,50 @@
+<div class="chapter">
+  <h1>🔀 &#64;if 條件顯示</h1>
+
+  <!-- ① @if / @else -->
+  <section class="demo-section">
+    <h2>① &#64;if 小節練習</h2>
+    @if (isLoggedIn) {
+      <p>歡迎回來！</p>
+    } @else {
+      <p>請先登入</p>
+    }
+  </section>
+
+  <!-- ② @if 和 display:none 的差異，可以用 F12 比較 -->
+  <section class="demo-section">
+    <h2>② &#64;if 與 display:none</h2>
+    <p>打開 F12 → Elements：&#64;if 的內容不在 DOM 中，display:none 的內容仍然在</p>
+    @if (false) {
+      <h3>我是h3的內容（&#64;if）</h3>
+    }
+    <h3 style="display: none;">我是h3的內容（display:none）</h3>
+  </section>
+
+  <!-- ③ @else if：由上往下判斷，第一個成立的分支執行後就停止 -->
+  <section class="demo-section">
+    <h2>③ &#64;else if 小節練習（score = {{ score }}）</h2>
+    @if (score >= 90) {
+      <p>優秀</p>
+    } @else if (score >= 70) {
+      <p>良好</p>
+    } @else if (score >= 60) {
+      <p>及格</p>
+    } @else {
+      <p>不及格</p>
+    }
+  </section>
+
+  <!-- ④ 補充練習：收合時，nav 會從 DOM 中移除 -->
+  <section class="demo-section">
+    <h2>④ 補充練習：側邊欄一鍵展開與收合</h2>
+    <button (click)="toggleMenu()">☰ 選單</button>
+    @if (showSidebar) {
+      <nav class="sidebar">
+        <a href="#">首頁</a>
+        <a href="#">商品管理</a>
+        <a href="#">會員管理</a>
+      </nav>
+    }
+  </section>
+</div>

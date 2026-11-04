@@ -1,0 +1,77 @@
+<div class="chapter">
+  <h1>🔗 繫結</h1>
+
+  <!-- ① 內嵌繫結：單向 TS → HTML -->
+  <section class="demo-section">
+    <h2>① 內嵌繫結</h2>
+    <h3>{{ title }}</h3>
+    <p>玩家：{{ name }}，等級：{{ level }}</p>
+    <!-- 雙大括號內可以寫簡單的運算 -->
+    <p>計算結果：{{ 1 + 2 }}</p>
+    <h3>小節練習</h3>
+    <p>商品：{{ product }}</p>
+    <p>單價：{{ price }} 元</p>
+    <p>數量：{{ qty }}</p>
+    <p>總計：{{ price * qty }} 元</p>
+  </section>
+
+  <!-- ② 屬性繫結：單向 TS → HTML，屬性名稱要加中括號 -->
+  <section class="demo-section">
+    <h2>② 屬性繫結</h2>
+    <input [placeholder]="hintText">
+    <img [src]="imgUrl" alt="示意圖" width="40">
+
+    <h3>[disabled]：條件為 true 時禁用</h3>
+    <button [disabled]="isMinLevel()">降級</button>
+    <button [disabled]="isMaxLevel()">升級</button>
+
+    <h3>[class.xxx]：條件為 true 時加上 class</h3>
+    <button [class.selected]="isSelected" (click)="select()">選取</button>
+
+    <h3>[ngClass]：同時控制多個 class</h3>
+    <div [ngClass]="{'active': isActive, 'error': hasError}">狀態區塊</div>
+
+    <h3>小節練習</h3>
+    <input [placeholder]="inputHint" />
+    <p [class.highlight]="isVip">VIP 會員</p>
+    <!-- isVip 為 true 時，!isVip 是 false，按鈕可以使用 -->
+    <button [disabled]="!isVip">專屬優惠</button>
+  </section>
+
+  <!-- ③ 事件繫結：單向 HTML → TS -->
+  <section class="demo-section">
+    <h2>③ 事件繫結</h2>
+    <h3>$event 事件物件</h3>
+    <input (input)="onSearch($event)" placeholder="搜尋...">
+    <p>目前輸入：{{ keyword }}</p>
+    <h3>小節練習</h3>
+    <p>點擊次數：{{ count }}</p>
+    <button (click)="addCount()">點擊 +1</button>
+    <button (click)="resetCount()">重置</button>
+  </section>
+
+  <!-- ④ 雙向繫結：任一方改變，另一方同步更新 -->
+  <section class="demo-section">
+    <h2>④ 雙向繫結（小節練習）</h2>
+    <input [(ngModel)]="nickname" placeholder="輸入暱稱">
+    <!-- nickname 是空字串時，顯示 '陌生人' -->
+    <p>你好，{{ nickname || '陌生人' }}！</p>
+  </section>
+
+  <!-- ⑤ 練習 1～2：四種繫結全部用上 -->
+  <section class="demo-section">
+    <h2>⑤ 練習 1～2：角色等級計算機</h2>
+    <div class="calculator">
+      <button class="reset-button" (click)="reset()">重置</button>
+      <h3 class="calculator-title">角色等級計算機</h3>
+      <p class="stat">等級：{{ level }}</p>
+      <button (click)="levelUp()">升級</button>
+      <button [disabled]="level <= 1" (click)="levelDown()">降級</button>
+      <p class="stat">攻擊力：{{ attack }}</p>
+      <p class="stat">防禦力：{{ defense }}</p>
+      <label>自行輸入等級：</label>
+      <input type="number" [(ngModel)]="inputLevel" />
+      <button (click)="modifyLevel()">修改等級</button>
+    </div>
+  </section>
+</div>

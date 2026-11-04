@@ -1,53 +1,45 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-ch51-validators',
-  templateUrl: './ch51-validators.html',
-  styleUrl: './ch51-validators.css',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, MatButtonModule]
+  selector: 'app-ch51-validators',         // 這個元件在 HTML 中使用的標籤名稱
+  templateUrl: './ch51-validators.html',   // 這個元件使用的 HTML 檔案
+  styleUrl: './ch51-validators.css',       // 這個元件使用的 CSS 檔案
+  standalone: true,                        // 獨立元件
+  imports: [ReactiveFormsModule]
 })
 export class Ch51Validators {
+
   fb = inject(FormBuilder);
 
+  // 練習：陣列第二個元素是驗證規則，多個規則用陣列包起來
   form = this.fb.group({
-    username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-    email:    ['', [Validators.required, Validators.email]],
-    age:      [null as number | null, [Validators.required, Validators.min(18), Validators.max(99)]],
-    phone:    ['', [Validators.pattern(/^09\d{8}$/)]],
-    zipCode:  ['', [Validators.pattern(/^\d{3,5}$/)]],
-    agree:    [false, Validators.requiredTrue]
+    username: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    // 數字欄位用 null 代表尚未填寫
+    age: [null as number | null, [Validators.required, Validators.min(18), Validators.max(99)]],
+    // ^09 是 09 開頭，\d{8} 是 8 碼數字，$ 是結尾
+    phone: ['', [Validators.required, Validators.pattern(/^09\d{8}$/)]],
+    // checkbox 一定要是 true 才算通過
+    agree: [false, Validators.requiredTrue],
   });
 
-  get f(): { [key: string]: AbstractControl } {
-    return this.form.controls;
-  }
+  // 補充練習 1：投影片也叫 form；同一個 class 不能重複，所以用不同名字
+  surveyForm = this.fb.group({
+    surveyTitle: ['', [Validators.required, Validators.maxLength(5)]],
+  });
 
-  getError(fieldName: string): string {
-    const control = this.form.get(fieldName);
-    if (!control?.errors || !control.touched) return '';
-    const errors = control.errors;
-    if (errors['required'])     return '此欄位為必填';
-    if (errors['requiredTrue']) return '必須同意才能繼續';
-    if (errors['email'])        return '請輸入正確的 Email 格式';
-    if (errors['minlength'])    return `最少需要 ${errors['minlength'].requiredLength} 個字元`;
-    if (errors['maxlength'])    return `最多 ${errors['maxlength'].requiredLength} 個字元`;
-    if (errors['min'])          return `最小值為 ${errors['min'].min}`;
-    if (errors['max'])          return `最大值為 ${errors['max'].max}`;
-    if (errors['pattern'])      return '格式不正確';
-    return '輸入有誤';
-  }
+  // 補充練習 2：只能輸入 1 到 4 位數字
+  dosageForm = this.fb.group({
+    mgDosage: ['', Validators.pattern(/^\d{1,4}$/)],
+  });
 
-  submitResult: string = '';
-
+  // 按下送出時執行
   onSubmit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      console.log('表單尚有欄位未通過驗證');
       return;
     }
-    this.submitResult = '✅ 表單驗證通過！送出成功！';
+    console.log('註冊成功', this.form.value);
   }
 }

@@ -1,0 +1,48 @@
+<div class="chapter">
+  <h1>🔄 &#64;switch 條件切換</h1>
+
+  <!-- ① TypeScript 的 switch：結果印在 Console -->
+  <section class="demo-section">
+    <h2>① switch vs if（打開 F12 → Console 看結果）</h2>
+    <label>testNum：</label>
+    <input type="number" [(ngModel)]="testNum">
+    <button (click)="useIf()">if 寫法</button>
+    <button (click)="useSwitch()">switch 寫法</button>
+    <button (click)="useExpression()">switch 運算式（testNum * 3）</button>
+  </section>
+
+  <!-- ② @switch：@case 不需要 break，比對成功就停止 -->
+  <section class="demo-section">
+    <h2>② &#64;switch 小節練習</h2>
+    <select [(ngModel)]="role">
+      <option value="admin">admin</option>
+      <option value="editor">editor</option>
+      <option value="guest">guest</option>
+    </select>
+    @switch (role) {
+      @case ('admin') {
+        <p>管理員</p>
+      }
+      @case ('editor') {
+        <p>編輯者</p>
+      }
+      @default {
+        <p>一般會員</p>
+      }
+    }
+  </section>
+
+  <!-- ③ 練習 -->
+  <section class="demo-section">
+    <h2>③ 練習：HTTP 狀態碼分類</h2>
+    <button (click)="checkStatus()">判斷 statusCode = 404</button>
+  </section>
+
+  <!-- ④ 補充練習 -->
+  <section class="demo-section">
+    <h2>④ 補充練習</h2>
+    <button (click)="checkDay()">1：星期看板</button>
+    <button (click)="checkDiscount()">2：會員折扣</button>
+    <button (click)="fallThrough()">3：故意漏寫 break</button>
+  </section>
+</div>

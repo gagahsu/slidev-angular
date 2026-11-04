@@ -1,0 +1,14 @@
+.form-field {
+  margin-bottom: 12px;
+}
+
+/* 固定最小高度，錯誤訊息出現時，下面的欄位不會跳動 */
+.field-error {
+  min-height: 1.25rem;
+}
+
+.field-error p {
+  margin: 2px 0 0;
+  color: #d32f2f;
+  font-size: 0.85rem;
+}

@@ -1,0 +1,15 @@
+/* [class.selected] 條件成立時套用 */
+.selected { background-color: #3498db; color: white; border-color: #2980b9; }
+
+/* [ngClass] 條件成立時套用 */
+.active { background-color: #d4edda; padding: 8px; }
+.error  { background-color: #f8d7da; padding: 8px; }
+
+/* 屬性繫結小節練習 */
+.highlight { color: #f39c12; font-weight: bold; }
+
+/* 等級計算機外框：relative 讓重置按鈕可以定位在右上角 */
+.calculator { position: relative; border: 2px solid #1f2937; border-radius: 8px; padding: 24px; max-width: 480px; }
+.reset-button { position: absolute; top: 4px; right: 4px; }
+.calculator-title { color: #dc2626; text-align: center; font-size: 1.4rem; }
+.stat { font-weight: bold; font-size: 1.2rem; margin-top: 8px; }

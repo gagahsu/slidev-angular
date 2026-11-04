@@ -1,0 +1,45 @@
+<div class="chapter">
+  <h1>🌐 串接 API</h1>
+
+  <!-- ① 三個步驟 -->
+  <section class="demo-section">
+    <h2>① 如何使用 API</h2>
+    <ol>
+      <li>在 app.config.ts 加入 provideHttpClient()</li>
+      <li>建立 HttpClientService，封裝四種 HTTP 方法</li>
+      <li>在元件注入 Service，並用 subscribe 接收結果</li>
+    </ol>
+    <p class="hint">進入這一頁時已經呼叫 GET API，打開 F12 → Console 可以看到結果</p>
+  </section>
+
+  <!-- ② POST 與錯誤處理：結果印在 Console -->
+  <section class="demo-section">
+    <h2>② POST 與補充練習 1：API 錯誤攔截</h2>
+    <button (click)="callPost()">呼叫 POST API</button>
+    <button (click)="callErrorApi()">呼叫無效網址</button>
+  </section>
+
+  <!-- ③ 練習：氣象資料，用卡片呈現 -->
+  <section class="demo-section">
+    <h2>③ 練習：中央氣象署開放資料</h2>
+    <!-- 有錯誤訊息時才顯示 -->
+    @if (weatherError) {
+      <p>{{ weatherError }}</p>
+    }
+    <div class="weather-grid">
+      <!-- 每個地區產生一張卡片 -->
+      @for (location of locations; track location.LocationName) {
+        <div class="weather-card">{{ location.LocationName }}</div>
+      }
+    </div>
+  </section>
+
+  <!-- ④ 補充練習 2 需要自己的金鑰 -->
+  <section class="demo-section">
+    <h2>④ 補充練習 2：政府天氣 API 網頁</h2>
+    <p>到中央氣象署開放資料平臺註冊會員，取得授權碼後，呼叫今明 36 小時天氣預報：</p>
+    <div class="code-show">
+      https://opendata.cwa.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization=你的金鑰&amp;locationName=高雄市
+    </div>
+  </section>
+</div>

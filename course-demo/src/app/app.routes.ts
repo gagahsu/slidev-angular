@@ -15,60 +15,65 @@ export const routes: Routes = [
   {
     path: 'ch17',
     loadComponent: () =>
-      import('./chapters/ch17-data-design/ch17-data-design').then(m => m.Ch17DataDesign)
+      import('./chapters/ch17-typescript-practice/ch17-typescript-practice').then(m => m.Ch17TypescriptPractice)
   },
   {
     path: 'ch18',
     loadComponent: () =>
-      import('./chapters/ch18-lifecycle/ch18-lifecycle').then(m => m.Ch18Lifecycle)
+      import('./chapters/ch18-data-design/ch18-data-design').then(m => m.Ch18DataDesign)
   },
   {
     path: 'ch19',
     loadComponent: () =>
-      import('./chapters/ch19-components/ch19-components').then(m => m.Ch19Components)
+      import('./chapters/ch19-lifecycle/ch19-lifecycle').then(m => m.Ch19Lifecycle)
   },
   {
     path: 'ch20',
     loadComponent: () =>
-      import('./chapters/ch20-binding/ch20-binding').then(m => m.Ch20Binding)
+      import('./chapters/ch20-components/ch20-components').then(m => m.Ch20Components)
   },
   {
     path: 'ch21',
     loadComponent: () =>
-      import('./chapters/ch21-routing/ch21-routing').then(m => m.Ch21Routing)
+      import('./chapters/ch21-binding/ch21-binding').then(m => m.Ch21Binding)
   },
   {
     path: 'ch22',
-    loadComponent: () =>
-      import('./chapters/ch22-data-passing/ch22-data-passing').then(m => m.Ch22DataPassing)
+    loadChildren: () =>
+      import('./chapters/ch22-routing/ch22-routing.routes').then(m => m.routes)
   },
   {
     path: 'ch23',
-    loadComponent: () =>
-      import('./chapters/ch23-web-storage/ch23-web-storage').then(m => m.Ch23WebStorage)
+    loadChildren: () =>
+      import('./chapters/ch23-data-passing/ch23-data-passing.routes').then(m => m.routes)
   },
   {
     path: 'ch24',
     loadComponent: () =>
-      import('./chapters/ch24-array-display/ch24-array-display').then(m => m.Ch24ArrayDisplay)
+      import('./chapters/ch24-web-storage/ch24-web-storage').then(m => m.Ch24WebStorage)
   },
   {
     path: 'ch25',
     loadComponent: () =>
-      import('./chapters/ch25-if-condition/ch25-if-condition').then(m => m.Ch25IfCondition)
+      import('./chapters/ch25-array-display/ch25-array-display').then(m => m.Ch25ArrayDisplay)
   },
   {
     path: 'ch26',
     loadComponent: () =>
-      import('./chapters/ch26-switch/ch26-switch').then(m => m.Ch26Switch)
+      import('./chapters/ch26-if-condition/ch26-if-condition').then(m => m.Ch26IfCondition)
   },
   {
     path: 'ch27',
     loadComponent: () =>
-      import('./chapters/ch27-http-api/ch27-http-api').then(m => m.Ch27HttpApi)
+      import('./chapters/ch27-switch/ch27-switch').then(m => m.Ch27Switch)
   },
   {
     path: 'ch28',
+    loadComponent: () =>
+      import('./chapters/ch28-http-api/ch28-http-api').then(m => m.Ch28HttpApi)
+  },
+  {
+    path: 'ch28-openai',
     loadComponent: () =>
       import('./chapters/ch28-openai/ch28-openai').then(m => m.Ch28Openai)
   },
@@ -119,8 +124,8 @@ export const routes: Routes = [
   },
   {
     path: 'ch39',
-    loadComponent: () =>
-      import('./chapters/ch39-tabs/ch39-tabs').then(m => m.Ch39Tabs)
+    loadChildren: () =>
+      import('./chapters/ch39-tabs/ch39-tabs.routes').then(m => m.routes)
   },
   {
     path: 'ch40',
@@ -149,8 +154,8 @@ export const routes: Routes = [
   },
   {
     path: 'ch45',
-    loadComponent: () =>
-      import('./chapters/ch45-loading/ch45-loading').then(m => m.Ch45Loading)
+    loadChildren: () =>
+      import('./chapters/ch45-loading/ch45-loading.routes').then(m => m.routes)
   },
   {
     path: 'ch46',
@@ -159,13 +164,13 @@ export const routes: Routes = [
   },
   {
     path: 'ch47',
-    loadComponent: () =>
-      import('./chapters/ch47-sidenav/ch47-sidenav').then(m => m.Ch47Sidenav)
+    loadChildren: () =>
+      import('./chapters/ch47-sidenav/ch47-sidenav.routes').then(m => m.routes)
   },
   {
     path: 'ch48',
-    loadComponent: () =>
-      import('./chapters/ch48-toolbar/ch48-toolbar').then(m => m.Ch48Toolbar)
+    loadChildren: () =>
+      import('./chapters/ch48-toolbar/ch48-toolbar.routes').then(m => m.routes)
   },
   {
     path: 'ch49',

@@ -1,0 +1,47 @@
+<div class="chapter">
+  <h1>🔄 生命週期</h1>
+  <p class="hint">按 F12 打開 Console 後重新整理，觀察 1、2、3 的順序；切換到其他章節時，會看到 ngOnDestroy 的訊息</p>
+
+  <!-- ① 九個執行階段 -->
+  <section class="demo-section">
+    <h2>① 生命週期執行順序</h2>
+    <table>
+      <thead>
+        <tr><th>階段</th><th>觸發時機</th><th>執行次數</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>constructor</code></td><td>類別建立時（最先，不屬於 Angular Hook）</td><td>一次</td></tr>
+        <tr><td><code>ngOnChanges</code></td><td>Input 值變化時</td><td>多次</td></tr>
+        <tr><td><code>ngOnInit</code></td><td>元件初始化時</td><td>一次</td></tr>
+        <tr><td><code>ngDoCheck</code></td><td>每次變更檢測時</td><td>多次</td></tr>
+        <tr><td><code>ngAfterContentInit</code></td><td>ng-content 初始化後</td><td>一次</td></tr>
+        <tr><td><code>ngAfterContentChecked</code></td><td>ng-content 變更檢測後</td><td>多次</td></tr>
+        <tr><td><code>ngAfterViewInit</code></td><td>視圖組裝完成後</td><td>一次</td></tr>
+        <tr><td><code>ngAfterViewChecked</code></td><td>視圖更新後</td><td>多次</td></tr>
+        <tr><td><code>ngOnDestroy</code></td><td>元件銷毀前</td><td>一次</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ② ngOnInit：畫面上的值都是在 ngOnInit 設定的 -->
+  <section class="demo-section">
+    <h2>② ngOnInit</h2>
+    <!-- 練習：welcomeMessage 沒有初始值，但畫面仍能正確顯示 -->
+    <p>{{ welcomeMessage }}</p>
+    <p>{{ announcement }}</p>
+    <p>累計瀏覽：{{ viewCount }} 次</p>
+    <!-- @for 跑過 data 陣列，每筆產生一個 li -->
+    <ul>
+      @for (item of data; track item) {
+        <li>{{ item }}</li>
+      }
+    </ul>
+  </section>
+
+  <!-- ③ ngAfterViewInit：#searchBox 是模板變數，讓 TS 可以取得這個輸入框 -->
+  <section class="demo-section">
+    <h2>③ ngAfterViewInit</h2>
+    <p>頁面載入後，下面的輸入框會自動獲得焦點：</p>
+    <input #searchBox type="text" placeholder="搜尋商品...">
+  </section>
+</div>

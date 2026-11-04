@@ -1,106 +1,86 @@
-<div style="max-width: 680px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
+<div class="chapter">
+  <h1>✅ Validators</h1>
 
-  <h1 style="color: #1a5c5c; text-align: center;">✅ Validators 表單驗證</h1>
+  <!-- ① 練習：會員註冊表單 -->
+  <section class="demo-section">
+    <h2>① 練習：會員註冊表單</h2>
+    <!-- (ngSubmit)：按下送出按鈕或按 Enter 時觸發 -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label>帳號：</label>
+        <input formControlName="username">
+        <div class="field-error">
+          <!-- touched：使用者點過這個欄位，才顯示錯誤訊息 -->
+          @if (form.get('username')?.invalid && form.get('username')?.touched) {
+            <p>帳號為必填，且至少 3 個字元。</p>
+          }
+        </div>
+      </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label>Email：</label>
+        <input formControlName="email">
+        <div class="field-error">
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <p>請輸入正確的 Email 格式。</p>
+          }
+        </div>
+      </div>
 
-    <!-- 使用者名稱 -->
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 6px;">
-        使用者名稱 *
-        <span style="font-weight: normal; color: #888; font-size: 0.85rem;">（3-20 字元）</span>
-      </label>
-      <input formControlName="username" placeholder="請輸入使用者名稱"
-        [style.borderColor]="f['username'].invalid && f['username'].touched ? '#e53935' : '#ccc'"
-        style="width: 100%; padding: 10px; border: 2px solid; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-      @if (f['username'].invalid && f['username'].touched) {
-        <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">{{ getError('username') }}</p>
+      <div class="form-field">
+        <label>年齡：</label>
+        <input type="number" formControlName="age">
+        <div class="field-error">
+          @if (form.get('age')?.invalid && form.get('age')?.touched) {
+            <p>年齡需介於 18 到 99 之間。</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>手機：</label>
+        <input formControlName="phone" placeholder="09xxxxxxxx">
+        <div class="field-error">
+          @if (form.get('phone')?.invalid && form.get('phone')?.touched) {
+            <p>請輸入正確格式的手機號碼（09 開頭共 10 碼）。</p>
+          }
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>
+          <input type="checkbox" formControlName="agree">
+          我同意會員條款
+        </label>
+        <div class="field-error">
+          @if (form.get('agree')?.invalid && form.get('agree')?.touched) {
+            <p>請勾選同意會員條款。</p>
+          }
+        </div>
+      </div>
+
+      <!-- 表單無效時，按鈕不能點 -->
+      <button type="submit" [disabled]="form.invalid">送出註冊</button>
+    </form>
+  </section>
+
+  <!-- ② 補充練習 1：只判斷 invalid，一打開頁面警告就會出現 -->
+  <section class="demo-section">
+    <h2>② 補充練習 1：即時錯誤提示</h2>
+    <form [formGroup]="surveyForm">
+      <input formControlName="surveyTitle">
+      @if (surveyForm.get('surveyTitle')?.invalid) {
+        <p style="color: red">⚠️ 問卷名稱為必填，且長度不能超過 5 個字！</p>
       }
-    </div>
+    </form>
+  </section>
 
-    <!-- Email -->
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 6px;">Email *</label>
-      <input formControlName="email" type="email" placeholder="example@email.com"
-        [style.borderColor]="f['email'].invalid && f['email'].touched ? '#e53935' : '#ccc'"
-        style="width: 100%; padding: 10px; border: 2px solid; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-      @if (f['email'].invalid && f['email'].touched) {
-        <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">{{ getError('email') }}</p>
-      }
-    </div>
-
-    <!-- 年齡 -->
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 6px;">
-        年齡 *
-        <span style="font-weight: normal; color: #888; font-size: 0.85rem;">（18-99）</span>
-      </label>
-      <input formControlName="age" type="number" placeholder="請輸入年齡"
-        [style.borderColor]="f['age'].invalid && f['age'].touched ? '#e53935' : '#ccc'"
-        style="width: 160px; padding: 10px; border: 2px solid; border-radius: 6px; font-size: 1rem;" />
-      @if (f['age'].invalid && f['age'].touched) {
-        <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">{{ getError('age') }}</p>
-      }
-    </div>
-
-    <!-- 手機 -->
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 6px;">
-        手機號碼
-        <span style="font-weight: normal; color: #888; font-size: 0.85rem;">（格式：09xxxxxxxx）</span>
-      </label>
-      <input formControlName="phone" placeholder="09xxxxxxxx"
-        [style.borderColor]="f['phone'].invalid && f['phone'].touched ? '#e53935' : '#ccc'"
-        style="width: 100%; padding: 10px; border: 2px solid; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-      @if (f['phone'].invalid && f['phone'].touched) {
-        <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">{{ getError('phone') }}</p>
-      }
-    </div>
-
-    <!-- 郵遞區號 -->
-    <div style="margin-bottom: 20px;">
-      <label style="display: block; font-weight: bold; margin-bottom: 6px;">
-        郵遞區號
-        <span style="font-weight: normal; color: #888; font-size: 0.85rem;">（3-5 碼數字）</span>
-      </label>
-      <input formControlName="zipCode" placeholder="106"
-        [style.borderColor]="f['zipCode'].invalid && f['zipCode'].touched ? '#e53935' : '#ccc'"
-        style="width: 160px; padding: 10px; border: 2px solid; border-radius: 6px; font-size: 1rem;" />
-      @if (f['zipCode'].invalid && f['zipCode'].touched) {
-        <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">{{ getError('zipCode') }}</p>
-      }
-    </div>
-
-    <!-- 同意條款 -->
-    <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 10px;">
-      <input type="checkbox" formControlName="agree" id="agree"
-        style="width: 18px; height: 18px; cursor: pointer;" />
-      <label for="agree" style="cursor: pointer;">
-        我同意服務條款與隱私政策 *
-      </label>
-      @if (f['agree'].invalid && f['agree'].touched) {
-        <span style="color: #e53935; font-size: 0.85rem;">{{ getError('agree') }}</span>
-      }
-    </div>
-
-    <div style="background: #f5f5f5; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 0.9rem;">
-      表單狀態：
-      <strong [style.color]="form.valid ? '#2e7d32' : '#e53935'">
-        {{ form.valid ? '✅ 驗證通過' : '❌ 驗證未通過' }}
-      </strong>
-    </div>
-
-    <button mat-raised-button color="primary" type="submit"
-      style="width: 100%; padding: 14px; font-size: 1rem;">
-      送出
-    </button>
-
-  </form>
-
-  @if (submitResult) {
-    <div style="margin-top: 20px; background: #e8f5e9; padding: 16px; border-radius: 10px; border: 2px solid #2e7d32; text-align: center; font-size: 1.1rem;">
-      {{ submitResult }}
-    </div>
-  }
-
+  <!-- ③ 補充練習 2：輸入 100a 或 12345，按鈕會變灰 -->
+  <section class="demo-section">
+    <h2>③ 補充練習 2：用正規表達式限制純數字</h2>
+    <form [formGroup]="dosageForm">
+      <input formControlName="mgDosage" placeholder="建議劑量（毫克）">
+      <button type="submit" [disabled]="dosageForm.invalid">送出</button>
+    </form>
+  </section>
 </div>
