@@ -3,16 +3,15 @@ import { HttpClient } from '@angular/common/http';
 
 // 定義 API 回傳資料的形狀
 interface User {
-  id: string;
-  name: { first: string; last: string };
+  id: number;
+  firstname: string;
+  lastname: string;
   email: string;
 }
 
-// 使用者陣列在 res.data.data，外層多包了一層 data
-interface RandomUsersResponse {
-  data: {
-    data: User[];
-  };
+// 使用者陣列在 res.data
+interface UsersResponse {
+  data: User[];
 }
 
 @Component({
@@ -25,7 +24,7 @@ export class UserListComponent implements OnInit {
 
   // 投影片沒有這一行：這個示範專案沒有安裝 zone.js，
   // API 回來之後要呼叫 markForCheck() 通知 Angular 更新畫面
-  private cdr = inject(ChangeDetectorRef);
+  // private cdr = inject(ChangeDetectorRef);
 
   // 三個變數分別代表：載入中、失敗、成功
   loading = false;
@@ -37,13 +36,13 @@ export class UserListComponent implements OnInit {
     this.loading = true;
 
     this.http
-      .get<RandomUsersResponse>('https://api.freeapi.app/api/v1/public/randomusers')
+      .get<UsersResponse>('https://fakerapi.it/api/v1/users')
       .subscribe({
         // 成功時執行；subscribe 是非同步的，ngOnInit 不會等它
         next: (res) => {
-          this.users = res.data.data;
+          this.users = res.data;
           this.loading = false;
-          this.cdr.markForCheck();
+          // this.cdr.markForCheck();
         },
         // 失敗時也要把 loading 設回 false，否則畫面會一直停在載入中
         error: (err) => {

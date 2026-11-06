@@ -103,7 +103,7 @@ export class AppComponent implements OnInit {
 
     // http.get() 回傳 Observable，不會立刻執行
     // .subscribe() 才是真正「訂閱」並開始等待資料
-    this.http.get('https://jsonplaceholder.typicode.com/users/1')
+    this.http.get('https://fakerapi.it/api/v1/users')
       .subscribe({
         next: (data) => {
           // 資料回來時（非同步）才執行這裡

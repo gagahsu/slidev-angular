@@ -494,21 +494,21 @@ layout: default
 請呼叫真實的免費 API，取得隨機使用者清單。
 
 ```
-https://api.freeapi.app/api/v1/public/randomusers
+https://fakerapi.it/api/v1/users
 ```
 
-回應結構：使用者陣列位於 `res.data.data`（外層多包一層 `data`）。
+回應結構：使用者陣列位於 `res.data`。
 
 | 欄位 | 型別 | 說明 |
 | --- | --- | --- |
-| `id` | `string` | 使用者 ID |
-| `name.first` / `name.last` | `string` | 姓 / 名（巢狀物件） |
+| `id` | `number` | 使用者 ID |
+| `firstname` / `lastname` | `string` | 名 / 姓 |
 | `email` | `string` | 電子郵件 |
 
 <!--
 我們來做一個練習，呼叫真實的免費 API，取得隨機使用者的清單。
 
-這頁先說明 API 和回傳的資料結構。要特別注意兩件事：第一，使用者陣列在 `res.data.data`，外層多包了一層 data。第二，每位使用者的姓名是一個巢狀物件，分成 `name.first` 和 `name.last`，而不是單一的字串。
+這頁先說明 API 和回傳的資料結構。要特別注意兩件事：第一，使用者陣列在 `res.data`，不是 `res` 本身。第二，每位使用者的姓名分成 `firstname` 和 `lastname` 兩個欄位，而不是單一的字串。
 
 下一頁是實際要做的需求。
 -->
@@ -525,9 +525,9 @@ layout: default
 1. 建立 `UserListComponent`，屬性 `loading`、`errorMessage`、`users` 分別代表三種狀態
 2. `ngOnInit()` 一開始先將 `loading` 設為 `true`
 3. 呼叫 `HttpClient.get(...)` 打上一頁的 API，用 `subscribe()` 接收結果
-4. `next` 回呼中，將 `res.data.data`（使用者陣列）存入 `users`，並把 `loading` 設回 `false`
+4. `next` 回呼中，將 `res.data`（使用者陣列）存入 `users`，並把 `loading` 設回 `false`
 5. `error` 回呼中設定 `errorMessage`，同樣把 `loading` 設回 `false`
-6. 樣板依 `loading` / `errorMessage` / `users` 三種狀態切換顯示「載入中」、錯誤訊息、或使用者清單（顯示 `name.first`、`name.last`、`email`）
+6. 樣板依 `loading` / `errorMessage` / `users` 三種狀態切換顯示「載入中」、錯誤訊息、或使用者清單（顯示 `firstname`、`lastname`、`email`）
 
 <!--
 這個練習要做一個會員清單，把「載入中、成功、失敗」三種狀態都處理好。
@@ -548,12 +548,12 @@ layout: default
 2. `error` 回呼一定要處理，否則 API 失敗時畫面會永遠停在「載入中」
 3. 樣板可用 `@if` / `*ngIf` 依 `loading`、`errorMessage`、`users` 三種狀態切換內容
 4. `subscribe()` 是非同步的，`ngOnInit()` 方法本身不會等 API 回應才結束
-5. `freeapi.app` 這支 API 回傳的資料會包一層 `data`，實際使用者陣列在 `res.data.data`，不是 `res.data`
+5. `fakerapi.it` 這支 API 回傳的是一個物件，實際使用者陣列在 `res.data`，不是 `res`
 
 <!--
 我們來看解題提示。
 
-第一，`loading` 要在發出請求之前設為 true，並且在 `next` 和 `error` 兩個回呼裡都要設回 false。第二，`error` 一定要處理，否則 API 失敗時，畫面會永遠停在載入中。第三，模板可以用 `@if` 依照三種狀態切換內容。第四，`subscribe` 是非同步的，`ngOnInit` 不會等 API 回應才結束。第五，使用者陣列在 `res.data.data`，不是 `res.data`。
+第一，`loading` 要在發出請求之前設為 true，並且在 `next` 和 `error` 兩個回呼裡都要設回 false。第二，`error` 一定要處理，否則 API 失敗時，畫面會永遠停在載入中。第三，模板可以用 `@if` 依照三種狀態切換內容。第四，`subscribe` 是非同步的，`ngOnInit` 不會等 API 回應才結束。第五，使用者陣列在 `res.data`，不是 `res`。
 -->
 
 ---
@@ -569,22 +569,21 @@ import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 interface User {
-  id: string;
-  name: { first: string; last: string };
+  id: number;
+  firstname: string;
+  lastname: string;
   email: string;
 }
 
-interface RandomUsersResponse {
-  data: {
-    data: User[];
-  };
+interface UsersResponse {
+  data: User[];
 }
 ```
 
 <!--
 我們看完整的解答，先看匯入和型別定義。
 
-匯入 `HttpClient`。`User` interface 描述每位使用者的形狀，注意 `name` 是一個包含 first 和 last 的巢狀物件。`RandomUsersResponse` 則對應這支 API 回傳的外層結構，外面包了一層 data，裡面才是使用者陣列。
+匯入 `HttpClient`。`User` interface 描述每位使用者的形狀，注意姓名分成 `firstname` 和 `lastname` 兩個欄位。`UsersResponse` 則對應這支 API 回傳的外層結構，使用者陣列放在 data 裡面。
 -->
 
 ---
@@ -628,10 +627,10 @@ layout: default
     this.loading = true;
 
     this.http
-      .get<RandomUsersResponse>('https://api.freeapi.app/api/v1/public/randomusers')
+      .get<UsersResponse>('https://fakerapi.it/api/v1/users')
       .subscribe({
         next: (res) => {
-          this.users = res.data.data;
+          this.users = res.data;
           this.loading = false;
         },
         error: (err) => {
@@ -646,7 +645,7 @@ layout: default
 <!--
 這頁是 `ngOnInit` 的邏輯。
 
-一開始先把 `loading` 設為 true，接著呼叫 `http.get` 並訂閱。`next` 收到回應時，取出 `res.data.data` 存進 `users`，並把 `loading` 設回 false。`error` 發生時，設定錯誤訊息，`loading` 一樣設回 false。
+一開始先把 `loading` 設為 true，接著呼叫 `http.get` 並訂閱。`next` 收到回應時，取出 `res.data` 存進 `users`，並把 `loading` 設回 false。`error` 發生時，設定錯誤訊息，`loading` 一樣設回 false。
 
 「先打開 loading，不論成功或失敗都要關掉 loading」，這是處理 API 請求最基本也最重要的寫法。
 -->
@@ -667,7 +666,7 @@ layout: default
 } @else {
   <ul>
     @for (user of users; track user.id) {
-      <li>{{ user.name.first }} {{ user.name.last }}（{{ user.email }}）</li>
+      <li>{{ user.firstname }} {{ user.lastname }}（{{ user.email }}）</li>
     }
   </ul>
 }
@@ -676,7 +675,7 @@ layout: default
 <!--
 最後是模板。
 
-用 `@if` 依序判斷三種狀態：`loading` 為 true 時，顯示載入中；否則如果 `errorMessage` 有值，顯示錯誤訊息；都不是的話，代表資料成功取得，用 `@for` 把使用者清單顯示出來。姓名要分別顯示 `name.first` 和 `name.last`。
+用 `@if` 依序判斷三種狀態：`loading` 為 true 時，顯示載入中；否則如果 `errorMessage` 有值，顯示錯誤訊息；都不是的話，代表資料成功取得，用 `@for` 把使用者清單顯示出來。姓名要分別顯示 `firstname` 和 `lastname`。
 
 這三段判斷，剛好對應 TypeScript 裡三個屬性的狀態。
 -->
