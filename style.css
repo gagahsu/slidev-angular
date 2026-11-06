@@ -88,4 +88,15 @@
   }
 }
 
+/* Content overflowing a slide makes Chromium shrink the whole print layout when
+   exporting to PDF, which adds black bands and drops the last slides */
+.print-slide-container {
+  contain: strict;
+}
+
+/* Avoid a blank page after the last slide */
+#print-content .print-slide-container:last-child {
+  break-after: auto;
+}
+
 * { -webkit-user-select: text !important; user-select: text !important; }

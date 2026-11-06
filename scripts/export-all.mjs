@@ -1,11 +1,15 @@
-import { readdirSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'fs'
+import { readdirSync, mkdirSync } from 'fs'
 import { execSync } from 'child_process'
 import { basename, join } from 'path'
 import { fileURLToPath } from 'url'
-import { PDFDocument } from 'pdf-lib'
 
 const root = fileURLToPath(new URL('..', import.meta.url))
 const outDir = join(root, 'dist')
+
+// The dev server compiles slides on demand and may reload the page, so slides can
+// still show "Loading slide..." when the PDF is printed, and Slidev reports no error.
+// There is no fixed wait that is always long enough: check the output and retry.
+const waitsMs = [10000, 30000, 60000]
 
 mkdirSync(outDir, { recursive: true })
 
@@ -16,52 +20,46 @@ const chapters = readdirSync(root)
 
 console.log(`找到 ${chapters.length} 個章節：${chapters.join(', ')}\n`)
 
+// Requires pdftotext (Poppler) on PATH
+function countLoadingSlides(pdf) {
+  const text = execSync(`pdftotext -enc UTF-8 "${pdf}" -`, {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'ignore'],
+  })
+  return text.match(/Loading slide/g)?.length ?? 0
+}
+
+const failed = []
+
 for (const file of chapters) {
   const name = basename(file, '.md')
-  const pngBase = join(outDir, name)
   const pdfOutput = join(outDir, `${name}.pdf`)
 
-  console.log(`▶ 匯出 ${file} → PNG...`)
+  console.log(`▶ 匯出 ${file} → PDF...`)
   try {
-    execSync(
-      `pnpm slidev export "${file}" --format png --output "${pngBase}" --timeout 60000 --wait 2000`,
-      { cwd: root, stdio: 'inherit' }
-    )
-
-    // Slidev outputs PNGs into a subdirectory named after the output base
-    const pngDir = pngBase
-    const pngs = readdirSync(pngDir)
-      .filter(f => f.endsWith('.png'))
-      .sort((a, b) => {
-        const n = f => parseInt(f.match(/\d+/)?.[0] ?? '0', 10)
-        return n(a) - n(b)
-      })
-
-    if (pngs.length === 0) {
-      console.error(`✘ 找不到 PNG，跳過：${file}\n`)
-      continue
+    let loading = 0
+    for (const wait of waitsMs) {
+      execSync(
+        `pnpm slidev export "${file}" --format pdf --output "${pdfOutput}" --with-toc false --timeout 60000 --wait-until networkidle --wait ${wait}`,
+        { cwd: root, stdio: 'inherit' }
+      )
+      loading = countLoadingSlides(pdfOutput)
+      if (loading === 0) break
+      console.warn(`  ${loading} 頁尚未載入完成（等待 ${wait / 1000} 秒）`)
     }
 
-    console.log(`  合併 ${pngs.length} 張 PNG → PDF...`)
-    const pdf = await PDFDocument.create()
+    if (loading > 0) throw new Error(`${loading} 頁仍未載入完成`)
 
-    for (const pngFile of pngs) {
-      const pngData = readFileSync(join(pngDir, pngFile))
-      const img = await pdf.embedPng(pngData)
-      const { width, height } = img
-      const p = pdf.addPage([width, height])
-      p.drawImage(img, { x: 0, y: 0, width, height })
-    }
-
-    writeFileSync(pdfOutput, await pdf.save())
-
-    // clean up intermediate PNG directory
-    rmSync(pngDir, { recursive: true })
-
-    console.log(`✔ 完成 ${name}.pdf（${pngs.length} 頁）\n`)
+    console.log(`✔ 完成 ${name}.pdf\n`)
   } catch (err) {
+    failed.push(name)
     console.error(`✘ 失敗：${file}\n`, err.message)
   }
+}
+
+if (failed.length > 0) {
+  console.error(`\n${failed.length} 個章節失敗：${failed.join(', ')}`)
+  process.exit(1)
 }
 
 console.log('全部完成！PDF 存放在 dist/ 資料夾。')
