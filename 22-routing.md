@@ -674,15 +674,16 @@ layout: default
 
 # TS 導航 — 注入 Router
 
-當換頁需要依據邏輯判斷（例如登入後跳轉），使用 TypeScript 程式導航。在 `constructor` 注入 `Router` 服務：
+當換頁需要依據邏輯判斷（例如登入後跳轉），使用 TypeScript 程式導航。用 `inject()` 注入 `Router` 服務：
 
 ```typescript
 // app.component.ts
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({ standalone: true, imports: [RouterOutlet] })
 export class AppComponent {
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   goToFirst() {
     this.router.navigate(['/first']);
@@ -691,13 +692,13 @@ export class AppComponent {
 ```
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <code>constructor</code> 注入是 Angular 依賴注入（DI）的標準寫法。注入後，整個元件都能透過 <code>this.router</code> 呼叫路由方法。
+💡 <code>inject()</code> 是 Angular 依賴注入（DI）的現代寫法。注入後，整個元件都能透過 <code>this.router</code> 呼叫路由方法。
 </div>
 
 <!--
 有時候換頁需要先經過邏輯判斷，例如登入成功之後才跳到後台。這種情況就不能在 HTML 直接寫死 `routerLink`，而要在 TypeScript 裡用程式切換頁面。
 
-第一步，在 `constructor` 注入 `Router` 服務。這就是之前在生命週期提到的相依注入，Angular 會自動把 `Router` 交給我們。
+第一步，用 `inject` 注入 `Router` 服務。這就是之前在生命週期提到的相依注入，Angular 會自動把 `Router` 交給我們。
 
 注入之後，整個元件都可以用 `this.router` 呼叫路由的方法。例如在 `goToFirst` 裡，呼叫 `this.router.navigate`，就會切換到 `/first`。
 -->
@@ -734,7 +735,7 @@ export const routes: Routes = [
 
 ```typescript
 // login.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -747,7 +748,7 @@ export class LoginComponent {
   password = '';   // 綁定輸入框
   error = false;   // 控制錯誤訊息顯示
 
-  constructor(private router: Router) {}  // 注入 Router
+  private router = inject(Router);  // 注入 Router
 }
 ```
 
@@ -756,7 +757,7 @@ export class LoginComponent {
 
 因為要用 `ngModel` 綁定密碼輸入框，所以 `imports` 加入了 `FormsModule`。
 
-元件有兩個變數：`password` 綁定輸入框，`error` 控制錯誤訊息要不要顯示。最後在 `constructor` 注入 `Router`。
+元件有兩個變數：`password` 綁定輸入框，`error` 控制錯誤訊息要不要顯示。最後用 `inject` 注入 `Router`。
 -->
 
 ---
@@ -767,7 +768,7 @@ export class LoginComponent {
 
 ```typescript
 export class LoginComponent {
-  // ... 承上頁屬性與 constructor
+  // ... 承上頁屬性與注入的 Router
 
   login() {
     if (this.password === '1234') {
@@ -932,12 +933,14 @@ this.router.navigate(['/list', 'Allen']);
 
 ```typescript
 // list.component.ts
+import { inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 export class ListComponent {
   name: string | null = '';
+  private route = inject(ActivatedRoute);
 
-  constructor(private route: ActivatedRoute) {
+  constructor() {
     this.name = this.route.snapshot.paramMap.get('name');
   }
 }
@@ -950,7 +953,7 @@ export class ListComponent {
 <!--
 資料帶過去之後，下一頁要怎麼取出來？
 
-在目標元件的 `constructor` 注入 `ActivatedRoute`，它可以取得目前路由的資訊。接著用 `this.route.snapshot.paramMap.get('name')`，意思是「從目前路由的快照裡，取出叫做 name 的參數」。
+在目標元件用 `inject` 注入 `ActivatedRoute`，它可以取得目前路由的資訊。接著在 `constructor` 裡用 `this.route.snapshot.paramMap.get('name')`，意思是「從目前路由的快照裡，取出叫做 name 的參數」。
 
 取出來之後存進 `name` 變數，畫面上就能顯示「使用者名稱：Allen」。注意取出來的值可能是 null，所以變數的型別寫成字串或 null。
 -->
@@ -995,7 +998,8 @@ this.router.navigate(['/list'], {
 
 ```typescript
 // list.component.ts
-constructor(private route: ActivatedRoute) {
+private route = inject(ActivatedRoute);
+constructor() {
   const name = this.route.snapshot.queryParamMap.get('name');
   const age  = this.route.snapshot.queryParamMap.get('age');
 }
@@ -1034,7 +1038,9 @@ search() {
 
 **B 頁面（取值）：**
 ```typescript
-constructor(private route: ActivatedRoute) {
+private route = inject(ActivatedRoute);
+
+constructor() {
   // 讀取 keyword 並 console.log
   console.log(___);
 }
@@ -1063,7 +1069,9 @@ search() {
 
 ```typescript
 // B 頁面 — 取值
-constructor(private route: ActivatedRoute) {
+private route = inject(ActivatedRoute);
+
+constructor() {
   console.log(this.route.snapshot.queryParamMap.get('keyword'));  // Angular
 }
 ```
@@ -1228,7 +1236,7 @@ layout: default
 **練習 1：按鈕返回起始頁**
 
 1. 在 `second.component.html` 做出「返回起始頁」按鈕
-2. 在 `SecondComponent` 的建構式注入 `Router`
+2. 在 `SecondComponent` 用 `inject()` 注入 `Router`
 3. 點擊時用 `this.router.navigateByUrl('/first')` 跳回首頁
 
 **練習 2：登入狀態導航**
@@ -1255,7 +1263,7 @@ layout: default
 
 ```typescript
 // second.component.ts
-constructor(private router: Router) {}
+private router = inject(Router);
 
 goBack() {
   this.router.navigateByUrl('/first');
@@ -1266,7 +1274,7 @@ goBack() {
 // first.component.ts
 isLogin: boolean = true;
 
-constructor(private router: Router) {}
+private router = inject(Router);
 
 checkUser() {
   if (this.isLogin) {
@@ -1281,7 +1289,7 @@ checkUser() {
 <!--
 我們來看答案。
 
-兩題都要先從 `@angular/router` 匯入 `Router`，在建構式注入。第一題的 `goBack` 只有一行，用 `navigateByUrl` 跳回 first。
+兩題都要先從 `@angular/core` 匯入 `inject`、從 `@angular/router` 匯入 `Router`，再用 `inject` 注入。第一題的 `goBack` 只有一行，用 `navigateByUrl` 跳回 first。
 
 第二題的 `checkUser` 用 `if` 判斷 `isLogin`：成立就先跳提示，再導向 second；不成立就只跳出拒絕訪問，留在原頁。這就是程式導航比 `routerLink` 更有彈性的地方：可以先判斷條件，再決定要不要換頁。
 -->

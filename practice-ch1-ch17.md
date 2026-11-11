@@ -1785,7 +1785,7 @@ layout: default
 # P3：完整解答 — TypeScript（1/4）
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HttpClientService } from '../http-service/http-client.service';
 
 interface Subject {
@@ -1824,11 +1824,11 @@ export class DashboardComponent implements OnInit {
   records: CourseRecord[] = [];
   today = new Date();
 
-  constructor(private http: HttpClientService) {}
+  private http = inject(HttpClientService);
 ```
 
 <!--
-三個關鍵：records 初始為空陣列，等 API 回來才有資料；today 屬性在元件建立時就抓一次 new Date()（Ch18）；constructor 注入 HttpClientService（Ch29 的寫法），拿到 this.http 之後就能呼叫 getApi。
+三個關鍵：records 初始為空陣列，等 API 回來才有資料；today 屬性在元件建立時就抓一次 new Date()（Ch18）；用 inject() 注入 HttpClientService，拿到 this.http 之後就能呼叫 getApi。
 -->
 
 ---
@@ -2422,7 +2422,7 @@ export class MenuComponent implements OnInit {
 ```
 
 <!--
-這一版的 MenuComponent 開頭資訊量大，逐一對照：imports 陣列引入子元件（HTML 才能用 <app-order-panel>）；OrderService 和 Router 用 inject() 注入（Ch24 說的現代寫法，跟 P3 的 constructor 注入對照，兩種都要看得懂）；ngOnInit 從 sessionStorage 讀回上次的訂單（FR-5、Ch25），跟 P2 的 localStorage 一模一樣的 API，只差在儲存空間的生命週期。
+這一版的 MenuComponent 開頭資訊量大，逐一對照：imports 陣列引入子元件（HTML 才能用 <app-order-panel>）；OrderService 和 Router 用 inject() 注入（Ch24 說的現代寫法，跟 P3 相同）；ngOnInit 從 sessionStorage 讀回上次的訂單（FR-5、Ch25），跟 P2 的 localStorage 一模一樣的 API，只差在儲存空間的生命週期。
 -->
 
 ---

@@ -10,10 +10,10 @@ import { CartService } from '../../services/cart.service';
 export class PageAComponent {
   // inject() 是新版寫法，效果和寫在 constructor 的括號內相同
   private exampleService = inject(ExampleService);
+  private authService = inject(AuthService);
 
-  // 也可以寫在 constructor 的括號內
   // public 代表 HTML 也可以直接讀取 cartService
-  constructor(private authService: AuthService, public cartService: CartService) {}
+  public cartService = inject(CartService);
 
   // 把值塞進 Service，其他頁面就能讀到
   sendData() {

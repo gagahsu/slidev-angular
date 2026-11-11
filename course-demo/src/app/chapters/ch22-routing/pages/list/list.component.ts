@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 // ActivatedRoute 用來讀取目前網址上的值
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,7 +10,9 @@ export class ListComponent {
   // 網址可能沒有這個值，所以型別包含 null
   name: string | null = '';
 
-  constructor(private route: ActivatedRoute) {
+  private route = inject(ActivatedRoute);
+
+  constructor() {
     // 取出路由設定中 /:name 的值
     this.name = this.route.snapshot.paramMap.get('name');
   }

@@ -1,54 +1,54 @@
 /* 靜態、動態、方法回傳共用的 class */
-.test { color: #2563eb; }
-.test2 { text-decoration: underline; }
+.test { color: #2563eb; } /* 文字改成藍色 */
+.test2 { text-decoration: underline; } /* 文字加底線 */
 
 /* 訂單清單 */
-.order-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-left: 0 !important;
-}
+.order-list { /* 選取 class 為 order-list 的 <ul> */
+  list-style: none; /* 拿掉清單前面的圓點 */
+  display: flex; /* 改用 Flexbox 排列子元素 */
+  flex-direction: column; /* 子元素由上往下排 */
+  gap: 0.5rem; /* 每個子元素之間留 0.5rem 間距 */
+  padding-left: 0; /* 左內距歸零，取代全域 .demo-section ul 的 22px */
+} /* .order-list 規則結束 */
 
-.order-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.5rem;
-  padding: 0.6rem 1rem;
-}
+.order-list li { /* 選取 .order-list 裡面的每個 <li> */
+  display: flex; /* 讓 <li> 內的客戶名稱與標籤橫向排列 */
+  justify-content: space-between; /* 內容推到左右兩端 */
+  align-items: center; /* 內容垂直置中 */
+  border: 1px solid #e2e8f0; /* 1px 淺灰色實線外框 */
+  border-radius: 0.5rem; /* 外框圓角 */
+  padding: 0.6rem 1rem; /* 內距：上下 0.6rem、左右 1rem */
+} /* .order-list li 規則結束 */
 
 /* 標籤共用樣式 */
-.badge {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
+.badge { /* 所有標籤共用的外型，顏色交給下方的狀態 class */
+  display: inline-block; /* 和文字同行排列，上下 padding 也會撐開高度 */
+  padding: 0.2rem 0.6rem; /* 內距：上下 0.2rem、左右 0.6rem */
+  border-radius: 999px; /* 圓角設很大，形成膠囊形狀 */
+  font-size: 0.75rem; /* 字體縮小成根元素的 0.75 倍 */
+  font-weight: 600; /* 字體半粗體 */
+} /* .badge 規則結束 */
 
 /* 各狀態的顏色 */
-.badge-pending   { background: #fef3c7; color: #92400e; }
-.badge-shipped   { background: #dbeafe; color: #1e40af; }
-.badge-completed { background: #dcfce7; color: #166534; }
-.badge-cancelled { background: #f3f4f6; color: #6b7280; }
-.badge-overdue   { background: #fee2e2; color: #991b1b; margin-left: 0.4rem; }
+.badge-pending   { background: #fef3c7; color: #92400e; } /* 待處理：淺黃底、深棕字 */
+.badge-shipped   { background: #dbeafe; color: #1e40af; } /* 已出貨：淺藍底、深藍字 */
+.badge-completed { background: #dcfce7; color: #166534; } /* 已完成：淺綠底、深綠字 */
+.badge-cancelled { background: #f3f4f6; color: #6b7280; } /* 已取消：淺灰底、灰字 */
+.badge-overdue   { background: #fee2e2; color: #991b1b; margin-left: 0.4rem; } /* 逾期：淺紅底、深紅字，左邊和狀態標籤隔開 */
 
 /* 隱藏元素 */
-.hidden { display: none; }
+.hidden { display: none; } /* 不顯示也不占位；權重和 .badge 相同，因為寫在後面所以蓋過 inline-block */
 
 /* 已取消的訂單：變淡並加上刪除線 */
-.row-cancelled {
-  opacity: 0.5;
-  text-decoration: line-through;
-}
+.row-cancelled { /* 由 getRowClass() 回傳，套用在整列 <li> */
+  opacity: 0.5; /* 不透明度 50%，整列變淡 */
+  text-decoration: line-through; /* 文字加刪除線 */
+} /* .row-cancelled 規則結束 */
 
 /* 補充練習 1 */
-.light { padding: 12px; border: 1px solid #e2e8f0; margin-bottom: 8px; }
-.active-style { background-color: #0ea5e9; color: white; }
+.light { padding: 12px; border: 1px solid #e2e8f0; margin-bottom: 8px; } /* 警報燈基本外觀：內距、淺灰外框、下方外距 */
+.active-style { background-color: #0ea5e9; color: white; } /* isActive 為 true 時套用：天藍底、白字 */
 
 /* 補充練習 3 */
-.pass { color: green; }
-.fail { color: red; }
+.pass { color: green; } /* 及格：綠字 */
+.fail { color: red; } /* 不及格：紅字 */

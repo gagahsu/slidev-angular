@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OpenaiService, ChatMessage } from './openai.service';
 
@@ -17,7 +17,7 @@ interface DisplayMessage {
 })
 export class Ch28Openai {
 
-  constructor(private openaiService: OpenaiService) {}
+  private openaiService = inject(OpenaiService);
 
   apiKey: string = '';
   userInput: string = '';

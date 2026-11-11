@@ -167,10 +167,10 @@ class: flex flex-col justify-center items-center text-center
 | 執行時機 | 類別（class）建立時最先執行 |
 | 執行次數 | 一次 |
 | 元件狀態 | 尚未初始化，無法存取 DOM |
-| 主要用途 | 相依注入（Dependency Injection） |
+| 這個階段會做的事 | 相依注入（Dependency Injection） |
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 <b>注意：</b> 因為 constructor 執行時元件尚未初始化，幾乎不會在這個階段撰寫業務邏輯，主要用於注入服務（Service）、函式或值。
+💡 <b>注意：</b> 因為 constructor 執行時元件尚未初始化，幾乎不會在這個階段撰寫業務邏輯。服務（Service）通常用 <code>inject()</code> 寫在類別屬性，同樣在元件建立時完成注入。
 </div>
 
 <!--
@@ -178,17 +178,17 @@ class: flex flex-col justify-center items-center text-center
 
 在這個階段，元件還沒有完成初始化，畫面也還沒建立，所以沒辦法存取畫面上的元素。
 
-那 `constructor` 在 Angular 裡主要用來做什麼？答案是「相依注入」，英文是 Dependency Injection，也就是把元件需要用到的服務或工具先準備好。
+那元件建立的這個階段，在 Angular 裡主要會做什麼？答案是「相依注入」，英文是 Dependency Injection，也就是把元件需要用到的服務或工具先準備好。現在通常用 `inject` 寫在類別屬性，它同樣是在元件建立時執行。
 
 因為元件還沒準備好，我們幾乎不會在這裡寫業務邏輯。
 -->
 
 ---
 
-# Constructor — 相依注入範例
+# 相依注入範例：inject()
 
 ```typescript
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MyService } from './my.service';
 
 @Component({
@@ -197,8 +197,10 @@ import { MyService } from './my.service';
   templateUrl: './demo.component.html',
 })
 export class DemoComponent {
-  constructor(private myService: MyService) {
-    // ✅ 適合：注入服務
+  // ✅ 適合：注入服務
+  private myService = inject(MyService);
+
+  constructor() {
     // ❌ 不適合：存取 DOM、呼叫 API
   }
 }
@@ -207,9 +209,9 @@ export class DemoComponent {
 <!--
 我們看相依注入的寫法。
 
-在 `constructor` 的小括號裡，寫了 `private myService: MyService`。意思是告訴 Angular：「建立這個元件時，請把 `MyService` 這個服務交給我使用」。
+在類別屬性寫 `private myService = inject(MyService)`。意思是告訴 Angular：「建立這個元件時，請把 `MyService` 這個服務交給我使用」。
 
-注意大括號裡面是空的。註解也寫得很清楚：適合在這裡注入服務，不適合存取畫面元素或呼叫 API。
+注意 `constructor` 的大括號裡面是空的。註解也寫得很清楚：適合在元件建立時注入服務，不適合存取畫面元素或呼叫 API。
 -->
 
 ---
@@ -864,7 +866,7 @@ layout: end
 ### 掌握生命週期，讓元件在對的時機做對的事
 
 <!--
-這一章我們認識了 Angular 的生命週期。`constructor` 最早執行，主要用來注入服務。`ngOnInit` 在元件初始化時執行一次，適合呼叫 API 和設定初始資料。`ngAfterViewInit` 在畫面組裝完成後執行，適合操作畫面元素。`ngOnDestroy` 在元件銷毀前執行，用來清理訂閱和計時器。執行多次的 Hook，要特別注意效能。
+這一章我們認識了 Angular 的生命週期。`constructor` 最早執行，服務則用 `inject` 在元件建立時注入。`ngOnInit` 在元件初始化時執行一次，適合呼叫 API 和設定初始資料。`ngAfterViewInit` 在畫面組裝完成後執行，適合操作畫面元素。`ngOnDestroy` 在元件銷毀前執行，用來清理訂閱和計時器。執行多次的 Hook，要特別注意效能。
 
 下一章，我們會學習怎麼建立和拆分元件。我們下一章見。
 -->

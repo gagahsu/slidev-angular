@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 // Router 用來在 TS 中切換頁面
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
@@ -13,7 +13,7 @@ export class FirstComponent {
   isLogin: boolean = true;
 
   // 注入 Router 後，整個元件都能用 this.router 切換頁面
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   // 按鈕切換登入狀態，方便觀察兩種結果
   toggleLogin() {

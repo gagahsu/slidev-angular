@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 export class SecondComponent {
 
   // 注入 Router
-  constructor(private router: Router) {}
+  private router = inject(Router);
 
   // 補充練習 1：直接傳入字串路徑
   goBack() {

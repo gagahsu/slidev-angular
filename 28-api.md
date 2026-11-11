@@ -284,20 +284,21 @@ export class HttpClientService {
 
 # 撰寫 HttpClient 文件（三）
 
-透過 constructor 將 `HttpClient` 注入，後續即可使用 `this.http` 呼叫各 HTTP 方法。
+透過 `inject()` 將 `HttpClient` 注入，後續即可使用 `this.http` 呼叫各 HTTP 方法。
 
 ```typescript
+import { inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 export class HttpClientService {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 }
 ```
 
 <!--
-接著在 `constructor` 注入 `HttpClient`。
+接著用 `inject` 注入 `HttpClient`。
 
-引入 `HttpClient` 之後，在 `constructor` 的參數寫 `private http: HttpClient`。這樣在 Service 裡，就可以透過 `this.http` 呼叫各種 HTTP 方法了。
+引入 `inject` 和 `HttpClient` 之後，在類別屬性寫 `private http` 等於 `inject(HttpClient)`。這樣在 Service 裡，就可以透過 `this.http` 呼叫各種 HTTP 方法了。
 -->
 
 ---
@@ -347,7 +348,7 @@ layout: default
 請根據前面投影片的內容，建立 `HttpClientService`：
 
 1. 建立 `http-service/http-client.service.ts`，加上 `@Injectable({ providedIn: 'root' })`
-2. 透過 constructor 注入 `HttpClient`
+2. 透過 `inject()` 注入 `HttpClient`
 3. 撰寫 `getApi(url: string)`，回傳 GET 請求
 4. 撰寫 `postApi(url: string, postData: any)`，回傳 POST 請求
 5. 撰寫 `putApi(url: string, putData: any)`，回傳 PUT 請求
@@ -356,7 +357,7 @@ layout: default
 <!--
 我們用一個小練習，自己把這個 Service 建立起來。
 
-請建立 `HttpClientService`，加上 `@Injectable` 和 `providedIn: 'root'`，在 `constructor` 注入 `HttpClient`，再寫出 `getApi`、`postApi`、`putApi` 和 `delApi` 四個方法。
+請建立 `HttpClientService`，加上 `@Injectable` 和 `providedIn: 'root'`，用 `inject` 注入 `HttpClient`，再寫出 `getApi`、`postApi`、`putApi` 和 `delApi` 四個方法。
 
 想一想，哪兩個方法需要第二個參數？
 
@@ -415,19 +416,20 @@ class: flex flex-col justify-center items-center text-center
 
 # 呼叫方法（一）— 注入 Service
 
-完成前兩步後，在目標元件 we TS 中注入 `HttpClientService`，並透過 constructor 取得實例。
+完成前兩步後，在目標元件的 TS 中注入 `HttpClientService`，並透過 `inject()` 取得實例。
 
 ```typescript
+import { inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HttpClientService } from '../http-service/http-client.service';
 ```
 
 ```typescript
-constructor(private http: HttpClientService) {}
+private http = inject(HttpClientService);
 ```
 
 <!--
-在要使用 API 的元件裡，先引入 `HttpClientService`，然後在 `constructor` 注入它，寫成 `private http: HttpClientService`。
+在要使用 API 的元件裡，先引入 `inject` 和 `HttpClientService`，然後用 `inject` 注入它，寫成 `private http` 等於 `inject(HttpClientService)`。
 
 注入之後，就可以在元件裡透過 `this.http` 呼叫剛才寫好的四個方法了。
 -->
@@ -472,7 +474,7 @@ https://api.freeapi.app/api/v1/public/randomusers
 ```
 
 ```typescript
-constructor(private http: HttpClientService) {}
+private http = inject(HttpClientService);
 
 ngOnInit(): void {
   // 補完呼叫與訂閱
@@ -496,7 +498,7 @@ layout: default
 # 呼叫方法 — 小節練習解答
 
 ```typescript
-constructor(private http: HttpClientService) {}
+private http = inject(HttpClientService);
 
 ngOnInit(): void {
   this.http.getApi('https://api.freeapi.app/api/v1/public/randomusers')
@@ -699,7 +701,7 @@ layout: default
 # 補充練習 1：API 錯誤攔截 — 參考答案
 
 ```typescript
-constructor(private http: HttpClientService) {}
+private http = inject(HttpClientService);
 
 ngOnInit(): void {
   this.http.getApi('https://api.freeapi.app/api/error-url').subscribe({

@@ -12,9 +12,12 @@ export class PageBComponent {
   token = '';
 
   private exampleService = inject(ExampleService);
+  private authService = inject(AuthService);
 
   // public 代表 HTML 可以直接讀取 cartService.cartCount
-  constructor(private authService: AuthService, public cartService: CartService) {
+  public cartService = inject(CartService);
+
+  constructor() {
     // 進入頁面時，從 Service 讀出 A 頁面存入的值
     this.userName = this.exampleService.userName;
     this.token = this.authService.token;

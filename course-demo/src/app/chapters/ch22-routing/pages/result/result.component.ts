@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -8,7 +8,9 @@ import { ActivatedRoute } from '@angular/router';
 export class ResultComponent {
   keyword: string | null = '';
 
-  constructor(private route: ActivatedRoute) {
+  private route = inject(ActivatedRoute);
+
+  constructor() {
     // 取出網址 ?keyword= 後面的值
     this.keyword = this.route.snapshot.queryParamMap.get('keyword');
     console.log(this.keyword);  // Angular

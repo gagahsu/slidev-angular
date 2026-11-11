@@ -275,10 +275,11 @@ class: flex flex-col justify-center items-center text-center
 
 ```typescript
 // first.component.ts
+import { inject } from '@angular/core';
 import { ExampleService } from '../@services/example.service';
 
 export class FirstComponent {
-  constructor(private exampleService: ExampleService) {}
+  private exampleService = inject(ExampleService);
 
   sendData() {
     this.exampleService.userName = 'Allen';
@@ -291,7 +292,7 @@ export class FirstComponent {
 <!--
 先看 A 頁面，也就是發送方。
 
-在 `first.component.ts` 的 `constructor` 裡注入 `ExampleService`。接著在 `sendData` 方法裡，寫 `this.exampleService.userName` 等於 Allen，把資料存進 Service。
+在 `first.component.ts` 從 `@angular/core` 引入 `inject`，然後在類別屬性寫 `private exampleService` 等於 `inject(ExampleService)`，就完成注入了。接著在 `sendData` 方法裡，寫 `this.exampleService.userName` 等於 Allen，把資料存進 Service。
 
 執行之後，Service 裡的 `userName` 就變成 Allen 了。A 頁面的任務到這裡就完成了。
 -->
@@ -304,12 +305,14 @@ export class FirstComponent {
 
 ```typescript
 // second.component.ts
+import { inject } from '@angular/core';
 import { ExampleService } from '../@services/example.service';
 
 export class SecondComponent {
   userName: string = '';
+  private exampleService = inject(ExampleService);
 
-  constructor(private exampleService: ExampleService) {
+  constructor() {
     this.userName = this.exampleService.userName;
   }
 }
@@ -322,7 +325,7 @@ export class SecondComponent {
 <!--
 再來看 B 頁面，也就是接收方。
 
-在 `second.component.ts` 的 `constructor` 裡，同樣注入 `ExampleService`，然後把 `this.exampleService.userName` 指定給自己的 `userName` 變數。這樣 B 頁面就能顯示剛才在 A 頁面存入的 Allen。
+在 `second.component.ts` 同樣用 `inject` 注入 `ExampleService`，然後在 `constructor` 裡，把 `this.exampleService.userName` 指定給自己的 `userName` 變數。這樣 B 頁面就能顯示剛才在 A 頁面存入的 Allen。
 
 要注意時間順序：A 頁面必須先把資料存進 Service，B 頁面才讀得到正確的值。
 
@@ -331,17 +334,16 @@ export class SecondComponent {
 
 ---
 
-# 注入 Service — inject() 現代寫法（發送方）
+# 注入 Service — constructor 傳統寫法（發送方）
 
-Angular 14+ 提供 `inject()` 函式，可取代 constructor 參數注入，直接以類別屬性方式宣告。
+Angular 14 之前只能把 Service 寫在 constructor 的參數裡注入，舊專案很常見，要看得懂。
 
 ```typescript
 // first.component.ts（發送方）
-import { inject } from '@angular/core';
 import { ExampleService } from '../@services/example.service';
 
 export class FirstComponent {
-  private exampleService = inject(ExampleService);
+  constructor(private exampleService: ExampleService) {}
 
   sendData() {
     this.exampleService.userName = 'Allen';
@@ -350,40 +352,38 @@ export class FirstComponent {
 ```
 
 <!--
-除了在 `constructor` 注入，Angular 還提供了另一種寫法：`inject()` 函式。
+除了 `inject()`，你在舊專案還會看到另一種寫法：`constructor` 注入。
 
-看發送方的範例，從 `@angular/core` 引入 `inject`，然後直接在類別屬性寫 `private exampleService` 等於 `inject(ExampleService)`，就完成注入了。
+看發送方的範例，在 `constructor` 的參數寫 `private exampleService: ExampleService`，就完成注入了。
 
-這種寫法不需要在 `constructor` 的參數裡宣告，程式碼更簡潔，很適合獨立元件。`sendData` 方法的寫法則完全一樣。
+這種寫法不需要引入 `inject`，但依賴一多，`constructor` 的參數就會變得很長。`sendData` 方法的寫法則完全一樣。
 -->
 
 ---
 
-# 注入 Service — inject() 現代寫法（接收方）
+# 注入 Service — constructor 傳統寫法（接收方）
 
-接收方同樣用 `inject()` 取得 Service 實例，讀值邏輯放在 `constructor` 中。
+接收方同樣寫在 constructor 的參數裡，讀值邏輯則放在 constructor 的大括號中。
 
 ```typescript
 // second.component.ts（接收方）
-import { inject } from '@angular/core';
 import { ExampleService } from '../@services/example.service';
 
 export class SecondComponent {
   userName = '';
-  private exampleService = inject(ExampleService);
 
-  constructor() {
+  constructor(private exampleService: ExampleService) {
     this.userName = this.exampleService.userName;
   }
 }
 ```
 
 <!--
-接收方也一樣，用 `inject()` 取得 Service。
+接收方也一樣，在 `constructor` 的參數注入 Service。
 
-類別屬性宣告 `exampleService` 等於 `inject(ExampleService)`，讀值的邏輯則放在 `constructor` 裡，把 Service 裡的 `userName` 指定給自己的變數。
+讀值的邏輯則放在 `constructor` 的大括號裡，把 Service 裡的 `userName` 指定給自己的變數。
 
-讀值的時機跟傳統寫法相同，一樣要確認發送方已經先存入資料。
+讀值的時機跟 `inject()` 寫法相同，一樣要確認發送方已經先存入資料。
 -->
 
 ---
@@ -398,7 +398,7 @@ export class SecondComponent {
 | 適用情境 | 舊版或需相容性的專案 | 新版 Standalone 推薦 |
 
 <div class="mt-4 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 兩種寫法注入的是<b>同一個 Service 實例</b>，功能完全相同；本課程新版範例以 <code>inject()</code> 為主流
+💡 兩種寫法注入的是<b>同一個 Service 實例</b>，功能完全相同；本課程範例統一使用 <code>inject()</code>
 </div>
 
 <!--
@@ -406,7 +406,7 @@ export class SecondComponent {
 
 `constructor` 注入是傳統寫法，寫在 `constructor` 的參數裡，所有版本的 Angular 都支援，舊專案大多是這種寫法。`inject()` 是較新的寫法，寫成類別屬性，新版的獨立元件比較推薦。
 
-兩種寫法注入的都是同一個 Service 實例，功能完全一樣。之後的章節會看到兩種寫法，這門課較新的範例以 `inject()` 為主。
+兩種寫法注入的都是同一個 Service 實例，功能完全一樣。這門課的範例統一使用 `inject()`，但 `constructor` 注入在舊專案很常見，兩種都要看得懂。
 -->
 
 ---
@@ -425,7 +425,9 @@ onLogin() {
 
 // B 頁面
 token = '';
-constructor(private authService: AuthService) {
+private authService = inject(AuthService);
+
+constructor() {
   this.token = ___;
 }
 ```
@@ -452,7 +454,9 @@ onLogin() {
 
 // B 頁面 — 取值
 token = '';
-constructor(private authService: AuthService) {
+private authService = inject(AuthService);
+
+constructor() {
   this.token = this.authService.token;  // 'abc123'
 }
 ```
@@ -1116,7 +1120,7 @@ export class CartService {
 
 ```typescript
 // product.component.ts
-constructor(public cartService: CartService) {}
+public cartService = inject(CartService);
 
 addToCart() {
   this.cartService.cartCount++;
@@ -1124,7 +1128,7 @@ addToCart() {
 ```
 
 ```html
-<!-- 另一個頁面的 HTML（建構式同樣注入 public cartService） -->
+<!-- 另一個頁面的 HTML（TS 同樣注入 public cartService） -->
 <p>購物車件數：{{ cartService.cartCount }}</p>
 ```
 

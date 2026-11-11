@@ -1,5 +1,5 @@
 // Injectable：讓這個 Service 可以被注入到其他地方
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 // HttpClient：Angular 用來呼叫 API 的工具
 import { HttpClient } from '@angular/common/http';
 
@@ -9,8 +9,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class HttpClientService {
 
-  // 透過 constructor 注入 HttpClient，之後用 this.http 呼叫
-  constructor(private http: HttpClient) {}
+  // 透過 inject() 注入 HttpClient，之後用 this.http 呼叫
+  private http = inject(HttpClient);
 
   // 讀取
   getApi(url: string) {

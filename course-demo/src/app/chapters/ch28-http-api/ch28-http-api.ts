@@ -18,8 +18,8 @@ export class Ch28HttpApi implements OnInit {
   locations: any[] = [];
   weatherError = '';
 
-  // 透過 constructor 注入我們寫好的 Service
-  constructor(private http: HttpClientService) {}
+  // 透過 inject() 注入我們寫好的 Service
+  private http = inject(HttpClientService);
 
   ngOnInit(): void {
     // 小節練習：一定要 subscribe，請求才會真的送出

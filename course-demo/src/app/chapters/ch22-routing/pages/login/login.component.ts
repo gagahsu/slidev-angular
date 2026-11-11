@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +11,7 @@ export class LoginComponent {
   password = '';   // 綁定輸入框
   error = false;   // 控制錯誤訊息顯示
 
-  constructor(private router: Router) {}  // 注入 Router
+  private router = inject(Router);  // 注入 Router
 
   // 先判斷，再決定要不要跳轉
   login() {

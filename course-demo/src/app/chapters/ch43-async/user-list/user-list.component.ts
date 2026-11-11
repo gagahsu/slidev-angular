@@ -48,7 +48,7 @@ export class UserListComponent implements OnInit {
         error: (err) => {
           this.errorMessage = '會員資料載入失敗，請稍後再試';
           this.loading = false;
-          this.cdr.markForCheck();
+          // this.cdr.markForCheck();
         },
       });
   }
