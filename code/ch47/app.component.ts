@@ -1,33 +1,21 @@
 /*
-  === 第47章：Sidenav（側邊導覽列）===
+  === 第47章：Signals — 元件 ===
 
-  mat-drawer-container 是 Angular Material 的側邊欄元件。
-  結構：
-  ① mat-drawer-container — 外層容器
-  ② mat-drawer           — 側邊欄本體
-  ③ 主要內容區            — 放在 container 裡的其他元素
+  使用 Signal 的好處：
+  ① 同步讀取：直接呼叫 signal() 就得到目前值，不需要訂閱
+  ② 模板自動追蹤：Angular 偵測到 signal() 被讀取，自動在值改變時重新渲染
+  ③ 不需要 async pipe：HTML 直接用 {{ signal() }} 讀取值
+  ④ 不需要 unsubscribe：Signal 沒有訂閱，不會記憶體洩漏
 
-  三種顯示模式（mode）：
-  ┌──────────┬──────────────────────────────────────────┐
-  │ over     │ 浮在主內容上方（預設），不影響主內容位置  │
-  │ push     │ 把主內容往旁邊推                          │
-  │ side     │ 和主內容並排，固定佔位                    │
-  └──────────┴──────────────────────────────────────────┘
-
-  控制開關：
-  → 在 HTML 用 #drawer 範本引用（template reference variable）
-  → 呼叫 drawer.toggle() / drawer.open() / drawer.close()
-  → 在 TypeScript 可用 @ViewChild(MatDrawer) drawer
-
-  autosize：當側邊欄打開/關閉時，主內容區自動調整大小。
+  effect()：
+  → 監聽 Signal 的變化，每次 Signal 更新就自動執行
+  → 類似 Observable 的 subscribe，但只能用在注入上下文（constructor / inject() 中）
 */
 
-import { Component } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, OnInit, Signal, effect, inject } from '@angular/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { LoadingService } from './loading.service';
 
 @Component({
   selector: 'app-root',
@@ -35,30 +23,40 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   styleUrls: ['./app.component.css'],
   standalone: true,
   imports: [
-    MatSidenavModule,   // mat-drawer-container / mat-drawer
-    MatListModule,      // mat-list / mat-list-item
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule
+    MatProgressSpinnerModule,
+    MatButtonModule
   ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
-  // 目前選中的模式
-  currentMode: 'over' | 'push' | 'side' = 'over';
+  private loadingService = inject(LoadingService);
 
-  // 選單項目
-  menuItems = [
-    { icon: 'home',     label: '首頁'   },
-    { icon: 'person',   label: '個人資料' },
-    { icon: 'settings', label: '設定'   },
-    { icon: 'help',     label: '說明'   }
-  ];
+  // Signal<boolean> 型別
+  loading!: Signal<boolean>;
 
-  // 目前選中的頁面
-  activePage: string = '首頁';
+  // 計數器：示範 signal 的 set / update
+  counter = inject(LoadingService).loading;  // 同一份 signal 引用
 
-  selectPage(label: string): void {
-    this.activePage = label;
+  constructor() {
+    // effect() 必須在注入上下文（constructor 或 inject() 中）使用
+    // 每次 loading signal 改變，這個 effect 就會重新執行
+    effect(() => {
+      console.log('loading Signal 變化：', this.loadingService.loading());
+    });
   }
+
+  ngOnInit(): void {
+    // Signal 不需要 subscribe，直接把引用存起來
+    this.loading = this.loadingService.loading;
+  }
+
+  simulateApiCall(): void {
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+    }, 2000);
+  }
+
+  showLoading(): void { this.loadingService.show(); }
+  hideLoading(): void { this.loadingService.hide(); }
 }

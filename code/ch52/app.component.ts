@@ -1,72 +1,116 @@
 /*
-  === 第52章：RWD（響應式網頁設計）===
+  === 第52章：Validators（表單驗證）===
 
-  RWD（Responsive Web Design）讓同一份 HTML / CSS
-  在桌機、平板、手機上都能有良好的顯示效果。
+  Validators 是 Angular 提供的內建驗證器，
+  在 FormControl 或 FormGroup 建立時傳入，讓 Angular 自動驗證輸入值。
 
-  核心工具：@media query
-  → 根據畫面寬度套用不同的 CSS 樣式
-  → 語法：@media (條件) { .class { 樣式 } }
+  常用 Validators：
+  ┌───────────────────────┬──────────────────────────────────────────┐
+  │ Validators.required   │ 必填（不能是空字串）                      │
+  │ Validators.requiredTrue│ checkbox 必須打勾                        │
+  │ Validators.email      │ 必須是合法 email 格式                     │
+  │ Validators.minLength(n)│ 最少 n 個字元                           │
+  │ Validators.maxLength(n)│ 最多 n 個字元                           │
+  │ Validators.min(n)     │ 數字最小值                               │
+  │ Validators.max(n)     │ 數字最大值                               │
+  │ Validators.pattern(re)│ 必須符合正規表達式                        │
+  └───────────────────────┴──────────────────────────────────────────┘
 
-  常用斷點（Breakpoints）：
-  ┌─────────────────┬──────────────┬──────────────────────┐
-  │ 裝置            │ 寬度範圍     │ @media 條件          │
-  ├─────────────────┼──────────────┼──────────────────────┤
-  │ 桌機（Desktop） │ > 1024px    │ min-width: 1025px    │
-  │ 平板（Tablet）  │ 601-1024px  │ max-width: 1024px    │
-  │ 手機（Mobile）  │ ≤ 600px     │ max-width: 600px     │
-  └─────────────────┴──────────────┴──────────────────────┘
+  驗證狀態屬性：
+  .valid    → 全部通過
+  .invalid  → 有任何一個不通過
+  .touched  → 使用者曾經 focus 過（點進去後離開）
+  .dirty    → 值有被修改過
 
-  響應式單位：
-  %   → 相對於父元素（寬度常用）
-  vw  → viewport width（1vw = 視窗寬度的 1%）
-  vh  → viewport height（1vh = 視窗高度的 1%）
-  px  → 固定像素（不會自動縮放）
-  rem → 相對於根元素 font-size（通常 1rem = 16px）
-
-  在 Angular 裡：
-  → 元件 CSS 用 @media query
-  → 可搭配 Angular CDK BreakpointObserver 在 TypeScript 裡偵測視窗大小
+  顯示錯誤訊息的時機：invalid && touched
+  → 使用者碰過這個欄位後才顯示錯誤，不一進頁面就紅一片
 */
 
-import { Component, OnInit, inject } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    MatButtonModule
+  ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
 
-  // BreakpointObserver：在 TypeScript 裡偵測視窗大小
-  private breakpointObserver = inject(BreakpointObserver);
+  fb = inject(FormBuilder);
 
-  currentDevice: string = 'Desktop';
-  windowWidth: number = window.innerWidth;
+  // 多種驗證器示範
+  form = this.fb.group({
+    // 必填 + 最少3字 + 最多20字
+    username: ['', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(20)
+    ]],
 
-  ngOnInit(): void {
-    // 監聽視窗大小變化
-    this.breakpointObserver.observe([
-      Breakpoints.Handset,   // 手機
-      Breakpoints.Tablet,    // 平板
-      Breakpoints.Web        // 桌機
-    ]).subscribe(result => {
-      if (result.breakpoints[Breakpoints.Handset]) {
-        this.currentDevice = '📱 手機（Mobile）';
-      } else if (result.breakpoints[Breakpoints.Tablet]) {
-        this.currentDevice = '📟 平板（Tablet）';
-      } else {
-        this.currentDevice = '🖥️ 桌機（Desktop）';
-      }
-    });
+    // 必填 + email 格式
+    email: ['', [
+      Validators.required,
+      Validators.email
+    ]],
 
-    // 監聽 resize 事件更新寬度顯示
-    window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth;
-    });
+    // 數字範圍
+    age: [null as number | null, [
+      Validators.required,
+      Validators.min(18),
+      Validators.max(99)
+    ]],
+
+    // 台灣手機號碼格式：09xx-xxxxxx
+    phone: ['', [
+      Validators.pattern(/^09\d{8}$/)
+    ]],
+
+    // 五碼郵遞區號
+    zipCode: ['', [
+      Validators.pattern(/^\d{3,5}$/)
+    ]],
+
+    // checkbox 必須勾選
+    agree: [false, Validators.requiredTrue]
+  });
+
+  // 快速取得欄位（減少模板裡的重複程式碼）
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
+  }
+
+  // 取得特定欄位的錯誤訊息
+  getError(fieldName: string): string {
+    const control = this.form.get(fieldName);
+    if (!control?.errors || !control.touched) return '';
+
+    const errors = control.errors;
+    if (errors['required'])     return '此欄位為必填';
+    if (errors['requiredTrue']) return '必須同意才能繼續';
+    if (errors['email'])        return '請輸入正確的 Email 格式';
+    if (errors['minlength'])    return `最少需要 ${errors['minlength'].requiredLength} 個字元`;
+    if (errors['maxlength'])    return `最多 ${errors['maxlength'].requiredLength} 個字元`;
+    if (errors['min'])          return `最小值為 ${errors['min'].min}`;
+    if (errors['max'])          return `最大值為 ${errors['max'].max}`;
+    if (errors['pattern'])      return '格式不正確';
+    return '輸入有誤';
+  }
+
+  submitResult: string = '';
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    this.submitResult = '✅ 表單驗證通過！送出成功！';
+    console.log('表單值：', this.form.value);
   }
 }

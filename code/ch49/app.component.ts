@@ -1,102 +1,53 @@
 /*
-  === 第49章：Mat-radio & Checkbox（單選與多選）===
+  === 第49章：Toolbar（工具列）===
 
-  ① 原生 HTML
-     <input type="radio" name="group">  — 同 name 為一組，只能選一個
-     <input type="checkbox">            — 各自獨立，可多選
+  mat-toolbar 是 Angular Material 的頂部工具列元件，
+  常用於 App 最頂端，放置 Logo、標題、導覽按鈕、圖示按鈕等。
 
-  ② Angular Material
-     <mat-radio-group> + <mat-radio-button>  — 樣式一致的單選
-     <mat-checkbox [(ngModel)]="變數">       — 樣式一致的多選
+  Spacer 技巧（最重要！）：
+  → <span class="spacer"></span> 搭配 CSS flex: 1 1 auto
+  → 讓 spacer 自動填滿剩餘空間，把右側元素推到最右邊
+  → 這是 Material Toolbar 排版的標準做法
 
-  mat-radio-group 重要屬性：
-  → [(ngModel)]  — 雙向綁定，得到選中的 value
-  → value        — 每個 radio-button 的值
-
-  mat-checkbox 重要屬性：
-  → [(ngModel)]  — 雙向綁定布林值（true = 勾選）
-  → indeterminate — 不確定狀態（半勾）
+  color 屬性：
+  → primary  — 主題色（通常是藍色）
+  → accent   — 強調色
+  → warn     — 警告色（紅色）
+  → 不設定   — 白色 / 預設背景
 */
 
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
   standalone: true,
   imports: [
-    FormsModule,         // [(ngModel)]
-    MatRadioModule,      // mat-radio-group / mat-radio-button
-    MatCheckboxModule,   // mat-checkbox
-    MatButtonModule
+    MatToolbarModule,   // mat-toolbar
+    MatIconModule,      // mat-icon
+    MatButtonModule,    // mat-icon-button
+    MatBadgeModule      // [matBadge] — 顯示數字角標
   ]
 })
 export class AppComponent {
 
-  // ==============================
-  // Radio（單選）
-  // ==============================
+  cartCount: number = 3;
+  notificationCount: number = 5;
 
-  // 原生 radio
-  nativeRadio: string = '';
-
-  // mat-radio-group
-  selectedSeason: string = '';
-  seasons = ['春', '夏', '秋', '冬'];
-
-  // 性別選擇
-  selectedGender: string = '';
-
-  // ==============================
-  // Checkbox（多選）
-  // ==============================
-
-  // 原生 checkbox
-  nativeCheckA: boolean = false;
-  nativeCheckB: boolean = false;
-
-  // mat-checkbox（課程清單）
-  courses = [
-    { name: 'HTML', checked: false },
-    { name: 'CSS',  checked: false },
-    { name: 'TypeScript', checked: false },
-    { name: 'Angular',    checked: false }
-  ];
-
-  // 取得勾選的課程清單
-  get selectedCourses(): string[] {
-    return this.courses.filter(c => c.checked).map(c => c.name);
+  addToCart(): void {
+    this.cartCount++;
   }
 
-  // 「全選」控制
-  get allChecked(): boolean {
-    return this.courses.every(c => c.checked);
+  clearCart(): void {
+    this.cartCount = 0;
   }
 
-  get someChecked(): boolean {
-    return this.courses.some(c => c.checked) && !this.allChecked;
-  }
-
-  toggleAll(checked: boolean): void {
-    this.courses.forEach(c => c.checked = checked);
-  }
-
-  // ==============================
-  // 表單送出
-  // ==============================
-
-  submitResult: string = '';
-
-  submit(): void {
-    const courses = this.selectedCourses.join('、') || '（未選擇）';
-    this.submitResult = `
-      性別：${this.selectedGender || '（未選）'}
-      喜歡的季節：${this.selectedSeason || '（未選）'}
-      選修課程：${courses}
-    `.trim();
+  readNotifications(): void {
+    this.notificationCount = 0;
   }
 }

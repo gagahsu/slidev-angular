@@ -338,7 +338,7 @@ has been blocked by CORS policy
 | `<base href="/">` | 檔案路徑會從**磁碟根目錄**開始找，例如 `C:/main-XXXX.js`，根本找不到檔案 |
 
 <div class="mt-3 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
-💡 解法：一定要透過網頁伺服器（<code>http://</code>）開啟，本機測試可用 <code>npx http-server</code> 或 VS Code 的 Live Server
+💡 解法：一定要透過網頁伺服器（<code>http://</code>）開啟，本機測試可用 <code>npx http-server</code> 或 VS Code 的 Live Server（Live Server 的根目錄必須是 <code>browser</code> 資料夾，見補充練習）
 </div>
 
 <!--
@@ -348,7 +348,7 @@ has been blocked by CORS policy
 
 原因有兩個。第一，Angular 打包後的 `index.html` 是用模組的方式載入 JavaScript，瀏覽器為了安全，不允許從本機檔案載入模組。第二，`index.html` 裡有一行 `base href` 等於斜線，代表所有檔案路徑都從根目錄開始找；用本機檔案開啟時，根目錄變成磁碟的根目錄，例如 C 槽，當然找不到 JS 檔。
 
-JS 載入失敗，Angular 就沒有機會執行，畫面自然一片空白。解法只有一個：透過網頁伺服器開啟。
+JS 載入失敗，Angular 就沒有機會執行，畫面自然一片空白。解法只有一個：透過網頁伺服器開啟。用 Live Server 的話要特別注意根目錄的設定，補充練習會說明。
 -->
 
 ---
@@ -372,8 +372,8 @@ layout: default
 直接點開 `index.html` 會白屏，要用本機伺服器才能正確預覽：
 
 1. 執行 `ng build`，確認產生 `dist/<專案名稱>/browser/`
-2. **方法一：** 如果有安裝 VS Code 的 Live Server 擴充套件，在 `browser` 資料夾按右鍵，選「Open with Live Server」
-3. **方法二：** 在終端機切換到 `browser` 目錄，執行 `npx http-server`
+2. **方法一：** 在終端機切換到 `browser` 目錄，執行 `npx http-server`
+3. **方法二：** 用 VS Code 的 Live Server，但伺服器的根目錄必須是 `browser` 資料夾（做法見參考答案）
 4. 打開終端機顯示的網址，確認網頁能正常顯示
 
 <!--
@@ -381,7 +381,7 @@ layout: default
 
 打包完的網站，直接雙擊 `index.html` 會一片白，因為瀏覽器用檔案的方式打開時，載入 JS 檔的路徑會出問題。要用伺服器來開，才會跟真正上線時一樣。
 
-可以用 VS Code 的 Live Server，或在終端機用 `npx http-server`。我們先暫停一下，自己動手試試看。
+可以在終端機用 `npx http-server`，或用 VS Code 的 Live Server。用 Live Server 要注意根目錄的設定，等一下的答案會說明。我們先暫停一下，自己動手試試看。
 -->
 
 ---
@@ -416,6 +416,43 @@ Available on:
 先 `ng build`，再用 `cd` 進到 `dist`、專案名稱、`browser` 這個資料夾，執行 `npx http-server`。終端機會顯示一個本機網址，打開它，網站就能正常運作了。
 
 用這個方式確認打包結果沒問題，再部署到雲端，可以少踩很多坑。
+-->
+
+---
+layout: default
+---
+
+# 補充練習：用 Live Server 預覽 — 參考答案
+
+在 `browser` 資料夾按右鍵選「Open with Live Server」，畫面一樣白屏，F12 出現：
+
+```text
+GET http://127.0.0.1:5500/main-XXXX.js net::ERR_ABORTED 404 (Not Found)
+Refused to apply style from 'http://127.0.0.1:5500/styles-XXXX.css'
+because its MIME type ('text/html') is not a supported stylesheet MIME type
+```
+
+| 原因 | 說明 |
+| --- | --- |
+| Live Server 的根目錄是 **VS Code 開啟的資料夾** | 網址其實是 `127.0.0.1:5500/dist/<專案名稱>/browser/index.html` |
+| `<base href="/">` | JS、CSS 從**伺服器根目錄**開始找：`127.0.0.1:5500/main-XXXX.js`，當然 404 |
+
+**解法（擇一）**
+- 用 VS Code **開啟 `browser` 資料夾**（File → Open Folder），再按右下角 **Go Live**
+- 或在專案的 `.vscode/settings.json` 指定根目錄，改完重新啟動 Live Server：
+
+```json
+{ "liveServer.settings.root": "/dist/<專案名稱>/browser" }
+```
+
+<!--
+很多同學習慣用 Live Server，但直接在 browser 資料夾按右鍵開啟，畫面還是一片白，F12 會看到 JS 檔 404，CSS 也因為 MIME 類型不對被拒絕套用。
+
+原因是 Live Server 的根目錄，是 VS Code 開啟的那個資料夾，也就是整個專案，不是 browser。所以網址其實是 5500 後面接 dist、專案名稱、browser。可是 index.html 裡的 base href 是斜線，JS 和 CSS 會從伺服器的根目錄開始找，那裡沒有這些檔案，就 404 了。CSS 那行錯誤，是因為 Live Server 找不到檔案時回了一頁 HTML，瀏覽器發現不是 CSS，就拒絕套用。
+
+解法有兩個。第一，用 VS Code 直接開啟 browser 資料夾，再按右下角的 Go Live，這樣根目錄就是 browser。第二，在專案的 .vscode 資料夾的 settings.json 裡，用 liveServer.settings.root 指定根目錄，路徑是相對於 VS Code 開啟的資料夾，改完要重新啟動 Live Server。
+
+重點只有一個：伺服器的根目錄，必須是 index.html 所在的 browser 資料夾。
 -->
 
 ---

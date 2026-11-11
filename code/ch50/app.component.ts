@@ -1,92 +1,102 @@
 /*
-  === 第50章：Reactive Forms（響應式表單）===
+  === 第50章：Mat-radio & Checkbox（單選與多選）===
 
-  Reactive Forms vs Template-driven Forms：
-  ┌──────────────────┬───────────────────────┬──────────────────────────┐
-  │                  │ Reactive Forms        │ Template-driven (ngModel) │
-  ├──────────────────┼───────────────────────┼──────────────────────────┤
-  │ 定義位置         │ TypeScript            │ HTML 模板                │
-  │ 驗證邏輯         │ TypeScript（集中管理）│ HTML 屬性                │
-  │ 動態欄位         │ 容易（FormArray）     │ 困難                     │
-  │ 測試             │ 容易（純 TS）         │ 需要 DOM                 │
-  └──────────────────┴───────────────────────┴──────────────────────────┘
+  ① 原生 HTML
+     <input type="radio" name="group">  — 同 name 為一組，只能選一個
+     <input type="checkbox">            — 各自獨立，可多選
 
-  核心 API：
-  FormControl  → 單一欄位
-  FormGroup    → 一組欄位（物件）
-  FormArray    → 動態數量的欄位（陣列）
-  FormBuilder  → 快速建立上述三種的工廠
+  ② Angular Material
+     <mat-radio-group> + <mat-radio-button>  — 樣式一致的單選
+     <mat-checkbox [(ngModel)]="變數">       — 樣式一致的多選
 
-  本章示範：動態問卷系統（可新增/刪除題目的 FormArray）
+  mat-radio-group 重要屬性：
+  → [(ngModel)]  — 雙向綁定，得到選中的 value
+  → value        — 每個 radio-button 的值
+
+  mat-checkbox 重要屬性：
+  → [(ngModel)]  — 雙向綁定布林值（true = 勾選）
+  → indeterminate — 不確定狀態（半勾）
 */
 
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormArray, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
   imports: [
-    ReactiveFormsModule,   // formGroup / formControlName / formArrayName
-    MatButtonModule,
-    MatIconModule
+    FormsModule,         // [(ngModel)]
+    MatRadioModule,      // mat-radio-group / mat-radio-button
+    MatCheckboxModule,   // mat-checkbox
+    MatButtonModule
   ]
 })
 export class AppComponent {
 
-  fb = inject(FormBuilder);
+  // ==============================
+  // Radio（單選）
+  // ==============================
 
-  // 整個問卷的 FormGroup
-  form = this.fb.group({
-    surveyTitle: ['', Validators.required],      // 問卷標題
-    authorName:  ['', Validators.required],      // 作者名稱
-    questions:   this.fb.array([])               // 動態題目（FormArray）
-  });
+  // 原生 radio
+  nativeRadio: string = '';
 
-  // 取得 questions FormArray（方便在 HTML 存取）
-  get questionsArray(): FormArray {
-    return this.form.get('questions') as FormArray;
+  // mat-radio-group
+  selectedSeason: string = '';
+  seasons = ['春', '夏', '秋', '冬'];
+
+  // 性別選擇
+  selectedGender: string = '';
+
+  // ==============================
+  // Checkbox（多選）
+  // ==============================
+
+  // 原生 checkbox
+  nativeCheckA: boolean = false;
+  nativeCheckB: boolean = false;
+
+  // mat-checkbox（課程清單）
+  courses = [
+    { name: 'HTML', checked: false },
+    { name: 'CSS',  checked: false },
+    { name: 'TypeScript', checked: false },
+    { name: 'Angular',    checked: false }
+  ];
+
+  // 取得勾選的課程清單
+  get selectedCourses(): string[] {
+    return this.courses.filter(c => c.checked).map(c => c.name);
   }
 
-  // 新增一題
-  addQuestion(): void {
-    const questionGroup: FormGroup = this.fb.group({
-      qTitle: ['', Validators.required],   // 題目文字
-      qType:  ['radio'],                   // 題目類型（radio / text / checkbox）
-      need:   [false]                      // 是否必填
-    });
-    this.questionsArray.push(questionGroup);
-    console.log('新增題目後的表單值：', this.form.value);
+  // 「全選」控制
+  get allChecked(): boolean {
+    return this.courses.every(c => c.checked);
   }
 
-  // 刪除某一題
-  removeQuestion(index: number): void {
-    this.questionsArray.removeAt(index);
+  get someChecked(): boolean {
+    return this.courses.some(c => c.checked) && !this.allChecked;
   }
 
-  // 取得特定 question 的 FormGroup
-  getQuestionGroup(index: number): FormGroup {
-    return this.questionsArray.at(index) as FormGroup;
+  toggleAll(checked: boolean): void {
+    this.courses.forEach(c => c.checked = checked);
   }
 
-  // 送出表單
-  formResult: any = null;
+  // ==============================
+  // 表單送出
+  // ==============================
 
-  onSubmit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();   // 顯示所有欄位的驗證錯誤
-      return;
-    }
-    this.formResult = this.form.value;
-    console.log('送出的表單值：', this.formResult);
-  }
+  submitResult: string = '';
 
-  resetForm(): void {
-    this.form.reset({ surveyTitle: '', authorName: '' });
-    this.questionsArray.clear();
-    this.formResult = null;
+  submit(): void {
+    const courses = this.selectedCourses.join('、') || '（未選擇）';
+    this.submitResult = `
+      性別：${this.selectedGender || '（未選）'}
+      喜歡的季節：${this.selectedSeason || '（未選）'}
+      選修課程：${courses}
+    `.trim();
   }
 }

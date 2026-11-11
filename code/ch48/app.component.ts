@@ -1,26 +1,33 @@
 /*
-  === 第48章：Toolbar（工具列）===
+  === 第48章：Sidenav（側邊導覽列）===
 
-  mat-toolbar 是 Angular Material 的頂部工具列元件，
-  常用於 App 最頂端，放置 Logo、標題、導覽按鈕、圖示按鈕等。
+  mat-drawer-container 是 Angular Material 的側邊欄元件。
+  結構：
+  ① mat-drawer-container — 外層容器
+  ② mat-drawer           — 側邊欄本體
+  ③ 主要內容區            — 放在 container 裡的其他元素
 
-  Spacer 技巧（最重要！）：
-  → <span class="spacer"></span> 搭配 CSS flex: 1 1 auto
-  → 讓 spacer 自動填滿剩餘空間，把右側元素推到最右邊
-  → 這是 Material Toolbar 排版的標準做法
+  三種顯示模式（mode）：
+  ┌──────────┬──────────────────────────────────────────┐
+  │ over     │ 浮在主內容上方（預設），不影響主內容位置  │
+  │ push     │ 把主內容往旁邊推                          │
+  │ side     │ 和主內容並排，固定佔位                    │
+  └──────────┴──────────────────────────────────────────┘
 
-  color 屬性：
-  → primary  — 主題色（通常是藍色）
-  → accent   — 強調色
-  → warn     — 警告色（紅色）
-  → 不設定   — 白色 / 預設背景
+  控制開關：
+  → 在 HTML 用 #drawer 範本引用（template reference variable）
+  → 呼叫 drawer.toggle() / drawer.open() / drawer.close()
+  → 在 TypeScript 可用 @ViewChild(MatDrawer) drawer
+
+  autosize：當側邊欄打開/關閉時，主內容區自動調整大小。
 */
 
 import { Component } from '@angular/core';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatBadgeModule } from '@angular/material/badge';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-root',
@@ -28,26 +35,30 @@ import { MatBadgeModule } from '@angular/material/badge';
   styleUrls: ['./app.component.css'],
   standalone: true,
   imports: [
-    MatToolbarModule,   // mat-toolbar
-    MatIconModule,      // mat-icon
-    MatButtonModule,    // mat-icon-button
-    MatBadgeModule      // [matBadge] — 顯示數字角標
+    MatSidenavModule,   // mat-drawer-container / mat-drawer
+    MatListModule,      // mat-list / mat-list-item
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule
   ]
 })
 export class AppComponent {
 
-  cartCount: number = 3;
-  notificationCount: number = 5;
+  // 目前選中的模式
+  currentMode: 'over' | 'push' | 'side' = 'over';
 
-  addToCart(): void {
-    this.cartCount++;
-  }
+  // 選單項目
+  menuItems = [
+    { icon: 'home',     label: '首頁'   },
+    { icon: 'person',   label: '個人資料' },
+    { icon: 'settings', label: '設定'   },
+    { icon: 'help',     label: '說明'   }
+  ];
 
-  clearCart(): void {
-    this.cartCount = 0;
-  }
+  // 目前選中的頁面
+  activePage: string = '首頁';
 
-  readNotifications(): void {
-    this.notificationCount = 0;
+  selectPage(label: string): void {
+    this.activePage = label;
   }
 }

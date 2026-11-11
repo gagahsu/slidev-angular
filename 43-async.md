@@ -353,11 +353,12 @@ setTimeout(() => {
 `Observable` 是 RxJS 提供的非同步資料流；Angular `HttpClient` 回傳 `Observable`，需呼叫 `subscribe()` 接收資料。
 
 ```typescript
+import { inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({ ... })
 export class AppComponent {
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   fetchData(): void {
     this.http.get('https://api.example.com/data')
@@ -453,7 +454,7 @@ setTimeout
 # 在 Angular 元件中使用非同步
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -463,7 +464,7 @@ import { HttpClient } from '@angular/common/http';
 export class AppComponent implements OnInit {
   message = '載入中...';
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   ngOnInit(): void {
     this.http.get<{ text: string }>('/api/hello').subscribe({
@@ -763,5 +764,5 @@ layout: end
 <!--
 這一章我們釐清了同步和非同步。同步照順序執行，前一步完成才會進行下一步；非同步啟動後不等待，結果透過回呼或訂閱通知。`setTimeout` 是最基本的非同步寫法，Observable 搭配 `subscribe` 則是 Angular 處理 API 的主要方式，`subscribe` 可以處理 next、error 和 complete。記住，同步的程式永遠會先執行完畢。
 
-下一章，我們會更深入學習訂閱。我們下一章見。
+下一章，我們會有系統地認識 Observable 背後的工具庫：RxJS。我們下一章見。
 -->

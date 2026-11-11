@@ -64,13 +64,13 @@ layout: default
 - **第四站：Angular 核心觀念**（Ch18–24）
 - **第五站：模板語法與資料處理**（Ch25–30）
 - **第六站：Angular Material**（Ch31–42）
-- **第七站：非同步與狀態管理**（Ch43–46）
-- **第八站：版面與表單**（Ch47–52）
-- **第九站：RxJS 與部署上線**（Ch53–55）
+- **第七站：非同步、RxJS 與狀態管理**（Ch43–47）
+- **第八站：版面與表單**（Ch48–53）
+- **第九站：打包與部署上線**（Ch54–55）
 - **全課程易錯重點 Top 10**
 
 <!--
-這是今天的路線圖。我們把五十五章分成九個階段，從開發環境、HTML 和 CSS、TypeScript，一路到 Angular 核心、Material、非同步、版面與表單，最後是 RxJS 和部署上線。每一站先看速記，再用快問快答自我檢測。最後的易錯重點 Top 10，是各章注意事項的總整理。
+這是今天的路線圖。我們把五十五章分成九個階段，從開發環境、HTML 和 CSS、TypeScript，一路到 Angular 核心、Material、非同步與 RxJS、版面與表單，最後是打包和部署上線。每一站先看速記，再用快問快答自我檢測。最後的易錯重點 Top 10，是各章注意事項的總整理。
 -->
 
 ---
@@ -102,12 +102,12 @@ layout: default
 | 階段 | 章節 | 主題 | 你獲得的能力 |
 | --- | --- | --- | --- |
 | 六 | Ch31–42 | Angular Material | 用元件庫組出專業 UI |
-| 七 | Ch43–46 | 非同步與狀態管理 | 訂閱、Loading、Signals |
-| 八 | Ch47–52 | 版面與表單 | 後台版型、動態表單、RWD |
-| 九 | Ch53–55 | RxJS 與部署 | 打包上線，作品見天日 |
+| 七 | Ch43–47 | 非同步、RxJS 與狀態管理 | RxJS、訂閱、Loading、Signals |
+| 八 | Ch48–53 | 版面與表單 | 後台版型、動態表單、RWD |
+| 九 | Ch54–55 | 打包與部署 | 打包上線，作品見天日 |
 
 <!--
-接著是後四個階段。要做出好看又省工的介面，就用 Angular Material；要處理等待資料和共享狀態，就學非同步；要做出完整的產品，再補上版面、表單和 RWD；最後打包部署，作品正式上線。
+接著是後四個階段。要做出好看又省工的介面，就用 Angular Material；要處理等待資料和共享狀態，就學非同步和 RxJS；要做出完整的產品，再補上版面、表單和 RWD；最後打包部署，作品正式上線。
 
 複習的時候，可以問自己一個問題：這九格裡面，哪一格我最沒把握？那一格對應的章節，就是我們最優先要回去重讀的地方。
 -->
@@ -878,9 +878,9 @@ layout: default
 | 元件 | 關鍵模組 | 一句話重點 | 章節 |
 | --- | --- | --- | --- |
 | Dialog | `MatDialogModule` | `dialog.open(元件, { data })`；內部注入 `MAT_DIALOG_DATA` 收資料 | Ch42 |
-| Sidenav | `MatSidenavModule` | 三種模式：`over`（覆蓋）／`push`（推擠）／`side`（並排） | Ch47 |
-| Toolbar | `MatToolbarModule` | Spacer 技巧：`flex: 1 1 auto` 把按鈕推到右邊 | Ch48 |
-| Menu／Badge | `MatMenuModule`、`MatBadgeModule` | 下拉選單與角標提示 | Ch48 |
+| Sidenav | `MatSidenavModule` | 三種模式：`over`（覆蓋）／`push`（推擠）／`side`（並排） | Ch48 |
+| Toolbar | `MatToolbarModule` | Spacer 技巧：`flex: 1 1 auto` 把按鈕推到右邊 | Ch49 |
+| Menu／Badge | `MatMenuModule`、`MatBadgeModule` | 下拉選單與角標提示 | Ch49 |
 
 <!--
 第二張總表。
@@ -898,9 +898,9 @@ layout: default
 
 | 元件 | 關鍵模組 | 一句話重點 | 章節 |
 | --- | --- | --- | --- |
-| Radio | `MatRadioModule` | `mat-radio-group` 綁 `ngModel`，單選 | Ch49 |
-| Checkbox | `MatCheckboxModule` | 每個選項各綁一個 boolean，複選 | Ch49 |
-| Spinner | `MatProgressSpinnerModule` | `mat-spinner` 搭配 Loading 狀態顯示 | Ch45 |
+| Radio | `MatRadioModule` | `mat-radio-group` 綁 `ngModel`，單選 | Ch50 |
+| Checkbox | `MatCheckboxModule` | 每個選項各綁一個 boolean，複選 | Ch50 |
+| Spinner | `MatProgressSpinnerModule` | `mat-spinner` 搭配 Loading 狀態顯示 | Ch46 |
 
 <div class="mt-2 p-3 bg-blue-50 border-l-4 border-blue-400 text-gray-700 text-sm text-left">
 💡 通用模式：<b>裝套件 → 元件 imports 加模組 → 抄官方 HTML 結構 → 客製化</b>。報錯先檢查模組有沒有匯入。
@@ -995,7 +995,7 @@ layout: default
 # 快問快答 ③ — 參考解答
 
 1. 直接**編譯錯誤**——新版 `@for` 的 `track` 是必填；通常綁唯一值如 `item.id`（Ch25）
-2. **不會**。Observable 是惰性的，`subscribe` 才會真正發出請求（Ch28, Ch53）
+2. **不會**。Observable 是惰性的，`subscribe` 才會真正發出請求（Ch28, Ch44）
 3. 漏了在 `ngAfterViewInit` 中執行 `this.dataSource.paginator = this.paginator`（Ch32）
 4. `providers` 少了 **`provideNativeDateAdapter()`**（Ch34）
 5. 越搜越少、刪字也回不來——因為資料來源被覆寫了。正確作法：**每次都從完整的原始陣列**（如 `this.items`）重新 `filter`，把結果指定給 `dataSource.data`（Ch37）
@@ -1003,7 +1003,7 @@ layout: default
 <!--
 我們來對答案。
 
-第一題，新版的 track 是必填，少寫會直接編譯錯誤。第二題，Observable 是惰性的，沒有人訂閱就不會執行，這和 Promise 一建立就執行不同，第九站還會再提到。第三題和第四題，是 Material 最常見的兩個錯誤，建議列進自己的檢查清單。第五題的原則是：原始資料不要動，顯示的資料每次重新計算，綜合練習的 applyFilters 就是完整的示範。
+第一題，新版的 track 是必填，少寫會直接編譯錯誤。第二題，Observable 是惰性的，沒有人訂閱就不會執行，這和 Promise 一建立就執行不同，第七站還會再提到。第三題和第四題，是 Material 最常見的兩個錯誤，建議列進自己的檢查清單。第五題的原則是：原始資料不要動，顯示的資料每次重新計算，綜合練習的 applyFilters 就是完整的示範。
 -->
 
 ---
@@ -1011,11 +1011,11 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第七站：非同步與狀態管理
-# Ch43–46
+# 第七站：非同步、RxJS 與狀態管理
+# Ch43–47
 
 <!--
-第七站是非同步與狀態管理，對應第四十三到第四十六章，處理資料還沒回來時畫面怎麼辦，以及多個元件怎麼共享狀態。
+第七站是非同步、RxJS 與狀態管理，對應第四十三到第四十七章，處理資料還沒回來時畫面怎麼辦，認識 Angular 背後的 RxJS，以及多個元件怎麼共享狀態。
 -->
 
 ---
@@ -1050,7 +1050,35 @@ console.log('3');
 layout: default
 ---
 
-# 第七站速記 — 訂閱與狀態共享（Ch44）
+# 第七站速記 — RxJS 核心概念（Ch44）
+
+| 概念 | 角色 |
+| --- | --- |
+| Observable（可觀察者） | 資料的生產者，**惰性**：有人訂閱才執行 |
+| Observer（觀察者） | 消費者：`next`／`error`／`complete` 三個回呼 |
+| Subscription | 訂閱憑證，`unsubscribe()` 取消；`add()` 可統一管理多個訂閱 |
+| Subject | 既是 Observable 也是 Observer，一對多廣播的橋接器 |
+| Operators | `pipe()` 串接 `map`、`filter` 等運算子加工資料流 |
+
+**vs Promise**：Promise 建立就執行、只發一次值、不能取消；Observable 訂閱才執行、可發多次、可取消
+
+<div class="mt-2 p-3 bg-red-50 border-l-4 border-red-400 text-gray-700 text-sm text-left">
+⚠️ 元件銷毀時（`ngOnDestroy`）務必 `unsubscribe()`，否則造成記憶體洩漏 — 尤其是 `interval` 這類不會自己結束的 Observable。
+</div>
+
+<!--
+RxJS 的五個概念，用一張表整理。Observable 是資料的生產者，而且是惰性的，有人訂閱才會執行；Observer 是消費者，有 next、error、complete 三個回呼；Subscription 是訂閱的憑證，用 unsubscribe 取消；Subject 可以一對多廣播；Operators 用 pipe 串接，加工資料流。
+
+和 Promise 的差異有三點：執行時機、發出值的次數，以及能不能取消。
+
+最下面的警告最重要：訂閱了，就要在 ngOnDestroy 退訂，否則元件消失了，訂閱還在，就會造成記憶體洩漏。
+-->
+
+---
+layout: default
+---
+
+# 第七站速記 — 訂閱與狀態共享（Ch45）
 
 **Service 三步驟：宣告 Subject → 公開 Observable → next() 更新**
 
@@ -1089,7 +1117,7 @@ this.cartService.cartCount$.subscribe(count => this.count = count);
 layout: default
 ---
 
-# 第七站速記 — Loading 全域架構（Ch45）
+# 第七站速記 — Loading 全域架構（Ch46）
 
 **問題**：等 API 時畫面沒回饋 → **解法**：全域 Loading 遮罩
 
@@ -1119,7 +1147,7 @@ HTML 裡的 async pipe 值得特別記住。它會自動訂閱，元件銷毀時
 layout: default
 ---
 
-# 第七站速記 — Signals（Ch46）
+# 第七站速記 — Signals（Ch47）
 
 ```typescript
 count = signal(0);                          // 建立：必須給初始值
@@ -1156,17 +1184,17 @@ class: flex flex-col justify-center items-center text-center
 ---
 
 # 第八站：版面與表單
-# Ch47–52
+# Ch48–53
 
 <!--
-第八站是版面與表單，對應第四十七到第五十二章。這一站做完，一個完整的後台系統就成形了。
+第八站是版面與表單，對應第四十八到第五十三章。這一站做完，一個完整的後台系統就成形了。
 -->
 
 ---
 layout: default
 ---
 
-# 第八站速記 — Reactive Forms（Ch50）
+# 第八站速記 — Reactive Forms（Ch51）
 
 **三個積木**
 
@@ -1198,7 +1226,7 @@ zoom: 0.83
 layout: default
 ---
 
-# 第八站速記 — Validators 驗證（Ch51）
+# 第八站速記 — Validators 驗證（Ch52）
 
 ```typescript
 email: new FormControl('', [Validators.required, Validators.email]),
@@ -1234,7 +1262,7 @@ Validators 寫在 FormControl 的第二個參數，是一個陣列，可以同�
 layout: default
 ---
 
-# 第八站速記 — RWD 響應式設計（Ch52）
+# 第八站速記 — RWD 響應式設計（Ch53）
 
 ```scss
 .container { display: flex; gap: 1rem; }
@@ -1270,39 +1298,11 @@ layout: section
 class: flex flex-col justify-center items-center text-center
 ---
 
-# 第九站：RxJS 與部署上線
-# Ch53–55
+# 第九站：打包與部署上線
+# Ch54–55
 
 <!--
-最後一站是 RxJS 與部署上線，對應第五十三到第五十五章。把 RxJS 的概念收攏，再把作品真正放上網路。
--->
-
----
-layout: default
----
-
-# 第九站速記 — RxJS 核心概念（Ch53）
-
-| 概念 | 角色 |
-| --- | --- |
-| Observable（可觀察者） | 資料的生產者，**惰性**：有人訂閱才執行 |
-| Observer（觀察者） | 消費者：`next`／`error`／`complete` 三個回呼 |
-| Subscription | 訂閱憑證，`unsubscribe()` 取消；`add()` 可統一管理多個訂閱 |
-| Subject | 既是 Observable 也是 Observer，一對多廣播的橋接器 |
-| Operators | `pipe()` 串接 `map`、`filter` 等運算子加工資料流 |
-
-**vs Promise**：Promise 建立就執行、只發一次值、不能取消；Observable 訂閱才執行、可發多次、可取消
-
-<div class="mt-2 p-3 bg-red-50 border-l-4 border-red-400 text-gray-700 text-sm text-left">
-⚠️ 元件銷毀時（`ngOnDestroy`）務必 `unsubscribe()`，否則造成記憶體洩漏 — 尤其是 `interval` 這類不會自己結束的 Observable。
-</div>
-
-<!--
-RxJS 的五個概念，用一張表整理。Observable 是資料的生產者，而且是惰性的，有人訂閱才會執行；Observer 是消費者，有 next、error、complete 三個回呼；Subscription 是訂閱的憑證，用 unsubscribe 取消；Subject 可以一對多廣播；Operators 用 pipe 串接，加工資料流。
-
-和 Promise 的差異有三點：執行時機、發出值的次數，以及能不能取消。
-
-最下面的警告最重要：訂閱了，就要在 ngOnDestroy 退訂，否則元件消失了，訂閱還在，就會造成記憶體洩漏。
+最後一站是打包與部署上線，對應第五十四到第五十五章，把作品真正放上網路。
 -->
 
 ---
@@ -1373,10 +1373,10 @@ layout: default
 
 # 快問快答 ④ — 參考解答
 
-1. 讓外部**只能訂閱、不能直接 `next()`**，狀態變更集中在 Service 方法內，可控又好除錯（Ch44）
-2. `BehaviorSubject`（新訂閱者需要立刻拿到目前數量）；可以，同步狀態正是 **Signal 的主場**，寫法更簡潔（Ch44, Ch46）
-3. `{{ count() }}` — Signal 讀值必須以函式呼叫形式（Ch46）
-4. 表單一載入所有必填欄位都是 `invalid`，會**還沒輸入就滿版錯誤訊息**；加上 `touched` 才會等使用者碰過欄位再提示（Ch51）
+1. 讓外部**只能訂閱、不能直接 `next()`**，狀態變更集中在 Service 方法內，可控又好除錯（Ch45）
+2. `BehaviorSubject`（新訂閱者需要立刻拿到目前數量）；可以，同步狀態正是 **Signal 的主場**，寫法更簡潔（Ch45, Ch47）
+3. `{{ count() }}` — Signal 讀值必須以函式呼叫形式（Ch47）
+4. 表單一載入所有必填欄位都是 `invalid`，會**還沒輸入就滿版錯誤訊息**；加上 `touched` 才會等使用者碰過欄位再提示（Ch52）
 5. `firebase init hosting` 時 **SPA 模式沒選 Yes**——需要把所有路徑 rewrite 回 `index.html`，讓 Angular 路由接手（Ch55）
 
 <!--
@@ -1425,7 +1425,7 @@ layout: default
 
 | # | 易錯點 | 正確作法 | 章節 |
 | --- | --- | --- | --- |
-| 6 | 訂閱忘記退訂 → 記憶體洩漏 | `ngOnDestroy` 呼叫 `unsubscribe()`，或改用 `async` pipe | Ch44, 53 |
+| 6 | 訂閱忘記退訂 → 記憶體洩漏 | `ngOnDestroy` 呼叫 `unsubscribe()`，或改用 `async` pipe | Ch44, 45 |
 | 7 | 過濾／搜尋越搜越少 | 永遠從**完整原始陣列**重新 `filter`，不要改到資料來源 | Ch37 |
 | 8 | `localStorage` 存物件變 `[object Object]` | 進 `JSON.stringify`、出 `JSON.parse` | Ch24 |
 | 9 | `getMonth()` 少一個月 | 月份從 **0** 開始，顯示時 `+1` 或交給 `DatePipe` | Ch17, 35 |

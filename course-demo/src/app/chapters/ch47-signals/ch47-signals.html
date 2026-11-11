@@ -1,0 +1,39 @@
+<!-- Signal 要加括號讀取：loading() -->
+@if (loading()) {
+  <div class="overlay">
+    <div class="spinner-box">
+      <mat-spinner [diameter]="70"></mat-spinner>
+    </div>
+  </div>
+}
+
+<div class="chapter">
+  <h1>⚡ Signals</h1>
+
+  <!-- ① 把 Loading 改寫成 Signal -->
+  <section class="demo-section">
+    <h2>① Signal 版 Loading</h2>
+    <p>loading() = {{ loading() }}</p>
+    <button (click)="showLoading()">顯示 Loading（2 秒）</button>
+    <p class="hint">打開 F12 → Console，可以看到 effect() 印出值的變化</p>
+  </section>
+
+  <!-- ② computed -->
+  <section class="demo-section">
+    <h2>② computed() 計算 Signal</h2>
+    <p>等級：{{ level() }}，攻擊力：{{ attack() }}，防禦力：{{ defense() }}</p>
+    <button (click)="levelUp()">升級</button>
+  </section>
+
+  <!-- ③ 練習 -->
+  <section class="demo-section">
+    <h2>③ 練習：購物車小計即時計算</h2>
+    <div class="cart-box">
+      <p>數量：{{ quantity() }}</p>
+      <button (click)="decrease()">-</button>
+      <button (click)="increase()">+</button>
+      <p>小計：NT$ {{ subtotal() }}</p>
+    </div>
+    <p class="hint">按到數量 6（小計 600），打開 Console 會看到優惠提醒</p>
+  </section>
+</div>

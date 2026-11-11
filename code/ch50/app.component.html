@@ -1,118 +1,99 @@
 <!--
-  === 第50章：Reactive Forms HTML ===
+  === 第50章：Mat-radio & Checkbox HTML ===
 
-  關鍵指令：
-  [formGroup]="form"        → 把 FormGroup 綁到 <form>
-  formControlName="title"   → 綁到 FormGroup 裡的 FormControl
-  formArrayName="questions" → 綁到 FormArray
-  [formGroupName]="$index"  → FormArray 裡的每個 FormGroup
+  示範原生 HTML 和 Angular Material 的單選與多選元件。
 -->
 
 <div style="max-width: 750px; margin: 30px auto; font-family: Arial, sans-serif; padding: 20px;">
 
-  <h1 style="color: #1a5c5c; text-align: center;">📝 Reactive Forms 動態問卷</h1>
+  <h1 style="color: #1a5c5c; text-align: center;">☑️ Radio & Checkbox 示範</h1>
 
-  <!-- 表單 -->
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
-    <!-- 問卷基本資訊 -->
-    <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
-      <h3 style="color: #1565c0; margin-top: 0;">問卷資訊</h3>
-
-      <div style="margin-bottom: 14px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 6px;">問卷標題 *</label>
-        <input
-          formControlName="surveyTitle"
-          placeholder="請輸入問卷標題"
-          style="width: 100%; padding: 10px; border: 2px solid #1565c0; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-        @if (form.get('surveyTitle')?.invalid && form.get('surveyTitle')?.touched) {
-          <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">標題為必填</p>
-        }
-      </div>
-
-      <div>
-        <label style="display: block; font-weight: bold; margin-bottom: 6px;">作者名稱 *</label>
-        <input
-          formControlName="authorName"
-          placeholder="請輸入作者名稱"
-          style="width: 100%; padding: 10px; border: 2px solid #1565c0; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-        @if (form.get('authorName')?.invalid && form.get('authorName')?.touched) {
-          <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">作者名稱為必填</p>
-        }
-      </div>
+  <!-- ① 原生 Radio -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #ccc; margin-bottom: 20px;">
+    <h2 style="margin-top: 0;">① 原生 HTML radio</h2>
+    <p style="color: #555;">同 <code>name</code> 的 radio 為一組，只能選一個。</p>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <label><input type="radio" name="native-gender" value="male"   (change)="nativeRadio='男'"> 男</label>
+      <label><input type="radio" name="native-gender" value="female" (change)="nativeRadio='女'"> 女</label>
+      <label><input type="radio" name="native-gender" value="other"  (change)="nativeRadio='不公開'"> 不公開</label>
     </div>
+    <p style="margin-top: 10px;">選取值：<strong>{{ nativeRadio || '（未選）' }}</strong></p>
+  </div>
 
-    <!-- 動態題目 FormArray -->
-    <div formArrayName="questions">
-      @for (control of questionsArray.controls; track $index) {
-        <!--
-          [formGroupName]="$index" → 綁到 FormArray 的第 $index 個 FormGroup
-        -->
-        <div [formGroupName]="$index"
-             style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 16px;">
+  <!-- ② mat-radio-group -->
+  <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; border: 2px solid #1565c0; margin-bottom: 20px;">
+    <h2 style="color: #1565c0; margin-top: 0;">② mat-radio-group（Material 單選）</h2>
 
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <strong style="color: #2e7d32;">題目 {{ $index + 1 }}</strong>
-            <button mat-icon-button color="warn" type="button" (click)="removeQuestion($index)">
-              <mat-icon fontIcon="delete"></mat-icon>
-            </button>
-          </div>
+    <h4 style="margin-bottom: 8px;">性別：</h4>
+    <!--
+      mat-radio-group [(ngModel)]：整個 group 的選取值
+      mat-radio-button [value]：每個選項的值
+    -->
+    <mat-radio-group [(ngModel)]="selectedGender" style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px;">
+      <mat-radio-button value="male">男</mat-radio-button>
+      <mat-radio-button value="female">女</mat-radio-button>
+      <mat-radio-button value="other">不公開</mat-radio-button>
+    </mat-radio-group>
+    <p>選取值：<strong style="color: #1565c0;">{{ selectedGender || '（未選）' }}</strong></p>
 
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 6px;">題目文字 *</label>
-            <input
-              formControlName="qTitle"
-              placeholder="請輸入題目內容"
-              style="width: 100%; padding: 10px; border: 2px solid #2e7d32; border-radius: 6px; font-size: 1rem; box-sizing: border-box;" />
-            @if (getQuestionGroup($index).get('qTitle')?.invalid && getQuestionGroup($index).get('qTitle')?.touched) {
-              <p style="color: #e53935; font-size: 0.85rem; margin: 4px 0 0;">題目文字為必填</p>
-            }
-          </div>
+    <h4 style="margin-bottom: 8px;">喜歡的季節：</h4>
+    <mat-radio-group [(ngModel)]="selectedSeason" style="display: flex; gap: 20px; flex-wrap: wrap;">
+      @for (season of seasons; track season) {
+        <mat-radio-button [value]="season">{{ season }}</mat-radio-button>
+      }
+    </mat-radio-group>
+    <p>選取值：<strong style="color: #1565c0;">{{ selectedSeason || '（未選）' }}</strong></p>
+  </div>
 
-          <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-            <div>
-              <label style="font-weight: bold; margin-right: 8px;">題型：</label>
-              <select formControlName="qType"
-                style="padding: 8px; border: 1px solid #ccc; border-radius: 6px;">
-                <option value="radio">單選題</option>
-                <option value="checkbox">多選題</option>
-                <option value="text">簡答題</option>
-              </select>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <input type="checkbox" formControlName="need" id="need-{{ $index }}" />
-              <label [for]="'need-' + $index">必填</label>
-            </div>
-          </div>
+  <!-- ③ 原生 Checkbox -->
+  <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; border: 2px solid #ccc; margin-bottom: 20px;">
+    <h2 style="margin-top: 0;">③ 原生 HTML checkbox</h2>
+    <p style="color: #555;">各自獨立，可多選，綁定布林值。</p>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+      <label><input type="checkbox" [(ngModel)]="nativeCheckA"> 選項 A</label>
+      <label><input type="checkbox" [(ngModel)]="nativeCheckB"> 選項 B</label>
+    </div>
+    <p style="margin-top: 10px;">A：{{ nativeCheckA }}，B：{{ nativeCheckB }}</p>
+  </div>
 
-        </div>
+  <!-- ④ mat-checkbox + 全選 -->
+  <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32; margin-bottom: 20px;">
+    <h2 style="color: #2e7d32; margin-top: 0;">④ mat-checkbox + 全選</h2>
+
+    <!-- 全選 checkbox：indeterminate 表示「部分選取」半勾狀態 -->
+    <mat-checkbox
+      [checked]="allChecked"
+      [indeterminate]="someChecked"
+      (change)="toggleAll($event.checked)"
+      style="margin-bottom: 12px; font-weight: bold;">
+      全選
+    </mat-checkbox>
+
+    <div style="display: flex; flex-direction: column; gap: 8px; padding-left: 24px;">
+      @for (course of courses; track course.name) {
+        <mat-checkbox [(ngModel)]="course.checked">
+          {{ course.name }}
+        </mat-checkbox>
       }
     </div>
 
-    <!-- 新增題目按鈕 -->
-    <button mat-stroked-button color="primary" type="button" (click)="addQuestion()"
-      style="width: 100%; padding: 14px; margin-bottom: 20px; font-size: 1rem;">
-      <mat-icon fontIcon="add"></mat-icon>
-      新增題目
+    @if (selectedCourses.length > 0) {
+      <div style="margin-top: 16px; background: #c8e6c9; padding: 12px; border-radius: 8px;">
+        已選：<strong>{{ selectedCourses.join('、') }}</strong>
+      </div>
+    }
+  </div>
+
+  <!-- 送出 -->
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button mat-raised-button color="primary" (click)="submit()" style="font-size: 1rem;">
+      送出表單
     </button>
+  </div>
 
-    <!-- 送出按鈕 -->
-    <div style="display: flex; gap: 12px;">
-      <button mat-raised-button color="primary" type="submit" style="flex: 1; padding: 14px; font-size: 1rem;">
-        送出問卷
-      </button>
-      <button mat-stroked-button type="button" (click)="resetForm()" style="padding: 14px;">
-        重設
-      </button>
-    </div>
-
-  </form>
-
-  <!-- 送出結果 -->
-  @if (formResult) {
-    <div style="margin-top: 24px; background: #e8f5e9; padding: 20px; border-radius: 10px; border: 2px solid #2e7d32;">
-      <h3 style="color: #2e7d32; margin-top: 0;">✅ 送出成功！表單值：</h3>
-      <pre style="background: #1e1e1e; color: #a5d6a7; padding: 16px; border-radius: 8px; font-size: 0.85rem; overflow: auto;">{{ formResult | json }}</pre>
+  @if (submitResult) {
+    <div style="background: #e8f5e9; padding: 16px; border-radius: 10px; border: 2px solid #2e7d32; white-space: pre-line;">
+      <strong>送出結果：</strong><br>{{ submitResult }}
     </div>
   }
 

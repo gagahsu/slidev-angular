@@ -1,116 +1,92 @@
 /*
-  === 第51章：Validators（表單驗證）===
+  === 第51章：Reactive Forms（響應式表單）===
 
-  Validators 是 Angular 提供的內建驗證器，
-  在 FormControl 或 FormGroup 建立時傳入，讓 Angular 自動驗證輸入值。
+  Reactive Forms vs Template-driven Forms：
+  ┌──────────────────┬───────────────────────┬──────────────────────────┐
+  │                  │ Reactive Forms        │ Template-driven (ngModel) │
+  ├──────────────────┼───────────────────────┼──────────────────────────┤
+  │ 定義位置         │ TypeScript            │ HTML 模板                │
+  │ 驗證邏輯         │ TypeScript（集中管理）│ HTML 屬性                │
+  │ 動態欄位         │ 容易（FormArray）     │ 困難                     │
+  │ 測試             │ 容易（純 TS）         │ 需要 DOM                 │
+  └──────────────────┴───────────────────────┴──────────────────────────┘
 
-  常用 Validators：
-  ┌───────────────────────┬──────────────────────────────────────────┐
-  │ Validators.required   │ 必填（不能是空字串）                      │
-  │ Validators.requiredTrue│ checkbox 必須打勾                        │
-  │ Validators.email      │ 必須是合法 email 格式                     │
-  │ Validators.minLength(n)│ 最少 n 個字元                           │
-  │ Validators.maxLength(n)│ 最多 n 個字元                           │
-  │ Validators.min(n)     │ 數字最小值                               │
-  │ Validators.max(n)     │ 數字最大值                               │
-  │ Validators.pattern(re)│ 必須符合正規表達式                        │
-  └───────────────────────┴──────────────────────────────────────────┘
+  核心 API：
+  FormControl  → 單一欄位
+  FormGroup    → 一組欄位（物件）
+  FormArray    → 動態數量的欄位（陣列）
+  FormBuilder  → 快速建立上述三種的工廠
 
-  驗證狀態屬性：
-  .valid    → 全部通過
-  .invalid  → 有任何一個不通過
-  .touched  → 使用者曾經 focus 過（點進去後離開）
-  .dirty    → 值有被修改過
-
-  顯示錯誤訊息的時機：invalid && touched
-  → 使用者碰過這個欄位後才顯示錯誤，不一進頁面就紅一片
+  本章示範：動態問卷系統（可新增/刪除題目的 FormArray）
 */
 
 import { Component, inject } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormArray, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   standalone: true,
   imports: [
-    ReactiveFormsModule,
-    CommonModule,
-    MatButtonModule
+    ReactiveFormsModule,   // formGroup / formControlName / formArrayName
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class AppComponent {
 
   fb = inject(FormBuilder);
 
-  // 多種驗證器示範
+  // 整個問卷的 FormGroup
   form = this.fb.group({
-    // 必填 + 最少3字 + 最多20字
-    username: ['', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(20)
-    ]],
-
-    // 必填 + email 格式
-    email: ['', [
-      Validators.required,
-      Validators.email
-    ]],
-
-    // 數字範圍
-    age: [null as number | null, [
-      Validators.required,
-      Validators.min(18),
-      Validators.max(99)
-    ]],
-
-    // 台灣手機號碼格式：09xx-xxxxxx
-    phone: ['', [
-      Validators.pattern(/^09\d{8}$/)
-    ]],
-
-    // 五碼郵遞區號
-    zipCode: ['', [
-      Validators.pattern(/^\d{3,5}$/)
-    ]],
-
-    // checkbox 必須勾選
-    agree: [false, Validators.requiredTrue]
+    surveyTitle: ['', Validators.required],      // 問卷標題
+    authorName:  ['', Validators.required],      // 作者名稱
+    questions:   this.fb.array([])               // 動態題目（FormArray）
   });
 
-  // 快速取得欄位（減少模板裡的重複程式碼）
-  get f(): { [key: string]: AbstractControl } {
-    return this.form.controls;
+  // 取得 questions FormArray（方便在 HTML 存取）
+  get questionsArray(): FormArray {
+    return this.form.get('questions') as FormArray;
   }
 
-  // 取得特定欄位的錯誤訊息
-  getError(fieldName: string): string {
-    const control = this.form.get(fieldName);
-    if (!control?.errors || !control.touched) return '';
-
-    const errors = control.errors;
-    if (errors['required'])     return '此欄位為必填';
-    if (errors['requiredTrue']) return '必須同意才能繼續';
-    if (errors['email'])        return '請輸入正確的 Email 格式';
-    if (errors['minlength'])    return `最少需要 ${errors['minlength'].requiredLength} 個字元`;
-    if (errors['maxlength'])    return `最多 ${errors['maxlength'].requiredLength} 個字元`;
-    if (errors['min'])          return `最小值為 ${errors['min'].min}`;
-    if (errors['max'])          return `最大值為 ${errors['max'].max}`;
-    if (errors['pattern'])      return '格式不正確';
-    return '輸入有誤';
+  // 新增一題
+  addQuestion(): void {
+    const questionGroup: FormGroup = this.fb.group({
+      qTitle: ['', Validators.required],   // 題目文字
+      qType:  ['radio'],                   // 題目類型（radio / text / checkbox）
+      need:   [false]                      // 是否必填
+    });
+    this.questionsArray.push(questionGroup);
+    console.log('新增題目後的表單值：', this.form.value);
   }
 
-  submitResult: string = '';
+  // 刪除某一題
+  removeQuestion(index: number): void {
+    this.questionsArray.removeAt(index);
+  }
+
+  // 取得特定 question 的 FormGroup
+  getQuestionGroup(index: number): FormGroup {
+    return this.questionsArray.at(index) as FormGroup;
+  }
+
+  // 送出表單
+  formResult: any = null;
 
   onSubmit(): void {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      this.form.markAllAsTouched();   // 顯示所有欄位的驗證錯誤
       return;
     }
-    this.submitResult = '✅ 表單驗證通過！送出成功！';
-    console.log('表單值：', this.form.value);
+    this.formResult = this.form.value;
+    console.log('送出的表單值：', this.formResult);
+  }
+
+  resetForm(): void {
+    this.form.reset({ surveyTitle: '', authorName: '' });
+    this.questionsArray.clear();
+    this.formResult = null;
   }
 }

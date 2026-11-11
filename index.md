@@ -303,53 +303,53 @@ style: |
     </Link>
     <Link to="ch44" class="chapter-card">
       <div class="chapter-num">Ch 44</div>
-      <div>訂閱</div>
-      <div class="chapter-subtitle">RxJS Subscription</div>
+      <div>RXJS</div>
+      <div class="chapter-subtitle">Reactive Extensions</div>
     </Link>
     <Link to="ch45" class="chapter-card">
       <div class="chapter-num">Ch 45</div>
-      <div>Loading</div>
-      <div class="chapter-subtitle">Loading Spinner</div>
+      <div>訂閱</div>
+      <div class="chapter-subtitle">RxJS Subscription</div>
     </Link>
     <Link to="ch46" class="chapter-card">
       <div class="chapter-num">Ch 46</div>
-      <div>Signals</div>
-      <div class="chapter-subtitle">Angular Signals</div>
+      <div>Loading</div>
+      <div class="chapter-subtitle">Loading Spinner</div>
     </Link>
     <Link to="ch47" class="chapter-card">
       <div class="chapter-num">Ch 47</div>
-      <div>Sidenav</div>
-      <div class="chapter-subtitle">Mat-sidenav</div>
+      <div>Signals</div>
+      <div class="chapter-subtitle">Angular Signals</div>
     </Link>
     <Link to="ch48" class="chapter-card">
       <div class="chapter-num">Ch 48</div>
-      <div>Toolbar</div>
-      <div class="chapter-subtitle">Mat-toolbar</div>
+      <div>Sidenav</div>
+      <div class="chapter-subtitle">Mat-sidenav</div>
     </Link>
     <Link to="ch49" class="chapter-card">
       <div class="chapter-num">Ch 49</div>
-      <div>Radio &amp; Checkbox</div>
-      <div class="chapter-subtitle">Mat-radio / Checkbox</div>
+      <div>Toolbar</div>
+      <div class="chapter-subtitle">Mat-toolbar</div>
     </Link>
     <Link to="ch50" class="chapter-card">
       <div class="chapter-num">Ch 50</div>
-      <div>Reactive Forms</div>
-      <div class="chapter-subtitle">Dynamic Form Control</div>
+      <div>Radio &amp; Checkbox</div>
+      <div class="chapter-subtitle">Mat-radio / Checkbox</div>
     </Link>
     <Link to="ch51" class="chapter-card">
       <div class="chapter-num">Ch 51</div>
-      <div>Validators</div>
-      <div class="chapter-subtitle">Form Validation</div>
+      <div>Reactive Forms</div>
+      <div class="chapter-subtitle">Dynamic Form Control</div>
     </Link>
     <Link to="ch52" class="chapter-card">
       <div class="chapter-num">Ch 52</div>
-      <div>RWD</div>
-      <div class="chapter-subtitle">Responsive Web Design</div>
+      <div>Validators</div>
+      <div class="chapter-subtitle">Form Validation</div>
     </Link>
     <Link to="ch53" class="chapter-card">
       <div class="chapter-num">Ch 53</div>
-      <div>RXJS</div>
-      <div class="chapter-subtitle">Reactive Extensions</div>
+      <div>RWD</div>
+      <div class="chapter-subtitle">Responsive Web Design</div>
     </Link>
     <Link to="ch54" class="chapter-card">
       <div class="chapter-num">Ch 54</div>
@@ -556,43 +556,43 @@ src: ./43-async.md
 ---
 
 ---
-src: ./44-subscription.md
+src: ./44-rxjs.md
 ---
 
 ---
-src: ./45-loading.md
+src: ./45-subscription.md
 ---
 
 ---
-src: ./46-signals.md
+src: ./46-loading.md
 ---
 
 ---
-src: ./47-sidenav.md
+src: ./47-signals.md
 ---
 
 ---
-src: ./48-toolbar.md
+src: ./48-sidenav.md
 ---
 
 ---
-src: ./49-mat-radio-checkbox.md
+src: ./49-toolbar.md
 ---
 
 ---
-src: ./50-reactive-forms.md
+src: ./50-mat-radio-checkbox.md
 ---
 
 ---
-src: ./51-validators.md
+src: ./51-reactive-forms.md
 ---
 
 ---
-src: ./52-rwd.md
+src: ./52-validators.md
 ---
 
 ---
-src: ./53-rxjs.md
+src: ./53-rwd.md
 ---
 
 ---

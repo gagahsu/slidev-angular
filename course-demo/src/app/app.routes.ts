@@ -150,51 +150,51 @@ export const routes: Routes = [
   {
     path: 'ch44',
     loadComponent: () =>
-      import('./chapters/ch44-subscription/ch44-subscription').then(m => m.Ch44Subscription)
+      import('./chapters/ch44-rxjs/ch44-rxjs').then(m => m.Ch44Rxjs)
   },
   {
     path: 'ch45',
-    loadChildren: () =>
-      import('./chapters/ch45-loading/ch45-loading.routes').then(m => m.routes)
+    loadComponent: () =>
+      import('./chapters/ch45-subscription/ch45-subscription').then(m => m.Ch45Subscription)
   },
   {
     path: 'ch46',
-    loadComponent: () =>
-      import('./chapters/ch46-signals/ch46-signals').then(m => m.Ch46Signals)
+    loadChildren: () =>
+      import('./chapters/ch46-loading/ch46-loading.routes').then(m => m.routes)
   },
   {
     path: 'ch47',
-    loadChildren: () =>
-      import('./chapters/ch47-sidenav/ch47-sidenav.routes').then(m => m.routes)
+    loadComponent: () =>
+      import('./chapters/ch47-signals/ch47-signals').then(m => m.Ch47Signals)
   },
   {
     path: 'ch48',
     loadChildren: () =>
-      import('./chapters/ch48-toolbar/ch48-toolbar.routes').then(m => m.routes)
+      import('./chapters/ch48-sidenav/ch48-sidenav.routes').then(m => m.routes)
   },
   {
     path: 'ch49',
-    loadComponent: () =>
-      import('./chapters/ch49-radio-checkbox/ch49-radio-checkbox').then(m => m.Ch49RadioCheckbox)
+    loadChildren: () =>
+      import('./chapters/ch49-toolbar/ch49-toolbar.routes').then(m => m.routes)
   },
   {
     path: 'ch50',
     loadComponent: () =>
-      import('./chapters/ch50-reactive-forms/ch50-reactive-forms').then(m => m.Ch50ReactiveForms)
+      import('./chapters/ch50-radio-checkbox/ch50-radio-checkbox').then(m => m.Ch50RadioCheckbox)
   },
   {
     path: 'ch51',
     loadComponent: () =>
-      import('./chapters/ch51-validators/ch51-validators').then(m => m.Ch51Validators)
+      import('./chapters/ch51-reactive-forms/ch51-reactive-forms').then(m => m.Ch51ReactiveForms)
   },
   {
     path: 'ch52',
     loadComponent: () =>
-      import('./chapters/ch52-rwd/ch52-rwd').then(m => m.Ch52Rwd)
+      import('./chapters/ch52-validators/ch52-validators').then(m => m.Ch52Validators)
   },
   {
     path: 'ch53',
     loadComponent: () =>
-      import('./chapters/ch53-rxjs/ch53-rxjs').then(m => m.Ch53Rxjs)
+      import('./chapters/ch53-rwd/ch53-rwd').then(m => m.Ch53Rwd)
   }
 ];
